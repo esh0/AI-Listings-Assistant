@@ -105,7 +105,7 @@ export function ProductForm({
                                     onChange={(e) =>
                                         onPlatformChange(e.target.value as Platform)
                                     }
-                                    className="h-4 w-4 border-gray-300 text-primary focus:ring-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                    className="h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                                     aria-required="true"
                                 />
                                 <span className="text-sm font-medium group-hover:text-foreground">
@@ -122,7 +122,7 @@ export function ProductForm({
                         onChange={(e) => {
                             // TODO: Implement "generate for all platforms" feature
                         }}
-                        className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                        className="h-4 w-4 rounded border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                         disabled
                     />
                     <span className="text-sm text-muted-foreground">
@@ -152,7 +152,7 @@ export function ProductForm({
                                         handleToneRadioChange(e.target.value as ToneStyle)
                                     }
                                     disabled={generateAllTones}
-                                    className="mt-0.5 h-4 w-4 border-gray-300 text-primary focus:ring-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
+                                    className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
                                     aria-describedby={`tone-${value}-description`}
                                 />
                                 <div className="flex-1">
@@ -175,7 +175,7 @@ export function ProductForm({
                         type="checkbox"
                         checked={generateAllTones}
                         onChange={(e) => handleGenerateAllTonesChange(e.target.checked)}
-                        className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                        className="h-4 w-4 rounded border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     />
                     <span className="text-sm group-hover:text-foreground">
                         Wygeneruj wszystkie warianty stylistyczne
@@ -232,7 +232,7 @@ export function ProductForm({
                                     onChange={(e) =>
                                         onConditionChange(e.target.value as ProductCondition)
                                     }
-                                    className="h-4 w-4 border-gray-300 text-primary focus:ring-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                    className="h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                                     aria-required="true"
                                 />
                                 <span className="text-sm font-medium group-hover:text-foreground">
@@ -259,7 +259,7 @@ export function ProductForm({
                             onChange={(e) =>
                                 onPriceTypeChange(e.target.value as PriceType)
                             }
-                            className="mt-0.5 h-4 w-4 border-gray-300 text-primary focus:ring-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                            className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                         />
                         <div className="flex-1">
                             <span className="text-sm font-medium group-hover:text-foreground">
@@ -280,7 +280,7 @@ export function ProductForm({
                             onChange={(e) =>
                                 onPriceTypeChange(e.target.value as PriceType)
                             }
-                            className="mt-0.5 h-4 w-4 border-gray-300 text-primary focus:ring-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                            className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                         />
                         <div className="flex-1">
                             <span className="text-sm font-medium group-hover:text-foreground">
@@ -301,7 +301,7 @@ export function ProductForm({
                             onChange={(e) =>
                                 onPriceTypeChange(e.target.value as PriceType)
                             }
-                            className="mt-0.5 h-4 w-4 border-gray-300 text-primary focus:ring-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                            className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                         />
                         <div className="flex-1">
                             <span className="text-sm font-medium group-hover:text-foreground">
