@@ -172,7 +172,10 @@ const PROMPT_GENERAL_GUIDELINES = `## ZASADY OGÓLNE:
 3. Oceń jakość każdego zdjęcia; zaproponuj konkretne poprawki
 4. Zbuduj tytuł z kluczowymi frazami w stylu wybranego TONU
 5. Stwórz opis w stylu TONU: wprowadzenie, specyfikacja (tylko dane pewne!), stan, CTA
-6. Zachowaj spójność i rzetelność informacji`;
+6. Zachowaj spójność i rzetelność informacji
+
+## SPECJALNE ZASADY DLA BŁĘDÓW LUB BRAKU DANYCH:
+- Jeżeli zdjęcia są nieczytelne, uszkodzone lub brak kluczowych danych — wygeneruj negatywną odpowiedź z isValid: false i error.`;
 
 // DEPRECATED: Old monolithic system prompt - kept for reference, will be replaced with modular structure
 // TODO: Remove after successful migration to modular prompts
