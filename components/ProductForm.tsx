@@ -8,9 +8,14 @@ import {
     Platform,
     ProductCondition,
     DeliveryOption,
+    ToneStyle,
+    PriceType,
     PLATFORM_NAMES,
     CONDITION_NAMES,
     DELIVERY_NAMES,
+    PLATFORM_DEFAULT_TONES,
+    TONE_STYLE_NAMES,
+    TONE_STYLE_DESCRIPTIONS,
 } from "@/lib/types";
 
 interface ProductFormProps {
@@ -20,12 +25,18 @@ interface ProductFormProps {
     price: string;
     delivery: DeliveryOption[];
     notes: string;
+    selectedTone: ToneStyle;
+    generateAllTones: boolean;
+    priceType: PriceType;
     onPlatformChange: (value: Platform) => void;
     onProductNameChange: (value: string) => void;
     onConditionChange: (value: ProductCondition) => void;
     onPriceChange: (value: string) => void;
     onDeliveryChange: (value: DeliveryOption[]) => void;
     onNotesChange: (value: string) => void;
+    onToneChange: (value: ToneStyle) => void;
+    onGenerateAllTonesChange: (value: boolean) => void;
+    onPriceTypeChange: (value: PriceType) => void;
 }
 
 export function ProductForm({
@@ -35,12 +46,18 @@ export function ProductForm({
     price,
     delivery,
     notes,
+    selectedTone,
+    generateAllTones,
+    priceType,
     onPlatformChange,
     onProductNameChange,
     onConditionChange,
     onPriceChange,
     onDeliveryChange,
     onNotesChange,
+    onToneChange,
+    onGenerateAllTonesChange,
+    onPriceTypeChange,
 }: ProductFormProps) {
     const platformOptions = React.useMemo(() =>
         Object.entries(PLATFORM_NAMES).map(([value, label]) => ({
@@ -88,6 +105,62 @@ export function ProductForm({
                 />
             </div>
 
+            {/* Tone Style */}
+            <fieldset className="space-y-3">
+                <legend className="text-sm font-medium leading-none">
+                    Styl komunikacji <span className="text-destructive">*</span>
+                </legend>
+                <div className="space-y-2">
+                    {(Object.entries(TONE_STYLE_NAMES) as [ToneStyle, string][]).map(
+                        ([value, label]) => (
+                            <label
+                                key={value}
+                                className="flex items-start gap-3 cursor-pointer group"
+                            >
+                                <input
+                                    type="radio"
+                                    name="tone"
+                                    value={value}
+                                    checked={selectedTone === value}
+                                    onChange={(e) =>
+                                        onToneChange(e.target.value as ToneStyle)
+                                    }
+                                    className="mt-0.5 h-4 w-4 border-gray-300 text-primary focus:ring-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                    aria-describedby={`tone-${value}-description`}
+                                />
+                                <div className="flex-1">
+                                    <span className="text-sm font-medium group-hover:text-foreground">
+                                        {label}
+                                    </span>
+                                    <p
+                                        id={`tone-${value}-description`}
+                                        className="text-xs text-muted-foreground mt-0.5"
+                                    >
+                                        {TONE_STYLE_DESCRIPTIONS[value]}
+                                    </p>
+                                </div>
+                            </label>
+                        )
+                    )}
+                </div>
+                <label className="flex items-center gap-2 cursor-pointer group mt-3">
+                    <input
+                        type="checkbox"
+                        checked={generateAllTones}
+                        onChange={(e) => onGenerateAllTonesChange(e.target.checked)}
+                        className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    />
+                    <span className="text-sm group-hover:text-foreground">
+                        Wygeneruj wszystkie warianty stylistyczne
+                    </span>
+                </label>
+                <p className="text-xs text-muted-foreground">
+                    {generateAllTones
+                        ? "Otrzymasz 3 wersje ogłoszenia w różnych stylach"
+                        : "Otrzymasz ogłoszenie w wybranym stylu"}
+                </p>
+            </fieldset>
+
             {/* Product Name */}
             <div className="space-y-2">
                 <label
@@ -131,38 +204,108 @@ export function ProductForm({
                 />
             </div>
 
-            {/* Price */}
-            <div className="space-y-2">
-                <label
-                    htmlFor="price"
-                    className="text-sm font-medium leading-none"
-                >
-                    Cena{" "}
-                    <span className="text-muted-foreground text-xs">
-                        (opcjonalne)
-                    </span>
-                </label>
-                <div className="relative">
-                    <Input
-                        id="price"
-                        type="number"
-                        min="0"
-                        max="999999"
-                        step="0.01"
-                        value={price}
-                        onChange={(e) => onPriceChange(e.target.value)}
-                        placeholder="0.00"
-                        className="pr-12"
-                        aria-describedby="price-hint"
-                    />
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm" aria-label="Waluta">
-                        PLN
-                    </span>
+            {/* Price Type */}
+            <fieldset className="space-y-3">
+                <legend className="text-sm font-medium leading-none">
+                    Cena <span className="text-destructive">*</span>
+                </legend>
+                <div className="space-y-2">
+                    <label className="flex items-start gap-3 cursor-pointer group">
+                        <input
+                            type="radio"
+                            name="priceType"
+                            value="ai_suggest"
+                            checked={priceType === "ai_suggest"}
+                            onChange={(e) =>
+                                onPriceTypeChange(e.target.value as PriceType)
+                            }
+                            className="mt-0.5 h-4 w-4 border-gray-300 text-primary focus:ring-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                        />
+                        <div className="flex-1">
+                            <span className="text-sm font-medium group-hover:text-foreground">
+                                Zasugeruj cenę
+                            </span>
+                            <p className="text-xs text-muted-foreground mt-0.5">
+                                AI zaproponuje odpowiednią cenę na podstawie produktu
+                            </p>
+                        </div>
+                    </label>
+
+                    <label className="flex items-start gap-3 cursor-pointer group">
+                        <input
+                            type="radio"
+                            name="priceType"
+                            value="user_provided"
+                            checked={priceType === "user_provided"}
+                            onChange={(e) =>
+                                onPriceTypeChange(e.target.value as PriceType)
+                            }
+                            className="mt-0.5 h-4 w-4 border-gray-300 text-primary focus:ring-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                        />
+                        <div className="flex-1">
+                            <span className="text-sm font-medium group-hover:text-foreground">
+                                Podaję swoją cenę
+                            </span>
+                            <p className="text-xs text-muted-foreground mt-0.5">
+                                Wprowadź konkretną kwotę do ogłoszenia
+                            </p>
+                        </div>
+                    </label>
+
+                    <label className="flex items-start gap-3 cursor-pointer group">
+                        <input
+                            type="radio"
+                            name="priceType"
+                            value="free"
+                            checked={priceType === "free"}
+                            onChange={(e) =>
+                                onPriceTypeChange(e.target.value as PriceType)
+                            }
+                            className="mt-0.5 h-4 w-4 border-gray-300 text-primary focus:ring-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                        />
+                        <div className="flex-1">
+                            <span className="text-sm font-medium group-hover:text-foreground">
+                                Oddam za darmo
+                            </span>
+                            <p className="text-xs text-muted-foreground mt-0.5">
+                                Produkt zostanie oznaczony jako darmowy
+                            </p>
+                        </div>
+                    </label>
                 </div>
-                <p id="price-hint" className="text-xs text-muted-foreground">
-                    Jeśli nie podasz ceny, AI zasugeruje odpowiednią kwotę
-                </p>
-            </div>
+
+                {priceType === "user_provided" && (
+                    <div className="space-y-2 pt-2">
+                        <label
+                            htmlFor="userPrice"
+                            className="text-sm font-medium leading-none"
+                        >
+                            Twoja cena <span className="text-destructive">*</span>
+                        </label>
+                        <div className="relative">
+                            <Input
+                                id="userPrice"
+                                type="number"
+                                min="0"
+                                max="999999"
+                                step="0.01"
+                                value={price}
+                                onChange={(e) => onPriceChange(e.target.value)}
+                                placeholder="0.00"
+                                className="pr-12"
+                                aria-label="Cena produktu"
+                                required
+                            />
+                            <span
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm"
+                                aria-label="Waluta"
+                            >
+                                PLN
+                            </span>
+                        </div>
+                    </div>
+                )}
+            </fieldset>
 
             {/* Delivery */}
             <fieldset className="space-y-2">
