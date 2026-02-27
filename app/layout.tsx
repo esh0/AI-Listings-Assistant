@@ -66,7 +66,11 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="pl" suppressHydrationWarning>
+        <html lang="pl" suppressHydrationWarning className="[color-scheme:light] dark:[color-scheme:dark]">
+            <head>
+                <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+                <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+            </head>
             <body className={`${spaceGrotesk.variable} ${instrumentSerif.variable} font-sans antialiased`}>
                 <ThemeProvider
                     attribute="class"

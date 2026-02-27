@@ -350,7 +350,7 @@ export default function HomePage() {
                     {!result && (
                         <div className="mt-8">
                             <Button
-                                type="submit"
+                                type="button"
                                 size="lg"
                                 className="w-full sm:w-auto sm:min-w-[300px] text-base font-semibold transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
                                 onClick={handleSubmit}

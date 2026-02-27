@@ -180,7 +180,7 @@ export function AdResult({ result, imagePreviews, platform, productName, conditi
                             )}
                         </Button>
                     </div>
-                    <p className="text-base leading-relaxed whitespace-pre-wrap">
+                    <p className="text-base leading-relaxed whitespace-pre-wrap [text-wrap:balance]">
                         {displayContent.description}
                     </p>
                 </div>
@@ -253,6 +253,8 @@ export function AdResult({ result, imagePreviews, platform, productName, conditi
                                                     src={previewUrl}
                                                     alt={`Zdjęcie ${index + 1}`}
                                                     className="w-16 h-16 object-cover rounded-md border transition-transform hover:scale-105"
+                                                    width={64}
+                                                    height={64}
                                                 />
                                             ) : (
                                                 <div className="w-16 h-16 bg-muted rounded-md border flex items-center justify-center">

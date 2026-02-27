@@ -213,7 +213,7 @@ export function ProductForm({
                     id="productName"
                     value={productName}
                     onChange={(e) => onProductNameChange(e.target.value)}
-                    placeholder="np. iPhone 13 Pro, Krzesło IKEA, Kurtka zimowa..."
+                    placeholder="np. iPhone 13 Pro, Krzesło IKEA, Kurtka zimowa…"
                     maxLength={200}
                     aria-describedby="productName-hint"
                 />
@@ -335,7 +335,9 @@ export function ProductForm({
                         <div className="relative">
                             <Input
                                 id="userPrice"
+                                name="price"
                                 type="number"
+                                inputMode="decimal"
                                 min="0"
                                 max="999999"
                                 step="0.01"
@@ -344,6 +346,7 @@ export function ProductForm({
                                 placeholder="0.00"
                                 className="pr-12"
                                 aria-label="Cena produktu"
+                                autoComplete="off"
                                 required
                             />
                             <span
@@ -406,7 +409,7 @@ export function ProductForm({
                     id="notes"
                     value={notes}
                     onChange={(e) => onNotesChange(e.target.value)}
-                    placeholder="np. uszkodzenia, braki, wymiary, historia produktu..."
+                    placeholder="np. uszkodzenia, braki, wymiary, historia produktu…"
                     rows={3}
                     maxLength={1000}
                     aria-describedby="notes-hint"
