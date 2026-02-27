@@ -14,6 +14,16 @@ export type ProductCondition =
 
 export type DeliveryOption = "odbiór osobisty" | "wysyłka";
 
+export type ToneStyle = "professional" | "friendly" | "casual";
+
+export type PriceType = "user_provided" | "ai_suggest" | "free";
+
+export interface ToneVariant {
+    tone: ToneStyle;
+    title: string;
+    description: string;
+}
+
 // Form data
 export interface ProductFormData {
     platform: Platform;
@@ -44,7 +54,10 @@ export interface GenerateAdRequest {
     platform: Platform;
     productName: string;
     condition: ProductCondition;
-    price: string;
+    price?: string;
+    priceType: PriceType;
+    tone: ToneStyle;
+    generateAllTones: boolean;
     delivery: string;
     notes: string;
     images: ImageForRequest[];
@@ -77,7 +90,13 @@ export interface GenerateAdResponse {
     error?: string;
     title?: string;
     description?: string;
-    price?: PriceSuggestion;
+    toneVariants?: ToneVariant[];
+    price?: PriceSuggestion | null;
+    isFree?: boolean;
+    confidence?: {
+        productIdentification: "high" | "medium" | "low";
+        specifications: "high" | "medium" | "low";
+    };
     images?: ImageAnalysis[];
 }
 
@@ -111,3 +130,25 @@ export const DELIVERY_NAMES: Record<DeliveryOption, string> = {
 
 // Max images allowed
 export const MAX_IMAGES = 8;
+
+// Platform default tones
+export const PLATFORM_DEFAULT_TONES: Record<Platform, ToneStyle> = {
+    olx: "casual",
+    allegro_lokalnie: "professional",
+    facebook_marketplace: "friendly",
+    vinted: "friendly",
+};
+
+// Tone style display names
+export const TONE_STYLE_NAMES: Record<ToneStyle, string> = {
+    professional: "Profesjonalny",
+    friendly: "Przyjazny",
+    casual: "Swobodny",
+};
+
+// Tone style descriptions
+export const TONE_STYLE_DESCRIPTIONS: Record<ToneStyle, string> = {
+    professional: "Formalny, rzeczowy styl idealny dla poważnych transakcji",
+    friendly: "Ciepły i przystępny ton budujący zaufanie",
+    casual: "Bezpośredni i luźny język jak w rozmowie",
+};
