@@ -180,6 +180,56 @@ These markdown files are loaded at runtime and injected into the AI prompt to en
 - **Styling**: Tailwind classes using `cn()` utility for conditional classes
 - **Naming**: camelCase for variables/functions, PascalCase for components/types
 
+## Performance Best Practices
+
+Following Vercel React Best Practices to ensure optimal bundle size and performance:
+
+### Bundle Size Optimization (CRITICAL)
+
+**Dynamic Imports for Conditional Components:**
+- ✅ Use `next/dynamic` for components loaded only after user interaction
+- ✅ Components like `FullscreenLoading` and `AdResult` are dynamically imported in `app/page.tsx`
+- ❌ **NEVER** eagerly import heavy components that aren't shown on initial render
+- Pattern to follow:
+  ```typescript
+  const HeavyComponent = dynamic(() =>
+    import("@/components/HeavyComponent").then(mod => ({ default: mod.HeavyComponent })),
+    { ssr: false }
+  );
+  ```
+
+**Icon Imports:**
+- ✅ Import from `lucide-react` barrel file (modern bundlers handle tree-shaking automatically)
+- ✅ Next.js App Router with Turbopack optimizes these imports
+- ❌ **DO NOT** attempt direct imports like `lucide-react/dist/esm/icons/...` (causes TypeScript errors)
+- Pattern to follow:
+  ```typescript
+  import { Icon1, Icon2, Icon3 } from "lucide-react";
+  ```
+
+### Re-render Optimization
+
+- ✅ Use `useCallback` for event handlers passed to child components
+- ✅ Use `useMemo` for expensive calculations
+- ✅ Use `React.memo` for components that receive primitive props
+- ✅ Extract default non-primitive parameter values to constants outside component
+
+### Why These Patterns Matter
+
+1. **Dynamic imports reduce initial bundle size** by 50-200KB for large components
+2. **Lazy loading improves Time to Interactive (TTI)** - users see content faster
+3. **Code splitting** ensures users only download code they actually use
+4. **Tree-shaking** removes unused exports from dependencies automatically
+
+### Performance Checklist for New Features
+
+When adding new features or components:
+- [ ] Is this component shown on initial page load? If NO → use `dynamic` import
+- [ ] Does this component depend on user action? If YES → use `dynamic` import with `ssr: false`
+- [ ] Are you importing 5+ icons from lucide-react? → Use barrel import (tree-shaking handles it)
+- [ ] Are callbacks passed to multiple children? → Wrap in `useCallback`
+- [ ] Are you computing derived values? → Wrap in `useMemo`
+
 ## AI Model Configuration
 
 The app uses OpenAI's `o4-mini` model with:

@@ -1,16 +1,24 @@
 "use client";
 
 import React, { useState, useCallback, useMemo, useEffect, useRef } from "react";
-import { Sparkles, ShoppingBag, Send, RotateCcw, Pencil, Camera, FileText } from "lucide-react";
+import dynamic from "next/dynamic";
+import { ShoppingBag, Send, RotateCcw, Pencil, Camera, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { UploadDropzone } from "@/components/UploadDropzone";
 import { ProductForm } from "@/components/ProductForm";
-import { AdResult } from "@/components/AdResult";
-import { FullscreenLoading } from "@/components/FullscreenLoading";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { fileToBase64, getImageMimeType } from "@/lib/utils";
+
+// Dynamic imports for components loaded conditionally after user action
+// Reduces initial bundle size and improves Time to Interactive (TTI)
+const FullscreenLoading = dynamic(() => import("@/components/FullscreenLoading").then(mod => ({ default: mod.FullscreenLoading })), {
+    ssr: false,
+});
+const AdResult = dynamic(() => import("@/components/AdResult").then(mod => ({ default: mod.AdResult })), {
+    ssr: false,
+});
 import type {
     UploadedImage,
     Platform,
