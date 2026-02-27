@@ -1,4 +1,9 @@
 import { z } from "zod";
+import type { ToneStyle, PriceType } from "@/lib/types";
+
+// Enum schemas for tone and price types
+export const ToneStyleSchema = z.enum(["professional", "friendly", "casual"]);
+export const PriceTypeSchema = z.enum(["user_provided", "ai_suggest", "free"]);
 
 // Form validation schema
 export const productFormSchema = z.object({
@@ -33,29 +38,45 @@ export const imageForRequestSchema = z.object({
 });
 
 // API request validation schema - now supports multiple images
-export const generateAdRequestSchema = z.object({
-    platform: z.enum([
-        "olx",
-        "allegro_lokalnie",
-        "facebook_marketplace",
-        "vinted",
-    ]),
-    productName: z.string(),
-    condition: z.enum([
-        "nowy",
-        "używany, jak nowy",
-        "używany, w dobrym stanie",
-        "używany, w przeciętnym stanie",
-        "uszkodzony",
-    ]),
-    price: z.string(),
-    delivery: z.string(),
-    notes: z.string(),
-    images: z
-        .array(imageForRequestSchema)
-        .min(1, "Przynajmniej jedno zdjęcie jest wymagane")
-        .max(8, "Maksymalnie 8 zdjęć"),
-});
+export const generateAdRequestSchema = z
+    .object({
+        platform: z.enum([
+            "olx",
+            "allegro_lokalnie",
+            "facebook_marketplace",
+            "vinted",
+        ]),
+        productName: z.string(),
+        condition: z.enum([
+            "nowy",
+            "używany, jak nowy",
+            "używany, w dobrym stanie",
+            "używany, w przeciętnym stanie",
+            "uszkodzony",
+        ]),
+        price: z.string().optional(),
+        priceType: PriceTypeSchema,
+        tone: ToneStyleSchema,
+        generateAllTones: z.boolean(),
+        delivery: z.string(),
+        notes: z.string(),
+        images: z
+            .array(imageForRequestSchema)
+            .min(1, "Przynajmniej jedno zdjęcie jest wymagane")
+            .max(8, "Maksymalnie 8 zdjęć"),
+    })
+    .refine(
+        (data) => {
+            if (data.priceType === "user_provided") {
+                return !!data.price && data.price.trim().length > 0;
+            }
+            return true;
+        },
+        {
+            message: "Cena jest wymagana gdy wybrano 'Moja cena'",
+            path: ["price"],
+        }
+    );
 
 export type GenerateAdRequestSchema = z.infer<typeof generateAdRequestSchema>;
 
