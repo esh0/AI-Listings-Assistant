@@ -21,7 +21,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { formatPrice } from "@/lib/utils";
-import type { GenerateAdResponse } from "@/lib/types";
+import type { GenerateAdResponse, ToneStyle } from "@/lib/types";
+import { TONE_STYLE_NAMES } from "@/lib/types";
 
 interface AdResultProps {
     result: GenerateAdResponse;
@@ -30,6 +31,7 @@ interface AdResultProps {
 
 export function AdResult({ result, imagePreviews }: AdResultProps) {
     const [copiedField, setCopiedField] = useState<string | null>(null);
+    const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
 
     const copyToClipboard = async (text: string, field: string) => {
         try {
@@ -54,10 +56,38 @@ export function AdResult({ result, imagePreviews }: AdResultProps) {
         );
     }
 
+    const displayContent = result.toneVariants && result.toneVariants.length > 0
+        ? result.toneVariants[selectedVariantIndex]
+        : { title: result.title, description: result.description };
+
     return (
         <div className="space-y-8 animate-slide-up" role="region" aria-label="Wygenerowane ogłoszenie">
+            {/* Multi-Tone Tabs */}
+            {result.toneVariants && result.toneVariants.length > 0 && (
+                <div className="mb-6">
+                    <div className="flex space-x-2 border-b">
+                        {result.toneVariants.map((variant, index) => (
+                            <button
+                                key={variant.tone}
+                                onClick={() => setSelectedVariantIndex(index)}
+                                className={`px-4 py-2 font-medium transition-colors ${
+                                    selectedVariantIndex === index
+                                        ? "border-b-2 border-primary text-primary"
+                                        : "text-muted-foreground hover:text-foreground"
+                                }`}
+                            >
+                                {TONE_STYLE_NAMES[variant.tone as ToneStyle]}
+                            </button>
+                        ))}
+                    </div>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                        Wybierz styl, który najbardziej Ci odpowiada
+                    </p>
+                </div>
+            )}
+
             {/* Title Section */}
-            {result.title && (
+            {displayContent.title && (
                 <div className="bg-muted/30 border-l-4 border-primary p-6 rounded-md transition-all hover:bg-muted/40">
                     <div className="flex items-start justify-between gap-4 mb-3">
                         <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
@@ -68,7 +98,7 @@ export function AdResult({ result, imagePreviews }: AdResultProps) {
                             variant="ghost"
                             size="sm"
                             onClick={() =>
-                                copyToClipboard(result.title!, "title")
+                                copyToClipboard(displayContent.title!, "title")
                             }
                             aria-label="Kopiuj tytuł do schowka"
                             className="transition-all duration-200 hover:scale-105 active:scale-95"
@@ -87,13 +117,13 @@ export function AdResult({ result, imagePreviews }: AdResultProps) {
                         </Button>
                     </div>
                     <p className="text-lg font-semibold leading-relaxed tracking-tight">
-                        {result.title}
+                        {displayContent.title}
                     </p>
                 </div>
             )}
 
             {/* Description Section */}
-            {result.description && (
+            {displayContent.description && (
                 <div className="bg-muted/30 border-l-4 border-primary p-6 rounded-md transition-all hover:bg-muted/40">
                     <div className="flex items-start justify-between gap-4 mb-3">
                         <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
@@ -105,7 +135,7 @@ export function AdResult({ result, imagePreviews }: AdResultProps) {
                             size="sm"
                             onClick={() =>
                                 copyToClipboard(
-                                    result.description!,
+                                    displayContent.description!,
                                     "description"
                                 )
                             }
@@ -126,13 +156,30 @@ export function AdResult({ result, imagePreviews }: AdResultProps) {
                         </Button>
                     </div>
                     <p className="text-base leading-relaxed whitespace-pre-wrap">
-                        {result.description}
+                        {displayContent.description}
                     </p>
                 </div>
             )}
 
             {/* Price Section - Compact inline */}
-            {result.price && (
+            {result.isFree ? (
+                <div className="space-y-2">
+                    <h3 className="text-lg font-semibold">Cena</h3>
+                    <div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                        <div className="flex items-center space-x-2">
+                            <span className="text-2xl">🎁</span>
+                            <div>
+                                <p className="font-semibold text-green-700 dark:text-green-400">
+                                    Za darmo
+                                </p>
+                                <p className="text-sm text-green-600 dark:text-green-500">
+                                    Oddajesz produkt bezpłatnie
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ) : result.price ? (
                 <div className="flex flex-wrap items-center gap-4 p-6 bg-primary/5 border border-primary/20 rounded-md transition-all hover:border-primary/30">
                     <div className="flex items-center gap-2">
                         <DollarSign className="h-5 w-5 text-primary" aria-hidden="true" />
@@ -153,7 +200,7 @@ export function AdResult({ result, imagePreviews }: AdResultProps) {
                         {result.price.reason}
                     </p>
                 </div>
-            )}
+            ) : null}
 
             {/* Image Analysis Section */}
             {result.images && result.images.length > 0 && (
@@ -226,13 +273,13 @@ export function AdResult({ result, imagePreviews }: AdResultProps) {
             )}
 
             {/* Copy All Button - prominent */}
-            {result.title && result.description && (
+            {displayContent.title && displayContent.description && (
                 <Button
                     size="lg"
                     className="w-full sm:w-auto sm:min-w-[300px] text-base font-semibold transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
                     onClick={() =>
                         copyToClipboard(
-                            `${result.title}\n\n${result.description}`,
+                            `${displayContent.title}\n\n${displayContent.description}`,
                             "all"
                         )
                     }
