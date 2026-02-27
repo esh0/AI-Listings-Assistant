@@ -402,11 +402,26 @@ export async function generateAd(
     // Load platform-specific rules
     const platformRules = getPlatformRules(request.platform as Platform);
 
+    // Build price context based on priceType
+    let priceContext = "";
+    if (request.priceType === "free") {
+        priceContext = "Za darmo (użytkownik oddaje produkt bezpłatnie)";
+    } else if (request.priceType === "user_provided") {
+        priceContext = `Cena podana przez użytkownika: ${request.price} zł`;
+    } else {
+        priceContext = "Zasugeruj odpowiednią cenę na podstawie analizy produktu i rynku";
+    }
+
+    // Build tone context
+    const toneContext = request.generateAllTones
+        ? "Wygeneruj 3 wersje ogłoszenia w TRZECH RÓŻNYCH TONACH: professional, friendly, casual. Każda wersja powinna być wyraźnie inna stylistycznie."
+        : `Wygeneruj ogłoszenie w stylu: ${request.tone.toUpperCase()}`;
+
     const userPrompt = `## Dane wejściowe:
 - Platforma sprzedażowa: ${request.platform}
 - Nazwa produktu: ${request.productName || "rozpoznaj ze zdjęć"}
 - Stan: ${request.condition}
-- Cena: ${request.price || "zasugeruj odpowiednią cenę"}
+- Cena: ${priceContext}
 - Sposób dostawy: ${request.delivery}
 - Dodatkowe informacje: ${request.notes || "brak"}
 - Liczba zdjęć: ${request.images.length}
@@ -414,6 +429,9 @@ export async function generateAd(
 
 ## ZASADY SPECYFICZNE DLA PLATFORMY ${request.platform.toUpperCase()}:
 ${platformRules}
+
+## TON OGŁOSZENIA:
+${toneContext}
 
 Wygeneruj ogłoszenie sprzedażowe w formacie JSON zgodnie z powyższymi zasadami platformy. Przeanalizuj wszystkie ${request.images.length} zdjęć i dodaj ocenę każdego z nich.`;
 
@@ -442,12 +460,15 @@ Wygeneruj ogłoszenie sprzedażowe w formacie JSON zgodnie z powyższymi zasadam
             });
         }
 
+        // Determine system tone: use friendly for multi-tone, otherwise use requested tone
+        const systemTone = request.generateAllTones ? "friendly" : request.tone;
+
         const response = await openai.chat.completions.create({
             model: "o4-mini",
             messages: [
                 {
                     role: "system",
-                    content: `${SYSTEM_PROMPT}\n\n${JSON_SCHEMA}`,
+                    content: `${buildSystemPrompt(systemTone)}\n\n${buildJsonSchema(request.generateAllTones)}`,
                 },
                 {
                     role: "user",
@@ -455,7 +476,7 @@ Wygeneruj ogłoszenie sprzedażowe w formacie JSON zgodnie z powyższymi zasadam
                 },
             ],
             response_format: { type: "json_object" },
-            max_completion_tokens: 4000,
+            max_completion_tokens: request.generateAllTones ? 6000 : 4000,
         });
 
         const content = response.choices[0]?.message?.content;
