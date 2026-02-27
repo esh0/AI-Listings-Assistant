@@ -9,14 +9,17 @@ Aplikacja webowa wykorzystująca AI (OpenAI GPT-4o) do automatycznego generowani
 
 ## ✨ Funkcjonalności
 
-- 📸 **Upload zdjęć** - Drag & drop z podglądem i walidacją (max 10MB, JPG/PNG/WEBP)
-- 🤖 **Analiza AI** - Automatyczne rozpoznawanie produktu ze zdjęcia
-- 📝 **Generowanie ogłoszeń** - Tytuły i opisy dopasowane do platformy sprzedażowej
-- 💰 **Sugestie cenowe** - Rekomendowane przedziały cenowe z uzasadnieniem
-- 📷 **Analiza jakości zdjęć** - Ocena i sugestie poprawek
+- 📸 **Upload zdjęć** - Drag & drop z podglądem i walidacją (do 8 zdjęć, max 10MB, JPG/PNG/WEBP)
+- 🤖 **Analiza AI** - Automatyczne rozpoznawanie produktu ze zdjęć z inteligentną obsługą niepewności
+- 🎨 **Warianty stylistyczne** - 3 style komunikacji (Profesjonalny, Przyjazny, Swobodny) z rekomendacjami dla platform
+- 📝 **Generowanie ogłoszeń** - Tytuły i opisy dopasowane do platformy i wybranego stylu
+- 💰 **Elastyczne ceny** - Sugestie AI, własna cena lub opcja "Za darmo"
+- 📷 **Analiza jakości zdjęć** - Ocena każdego zdjęcia z sugestiami poprawek
+- 📊 **Podsumowanie generowania** - Przejrzyste wyświetlanie parametrów użytych do generowania
 - 🌙 **Dark mode** - Automatyczne przełączanie motywu
 - 📱 **Responsywny design** - Działa na każdym urządzeniu
 - 📋 **Kopiowanie do schowka** - Szybkie przenoszenie treści na platformę
+- ✅ **Interfejs radiowy** - Intuicyjne radio buttons zamiast dropdownów dla lepszego UX
 
 ## 🚀 Szybki start
 
@@ -89,10 +92,12 @@ marketplace-assistant/
 
 ## 🎯 Jak to działa
 
-1. **Upload zdjęcia** - Użytkownik przeciąga lub wybiera zdjęcie produktu
-2. **Wypełnienie formularza** - Wybór platformy, stanu, opcji dostawy
-3. **Generowanie** - AI analizuje zdjęcie i tworzy ogłoszenie
-4. **Kopiowanie** - Gotowy tytuł i opis można skopiować do schowka
+1. **Upload zdjęć** - Użytkownik przeciąga lub wybiera zdjęcia produktu (do 8 sztuk)
+2. **Wypełnienie formularza** - Wybór platformy (radio buttons), stanu, opcji dostawy (domyślnie oba), stylu komunikacji z rekomendacjami
+3. **Obsługa ceny** - Wybór: AI sugeruje cenę, własna cena, lub "Za darmo"
+4. **Generowanie** - AI analizuje zdjęcia zgodnie z hierarchią informacji (dane użytkownika > fakty widoczne > wnioski)
+5. **Wyniki** - Wyświetlenie tytułu, opisu, ceny (jeśli dotyczy) oraz podsumowania parametrów generowania
+6. **Kopiowanie** - Gotowy tytuł i opis można skopiować do schowka jednym kliknięciem
 
 ## 🔧 Konfiguracja
 
@@ -105,10 +110,15 @@ marketplace-assistant/
 
 ### Wspierane platformy
 
-- **OLX** - Styl zwięzły, praktyczny
-- **Allegro Lokalnie** - Profesjonalny, szczegółowy
-- **Facebook Marketplace** - Przyjazny, bezpośredni
-- **Vinted** - Modowy, lifestyle
+- **OLX** - Styl zwięzły, praktyczny | Rekomendowany ton: **Swobodny**
+- **Allegro Lokalnie** - Profesjonalny, szczegółowy | Rekomendowany ton: **Profesjonalny**
+- **Facebook Marketplace** - Przyjazny, bezpośredni | Rekomendowany ton: **Przyjazny**
+- **Vinted** - Modowy, lifestyle | Rekomendowany ton: **Przyjazny**
+
+Każda platforma ma dedykowane zasady generowania treści z uwzględnieniem 3 wariantów stylistycznych:
+- **Profesjonalny** - Formalny, rzeczowy, ekspertycki
+- **Przyjazny** - Ciepły, pomocny, naturalny
+- **Swobodny** - Luźny, potoczny, bezpośredni
 
 ## 🚢 Deployment
 
@@ -157,16 +167,33 @@ Generuje ogłoszenie sprzedażowe na podstawie zdjęcia i danych produktu.
   "platform": "olx",
   "productName": "iPhone 13 Pro",
   "condition": "używany, w dobrym stanie",
+  "priceType": "user_provided",
   "price": "2500",
   "delivery": "odbiór osobisty, wysyłka",
   "notes": "Komplet z pudełkiem",
-  "image": {
-    "base64": "...",
-    "filename": "iphone.jpg",
-    "mimeType": "image/jpeg"
-  }
+  "tone": "friendly",
+  "generateAllTones": false,
+  "images": [
+    {
+      "base64": "...",
+      "filename": "iphone.jpg",
+      "mimeType": "image/jpeg"
+    }
+  ]
 }
 ```
+
+**Pola:**
+- `platform`: "olx" | "allegro_lokalnie" | "facebook_marketplace" | "vinted"
+- `productName`: Opcjonalna nazwa produktu
+- `condition`: Stan produktu
+- `priceType`: "user_provided" | "ai_suggest" | "free"
+- `price`: Wymagane gdy priceType="user_provided"
+- `delivery`: String z opcjami dostawy
+- `notes`: Opcjonalne dodatkowe informacje
+- `tone`: "professional" | "friendly" | "casual"
+- `generateAllTones`: Zawsze false (funkcja usunięta)
+- `images`: Tablica zdjęć (base64, max 8)
 
 **Response:**
 
@@ -174,23 +201,36 @@ Generuje ogłoszenie sprzedażowe na podstawie zdjęcia i danych produktu.
 {
   "isValid": true,
   "title": "iPhone 13 Pro 256GB Grafitowy – Używany, Dobry Stan",
-  "description": "Oferuję iPhone 13 Pro w kolorze grafitowym...",
+  "description": "Sprzedam iPhone 13 Pro w kolorze grafitowym. Telefon w bardzo dobrym stanie, bez widocznych uszkodzeń. Komplet z oryginalnym pudełkiem...",
   "price": {
     "min": 2300,
     "max": 2700,
-    "reason": "Cena adekwatna do stanu i rynku wtórnego"
+    "reason": "Cena adekwatna do stanu urządzenia i aktualnego rynku wtórnego"
   },
+  "isFree": false,
   "images": [
     {
       "filename": "iphone.jpg",
-      "quality": "dobra",
-      "suggestions": "dodaj ujęcia ekranu i tyłu",
-      "isValid": true,
-      "reason": "Zdjęcie czytelne, produkt rozpoznawalny"
+      "quality": "Bardzo dobra jakość, produkt wyraźnie widoczny",
+      "suggestions": "Dodaj ujęcia z tyłu telefonu i ekranu włączonego",
+      "isValid": true
     }
-  ]
+  ],
+  "confidence": {
+    "productIdentification": "high",
+    "specifications": "medium"
+  }
 }
 ```
+
+**Pola odpowiedzi:**
+- `isValid`: Czy generowanie się powiodło
+- `title`: Wygenerowany tytuł ogłoszenia
+- `description`: Wygenerowany opis
+- `price`: Obiekt z min/max/reason lub null (gdy priceType="user_provided" lub "free")
+- `isFree`: true gdy priceType="free"
+- `images`: Analiza każdego przesłanego zdjęcia
+- `confidence`: Poziom pewności AI co do identyfikacji i specyfikacji
 
 ## 🛠 Rozwój
 
