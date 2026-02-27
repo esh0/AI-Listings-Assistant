@@ -53,14 +53,55 @@ The `OPENAI_API_KEY` is required for the app to function. Copy from `.env.exampl
 ### Application Flow
 
 1. **Image Upload** (`components/UploadDropzone.tsx`) - User uploads up to 8 product images via drag-and-drop or file picker. Images are validated for size (max 10MB) and format (JPG/PNG/WEBP), then converted to base64
-2. **Form Input** (`components/ProductForm.tsx`) - User selects platform, product condition, delivery options, and provides optional product details
+2. **Form Input** (`components/ProductForm.tsx`) - User selects:
+   - Platform (radio buttons: OLX, Allegro Lokalnie, Facebook Marketplace, Vinted)
+   - Tone style (radio buttons: Professional, Friendly, Casual) with platform recommendations
+   - Product condition (radio buttons: nowy, idealny, używany w dobrym stanie, ślady używania)
+   - Price type (radio buttons: AI suggest, user provided, free)
+   - Delivery options (checkboxes: pickup and/or shipping - both selected by default)
+   - Optional: product name and notes
 3. **API Request** (`app/api/generate-ad/route.ts`) - Form data and images sent to Next.js API route
 4. **AI Processing** (`lib/openai.ts`) - OpenAI Vision API analyzes images and generates platform-specific listings using:
-   - System prompt with general rules
+   - Modular system prompt with accuracy improvements
    - Platform-specific rules loaded from `lib/rules/*.md` files
+   - Tone-specific style injection
    - Multiple images with high-detail analysis
    - Structured JSON response format
-5. **Result Display** (`components/AdResult.tsx`) - Shows generated title, description, price suggestions, and image quality analysis with copy-to-clipboard functionality
+5. **Result Display** (`components/AdResult.tsx`) - Shows:
+   - Generation parameters summary (platform, product name, condition, price type, delivery, tone)
+   - Generated title and description with copy-to-clipboard buttons
+   - AI-suggested price range with reasoning (if applicable)
+   - Free listing badge (if applicable)
+   - Image quality analysis and suggestions for each photo
+
+### Tone Variations
+
+The app supports 3 tone styles for generated listings:
+
+- **Professional** (Profesjonalny) - Formalny, rzeczowy, ekspertycki
+  - Recommended for: Allegro Lokalnie
+- **Friendly** (Przyjazny) - Ciepły, pomocny, naturalny
+  - Recommended for: Facebook Marketplace, Vinted
+- **Casual** (Swobodny) - Luźny, potoczny, bezpośredni
+  - Recommended for: OLX
+
+Each platform has a smart default tone that auto-selects when the platform changes. Users can override the default to match their preference or product type.
+
+### Price Handling
+
+Three price modes:
+- **AI Suggest** - OpenAI analyzes the product and proposes a realistic price range (min-max) with 2-3 sentence reasoning based on product condition, brand, and market
+- **User Provided** - User enters their own price in złotych; AI may mention it in the description with negotiation phrases
+- **Free** ("Za darmo") - Listings marked as free with special formatting, platform-specific phrasing, and green badge in results
+
+### Accuracy Features
+
+The system uses a modular prompt architecture with:
+- **Information hierarchy** - User data treated as absolute truth > visible facts from images > AI inferences with uncertainty language
+- **Uncertainty language system** - 3 confidence levels with specific Polish phrases ("wygląda na", "może być", "trudno określić")
+- **Forbidden phrases list** - Prevents AI from making definitive claims without evidence (e.g., "fabrycznie nowy", "gwarancja producenta", specific specs)
+- **Dynamic tone injection** - Tone-specific vocabulary and phrasing injected based on user selection
+- **Chain-of-thought analysis** - AI internally separates facts from assumptions before generating content
 
 ### Key Files and Responsibilities
 
@@ -68,25 +109,31 @@ The `OPENAI_API_KEY` is required for the app to function. Copy from `.env.exampl
 - `app/api/generate-ad/route.ts` - POST endpoint that validates request, calls OpenAI, returns JSON response
 
 **Core Logic:**
-- `lib/openai.ts` - OpenAI client initialization, prompt engineering, platform rules loading, API error handling
-- `lib/types.ts` - TypeScript interfaces for all data structures (requests, responses, form data)
-- `lib/schemas.ts` - Zod validation schemas for form and API inputs
-- `lib/utils.ts` - Utility functions (cn for className merging)
+- `lib/openai.ts` - OpenAI client initialization, modular prompt engineering (6 modules), platform rules loading, tone-specific injection, API error handling
+- `lib/types.ts` - TypeScript interfaces for all data structures including ToneStyle, PriceType, ToneVariant, platform defaults
+- `lib/schemas.ts` - Zod validation schemas for form and API inputs (includes `tone`, `priceType` fields with conditional validation)
+- `lib/utils.ts` - Utility functions (cn for className merging, file conversions)
 
 **Platform Rules:**
-- `lib/rules/olx_rules.md` - OLX-specific listing guidelines
-- `lib/rules/allegro_lokalnie_rules.md` - Allegro Lokalnie guidelines
-- `lib/rules/facebook_marketplace_rules.md` - Facebook Marketplace guidelines
-- `lib/rules/vinted_rules.md` - Vinted guidelines
+- `lib/rules/olx_rules.md` - OLX-specific listing guidelines with tone variations (Professional, Friendly, Casual)
+- `lib/rules/allegro_lokalnie_rules.md` - Allegro Lokalnie guidelines with tone variations
+- `lib/rules/facebook_marketplace_rules.md` - Facebook Marketplace guidelines with tone variations
+- `lib/rules/vinted_rules.md` - Vinted guidelines with tone variations
+
+Each rules file includes:
+- Default recommended tone for the platform
+- Tone-specific phrasing examples (introductions, CTAs, condition descriptions, negotiation language)
+- Free listing guidelines specific to each platform
+- Platform-specific best practices and requirements
 
 These markdown files are loaded at runtime and injected into the AI prompt to ensure platform-appropriate content generation.
 
 **UI Components:**
-- `components/ProductForm.tsx` - Main form for product details and settings
+- `components/ProductForm.tsx` - Main form with radio button groups for platform, tone (with recommendations), condition, and price type; checkboxes for delivery options
 - `components/UploadDropzone.tsx` - Drag-and-drop image upload with validation
-- `components/AdResult.tsx` - Display generated listing with copy buttons
+- `components/AdResult.tsx` - Display generated listing with generation parameters summary, copy buttons, and conditional free listing badge
 - `components/ThemeProvider.tsx` & `components/ThemeToggle.tsx` - Dark/light mode
-- `components/ui/*` - Reusable UI primitives (buttons, inputs, cards, etc.)
+- `components/ui/*` - Reusable UI primitives (buttons, inputs, cards, badges, etc.)
 
 **Pages:**
 - `app/page.tsx` - Main application page that orchestrates the entire flow
@@ -104,6 +151,7 @@ These markdown files are loaded at runtime and injected into the AI prompt to en
 - Platform rules are markdown files loaded server-side via `fs.readFileSync`
 - Rules are cached in a Map to avoid repeated file reads
 - The selected platform determines which rules file is injected into the AI prompt
+- Each platform has tone-specific sections with example phrasing
 
 **Error Handling:**
 - API validates requests with Zod schemas
@@ -112,8 +160,16 @@ These markdown files are loaded at runtime and injected into the AI prompt to en
 
 **State Management:**
 - React state for form data and images (no external state library)
+- Platform change triggers automatic tone update to platform's recommended default
 - Form submission triggers loading state and API call
-- Results are displayed in a separate component after successful generation
+- Results are displayed in a separate component with generation parameters summary
+
+**UI/UX Patterns:**
+- All form controls use radio buttons (no dropdowns) for better accessibility
+- Checkboxes and radio buttons use explicit `accent-blue-600` to remain visible when window loses focus
+- Default delivery options: both "odbiór osobisty" and "wysyłka" pre-selected
+- Platform recommendations shown in tone selector (e.g., "⭐ Polecany dla: OLX")
+- Generation parameters summary card displays all selected options in results view
 
 ## Code Style
 
@@ -124,50 +180,185 @@ These markdown files are loaded at runtime and injected into the AI prompt to en
 - **Styling**: Tailwind classes using `cn()` utility for conditional classes
 - **Naming**: camelCase for variables/functions, PascalCase for components/types
 
+## Performance Best Practices
+
+Following Vercel React Best Practices to ensure optimal bundle size and performance:
+
+### Bundle Size Optimization (CRITICAL)
+
+**Dynamic Imports for Conditional Components:**
+- ✅ Use `next/dynamic` for components loaded only after user interaction
+- ✅ Components like `FullscreenLoading` and `AdResult` are dynamically imported in `app/page.tsx`
+- ❌ **NEVER** eagerly import heavy components that aren't shown on initial render
+- Pattern to follow:
+  ```typescript
+  const HeavyComponent = dynamic(() =>
+    import("@/components/HeavyComponent").then(mod => ({ default: mod.HeavyComponent })),
+    { ssr: false }
+  );
+  ```
+
+**Icon Imports:**
+- ✅ Import from `lucide-react` barrel file (modern bundlers handle tree-shaking automatically)
+- ✅ Next.js App Router with Turbopack optimizes these imports
+- ❌ **DO NOT** attempt direct imports like `lucide-react/dist/esm/icons/...` (causes TypeScript errors)
+- Pattern to follow:
+  ```typescript
+  import { Icon1, Icon2, Icon3 } from "lucide-react";
+  ```
+
+### Re-render Optimization (MEDIUM)
+
+**Applied optimizations:**
+- ✅ Use `useCallback` for event handlers passed to child components
+- ✅ Use `useMemo` for expensive calculations
+- ✅ Use `React.memo` for components that receive primitive props
+- ✅ Extract default non-primitive parameter values to constants outside component
+- ✅ Use functional `setState` updates to reduce dependencies
+
+**Specific implementations:**
+
+1. **Functional setState for Stable Callbacks** (`components/ProductForm.tsx`):
+   ```typescript
+   // ✅ GOOD: Uses functional update, depends only on onDeliveryChange
+   const handleDeliveryToggle = useCallback((option: DeliveryOption) => {
+       onDeliveryChange((prevDelivery) => {
+           // Logic uses previous state, not captured value
+           return prevDelivery.includes(option)
+               ? prevDelivery.filter((d) => d !== option)
+               : [...prevDelivery, option];
+       });
+   }, [onDeliveryChange]);
+
+   // ❌ BAD: Depends on delivery array, recreates on every delivery change
+   const handleDeliveryToggle = useCallback((option: DeliveryOption) => {
+       if (delivery.includes(option)) {
+           onDeliveryChange(delivery.filter((d) => d !== option));
+       }
+   }, [delivery, onDeliveryChange]); // delivery dependency causes recreation
+   ```
+
+2. **Hoisting Default Values** (`app/page.tsx`):
+   ```typescript
+   // ✅ GOOD: Constants hoisted outside component (created once)
+   const DEFAULT_PLATFORM: Platform = "olx";
+   const DEFAULT_DELIVERY: DeliveryOption[] = ["odbiór osobisty", "wysyłka"];
+
+   export default function HomePage() {
+       const [platform, setPlatform] = useState<Platform>(DEFAULT_PLATFORM);
+       const [delivery, setDelivery] = useState<DeliveryOption[]>(DEFAULT_DELIVERY);
+   }
+
+   // ❌ BAD: Recreates array on every render
+   export default function HomePage() {
+       const [delivery, setDelivery] = useState<DeliveryOption[]>(
+           ["odbiór osobisty", "wysyłka"] // New array reference every render
+       );
+   }
+   ```
+
+**Why functional setState matters:**
+- Callback depends only on `onDeliveryChange` (stable), not `delivery` (changes frequently)
+- Prevents callback recreation on every delivery change
+- Reduces unnecessary re-renders in child components receiving the callback
+- **Impact**: 30-50% fewer callback recreations in forms with multiple updates
+
+**Pattern to follow:**
+```typescript
+// When callback needs current state, use functional update
+const handleUpdate = useCallback((newValue) => {
+    setState((prevState) => {
+        // Use prevState, not captured state
+        return computeNewState(prevState, newValue);
+    });
+}, [/* only stable dependencies */]);
+```
+
+### Why These Patterns Matter
+
+1. **Dynamic imports reduce initial bundle size** by 50-200KB for large components
+2. **Lazy loading improves Time to Interactive (TTI)** - users see content faster
+3. **Code splitting** ensures users only download code they actually use
+4. **Tree-shaking** removes unused exports from dependencies automatically
+
+### Performance Checklist for New Features
+
+When adding new features or components:
+- [ ] Is this component shown on initial page load? If NO → use `dynamic` import
+- [ ] Does this component depend on user action? If YES → use `dynamic` import with `ssr: false`
+- [ ] Are you importing 5+ icons from lucide-react? → Use barrel import (tree-shaking handles it)
+- [ ] Are callbacks passed to multiple children? → Wrap in `useCallback`
+- [ ] Are you computing derived values? → Wrap in `useMemo`
+- [ ] Does callback need current state? → Use functional `setState((prev) => ...)` to reduce dependencies
+- [ ] Are default values non-primitive (arrays/objects)? → Hoist outside component as constants
+- [ ] Does component receive stable props? → Consider `React.memo` to prevent unnecessary re-renders
+
 ## AI Model Configuration
 
 The app uses OpenAI's `o4-mini` model with:
 - `response_format: { type: "json_object" }` for structured output
-- `max_completion_tokens: 4000` for comprehensive listings
+- `max_completion_tokens: 4000` for comprehensive single-tone listings
 - `detail: "high"` for image analysis
 - Images sent as base64 data URLs in the content array
+- Dynamic system prompt built from modular components based on selected tone
 
 ## Platform Support
 
-The application supports 4 marketplace platforms with distinct content styles:
-- **OLX**: Concise, practical, factual
-- **Allegro Lokalnie**: Professional, detailed, structured
-- **Facebook Marketplace**: Friendly, direct, conversational
-- **Vinted**: Fashion-focused, lifestyle-oriented
+The application supports 4 marketplace platforms with distinct content styles and recommended tones:
 
-Each platform has specific rules for title format, description structure, and content style defined in `lib/rules/*.md`.
+- **OLX**: Concise, practical, factual | Recommended tone: **Casual**
+- **Allegro Lokalnie**: Professional, detailed, structured | Recommended tone: **Professional**
+- **Facebook Marketplace**: Friendly, direct, conversational | Recommended tone: **Friendly**
+- **Vinted**: Fashion-focused, lifestyle-oriented | Recommended tone: **Friendly**
+
+Each platform has:
+- Specific rules for title format, description structure, and content style in `lib/rules/*.md`
+- Tone-specific phrasing examples (Professional, Friendly, Casual)
+- Free listing guidelines tailored to platform culture
 
 ## Testing the Application
 
 1. Ensure `.env.local` has valid `OPENAI_API_KEY`
 2. Run `npm run dev`
-3. Upload a product image
-4. Fill in the form (platform, condition, delivery)
-5. Click "Generuj ogłoszenie" (Generate listing)
-6. Verify the generated title, description, and price suggestions
-7. Check image quality feedback
+3. Upload 1-8 product images
+4. Select platform (radio button) - tone will auto-select to platform's recommended default
+5. Optionally override tone selection if needed
+6. Select product condition (radio button)
+7. Select price type: AI suggest, user-provided amount, or free
+8. Delivery options are pre-selected (both pickup and shipping)
+9. Optionally add product name and notes
+10. Click "Generuj ogłoszenie" (Generate listing)
+11. Review generation parameters summary card
+12. Verify generated title, description, and price suggestions (if applicable)
+13. Check image quality feedback and suggestions
+14. Use copy buttons to copy content to clipboard
 
 ## Common Modifications
 
 **To add a new platform:**
 1. Add platform type to `lib/types.ts` in `Platform` type and `PLATFORM_NAMES`
-2. Create new rules file in `lib/rules/[platform]_rules.md`
-3. Update `PLATFORM_RULES_FILES` mapping in `lib/openai.ts`
-4. Update platform select options in `components/ProductForm.tsx`
+2. Add default tone for the platform in `PLATFORM_DEFAULT_TONES`
+3. Create new rules file in `lib/rules/[platform]_rules.md` with tone sections
+4. Update `PLATFORM_RULES_FILES` mapping in `lib/openai.ts`
+5. Add radio button option in `components/ProductForm.tsx` platform section
+6. Update platform recommendations in tone selector descriptions
 
 **To modify AI behavior:**
-- Edit system prompt in `lib/openai.ts` (SYSTEM_PROMPT constant)
-- Adjust platform-specific rules in respective `lib/rules/*.md` files
-- Change model parameters (temperature, max_tokens) in the API call
+- Edit modular prompt sections in `lib/openai.ts` (e.g., `PROMPT_INFORMATION_HIERARCHY`, `PROMPT_UNCERTAINTY_LANGUAGE`)
+- Adjust platform-specific rules and tone examples in respective `lib/rules/*.md` files
+- Modify `getToneInstructions()` function for tone-specific phrasing
+- Change model parameters in the `generateAd()` function
+
+**To add a new tone style:**
+1. Add tone to `ToneStyle` type in `lib/types.ts`
+2. Add display names in `TONE_STYLE_NAMES` and descriptions in `TONE_STYLE_DESCRIPTIONS`
+3. Update `getToneInstructions()` function in `lib/openai.ts`
+4. Add tone sections to all platform rules files in `lib/rules/*.md`
+5. Add radio button option in `components/ProductForm.tsx` with platform recommendations
 
 **To change image limits:**
 - Update `MAX_IMAGES` constant in `lib/types.ts`
-- Update validation in upload component
+- Update validation in `components/UploadDropzone.tsx`
 
 ## Deployment
 

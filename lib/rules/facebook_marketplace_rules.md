@@ -1,5 +1,39 @@
 # ZASADY FACEBOOK MARKETPLACE - CRÈME DE LA CRÈME
 
+## DOMYŚLNY TON DLA PLATFORMY
+friendly
+
+## TON: PROFESSIONAL
+### Frazowanie
+- Wprowadzenie: "Oferuję [produkt]"
+- Stan: "W bardzo dobrym stanie", "Zadbany, sprawny"
+- CTA: "Zapraszam do kontaktu przez Messenger"
+- Negocjacje: "Cena do negocjacji"
+- Za darmo: "Oddaję bezpłatnie"
+
+## TON: FRIENDLY (NAJPOPULARNIEJSZY na Facebook)
+### Frazowanie
+- Wprowadzenie: "Sprzedam [produkt]"
+- Stan: "Super stan", "W bardzo dobrym stanie"
+- CTA: "Pisz na Messengerze! 😊", "Napisz jak masz pytania!"
+- Negocjacje: "Cena do dogadania"
+- Za darmo: "Oddam za darmo! 🎁"
+
+## TON: CASUAL
+### Frazowanie
+- Wprowadzenie: "Mam [produkt]", "Sprzedam [produkt]"
+- Stan: "Mega stan", "Wszystko gra"
+- CTA: "Pisz!", "Gadaj śmiało!"
+- Negocjacje: "Cena do gada"
+- Za darmo: "Za free!"
+
+## ZA DARMO na Facebook Marketplace
+- Bardzo popularne, szczególnie w lokalnych grupach
+- Emoji 🎁 często używane i mile widziane
+- Prosty, bezpośredni język
+- Zachęć do szybkiego kontaktu
+- Przykład: "Oddam za darmo! 🎁 Sprawny, dobry stan. Pisz szybko!"
+
 ## TYTUŁ (do 60 znaków widocznych w podglądzie)
 - Formuła: [MARKA/TYP] + [MODEL] + [PARAMETR] + [STAN opcjonalnie]
 - Najważniejsze słowa w PIERWSZYCH 50 znakach

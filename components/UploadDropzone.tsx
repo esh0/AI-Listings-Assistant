@@ -149,6 +149,8 @@ export function UploadDropzone({ onImagesChange, images }: UploadDropzoneProps) 
                                 src={image.preview}
                                 alt={`Zdjęcie produktu ${index + 1}`}
                                 className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                                width={400}
+                                height={400}
                                 loading="lazy"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-3">
@@ -228,10 +230,10 @@ export function UploadDropzone({ onImagesChange, images }: UploadDropzoneProps) 
                         </div>
                         <div className="space-y-2">
                             <p className="text-lg font-semibold">
-                                {isCompressing ? "Przetwarzanie..." : "Przeciągnij zdjęcia tutaj"}
+                                {isCompressing ? "Przetwarzanie…" : "Przeciągnij zdjęcia tutaj"}
                             </p>
                             <p className="text-sm text-muted-foreground leading-relaxed">
-                                {isCompressing ? "Optymalizacja obrazów..." : "lub kliknij, aby wybrać pliki"}
+                                {isCompressing ? "Optymalizacja obrazów…" : "lub kliknij, aby wybrać pliki"}
                             </p>
                         </div>
                         <div className="flex items-center gap-2 text-xs text-muted-foreground">

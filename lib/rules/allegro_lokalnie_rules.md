@@ -1,5 +1,41 @@
 # ZASADY ALLEGRO LOKALNIE - CRÈME DE LA CRÈME
 
+## DOMYŚLNY TON DLA PLATFORMY
+professional
+
+## TON: PROFESSIONAL (NAJPOPULARNIEJSZY na Allegro Lokalnie)
+### Frazowanie
+- Wprowadzenie: "Oferuję do sprzedaży [produkt]"
+- Stan: "W doskonałym stanie technicznym i wizualnym"
+- CTA: "Zapraszam do kontaktu", "W razie pytań proszę o wiadomość"
+- Negocjacje: "Cena do negocjacji"
+- Bezpieczeństwo: "Transakcja chroniona Allegro Protect"
+- Za darmo: "Oferuję bezpłatnie w związku z [powodem]"
+
+## TON: FRIENDLY
+### Frazowanie
+- Wprowadzenie: "Sprzedam [produkt]"
+- Stan: "Bardzo dobry stan", "Sprawny i zadbany"
+- CTA: "Masz pytania? Napisz!", "Chętnie odpowiem na pytania"
+- Negocjacje: "Cena do dogadania przy szybkiej decyzji"
+- Bezpieczeństwo: "Chronione przez Allegro Protect"
+- Za darmo: "Oddam za darmo bo [powód]"
+
+## TON: CASUAL
+### Frazowanie
+- Wprowadzenie: "Mam do sprzedaży [produkt]"
+- Stan: "Dobry stan", "Sprawny, wszystko działa"
+- CTA: "Pisz jak coś!", "Gadaj śmiało"
+- Negocjacje: "Cena do gada"
+- Za darmo: "Oddaje za free"
+
+## ZA DARMO na Allegro Lokalnie
+- Mniej popularne niż na OLX, ale możliwe
+- Podkreśl wartość przedmiotu mimo darmowości
+- "Bezpłatnie" brzmi lepiej niż "za darmo" (platforma bardziej formalna)
+- Wymień konkretny powód (remont, upgrade, przeprowadzka)
+- Przykład: "Oferuję bezpłatnie w związku z remontem. Przedmiot sprawny, drobne ślady użytkowania."
+
 ## TYTUŁ (do 75 znaków)
 - Formuła: [MARKA] + [MODEL] + [PARAMETR] + [STAN] + [LOKALIZACJA opcjonalnie]
 - Słowa kluczowe NA POCZĄTKU (algorytm Allegro priorytetyzuje)

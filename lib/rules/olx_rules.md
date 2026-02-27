@@ -1,5 +1,39 @@
 # ZASADY OLX - CRÈME DE LA CRÈME
 
+## DOMYŚLNY TON DLA PLATFORMY
+casual
+
+## TON: PROFESSIONAL
+### Frazowanie
+- Wprowadzenie: "Oferuję do sprzedaży [produkt]"
+- Stan: "W doskonałym stanie", "Minimalne ślady użytkowania"
+- CTA: "Zapraszam do kontaktu w celu uzyskania dodatkowych informacji"
+- Negocjacje: "Cena do negocjacji"
+- Za darmo: "Oddaję bezpłatnie w związku z [powodem]"
+
+## TON: FRIENDLY
+### Frazowanie
+- Wprowadzenie: "Sprzedam [produkt]"
+- Stan: "Bardzo dobry stan", "Super stan jak na wiek"
+- CTA: "Pytania? Napisz śmiało! 😊"
+- Negocjacje: "Cena do dogadania"
+- Za darmo: "Oddam za darmo! Pisz szybko!"
+
+## TON: CASUAL (NAJPOPULARNIEJSZY na OLX)
+### Frazowanie
+- Wprowadzenie: "Mam na sprzedaż [produkt]", "Do oddania [produkt]"
+- Stan: "Mega stan", "Świetny stan", "Normalny stan użytkowy"
+- CTA: "Gadaj jak coś!", "Pisz!", "Dzwoń śmiało"
+- Negocjacje: "Cena do gada"
+- Za darmo: "Za free", "Daję za darmo bo nie potrzebuję"
+
+## ZA DARMO na OLX
+- Bardzo popularna kategoria "Oddam za darmo"
+- Podkreśl stan i dlaczego oddajesz (przeprowadzka, upgrade, brak miejsca)
+- Zachęć do szybkiego kontaktu (duże zainteresowanie!)
+- Nie wspominaj o lokalizacji/wysyłce
+- Przykład: "Oddaję za darmo, bo kupuję nowy. Stan dobry, sprawny."
+
 ## TYTUŁ (50-70 znaków)
 - Formuła: [MARKA] + [MODEL] + [PARAMETR KLUCZOWY] + [STAN]
 - Słowo kluczowe NA POCZĄTKU

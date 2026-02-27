@@ -21,14 +21,23 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { formatPrice } from "@/lib/utils";
-import type { GenerateAdResponse } from "@/lib/types";
+import type { GenerateAdResponse, ToneStyle, Platform, ProductCondition, PriceType } from "@/lib/types";
+import { TONE_STYLE_NAMES, PLATFORM_NAMES, CONDITION_NAMES } from "@/lib/types";
 
 interface AdResultProps {
     result: GenerateAdResponse;
     imagePreviews?: string[]; // Array of preview URLs in order by index
+    // Generation parameters
+    platform: Platform;
+    productName?: string;
+    condition: ProductCondition;
+    priceType: PriceType;
+    userPrice?: string;
+    delivery: string;
+    selectedTone: ToneStyle;
 }
 
-export function AdResult({ result, imagePreviews }: AdResultProps) {
+export function AdResult({ result, imagePreviews, platform, productName, condition, priceType, userPrice, delivery, selectedTone }: AdResultProps) {
     const [copiedField, setCopiedField] = useState<string | null>(null);
 
     const copyToClipboard = async (text: string, field: string) => {
@@ -54,10 +63,56 @@ export function AdResult({ result, imagePreviews }: AdResultProps) {
         );
     }
 
+    const displayContent = { title: result.title, description: result.description };
+
     return (
         <div className="space-y-8 animate-slide-up" role="region" aria-label="Wygenerowane ogłoszenie">
+            {/* Generation Parameters Summary */}
+            <Card className="bg-muted/30">
+                <CardHeader>
+                    <CardTitle className="text-sm font-medium flex items-center gap-2">
+                        <FileText className="h-4 w-4" />
+                        Parametry generowania
+                    </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                        <span className="text-muted-foreground">Platforma:</span>
+                        <Badge variant="secondary">{PLATFORM_NAMES[platform]}</Badge>
+                    </div>
+                    {productName && (
+                        <div className="flex justify-between">
+                            <span className="text-muted-foreground">Nazwa produktu:</span>
+                            <span className="font-medium">{productName}</span>
+                        </div>
+                    )}
+                    <div className="flex justify-between">
+                        <span className="text-muted-foreground">Stan:</span>
+                        <span className="font-medium">{CONDITION_NAMES[condition]}</span>
+                    </div>
+                    <div className="flex justify-between">
+                        <span className="text-muted-foreground">Cena:</span>
+                        <span className="font-medium">
+                            {priceType === "free" && "Za darmo"}
+                            {priceType === "user_provided" && `${userPrice} zł`}
+                            {priceType === "ai_suggest" && "Zasugerowana przez AI"}
+                        </span>
+                    </div>
+                    <div className="flex justify-between">
+                        <span className="text-muted-foreground">Dostawa:</span>
+                        <span className="font-medium">{delivery}</span>
+                    </div>
+                    <div className="flex justify-between">
+                        <span className="text-muted-foreground">Styl:</span>
+                        <Badge variant="outline">
+                            {TONE_STYLE_NAMES[selectedTone]}
+                        </Badge>
+                    </div>
+                </CardContent>
+            </Card>
+
             {/* Title Section */}
-            {result.title && (
+            {displayContent.title && (
                 <div className="bg-muted/30 border-l-4 border-primary p-6 rounded-md transition-all hover:bg-muted/40">
                     <div className="flex items-start justify-between gap-4 mb-3">
                         <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
@@ -68,7 +123,7 @@ export function AdResult({ result, imagePreviews }: AdResultProps) {
                             variant="ghost"
                             size="sm"
                             onClick={() =>
-                                copyToClipboard(result.title!, "title")
+                                copyToClipboard(displayContent.title!, "title")
                             }
                             aria-label="Kopiuj tytuł do schowka"
                             className="transition-all duration-200 hover:scale-105 active:scale-95"
@@ -87,13 +142,13 @@ export function AdResult({ result, imagePreviews }: AdResultProps) {
                         </Button>
                     </div>
                     <p className="text-lg font-semibold leading-relaxed tracking-tight">
-                        {result.title}
+                        {displayContent.title}
                     </p>
                 </div>
             )}
 
             {/* Description Section */}
-            {result.description && (
+            {displayContent.description && (
                 <div className="bg-muted/30 border-l-4 border-primary p-6 rounded-md transition-all hover:bg-muted/40">
                     <div className="flex items-start justify-between gap-4 mb-3">
                         <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
@@ -105,7 +160,7 @@ export function AdResult({ result, imagePreviews }: AdResultProps) {
                             size="sm"
                             onClick={() =>
                                 copyToClipboard(
-                                    result.description!,
+                                    displayContent.description!,
                                     "description"
                                 )
                             }
@@ -125,14 +180,31 @@ export function AdResult({ result, imagePreviews }: AdResultProps) {
                             )}
                         </Button>
                     </div>
-                    <p className="text-base leading-relaxed whitespace-pre-wrap">
-                        {result.description}
+                    <p className="text-base leading-relaxed whitespace-pre-wrap [text-wrap:balance]">
+                        {displayContent.description}
                     </p>
                 </div>
             )}
 
             {/* Price Section - Compact inline */}
-            {result.price && (
+            {result.isFree ? (
+                <div className="space-y-2">
+                    <h3 className="text-lg font-semibold">Cena</h3>
+                    <div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                        <div className="flex items-center space-x-2">
+                            <span className="text-2xl">🎁</span>
+                            <div>
+                                <p className="font-semibold text-green-700 dark:text-green-400">
+                                    Za darmo
+                                </p>
+                                <p className="text-sm text-green-600 dark:text-green-500">
+                                    Oddajesz produkt bezpłatnie
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ) : result.price ? (
                 <div className="flex flex-wrap items-center gap-4 p-6 bg-primary/5 border border-primary/20 rounded-md transition-all hover:border-primary/30">
                     <div className="flex items-center gap-2">
                         <DollarSign className="h-5 w-5 text-primary" aria-hidden="true" />
@@ -153,7 +225,7 @@ export function AdResult({ result, imagePreviews }: AdResultProps) {
                         {result.price.reason}
                     </p>
                 </div>
-            )}
+            ) : null}
 
             {/* Image Analysis Section */}
             {result.images && result.images.length > 0 && (
@@ -181,6 +253,8 @@ export function AdResult({ result, imagePreviews }: AdResultProps) {
                                                     src={previewUrl}
                                                     alt={`Zdjęcie ${index + 1}`}
                                                     className="w-16 h-16 object-cover rounded-md border transition-transform hover:scale-105"
+                                                    width={64}
+                                                    height={64}
                                                 />
                                             ) : (
                                                 <div className="w-16 h-16 bg-muted rounded-md border flex items-center justify-center">
@@ -226,13 +300,13 @@ export function AdResult({ result, imagePreviews }: AdResultProps) {
             )}
 
             {/* Copy All Button - prominent */}
-            {result.title && result.description && (
+            {displayContent.title && displayContent.description && (
                 <Button
                     size="lg"
                     className="w-full sm:w-auto sm:min-w-[300px] text-base font-semibold transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
                     onClick={() =>
                         copyToClipboard(
-                            `${result.title}\n\n${result.description}`,
+                            `${displayContent.title}\n\n${displayContent.description}`,
                             "all"
                         )
                     }

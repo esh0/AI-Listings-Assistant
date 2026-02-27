@@ -1,28 +1,40 @@
 "use client";
 
 import React, { useState, useCallback, useMemo, useEffect, useRef } from "react";
-import { Sparkles, ShoppingBag, Send, RotateCcw, Pencil, Camera, FileText } from "lucide-react";
+import dynamic from "next/dynamic";
+import { ShoppingBag, Send, RotateCcw, Pencil, Camera, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { UploadDropzone } from "@/components/UploadDropzone";
 import { ProductForm } from "@/components/ProductForm";
-import { AdResult } from "@/components/AdResult";
-import { FullscreenLoading } from "@/components/FullscreenLoading";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { fileToBase64, getImageMimeType } from "@/lib/utils";
+
+// Dynamic imports for components loaded conditionally after user action
+// Reduces initial bundle size and improves Time to Interactive (TTI)
+const FullscreenLoading = dynamic(() => import("@/components/FullscreenLoading").then(mod => ({ default: mod.FullscreenLoading })), {
+    ssr: false,
+});
+const AdResult = dynamic(() => import("@/components/AdResult").then(mod => ({ default: mod.AdResult })), {
+    ssr: false,
+});
 import type {
     UploadedImage,
     Platform,
     ProductCondition,
     DeliveryOption,
     GenerateAdResponse,
+    ToneStyle,
+    PriceType,
 } from "@/lib/types";
 
-// Default values for form reset
+// Default values for form reset - hoisted outside component to avoid recreation
 const DEFAULT_PLATFORM: Platform = "olx";
 const DEFAULT_CONDITION: ProductCondition = "używany, w dobrym stanie";
-const DEFAULT_DELIVERY: DeliveryOption[] = ["odbiór osobisty"];
+const DEFAULT_DELIVERY: DeliveryOption[] = ["odbiór osobisty", "wysyłka"];
+const DEFAULT_TONE: ToneStyle = "friendly";
+const DEFAULT_PRICE_TYPE: PriceType = "ai_suggest";
 
 export default function HomePage() {
     // Form state
@@ -33,6 +45,8 @@ export default function HomePage() {
     const [price, setPrice] = useState("");
     const [delivery, setDelivery] = useState<DeliveryOption[]>(DEFAULT_DELIVERY);
     const [notes, setNotes] = useState("");
+    const [selectedTone, setSelectedTone] = useState<ToneStyle>(DEFAULT_TONE);
+    const [priceType, setPriceType] = useState<PriceType>(DEFAULT_PRICE_TYPE);
 
     // UI state
     const [isLoading, setIsLoading] = useState(false);
@@ -137,10 +151,13 @@ export default function HomePage() {
                     platform,
                     productName,
                     condition,
-                    price,
+                    priceType,
+                    price: priceType === "user_provided" ? price : undefined,
                     delivery: delivery.join(", "),
                     notes,
                     images: imagesForRequest,
+                    tone: selectedTone,
+                    generateAllTones: false,
                 }),
                 signal: abortControllerRef.current.signal,
             });
@@ -185,7 +202,7 @@ export default function HomePage() {
             setIsLoading(false);
             abortControllerRef.current = null;
         }
-    }, [images, platform, productName, condition, price, delivery, notes]);
+    }, [images, platform, productName, condition, price, delivery, notes, selectedTone, priceType]);
 
     // Full reset - clears everything
     const handleReset = useCallback(() => {
@@ -204,6 +221,8 @@ export default function HomePage() {
         setPrice("");
         setDelivery(DEFAULT_DELIVERY);
         setNotes("");
+        setSelectedTone(DEFAULT_TONE);
+        setPriceType(DEFAULT_PRICE_TYPE);
         setResult(null);
         setError(null);
     }, [images]);
@@ -306,12 +325,16 @@ export default function HomePage() {
                                     price={price}
                                     delivery={delivery}
                                     notes={notes}
+                                    selectedTone={selectedTone}
+                                    priceType={priceType}
                                     onPlatformChange={setPlatform}
                                     onProductNameChange={setProductName}
                                     onConditionChange={setCondition}
                                     onPriceChange={setPrice}
                                     onDeliveryChange={setDelivery}
                                     onNotesChange={setNotes}
+                                    onToneChange={setSelectedTone}
+                                    onPriceTypeChange={setPriceType}
                                 />
                             </div>
                         </form>
@@ -339,7 +362,7 @@ export default function HomePage() {
                     {!result && (
                         <div className="mt-8">
                             <Button
-                                type="submit"
+                                type="button"
                                 size="lg"
                                 className="w-full sm:w-auto sm:min-w-[300px] text-base font-semibold transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
                                 onClick={handleSubmit}
@@ -377,7 +400,17 @@ export default function HomePage() {
                                 </div>
                             </div>
 
-                            <AdResult result={result} imagePreviews={imagePreviewsList} />
+                            <AdResult
+                                result={result}
+                                imagePreviews={imagePreviewsList}
+                                platform={platform}
+                                productName={productName}
+                                condition={condition}
+                                priceType={priceType}
+                                userPrice={price}
+                                delivery={delivery.join(", ")}
+                                selectedTone={selectedTone}
+                            />
                         </section>
                     )}
 
