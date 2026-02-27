@@ -62,15 +62,46 @@ The `OPENAI_API_KEY` is required for the app to function. Copy from `.env.exampl
    - Structured JSON response format
 5. **Result Display** (`components/AdResult.tsx`) - Shows generated title, description, price suggestions, and image quality analysis with copy-to-clipboard functionality
 
+### Tone Variations
+
+The app supports 3 tone styles for generated listings:
+
+- **Professional** - Formalny, rzeczowy, ekspertycki
+- **Friendly** - Ciepły, pomocny, naturalny
+- **Casual** - Luźny, potoczny, bezpośredni
+
+Each platform has a smart default tone:
+- OLX → Casual
+- Allegro Lokalnie → Professional
+- Facebook Marketplace → Friendly
+- Vinted → Friendly
+
+Users can override the default or generate all 3 variants at once for comparison.
+
+### Price Handling
+
+Three price modes:
+- **AI Suggest** - OpenAI proposes price range with reasoning
+- **User Provided** - User sets their own price
+- **Free** - "Za darmo" listings with special formatting
+
+### Accuracy Features
+
+The system uses a modular prompt architecture with:
+- Information hierarchy (user data > visible facts > AI inference)
+- Uncertainty language system (3 confidence levels)
+- Forbidden phrases list to prevent hallucination
+- Dynamic tone injection based on selection
+
 ### Key Files and Responsibilities
 
 **API Layer:**
 - `app/api/generate-ad/route.ts` - POST endpoint that validates request, calls OpenAI, returns JSON response
 
 **Core Logic:**
-- `lib/openai.ts` - OpenAI client initialization, prompt engineering, platform rules loading, API error handling
-- `lib/types.ts` - TypeScript interfaces for all data structures (requests, responses, form data)
-- `lib/schemas.ts` - Zod validation schemas for form and API inputs
+- `lib/openai.ts` - OpenAI client initialization, prompt engineering, platform rules loading, API error handling, tone and accuracy system integration
+- `lib/types.ts` - TypeScript interfaces for all data structures (requests, responses, form data, tone/price types)
+- `lib/schemas.ts` - Zod validation schemas for form and API inputs (includes `tone`, `priceType`, `generateAllTones` fields)
 - `lib/utils.ts` - Utility functions (cn for className merging)
 
 **Platform Rules:**
@@ -109,6 +140,16 @@ These markdown files are loaded at runtime and injected into the AI prompt to en
 - API validates requests with Zod schemas
 - OpenAI errors are caught and mapped to user-friendly Polish messages
 - Rate limiting (429), auth errors (401), and generic errors are handled separately
+
+**Request Validation:**
+The `generateAdRequestSchema` validates all API requests and includes:
+- `platform`: Selected marketplace platform (OLX, Allegro Lokalnie, Facebook Marketplace, Vinted)
+- `productName`, `condition`, `delivery`, `notes`: Product details
+- `priceType`: "user_provided" | "ai_suggest" | "free"
+- `price`: Optional user-provided price (required when priceType is "user_provided")
+- `tone`: "professional" | "friendly" | "casual"
+- `generateAllTones`: Boolean flag to generate all 3 tone variants
+- `images`: Array of 1-8 base64-encoded images with metadata
 
 **State Management:**
 - React state for form data and images (no external state library)
