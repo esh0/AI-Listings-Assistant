@@ -1,5 +1,40 @@
 # ZASADY VINTED - CRÈME DE LA CRÈME
 
+## DOMYŚLNY TON DLA PLATFORMY
+friendly
+
+## TON: PROFESSIONAL (dla luksusowych marek)
+### Frazowanie
+- Wprowadzenie: "Oferuję [produkt marki]"
+- Stan: "W doskonałym stanie", "Stan idealny"
+- Detale: "Dokładne wymiary:", "Autentyczność potwierdzona metką"
+- CTA: "Zapraszam do kontaktu w razie pytań"
+- Za darmo: "Oddaję bezpłatnie"
+
+## TON: FRIENDLY (STANDARDOWY dla Vinted)
+### Frazowanie
+- Wprowadzenie: "Sprzedam [produkt] 💕"
+- Stan: "Super stan!", "Noszony kilka razy"
+- Detale: "Wymiary:", "Piękny kolor!"
+- CTA: "Pytania? Pisz śmiało! 💬"
+- Za darmo: "Oddam za darmo! (płacisz tylko wysyłkę)"
+
+## TON: CASUAL (młodsza grupa użytkowników)
+### Frazowanie
+- Wprowadzenie: "Sprzedam [produkt] ✨"
+- Stan: "Mega stan", "Noszona parę razy"
+- Detale: "Wymiary na zdjęciach", "Cudny kolor"
+- CTA: "Pisz! 💕", "Gadaj śmiało!"
+- Za darmo: "Za free! (tylko wysyłka)"
+
+## ZA DARMO na Vinted
+- Rzadsze niż na innych platformach
+- Możliwe: 0 zł + kupujący płaci wysyłkę
+- Lub całkowicie za darmo
+- Dobry sposób na pozbycie się rzeczy i budowanie reputacji
+- Zaznacz "oddaję za darmo" w tytule
+- Przykład: "Oddaję za darmo (płacisz tylko wysyłkę). Ładny stan, nie pasuje rozmiarem."
+
 ## TYTUŁ (40-60 znaków, max 100)
 - Formuła: [MARKA] + [TYP] + [KOLOR/WZÓR] + [CECHA] + [ROZMIAR opcjonalnie]
 - Marka NA POCZĄTKU (najważniejsze!)
