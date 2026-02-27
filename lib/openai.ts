@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import type { GenerateAdRequest, GenerateAdResponse, Platform } from "./types";
+import type { GenerateAdRequest, GenerateAdResponse, Platform, ToneStyle } from "./types";
 import { readFileSync } from "fs";
 import { join } from "path";
 
@@ -176,6 +176,89 @@ const PROMPT_GENERAL_GUIDELINES = `## ZASADY OGÓLNE:
 
 ## SPECJALNE ZASADY DLA BŁĘDÓW LUB BRAKU DANYCH:
 - Jeżeli zdjęcia są nieczytelne, uszkodzone lub brak kluczowych danych — wygeneruj negatywną odpowiedź z isValid: false i error.`;
+
+// Tone-specific style instructions
+function getToneInstructions(tone: ToneStyle): string {
+  const toneMap = {
+    professional: `## TON: PROFESSIONAL (Profesjonalny)
+- Ton formalny, rzeczowy, ekspertycki
+- Pełne zdania, poprawna składnia
+- Terminologia techniczna dozwolona
+- Unikaj skrótów potocznych i slangu
+- Zero emoji w opisie
+- Przykłady fraz:
+  * Wprowadzenie: "Oferuję do sprzedaży [produkt]"
+  * Stan: "W doskonałym stanie", "Niewielkie ślady użytkowania"
+  * CTA: "Zapraszam do kontaktu", "W razie pytań proszę o kontakt"
+  * Negocjacje: "Cena do negocjacji"
+  * Za darmo: "Oddaję bezpłatnie", "Bezpłatnie do odbioru"`,
+
+    friendly: `## TON: FRIENDLY (Przyjazny)
+- Ton ciepły, pomocny, bezpośredni
+- Zdania średniej długości
+- Balans między formalnym a potocznym
+- Emoji dozwolone w umiarkowanej ilości (1-2)
+- Naturalny, ludzki język
+- Przykłady fraz:
+  * Wprowadzenie: "Sprzedam [produkt]"
+  * Stan: "Bardzo dobry stan", "W super stanie"
+  * CTA: "Pytania? Napisz śmiało!", "Pisz śmiało jeśli masz pytania!"
+  * Negocjacje: "Cena do dogadania"
+  * Za darmo: "Oddam za darmo!", "Za darmo do odbioru"`,
+
+    casual: `## TON: CASUAL (Swobodny)
+- Ton luźny, potoczny, naturalny
+- Krótkie, proste zdania
+- Język codzienny, slang mile widziany
+- Emoji mile widziane (2-3)
+- Bezpośredni i szczery
+- Przykłady fraz:
+  * Wprowadzenie: "Mam do oddania [produkt]", "Wyprzedażam [produkt]"
+  * Stan: "Mega stan", "Świetny stan", "Stan OK"
+  * CTA: "Gadaj jak coś!", "Pisz!", "Dzwoń śmiało"
+  * Negocjacje: "Cena do gada"
+  * Za darmo: "Za free", "Daję za darmo", "Oddaje"`,
+  };
+
+  return toneMap[tone];
+}
+
+// Vocabulary guide for consistency
+const TONE_VOCABULARY = `## SŁOWNICTWO WG TONU
+
+| Kontekst | Professional | Friendly | Casual |
+|----------|--------------|----------|--------|
+| Wprowadzenie | "Oferuję do sprzedaży" | "Sprzedam" | "Mam do oddania" |
+| Stan | "W doskonałym stanie" | "Bardzo dobry stan" | "Mega stan" |
+| Kontakt | "Zapraszam do kontaktu" | "Pisz śmiało!" | "Gadaj!" |
+| Pytania | "W razie pytań proszę o kontakt" | "Masz pytania? Napisz!" | "Pytania? Pisz!" |
+| Negocjacje | "Cena do negocjacji" | "Cena do dogadania" | "Cena do gada" |
+| Za darmo | "Bezpłatnie do odbioru" | "Oddam za darmo!" | "Za free" |
+`;
+
+function buildSystemPrompt(tone: ToneStyle): string {
+  return `Jesteś ekspertem w tworzeniu ogłoszeń sprzedażowych na polskie platformy marketplace (OLX, Allegro Lokalnie, Facebook Marketplace, Vinted).
+
+Analizuj zdjęcia produktu i dane wejściowe, aby wygenerować tytuł i opis w wybranym stylu językowym (TONIE).
+
+${PROMPT_INFORMATION_HIERARCHY}
+
+${PROMPT_FACTS_VS_INFERENCE}
+
+${PROMPT_UNCERTAINTY_LANGUAGE}
+
+${PROMPT_FORBIDDEN_PHRASES}
+
+${PROMPT_PRICE_HANDLING}
+
+${getToneInstructions(tone)}
+
+${TONE_VOCABULARY}
+
+${PROMPT_GENERAL_GUIDELINES}
+
+Odpowiedz TYLKO w formacie JSON zgodnym z poniższym schematem:`;
+}
 
 // DEPRECATED: Old monolithic system prompt - kept for reference, will be replaced with modular structure
 // TODO: Remove after successful migration to modular prompts
