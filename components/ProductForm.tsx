@@ -106,37 +106,95 @@ export function ProductForm({
                     Styl komunikacji <span className="text-destructive">*</span>
                 </legend>
                 <div className="space-y-2">
-                    {(Object.entries(TONE_STYLE_NAMES) as [ToneStyle, string][]).map(
-                        ([value, label]) => (
-                            <label
-                                key={value}
-                                className="flex items-start gap-3 cursor-pointer group"
+                    <label
+                        className="flex items-start gap-3 cursor-pointer group"
+                    >
+                        <input
+                            type="radio"
+                            name="tone"
+                            value="professional"
+                            checked={selectedTone === "professional"}
+                            onChange={(e) =>
+                                onToneChange(e.target.value as ToneStyle)
+                            }
+                            className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                            aria-describedby="tone-professional-description"
+                        />
+                        <div className="flex-1">
+                            <span className="text-sm font-medium group-hover:text-foreground">
+                                {TONE_STYLE_NAMES["professional"]}
+                            </span>
+                            <p
+                                id="tone-professional-description"
+                                className="text-xs text-muted-foreground mt-0.5"
                             >
-                                <input
-                                    type="radio"
-                                    name="tone"
-                                    value={value}
-                                    checked={selectedTone === value}
-                                    onChange={(e) =>
-                                        onToneChange(e.target.value as ToneStyle)
-                                    }
-                                    className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                                    aria-describedby={`tone-${value}-description`}
-                                />
-                                <div className="flex-1">
-                                    <span className="text-sm font-medium group-hover:text-foreground">
-                                        {label}
-                                    </span>
-                                    <p
-                                        id={`tone-${value}-description`}
-                                        className="text-xs text-muted-foreground mt-0.5"
-                                    >
-                                        {TONE_STYLE_DESCRIPTIONS[value]}
-                                    </p>
-                                </div>
-                            </label>
-                        )
-                    )}
+                                {TONE_STYLE_DESCRIPTIONS["professional"]}
+                                <span className="block mt-1 text-blue-600 dark:text-blue-400 font-medium">
+                                    ⭐ Polecany dla: Allegro Lokalnie
+                                </span>
+                            </p>
+                        </div>
+                    </label>
+
+                    <label
+                        className="flex items-start gap-3 cursor-pointer group"
+                    >
+                        <input
+                            type="radio"
+                            name="tone"
+                            value="friendly"
+                            checked={selectedTone === "friendly"}
+                            onChange={(e) =>
+                                onToneChange(e.target.value as ToneStyle)
+                            }
+                            className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                            aria-describedby="tone-friendly-description"
+                        />
+                        <div className="flex-1">
+                            <span className="text-sm font-medium group-hover:text-foreground">
+                                {TONE_STYLE_NAMES["friendly"]}
+                            </span>
+                            <p
+                                id="tone-friendly-description"
+                                className="text-xs text-muted-foreground mt-0.5"
+                            >
+                                {TONE_STYLE_DESCRIPTIONS["friendly"]}
+                                <span className="block mt-1 text-blue-600 dark:text-blue-400 font-medium">
+                                    ⭐ Polecany dla: Facebook Marketplace, Vinted
+                                </span>
+                            </p>
+                        </div>
+                    </label>
+
+                    <label
+                        className="flex items-start gap-3 cursor-pointer group"
+                    >
+                        <input
+                            type="radio"
+                            name="tone"
+                            value="casual"
+                            checked={selectedTone === "casual"}
+                            onChange={(e) =>
+                                onToneChange(e.target.value as ToneStyle)
+                            }
+                            className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                            aria-describedby="tone-casual-description"
+                        />
+                        <div className="flex-1">
+                            <span className="text-sm font-medium group-hover:text-foreground">
+                                {TONE_STYLE_NAMES["casual"]}
+                            </span>
+                            <p
+                                id="tone-casual-description"
+                                className="text-xs text-muted-foreground mt-0.5"
+                            >
+                                {TONE_STYLE_DESCRIPTIONS["casual"]}
+                                <span className="block mt-1 text-blue-600 dark:text-blue-400 font-medium">
+                                    ⭐ Polecany dla: OLX
+                                </span>
+                            </p>
+                        </div>
+                    </label>
                 </div>
             </fieldset>
 
