@@ -36,7 +36,6 @@ export default function HomePage() {
     const [delivery, setDelivery] = useState<DeliveryOption[]>(DEFAULT_DELIVERY);
     const [notes, setNotes] = useState("");
     const [selectedTone, setSelectedTone] = useState<ToneStyle>("friendly");
-    const [generateAllTones, setGenerateAllTones] = useState(false);
     const [priceType, setPriceType] = useState<PriceType>("ai_suggest");
 
     // UI state
@@ -148,7 +147,7 @@ export default function HomePage() {
                     notes,
                     images: imagesForRequest,
                     tone: selectedTone,
-                    generateAllTones,
+                    generateAllTones: false,
                 }),
                 signal: abortControllerRef.current.signal,
             });
@@ -193,7 +192,7 @@ export default function HomePage() {
             setIsLoading(false);
             abortControllerRef.current = null;
         }
-    }, [images, platform, productName, condition, price, delivery, notes, selectedTone, generateAllTones, priceType]);
+    }, [images, platform, productName, condition, price, delivery, notes, selectedTone, priceType]);
 
     // Full reset - clears everything
     const handleReset = useCallback(() => {
@@ -315,7 +314,6 @@ export default function HomePage() {
                                     delivery={delivery}
                                     notes={notes}
                                     selectedTone={selectedTone}
-                                    generateAllTones={generateAllTones}
                                     priceType={priceType}
                                     onPlatformChange={setPlatform}
                                     onProductNameChange={setProductName}
@@ -324,7 +322,6 @@ export default function HomePage() {
                                     onDeliveryChange={setDelivery}
                                     onNotesChange={setNotes}
                                     onToneChange={setSelectedTone}
-                                    onGenerateAllTonesChange={setGenerateAllTones}
                                     onPriceTypeChange={setPriceType}
                                 />
                             </div>
@@ -400,6 +397,7 @@ export default function HomePage() {
                                 priceType={priceType}
                                 userPrice={price}
                                 delivery={delivery.join(", ")}
+                                selectedTone={selectedTone}
                             />
                         </section>
                     )}

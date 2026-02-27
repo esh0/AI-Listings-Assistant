@@ -26,7 +26,6 @@ interface ProductFormProps {
     delivery: DeliveryOption[];
     notes: string;
     selectedTone: ToneStyle;
-    generateAllTones: boolean;
     priceType: PriceType;
     onPlatformChange: (value: Platform) => void;
     onProductNameChange: (value: string) => void;
@@ -35,7 +34,6 @@ interface ProductFormProps {
     onDeliveryChange: (value: DeliveryOption[]) => void;
     onNotesChange: (value: string) => void;
     onToneChange: (value: ToneStyle) => void;
-    onGenerateAllTonesChange: (value: boolean) => void;
     onPriceTypeChange: (value: PriceType) => void;
 }
 
@@ -47,7 +45,6 @@ export function ProductForm({
     delivery,
     notes,
     selectedTone,
-    generateAllTones,
     priceType,
     onPlatformChange,
     onProductNameChange,
@@ -56,7 +53,6 @@ export function ProductForm({
     onDeliveryChange,
     onNotesChange,
     onToneChange,
-    onGenerateAllTonesChange,
     onPriceTypeChange,
 }: ProductFormProps) {
     const handleDeliveryToggle = React.useCallback((option: DeliveryOption) => {
@@ -68,19 +64,6 @@ export function ProductForm({
             onDeliveryChange([...delivery, option]);
         }
     }, [delivery, onDeliveryChange]);
-
-    // Handle tone radio selection - uncheck "generate all" when selecting specific tone
-    const handleToneRadioChange = React.useCallback((tone: ToneStyle) => {
-        onToneChange(tone);
-        if (generateAllTones) {
-            onGenerateAllTonesChange(false);
-        }
-    }, [onToneChange, onGenerateAllTonesChange, generateAllTones]);
-
-    // Handle "generate all tones" checkbox - uncheck tone radios when checked
-    const handleGenerateAllTonesChange = React.useCallback((checked: boolean) => {
-        onGenerateAllTonesChange(checked);
-    }, [onGenerateAllTonesChange]);
 
     return (
         <div className="space-y-4">
@@ -115,20 +98,6 @@ export function ProductForm({
                         )
                     )}
                 </div>
-                <label className="flex items-center gap-2 cursor-pointer group mt-3">
-                    <input
-                        type="checkbox"
-                        checked={false}
-                        onChange={(e) => {
-                            // TODO: Implement "generate for all platforms" feature
-                        }}
-                        className="h-4 w-4 rounded border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                        disabled
-                    />
-                    <span className="text-sm text-muted-foreground">
-                        Wygeneruj dla wszystkich platform (wkrótce)
-                    </span>
-                </label>
             </fieldset>
 
             {/* Tone Style */}
@@ -147,16 +116,15 @@ export function ProductForm({
                                     type="radio"
                                     name="tone"
                                     value={value}
-                                    checked={selectedTone === value && !generateAllTones}
+                                    checked={selectedTone === value}
                                     onChange={(e) =>
-                                        handleToneRadioChange(e.target.value as ToneStyle)
+                                        onToneChange(e.target.value as ToneStyle)
                                     }
-                                    disabled={generateAllTones}
-                                    className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
+                                    className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                                     aria-describedby={`tone-${value}-description`}
                                 />
                                 <div className="flex-1">
-                                    <span className={`text-sm font-medium group-hover:text-foreground ${generateAllTones ? 'text-muted-foreground' : ''}`}>
+                                    <span className="text-sm font-medium group-hover:text-foreground">
                                         {label}
                                     </span>
                                     <p
@@ -170,22 +138,6 @@ export function ProductForm({
                         )
                     )}
                 </div>
-                <label className="flex items-center gap-2 cursor-pointer group mt-3">
-                    <input
-                        type="checkbox"
-                        checked={generateAllTones}
-                        onChange={(e) => handleGenerateAllTonesChange(e.target.checked)}
-                        className="h-4 w-4 rounded border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                    />
-                    <span className="text-sm group-hover:text-foreground">
-                        Wygeneruj wszystkie warianty stylistyczne
-                    </span>
-                </label>
-                <p className="text-xs text-muted-foreground">
-                    {generateAllTones
-                        ? "Otrzymasz 3 wersje ogłoszenia w różnych stylach"
-                        : "Otrzymasz ogłoszenie w wybranym stylu"}
-                </p>
             </fieldset>
 
             {/* Product Name */}

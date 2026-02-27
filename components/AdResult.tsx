@@ -34,11 +34,11 @@ interface AdResultProps {
     priceType: PriceType;
     userPrice?: string;
     delivery: string;
+    selectedTone: ToneStyle;
 }
 
-export function AdResult({ result, imagePreviews, platform, productName, condition, priceType, userPrice, delivery }: AdResultProps) {
+export function AdResult({ result, imagePreviews, platform, productName, condition, priceType, userPrice, delivery, selectedTone }: AdResultProps) {
     const [copiedField, setCopiedField] = useState<string | null>(null);
-    const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
 
     const copyToClipboard = async (text: string, field: string) => {
         try {
@@ -63,9 +63,7 @@ export function AdResult({ result, imagePreviews, platform, productName, conditi
         );
     }
 
-    const displayContent = result.toneVariants && result.toneVariants.length > 0
-        ? result.toneVariants[selectedVariantIndex]
-        : { title: result.title, description: result.description };
+    const displayContent = { title: result.title, description: result.description };
 
     return (
         <div className="space-y-8 animate-slide-up" role="region" aria-label="Wygenerowane ogłoszenie">
@@ -104,47 +102,14 @@ export function AdResult({ result, imagePreviews, platform, productName, conditi
                         <span className="text-muted-foreground">Dostawa:</span>
                         <span className="font-medium">{delivery}</span>
                     </div>
-                    {result.toneVariants && result.toneVariants.length > 0 ? (
-                        <div className="flex justify-between">
-                            <span className="text-muted-foreground">Wygenerowane style:</span>
-                            <span className="font-medium">Wszystkie 3 warianty</span>
-                        </div>
-                    ) : (
-                        <div className="flex justify-between">
-                            <span className="text-muted-foreground">Styl:</span>
-                            <Badge variant="outline">
-                                {result.toneVariants ?
-                                    TONE_STYLE_NAMES[result.toneVariants[0].tone as ToneStyle] :
-                                    "Przyjazny"}
-                            </Badge>
-                        </div>
-                    )}
+                    <div className="flex justify-between">
+                        <span className="text-muted-foreground">Styl:</span>
+                        <Badge variant="outline">
+                            {TONE_STYLE_NAMES[selectedTone]}
+                        </Badge>
+                    </div>
                 </CardContent>
             </Card>
-
-            {/* Multi-Tone Tabs */}
-            {result.toneVariants && result.toneVariants.length > 0 && (
-                <div className="mb-6">
-                    <div className="flex space-x-2 border-b">
-                        {result.toneVariants.map((variant, index) => (
-                            <button
-                                key={variant.tone}
-                                onClick={() => setSelectedVariantIndex(index)}
-                                className={`px-4 py-2 font-medium transition-colors ${
-                                    selectedVariantIndex === index
-                                        ? "border-b-2 border-primary text-primary"
-                                        : "text-muted-foreground hover:text-foreground"
-                                }`}
-                            >
-                                {TONE_STYLE_NAMES[variant.tone as ToneStyle]}
-                            </button>
-                        ))}
-                    </div>
-                    <p className="mt-2 text-sm text-muted-foreground">
-                        Wybierz styl, który najbardziej Ci odpowiada
-                    </p>
-                </div>
-            )}
 
             {/* Title Section */}
             {displayContent.title && (
