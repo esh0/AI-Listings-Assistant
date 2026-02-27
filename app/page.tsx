@@ -17,6 +17,8 @@ import type {
     ProductCondition,
     DeliveryOption,
     GenerateAdResponse,
+    ToneStyle,
+    PriceType,
 } from "@/lib/types";
 
 // Default values for form reset
@@ -33,6 +35,9 @@ export default function HomePage() {
     const [price, setPrice] = useState("");
     const [delivery, setDelivery] = useState<DeliveryOption[]>(DEFAULT_DELIVERY);
     const [notes, setNotes] = useState("");
+    const [selectedTone, setSelectedTone] = useState<ToneStyle>("friendly");
+    const [generateAllTones, setGenerateAllTones] = useState(false);
+    const [priceType, setPriceType] = useState<PriceType>("ai_suggest");
 
     // UI state
     const [isLoading, setIsLoading] = useState(false);
@@ -306,12 +311,18 @@ export default function HomePage() {
                                     price={price}
                                     delivery={delivery}
                                     notes={notes}
+                                    selectedTone={selectedTone}
+                                    generateAllTones={generateAllTones}
+                                    priceType={priceType}
                                     onPlatformChange={setPlatform}
                                     onProductNameChange={setProductName}
                                     onConditionChange={setCondition}
                                     onPriceChange={setPrice}
                                     onDeliveryChange={setDelivery}
                                     onNotesChange={setNotes}
+                                    onToneChange={setSelectedTone}
+                                    onGenerateAllTonesChange={setGenerateAllTones}
+                                    onPriceTypeChange={setPriceType}
                                 />
                             </div>
                         </form>
