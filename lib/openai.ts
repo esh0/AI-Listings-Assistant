@@ -303,6 +303,8 @@ const SYSTEM_PROMPT = `Jesteś ekspertem w tworzeniu ogłoszeń sprzedażowych n
 
 Odpowiedz TYLKO w formacie JSON zgodnym z poniższym schematem:`;
 
+// DEPRECATED: Old JSON schema - kept for backward compatibility
+// This constant is no longer used - use buildJsonSchema() function instead
 const JSON_SCHEMA = `{
   "isValid": boolean,
   "error": string (tylko jeśli isValid=false),
@@ -323,6 +325,74 @@ const JSON_SCHEMA = `{
     }
   ]
 }`;
+
+/**
+ * Build JSON schema based on whether multi-tone generation is enabled
+ * @param generateAllTones - If true, returns schema with toneVariants array; if false, returns single tone schema
+ * @returns JSON schema string for AI response format
+ */
+function buildJsonSchema(generateAllTones: boolean): string {
+  if (generateAllTones) {
+    // Multi-tone response schema
+    return `{
+  "isValid": boolean,
+  "error": string (tylko jeśli isValid=false),
+  "toneVariants": [
+    {
+      "tone": "professional" | "friendly" | "casual",
+      "title": string,
+      "description": string
+    }
+  ],
+  "price": {
+    "min": number,
+    "max": number,
+    "reason": string
+  } | null,
+  "isFree": boolean (true jeśli priceType="free"),
+  "images": [
+    {
+      "filename": string,
+      "quality": string,
+      "suggestions": string,
+      "isValid": boolean,
+      "reason": string
+    }
+  ],
+  "confidence": {
+    "productIdentification": "high" | "medium" | "low",
+    "specifications": "high" | "medium" | "low"
+  }
+}`;
+  } else {
+    // Single tone response schema
+    return `{
+  "isValid": boolean,
+  "error": string (tylko jeśli isValid=false),
+  "title": string,
+  "description": string,
+  "price": {
+    "min": number,
+    "max": number,
+    "reason": string
+  } | null,
+  "isFree": boolean (true jeśli priceType="free"),
+  "images": [
+    {
+      "filename": string,
+      "quality": string,
+      "suggestions": string,
+      "isValid": boolean,
+      "reason": string
+    }
+  ],
+  "confidence": {
+    "productIdentification": "high" | "medium" | "low",
+    "specifications": "high" | "medium" | "low"
+  }
+}`;
+  }
+}
 
 export async function generateAd(
     request: GenerateAdRequest
