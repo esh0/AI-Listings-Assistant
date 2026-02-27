@@ -142,10 +142,13 @@ export default function HomePage() {
                     platform,
                     productName,
                     condition,
-                    price,
+                    priceType,
+                    price: priceType === "user_provided" ? price : undefined,
                     delivery: delivery.join(", "),
                     notes,
                     images: imagesForRequest,
+                    tone: selectedTone,
+                    generateAllTones,
                 }),
                 signal: abortControllerRef.current.signal,
             });
@@ -190,7 +193,7 @@ export default function HomePage() {
             setIsLoading(false);
             abortControllerRef.current = null;
         }
-    }, [images, platform, productName, condition, price, delivery, notes]);
+    }, [images, platform, productName, condition, price, delivery, notes, selectedTone, generateAllTones, priceType]);
 
     // Full reset - clears everything
     const handleReset = useCallback(() => {
