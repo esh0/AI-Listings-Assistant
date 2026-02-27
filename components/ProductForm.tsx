@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo } from "react";
+import React, { memo, useCallback } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
@@ -31,7 +31,7 @@ interface ProductFormProps {
     onProductNameChange: (value: string) => void;
     onConditionChange: (value: ProductCondition) => void;
     onPriceChange: (value: string) => void;
-    onDeliveryChange: (value: DeliveryOption[]) => void;
+    onDeliveryChange: (value: DeliveryOption[] | ((prev: DeliveryOption[]) => DeliveryOption[])) => void;
     onNotesChange: (value: string) => void;
     onToneChange: (value: ToneStyle) => void;
     onPriceTypeChange: (value: PriceType) => void;
@@ -55,15 +55,21 @@ export function ProductForm({
     onToneChange,
     onPriceTypeChange,
 }: ProductFormProps) {
-    const handleDeliveryToggle = React.useCallback((option: DeliveryOption) => {
-        if (delivery.includes(option)) {
-            if (delivery.length > 1) {
-                onDeliveryChange(delivery.filter((d) => d !== option));
+    // Memoize delivery toggle to prevent recreation on every render
+    // Uses functional setState to avoid dependency on delivery array
+    const handleDeliveryToggle = useCallback((option: DeliveryOption) => {
+        onDeliveryChange((prevDelivery) => {
+            if (prevDelivery.includes(option)) {
+                // Only remove if more than one option selected
+                if (prevDelivery.length > 1) {
+                    return prevDelivery.filter((d) => d !== option);
+                }
+                return prevDelivery;
+            } else {
+                return [...prevDelivery, option];
             }
-        } else {
-            onDeliveryChange([...delivery, option]);
-        }
-    }, [delivery, onDeliveryChange]);
+        });
+    }, [onDeliveryChange]);
 
     return (
         <div className="space-y-4">

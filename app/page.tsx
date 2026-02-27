@@ -29,10 +29,12 @@ import type {
     PriceType,
 } from "@/lib/types";
 
-// Default values for form reset
+// Default values for form reset - hoisted outside component to avoid recreation
 const DEFAULT_PLATFORM: Platform = "olx";
 const DEFAULT_CONDITION: ProductCondition = "używany, w dobrym stanie";
 const DEFAULT_DELIVERY: DeliveryOption[] = ["odbiór osobisty", "wysyłka"];
+const DEFAULT_TONE: ToneStyle = "friendly";
+const DEFAULT_PRICE_TYPE: PriceType = "ai_suggest";
 
 export default function HomePage() {
     // Form state
@@ -43,8 +45,8 @@ export default function HomePage() {
     const [price, setPrice] = useState("");
     const [delivery, setDelivery] = useState<DeliveryOption[]>(DEFAULT_DELIVERY);
     const [notes, setNotes] = useState("");
-    const [selectedTone, setSelectedTone] = useState<ToneStyle>("friendly");
-    const [priceType, setPriceType] = useState<PriceType>("ai_suggest");
+    const [selectedTone, setSelectedTone] = useState<ToneStyle>(DEFAULT_TONE);
+    const [priceType, setPriceType] = useState<PriceType>(DEFAULT_PRICE_TYPE);
 
     // UI state
     const [isLoading, setIsLoading] = useState(false);
@@ -219,6 +221,8 @@ export default function HomePage() {
         setPrice("");
         setDelivery(DEFAULT_DELIVERY);
         setNotes("");
+        setSelectedTone(DEFAULT_TONE);
+        setPriceType(DEFAULT_PRICE_TYPE);
         setResult(null);
         setError(null);
     }, [images]);
