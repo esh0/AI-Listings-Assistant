@@ -59,20 +59,6 @@ export function ProductForm({
     onGenerateAllTonesChange,
     onPriceTypeChange,
 }: ProductFormProps) {
-    const platformOptions = React.useMemo(() =>
-        Object.entries(PLATFORM_NAMES).map(([value, label]) => ({
-            value,
-            label,
-        })), []
-    );
-
-    const conditionOptions = React.useMemo(() =>
-        Object.entries(CONDITION_NAMES).map(([value, label]) => ({
-            value,
-            label,
-        })), []
-    );
-
     const handleDeliveryToggle = React.useCallback((option: DeliveryOption) => {
         if (delivery.includes(option)) {
             if (delivery.length > 1) {
@@ -83,27 +69,67 @@ export function ProductForm({
         }
     }, [delivery, onDeliveryChange]);
 
+    // Handle tone radio selection - uncheck "generate all" when selecting specific tone
+    const handleToneRadioChange = React.useCallback((tone: ToneStyle) => {
+        onToneChange(tone);
+        if (generateAllTones) {
+            onGenerateAllTonesChange(false);
+        }
+    }, [onToneChange, onGenerateAllTonesChange, generateAllTones]);
+
+    // Handle "generate all tones" checkbox - uncheck tone radios when checked
+    const handleGenerateAllTonesChange = React.useCallback((checked: boolean) => {
+        onGenerateAllTonesChange(checked);
+    }, [onGenerateAllTonesChange]);
+
     return (
         <div className="space-y-4">
             {/* Platform */}
-            <div className="space-y-2">
-                <label
-                    htmlFor="platform"
-                    className="text-sm font-medium leading-none"
-                >
+            <fieldset className="space-y-3">
+                <legend className="text-sm font-medium leading-none">
                     Platforma sprzedażowa{" "}
                     <span className="text-destructive">*</span>
+                </legend>
+                <div className="space-y-2">
+                    {(Object.entries(PLATFORM_NAMES) as [Platform, string][]).map(
+                        ([value, label]) => (
+                            <label
+                                key={value}
+                                className="flex items-center gap-3 cursor-pointer group"
+                            >
+                                <input
+                                    type="radio"
+                                    name="platform"
+                                    value={value}
+                                    checked={platform === value}
+                                    onChange={(e) =>
+                                        onPlatformChange(e.target.value as Platform)
+                                    }
+                                    className="h-4 w-4 border-gray-300 text-primary focus:ring-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                    aria-required="true"
+                                />
+                                <span className="text-sm font-medium group-hover:text-foreground">
+                                    {label}
+                                </span>
+                            </label>
+                        )
+                    )}
+                </div>
+                <label className="flex items-center gap-2 cursor-pointer group mt-3">
+                    <input
+                        type="checkbox"
+                        checked={false}
+                        onChange={(e) => {
+                            // TODO: Implement "generate for all platforms" feature
+                        }}
+                        className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                        disabled
+                    />
+                    <span className="text-sm text-muted-foreground">
+                        Wygeneruj dla wszystkich platform (wkrótce)
+                    </span>
                 </label>
-                <Select
-                    id="platform"
-                    value={platform}
-                    onChange={(e) =>
-                        onPlatformChange(e.target.value as Platform)
-                    }
-                    options={platformOptions}
-                    aria-required="true"
-                />
-            </div>
+            </fieldset>
 
             {/* Tone Style */}
             <fieldset className="space-y-3">
@@ -121,15 +147,16 @@ export function ProductForm({
                                     type="radio"
                                     name="tone"
                                     value={value}
-                                    checked={selectedTone === value}
+                                    checked={selectedTone === value && !generateAllTones}
                                     onChange={(e) =>
-                                        onToneChange(e.target.value as ToneStyle)
+                                        handleToneRadioChange(e.target.value as ToneStyle)
                                     }
-                                    className="mt-0.5 h-4 w-4 border-gray-300 text-primary focus:ring-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                    disabled={generateAllTones}
+                                    className="mt-0.5 h-4 w-4 border-gray-300 text-primary focus:ring-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
                                     aria-describedby={`tone-${value}-description`}
                                 />
                                 <div className="flex-1">
-                                    <span className="text-sm font-medium group-hover:text-foreground">
+                                    <span className={`text-sm font-medium group-hover:text-foreground ${generateAllTones ? 'text-muted-foreground' : ''}`}>
                                         {label}
                                     </span>
                                     <p
@@ -147,7 +174,7 @@ export function ProductForm({
                     <input
                         type="checkbox"
                         checked={generateAllTones}
-                        onChange={(e) => onGenerateAllTonesChange(e.target.checked)}
+                        onChange={(e) => handleGenerateAllTonesChange(e.target.checked)}
                         className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     />
                     <span className="text-sm group-hover:text-foreground">
@@ -186,23 +213,36 @@ export function ProductForm({
             </div>
 
             {/* Condition */}
-            <div className="space-y-2">
-                <label
-                    htmlFor="condition"
-                    className="text-sm font-medium leading-none"
-                >
+            <fieldset className="space-y-3">
+                <legend className="text-sm font-medium leading-none">
                     Stan produktu <span className="text-destructive">*</span>
-                </label>
-                <Select
-                    id="condition"
-                    value={condition}
-                    onChange={(e) =>
-                        onConditionChange(e.target.value as ProductCondition)
-                    }
-                    options={conditionOptions}
-                    aria-required="true"
-                />
-            </div>
+                </legend>
+                <div className="space-y-2">
+                    {(Object.entries(CONDITION_NAMES) as [ProductCondition, string][]).map(
+                        ([value, label]) => (
+                            <label
+                                key={value}
+                                className="flex items-center gap-3 cursor-pointer group"
+                            >
+                                <input
+                                    type="radio"
+                                    name="condition"
+                                    value={value}
+                                    checked={condition === value}
+                                    onChange={(e) =>
+                                        onConditionChange(e.target.value as ProductCondition)
+                                    }
+                                    className="h-4 w-4 border-gray-300 text-primary focus:ring-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                    aria-required="true"
+                                />
+                                <span className="text-sm font-medium group-hover:text-foreground">
+                                    {label}
+                                </span>
+                            </label>
+                        )
+                    )}
+                </div>
+            </fieldset>
 
             {/* Price Type */}
             <fieldset className="space-y-3">

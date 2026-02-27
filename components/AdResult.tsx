@@ -21,15 +21,22 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { formatPrice } from "@/lib/utils";
-import type { GenerateAdResponse, ToneStyle } from "@/lib/types";
-import { TONE_STYLE_NAMES } from "@/lib/types";
+import type { GenerateAdResponse, ToneStyle, Platform, ProductCondition, PriceType } from "@/lib/types";
+import { TONE_STYLE_NAMES, PLATFORM_NAMES, CONDITION_NAMES } from "@/lib/types";
 
 interface AdResultProps {
     result: GenerateAdResponse;
     imagePreviews?: string[]; // Array of preview URLs in order by index
+    // Generation parameters
+    platform: Platform;
+    productName?: string;
+    condition: ProductCondition;
+    priceType: PriceType;
+    userPrice?: string;
+    delivery: string;
 }
 
-export function AdResult({ result, imagePreviews }: AdResultProps) {
+export function AdResult({ result, imagePreviews, platform, productName, condition, priceType, userPrice, delivery }: AdResultProps) {
     const [copiedField, setCopiedField] = useState<string | null>(null);
     const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
 
@@ -62,6 +69,59 @@ export function AdResult({ result, imagePreviews }: AdResultProps) {
 
     return (
         <div className="space-y-8 animate-slide-up" role="region" aria-label="Wygenerowane ogłoszenie">
+            {/* Generation Parameters Summary */}
+            <Card className="bg-muted/30">
+                <CardHeader>
+                    <CardTitle className="text-sm font-medium flex items-center gap-2">
+                        <FileText className="h-4 w-4" />
+                        Parametry generowania
+                    </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                        <span className="text-muted-foreground">Platforma:</span>
+                        <Badge variant="secondary">{PLATFORM_NAMES[platform]}</Badge>
+                    </div>
+                    {productName && (
+                        <div className="flex justify-between">
+                            <span className="text-muted-foreground">Nazwa produktu:</span>
+                            <span className="font-medium">{productName}</span>
+                        </div>
+                    )}
+                    <div className="flex justify-between">
+                        <span className="text-muted-foreground">Stan:</span>
+                        <span className="font-medium">{CONDITION_NAMES[condition]}</span>
+                    </div>
+                    <div className="flex justify-between">
+                        <span className="text-muted-foreground">Cena:</span>
+                        <span className="font-medium">
+                            {priceType === "free" && "Za darmo"}
+                            {priceType === "user_provided" && `${userPrice} zł`}
+                            {priceType === "ai_suggest" && "Zasugerowana przez AI"}
+                        </span>
+                    </div>
+                    <div className="flex justify-between">
+                        <span className="text-muted-foreground">Dostawa:</span>
+                        <span className="font-medium">{delivery}</span>
+                    </div>
+                    {result.toneVariants && result.toneVariants.length > 0 ? (
+                        <div className="flex justify-between">
+                            <span className="text-muted-foreground">Wygenerowane style:</span>
+                            <span className="font-medium">Wszystkie 3 warianty</span>
+                        </div>
+                    ) : (
+                        <div className="flex justify-between">
+                            <span className="text-muted-foreground">Styl:</span>
+                            <Badge variant="outline">
+                                {result.toneVariants ?
+                                    TONE_STYLE_NAMES[result.toneVariants[0].tone as ToneStyle] :
+                                    "Przyjazny"}
+                            </Badge>
+                        </div>
+                    )}
+                </CardContent>
+            </Card>
+
             {/* Multi-Tone Tabs */}
             {result.toneVariants && result.toneVariants.length > 0 && (
                 <div className="mb-6">

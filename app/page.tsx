@@ -24,7 +24,7 @@ import type {
 // Default values for form reset
 const DEFAULT_PLATFORM: Platform = "olx";
 const DEFAULT_CONDITION: ProductCondition = "używany, w dobrym stanie";
-const DEFAULT_DELIVERY: DeliveryOption[] = ["odbiór osobisty"];
+const DEFAULT_DELIVERY: DeliveryOption[] = ["odbiór osobisty", "wysyłka"];
 
 export default function HomePage() {
     // Form state
@@ -391,7 +391,16 @@ export default function HomePage() {
                                 </div>
                             </div>
 
-                            <AdResult result={result} imagePreviews={imagePreviewsList} />
+                            <AdResult
+                                result={result}
+                                imagePreviews={imagePreviewsList}
+                                platform={platform}
+                                productName={productName}
+                                condition={condition}
+                                priceType={priceType}
+                                userPrice={price}
+                                delivery={delivery.join(", ")}
+                            />
                         </section>
                     )}
 
