@@ -22,6 +22,9 @@ export const productFormSchema = z.object({
         "uszkodzony",
     ]),
     price: z.string().optional(),
+    priceType: PriceTypeSchema,
+    tone: ToneStyleSchema,
+    generateAllTones: z.boolean(),
     delivery: z
         .array(z.enum(["odbiór osobisty", "wysyłka"]))
         .min(1, "Wybierz przynajmniej jedną opcję dostawy"),
@@ -100,8 +103,18 @@ export const generateAdResponseSchema = z.object({
     error: z.string().optional(),
     title: z.string().optional(),
     description: z.string().optional(),
-    price: priceSuggestionSchema.optional(),
+    price: priceSuggestionSchema.nullable().optional(),
+    isFree: z.boolean().optional(),
     images: z.array(imageAnalysisSchema).optional(),
+    toneVariants: z.array(z.object({
+        tone: ToneStyleSchema,
+        title: z.string(),
+        description: z.string(),
+    })).optional(),
+    confidence: z.object({
+        productIdentification: z.enum(["high", "medium", "low"]),
+        specifications: z.enum(["high", "medium", "low"]),
+    }).optional(),
 });
 
 export type GenerateAdResponseSchema = z.infer<typeof generateAdResponseSchema>;
