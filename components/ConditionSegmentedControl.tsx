@@ -12,9 +12,10 @@ interface ConditionSegmentedControlProps {
 // Shortened labels for UI (full values remain in form data)
 const CONDITION_SHORT_LABELS: Record<ProductCondition, string> = {
     nowy: "Nowy",
-    idealny: "Jak nowy",
+    "używany, jak nowy": "Jak nowy",
     "używany, w dobrym stanie": "Używany",
-    "ślady używania, uszkodzony": "Uszkodzony",
+    "używany, w przeciętnym stanie": "Przeciętny",
+    uszkodzony: "Uszkodzony",
 };
 
 export function ConditionSegmentedControl({
@@ -23,9 +24,10 @@ export function ConditionSegmentedControl({
 }: ConditionSegmentedControlProps) {
     const conditions: ProductCondition[] = [
         "nowy",
-        "idealny",
+        "używany, jak nowy",
         "używany, w dobrym stanie",
-        "ślady używania, uszkodzony",
+        "używany, w przeciętnym stanie",
+        "uszkodzony",
     ];
 
     const handleKeyDown = useCallback(
