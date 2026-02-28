@@ -1,9 +1,11 @@
 "use client";
 
 import React, { memo, useCallback } from "react";
+import { Send } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 import { PlatformSelector } from "@/components/PlatformSelector";
 import { ToneSelector } from "@/components/ToneSelector";
 import { ConditionSegmentedControl } from "@/components/ConditionSegmentedControl";
@@ -42,28 +44,41 @@ interface ProductFormProps {
 
 export function ProductForm({
     platform,
+    selectedTone,
+    onPlatformChange,
+    onToneChange,
+}: Pick<ProductFormProps, 'platform' | 'selectedTone' | 'onPlatformChange' | 'onToneChange'>) {
+    return (
+        <div className="space-y-6">
+            <PlatformSelector
+                platform={platform}
+                onPlatformChange={onPlatformChange}
+            />
+
+            <ToneSelector
+                selectedTone={selectedTone}
+                onToneChange={onToneChange}
+            />
+        </div>
+    );
+}
+
+// Component for Card 3: Product Parameters
+export function ProductParameters({
     productName,
     condition,
     price,
     delivery,
-    notes,
-    selectedTone,
     priceType,
-    onPlatformChange,
     onProductNameChange,
     onConditionChange,
     onPriceChange,
     onDeliveryChange,
-    onNotesChange,
-    onToneChange,
     onPriceTypeChange,
-}: ProductFormProps) {
-    // Memoize delivery toggle to prevent recreation on every render
-    // Uses functional setState to avoid dependency on delivery array
+}: Omit<ProductFormProps, 'platform' | 'notes' | 'selectedTone' | 'onPlatformChange' | 'onNotesChange' | 'onToneChange'>) {
     const handleDeliveryToggle = useCallback((option: DeliveryOption) => {
         onDeliveryChange((prevDelivery) => {
             if (prevDelivery.includes(option)) {
-                // Only remove if more than one option selected
                 if (prevDelivery.length > 1) {
                     return prevDelivery.filter((d) => d !== option);
                 }
@@ -76,32 +91,16 @@ export function ProductForm({
 
     return (
         <div className="space-y-6">
-            <PlatformSelector
-                platform={platform}
-                onPlatformChange={onPlatformChange}
-            />
-
-            <ToneSelector
-                selectedTone={selectedTone}
-                onToneChange={onToneChange}
-            />
-
             {/* Product Name */}
             <div className="space-y-2">
-                <label
-                    htmlFor="productName"
-                    className="text-sm font-medium leading-none"
-                >
-                    Nazwa produktu{" "}
-                    <span className="text-muted-foreground text-xs">
-                        (opcjonalne)
-                    </span>
+                <label htmlFor="productName" className="text-sm font-medium leading-none">
+                    Nazwa produktu <span className="text-muted-foreground text-xs">(opcjonalne)</span>
                 </label>
                 <Input
                     id="productName"
                     value={productName}
                     onChange={(e) => onProductNameChange(e.target.value)}
-                    placeholder="np. iPhone 13 Pro, Krzesło IKEA, Kurtka zimowa…"
+                    placeholder="np. iPhone 13 Pro, Krzesło IKEA…"
                     maxLength={200}
                     aria-describedby="productName-hint"
                 />
@@ -110,6 +109,7 @@ export function ProductForm({
                 </p>
             </div>
 
+            {/* Condition */}
             <ConditionSegmentedControl
                 condition={condition}
                 onConditionChange={onConditionChange}
@@ -127,9 +127,7 @@ export function ProductForm({
                             name="priceType"
                             value="ai_suggest"
                             checked={priceType === "ai_suggest"}
-                            onChange={(e) =>
-                                onPriceTypeChange(e.target.value as PriceType)
-                            }
+                            onChange={(e) => onPriceTypeChange(e.target.value as PriceType)}
                             className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                         />
                         <div className="flex-1">
@@ -148,9 +146,7 @@ export function ProductForm({
                             name="priceType"
                             value="user_provided"
                             checked={priceType === "user_provided"}
-                            onChange={(e) =>
-                                onPriceTypeChange(e.target.value as PriceType)
-                            }
+                            onChange={(e) => onPriceTypeChange(e.target.value as PriceType)}
                             className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                         />
                         <div className="flex-1">
@@ -169,9 +165,7 @@ export function ProductForm({
                             name="priceType"
                             value="free"
                             checked={priceType === "free"}
-                            onChange={(e) =>
-                                onPriceTypeChange(e.target.value as PriceType)
-                            }
+                            onChange={(e) => onPriceTypeChange(e.target.value as PriceType)}
                             className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                         />
                         <div className="flex-1">
@@ -187,10 +181,7 @@ export function ProductForm({
 
                 {priceType === "user_provided" && (
                     <div className="space-y-2 pt-2">
-                        <label
-                            htmlFor="userPrice"
-                            className="text-sm font-medium leading-none"
-                        >
+                        <label htmlFor="userPrice" className="text-sm font-medium leading-none">
                             Twoja cena <span className="text-destructive">*</span>
                         </label>
                         <div className="relative">
@@ -210,10 +201,7 @@ export function ProductForm({
                                 autoComplete="off"
                                 required
                             />
-                            <span
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm"
-                                aria-label="Waluta"
-                            >
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm" aria-label="Waluta">
                                 PLN
                             </span>
                         </div>
@@ -226,17 +214,9 @@ export function ProductForm({
                 <legend className="text-sm font-medium leading-none">
                     Sposób dostawy <span className="text-destructive">*</span>
                 </legend>
-                <div className="flex flex-wrap gap-2" role="group" aria-label="Wybór sposobu dostawy">
-                    {(
-                        Object.entries(DELIVERY_NAMES) as [
-                            DeliveryOption,
-                            string
-                        ][]
-                    ).map(([value, label]) => (
-                        <label
-                            key={value}
-                            className="flex items-center gap-2 cursor-pointer group"
-                        >
+                <div className="flex flex-wrap gap-4" role="group" aria-label="Wybór sposobu dostawy">
+                    {(Object.entries(DELIVERY_NAMES) as [DeliveryOption, string][]).map(([value, label]) => (
+                        <label key={value} className="flex items-center gap-2 cursor-pointer group">
                             <input
                                 type="checkbox"
                                 checked={delivery.includes(value)}
@@ -254,30 +234,60 @@ export function ProductForm({
                     </p>
                 )}
             </fieldset>
+        </div>
+    );
+}
 
-            {/* Notes */}
-            <div className="space-y-2">
-                <label
-                    htmlFor="notes"
-                    className="text-sm font-medium leading-none"
-                >
-                    Dodatkowe informacje{" "}
-                    <span className="text-muted-foreground text-xs">
-                        (opcjonalne)
-                    </span>
+// Component for Card 4: Notes + CTA
+export function NotesAndCTA({
+    notes,
+    canSubmit,
+    isOffline,
+    onNotesChange,
+    onSubmit,
+}: {
+    notes: string;
+    canSubmit: boolean;
+    isOffline: boolean;
+    onNotesChange: (value: string) => void;
+    onSubmit: () => void;
+}) {
+    return (
+        <div className="flex flex-col h-full">
+            {/* Notes textarea */}
+            <div className="flex-1 space-y-2">
+                <label htmlFor="notes" className="text-sm font-medium leading-none">
+                    Dodatkowe informacje <span className="text-muted-foreground text-xs">(opcjonalne)</span>
                 </label>
                 <Textarea
                     id="notes"
                     value={notes}
                     onChange={(e) => onNotesChange(e.target.value)}
                     placeholder="np. uszkodzenia, braki, wymiary, historia produktu…"
-                    rows={3}
+                    rows={8}
                     maxLength={1000}
                     aria-describedby="notes-hint"
+                    className="min-h-[200px] resize-none"
                 />
                 <p id="notes-hint" className="text-xs text-muted-foreground">
                     {notes.length}/1000 znaków
                 </p>
+            </div>
+
+            {/* CTA Button - sticky */}
+            <div className="sticky bottom-0 pt-4 bg-card">
+                <Button
+                    type="button"
+                    size="lg"
+                    className="w-full h-14 text-lg font-bold bg-orange-500 hover:bg-orange-600 text-white shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                    onClick={onSubmit}
+                    disabled={!canSubmit || isOffline}
+                    aria-label="Generuj ogłoszenie sprzedażowe"
+                    title={isOffline ? "Brak połączenia z internetem" : undefined}
+                >
+                    <Send className="h-5 w-5 mr-2" aria-hidden="true" />
+                    {isOffline ? "Brak połączenia" : "Generuj ogłoszenie"}
+                </Button>
             </div>
         </div>
     );
