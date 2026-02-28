@@ -6,6 +6,7 @@ import { ShoppingBag, Send, RotateCcw, Pencil, Camera, FileText } from "lucide-r
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { CardWrapper } from "@/components/ui/card-wrapper";
 import { UploadDropzone } from "@/components/UploadDropzone";
 import { ProductForm } from "@/components/ProductForm";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -270,7 +271,7 @@ export default function HomePage() {
                     {/* Hero Section - only show when not showing results */}
                     {!result && (
                         <section aria-labelledby="page-title" className="mb-12 sm:mb-16">
-                            <h1 id="page-title" className="font-serif text-4xl sm:text-5xl font-normal mb-4 leading-tight tracking-tight">
+                            <h1 id="page-title" className="text-4xl sm:text-5xl font-bold mb-4 leading-tight tracking-tight">
                                 Sprzedaj szybciej <br className="hidden sm:inline" />
                                 <span className="text-primary">z lepszym opisem</span>
                             </h1>
@@ -280,44 +281,19 @@ export default function HomePage() {
                         </section>
                     )}
 
-                    {/* Form Section */}
+                    {/* Form Section - 2x2 Grid */}
                     {!result && (
-                        <form
-                            className="grid lg:grid-cols-[1.5fr_1fr] gap-8 lg:gap-12"
-                            onSubmit={(e) => {
-                                e.preventDefault();
-                                handleSubmit();
-                            }}
-                            aria-label="Formularz generowania ogłoszenia"
-                        >
-                            {/* Image Upload - larger, left column */}
-                            <div className="space-y-4">
-                                <div>
-                                    <h2 className="text-2xl font-bold tracking-tight mb-2 flex items-center gap-2">
-                                        <Camera className="h-5 w-5 text-primary" aria-hidden="true" />
-                                        Zdjęcia
-                                    </h2>
-                                    <p className="text-sm text-muted-foreground leading-relaxed">
-                                        Do 8 zdjęć produktu
-                                    </p>
-                                </div>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            {/* Card 1: Photos */}
+                            <CardWrapper title="Zdjęcia produktu" icon={Camera}>
                                 <UploadDropzone
                                     images={images}
                                     onImagesChange={setImages}
                                 />
-                            </div>
+                            </CardWrapper>
 
-                            {/* Product Form - compact, right column */}
-                            <div className="space-y-4">
-                                <div>
-                                    <h2 className="text-2xl font-bold tracking-tight mb-2 flex items-center gap-2">
-                                        <FileText className="h-5 w-5 text-primary" aria-hidden="true" />
-                                        Szczegóły
-                                    </h2>
-                                    <p className="text-sm text-muted-foreground leading-relaxed">
-                                        Dane opcjonalne
-                                    </p>
-                                </div>
+                            {/* Card 2: Platform + Tone */}
+                            <CardWrapper>
                                 <ProductForm
                                     platform={platform}
                                     productName={productName}
@@ -336,8 +312,8 @@ export default function HomePage() {
                                     onToneChange={setSelectedTone}
                                     onPriceTypeChange={setPriceType}
                                 />
-                            </div>
-                        </form>
+                            </CardWrapper>
+                        </div>
                     )}
 
                     {/* Error Alert */}
