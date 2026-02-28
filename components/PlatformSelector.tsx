@@ -12,15 +12,15 @@ interface PlatformSelectorProps {
 
 const PLATFORM_ICONS = {
     olx: ShoppingBag,
-    "allegro lokalnie": Store,
-    "facebook marketplace": Facebook,
+    allegro_lokalnie: Store,
+    facebook_marketplace: Facebook,
     vinted: Shirt,
 } as const;
 
 const PLATFORM_COLORS = {
     olx: "text-orange-500",
-    "allegro lokalnie": "text-green-600",
-    "facebook marketplace": "text-blue-600",
+    allegro_lokalnie: "text-green-600",
+    facebook_marketplace: "text-blue-600",
     vinted: "text-teal-600",
 } as const;
 
