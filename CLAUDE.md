@@ -129,9 +129,13 @@ Each rules file includes:
 These markdown files are loaded at runtime and injected into the AI prompt to ensure platform-appropriate content generation.
 
 **UI Components:**
-- `components/ProductForm.tsx` - Main form with radio button groups for platform, tone (with recommendations), condition, and price type; checkboxes for delivery options
-- `components/UploadDropzone.tsx` - Drag-and-drop image upload with validation
-- `components/AdResult.tsx` - Display generated listing with generation parameters summary, copy buttons, and conditional free listing badge
+- `components/ui/card-wrapper.tsx` - Reusable card wrapper with optional header and icon
+- `components/PlatformSelector.tsx` - 2x2 grid of platform tiles with lucide-react icons
+- `components/ToneSelector.tsx` - Horizontal segmented control for tone selection with descriptions
+- `components/ConditionSegmentedControl.tsx` - Responsive condition selector (segmented control on desktop, radio buttons on mobile)
+- `components/ProductForm.tsx` - Split into modular components (Platform+Tone, Parameters, Notes+CTA)
+- `components/UploadDropzone.tsx` - Drag-and-drop image upload with 3-4 column grid
+- `components/AdResult.tsx` - Display generated listing with generation parameters summary
 - `components/ThemeProvider.tsx` & `components/ThemeToggle.tsx` - Dark/light mode
 - `components/ui/*` - Reusable UI primitives (buttons, inputs, cards, badges, etc.)
 
@@ -140,6 +144,15 @@ These markdown files are loaded at runtime and injected into the AI prompt to en
 - `app/layout.tsx` - Root layout with metadata, fonts, and theme provider
 
 ### Important Patterns
+
+**Layout Pattern (2x2 Dashboard Grid):**
+- Desktop (≥1024px): 2x2 grid with 4 cards using `grid-cols-2 gap-6`
+  - Card 1: Photo upload dropzone with CardWrapper (min-h-[400px])
+  - Card 2: Platform tiles + Tone segmented control (min-h-[400px])
+  - Card 3: Product parameters (name, condition, price, delivery) (min-h-[500px])
+  - Card 4: Notes textarea + sticky CTA button (min-h-[500px])
+- Mobile (<1024px): Vertical stack of same cards using `grid-cols-1`
+- Cards: Consistent styling via CardWrapper component with `rounded-xl shadow-sm hover:shadow-md`
 
 **Image Handling:**
 - Images are converted to base64 in the browser before API submission
@@ -179,6 +192,13 @@ These markdown files are loaded at runtime and injected into the AI prompt to en
 - **Imports**: Use `@/*` path alias for imports from root directory
 - **Styling**: Tailwind classes using `cn()` utility for conditional classes
 - **Naming**: camelCase for variables/functions, PascalCase for components/types
+
+**Component Patterns:**
+- Segmented controls: Horizontal button group in muted container with roving tabindex
+- Platform tiles: 2x2 grid with icons, hover scale effects, and aria-radio roles
+- Responsive components: Desktop segmented control, mobile radio buttons (ConditionSegmentedControl)
+- Sticky CTA: Bottom-positioned button in Card 4 with `sticky bottom-0` for easy access
+- Card composition: CardWrapper with forwardRef and React.memo for performance
 
 ## Performance Best Practices
 
