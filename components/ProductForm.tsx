@@ -65,17 +65,15 @@ export function ProductForm({
 
 // Component for Card 3: Product Parameters
 export function ProductParameters({
-    productName,
     condition,
     price,
     delivery,
     priceType,
-    onProductNameChange,
     onConditionChange,
     onPriceChange,
     onDeliveryChange,
     onPriceTypeChange,
-}: Omit<ProductFormProps, 'platform' | 'notes' | 'selectedTone' | 'onPlatformChange' | 'onNotesChange' | 'onToneChange'>) {
+}: Omit<ProductFormProps, 'platform' | 'notes' | 'selectedTone' | 'productName' | 'onPlatformChange' | 'onNotesChange' | 'onToneChange' | 'onProductNameChange'>) {
     const handleDeliveryToggle = useCallback((option: DeliveryOption) => {
         onDeliveryChange((prevDelivery) => {
             if (prevDelivery.includes(option)) {
@@ -91,24 +89,6 @@ export function ProductParameters({
 
     return (
         <div className="space-y-6">
-            {/* Product Name */}
-            <div className="space-y-2">
-                <label htmlFor="productName" className="text-sm font-medium leading-none">
-                    Nazwa produktu <span className="text-muted-foreground text-xs">(opcjonalne)</span>
-                </label>
-                <Input
-                    id="productName"
-                    value={productName}
-                    onChange={(e) => onProductNameChange(e.target.value)}
-                    placeholder="np. iPhone 13 Pro, Krzesło IKEA…"
-                    maxLength={200}
-                    aria-describedby="productName-hint"
-                />
-                <p id="productName-hint" className="text-xs text-muted-foreground">
-                    Jeśli nie podasz nazwy, AI rozpozna produkt ze zdjęcia
-                </p>
-            </div>
-
             {/* Condition */}
             <ConditionSegmentedControl
                 condition={condition}
@@ -249,9 +229,9 @@ export function NotesAndCTA({
     onSubmit: () => void;
 }) {
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col">
             {/* Notes textarea */}
-            <div className="flex-1 space-y-2">
+            <div className="space-y-2">
                 <label htmlFor="notes" className="text-sm font-medium leading-none">
                     Dodatkowe informacje <span className="text-muted-foreground text-xs">(opcjonalne)</span>
                 </label>

@@ -44,9 +44,9 @@ export function ToneSelector({ selectedTone, onToneChange }: ToneSelectorProps) 
                 Styl komunikacji <span className="text-destructive">*</span>
             </legend>
 
-            {/* Segmented Control */}
+            {/* Desktop: Segmented Control */}
             <div
-                className="flex gap-1 bg-muted rounded-lg p-1"
+                className="hidden lg:flex gap-1 bg-muted rounded-lg p-1"
                 role="radiogroup"
                 aria-label="Wybór stylu komunikacji"
             >
@@ -71,6 +71,28 @@ export function ToneSelector({ selectedTone, onToneChange }: ToneSelectorProps) 
                         >
                             {TONE_STYLE_NAMES[tone]}
                         </button>
+                    );
+                })}
+            </div>
+
+            {/* Mobile: Radio Buttons */}
+            <div className="lg:hidden space-y-2" role="radiogroup" aria-label="Wybór stylu komunikacji">
+                {tones.map((tone) => {
+                    const isSelected = selectedTone === tone;
+                    return (
+                        <label key={tone} className="flex items-center gap-3 cursor-pointer group">
+                            <input
+                                type="radio"
+                                name="tone"
+                                value={tone}
+                                checked={isSelected}
+                                onChange={() => onToneChange(tone)}
+                                className="h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                            />
+                            <span className="text-sm font-medium group-hover:text-foreground">
+                                {TONE_STYLE_NAMES[tone]}
+                            </span>
+                        </label>
                     );
                 })}
             </div>

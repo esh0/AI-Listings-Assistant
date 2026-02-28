@@ -63,7 +63,7 @@ export function PlatformSelector({ platform, onPlatformChange }: PlatformSelecto
                             )}
                         >
                             <Icon className={cn("h-8 w-8", isSelected ? "text-primary" : colorClass)} aria-hidden="true" />
-                            <span className="text-sm font-medium">{label}</span>
+                            <span className="text-sm font-medium text-center">{label}</span>
                         </div>
                     );
                 })}

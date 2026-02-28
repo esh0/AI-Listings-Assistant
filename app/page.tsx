@@ -6,6 +6,7 @@ import { ShoppingBag, Send, RotateCcw, Pencil, Camera, FileText } from "lucide-r
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Input } from "@/components/ui/input";
 import { CardWrapper } from "@/components/ui/card-wrapper";
 import { UploadDropzone } from "@/components/UploadDropzone";
 import { ProductForm, ProductParameters, NotesAndCTA } from "@/components/ProductForm";
@@ -286,6 +287,24 @@ export default function HomePage() {
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             {/* Card 1: Photos */}
                             <CardWrapper title="Zdjęcia produktu" icon={Camera} className="min-h-[400px]">
+                                {/* Product Name */}
+                                <div className="space-y-2 mb-6">
+                                    <label htmlFor="productName" className="text-sm font-medium leading-none">
+                                        Nazwa produktu <span className="text-muted-foreground text-xs">(opcjonalne)</span>
+                                    </label>
+                                    <Input
+                                        id="productName"
+                                        value={productName}
+                                        onChange={(e) => setProductName(e.target.value)}
+                                        placeholder="np. iPhone 13 Pro, Krzesło IKEA…"
+                                        maxLength={200}
+                                        aria-describedby="productName-hint"
+                                    />
+                                    <p id="productName-hint" className="text-xs text-muted-foreground">
+                                        Jeśli nie podasz nazwy, AI rozpozna produkt ze zdjęcia
+                                    </p>
+                                </div>
+
                                 <UploadDropzone
                                     images={images}
                                     onImagesChange={setImages}
@@ -303,14 +322,12 @@ export default function HomePage() {
                             </CardWrapper>
 
                             {/* Card 3: Parameters */}
-                            <CardWrapper className="min-h-[500px]">
+                            <CardWrapper>
                                 <ProductParameters
-                                    productName={productName}
                                     condition={condition}
                                     price={price}
                                     delivery={delivery}
                                     priceType={priceType}
-                                    onProductNameChange={setProductName}
                                     onConditionChange={setCondition}
                                     onPriceChange={setPrice}
                                     onDeliveryChange={setDelivery}
@@ -319,7 +336,7 @@ export default function HomePage() {
                             </CardWrapper>
 
                             {/* Card 4: Notes + CTA */}
-                            <CardWrapper className="min-h-[500px] flex flex-col">
+                            <CardWrapper>
                                 <NotesAndCTA
                                     notes={notes}
                                     canSubmit={canSubmit}
