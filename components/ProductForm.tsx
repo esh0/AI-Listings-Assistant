@@ -4,6 +4,9 @@ import React, { memo, useCallback } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
+import { PlatformSelector } from "@/components/PlatformSelector";
+import { ToneSelector } from "@/components/ToneSelector";
+import { ConditionSegmentedControl } from "@/components/ConditionSegmentedControl";
 import {
     Platform,
     ProductCondition,
@@ -72,137 +75,16 @@ export function ProductForm({
     }, [onDeliveryChange]);
 
     return (
-        <div className="space-y-4">
-            {/* Platform */}
-            <fieldset className="space-y-3">
-                <legend className="text-sm font-medium leading-none">
-                    Platforma sprzedażowa{" "}
-                    <span className="text-destructive">*</span>
-                </legend>
-                <div className="space-y-2">
-                    {(Object.entries(PLATFORM_NAMES) as [Platform, string][]).map(
-                        ([value, label]) => (
-                            <label
-                                key={value}
-                                className="flex items-center gap-3 cursor-pointer group"
-                            >
-                                <input
-                                    type="radio"
-                                    name="platform"
-                                    value={value}
-                                    checked={platform === value}
-                                    onChange={(e) =>
-                                        onPlatformChange(e.target.value as Platform)
-                                    }
-                                    className="h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                                    aria-required="true"
-                                />
-                                <span className="text-sm font-medium group-hover:text-foreground">
-                                    {label}
-                                </span>
-                            </label>
-                        )
-                    )}
-                </div>
-            </fieldset>
+        <div className="space-y-6">
+            <PlatformSelector
+                platform={platform}
+                onPlatformChange={onPlatformChange}
+            />
 
-            {/* Tone Style */}
-            <fieldset className="space-y-3">
-                <legend className="text-sm font-medium leading-none">
-                    Styl komunikacji <span className="text-destructive">*</span>
-                </legend>
-                <div className="space-y-2">
-                    <label
-                        className="flex items-start gap-3 cursor-pointer group"
-                    >
-                        <input
-                            type="radio"
-                            name="tone"
-                            value="professional"
-                            checked={selectedTone === "professional"}
-                            onChange={(e) =>
-                                onToneChange(e.target.value as ToneStyle)
-                            }
-                            className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                            aria-describedby="tone-professional-description"
-                        />
-                        <div className="flex-1">
-                            <span className="text-sm font-medium group-hover:text-foreground">
-                                {TONE_STYLE_NAMES["professional"]}
-                            </span>
-                            <p
-                                id="tone-professional-description"
-                                className="text-xs text-muted-foreground mt-0.5"
-                            >
-                                {TONE_STYLE_DESCRIPTIONS["professional"]}
-                                <span className="block mt-1 text-blue-600 dark:text-blue-400 font-medium">
-                                    ⭐ Polecany dla: Allegro Lokalnie
-                                </span>
-                            </p>
-                        </div>
-                    </label>
-
-                    <label
-                        className="flex items-start gap-3 cursor-pointer group"
-                    >
-                        <input
-                            type="radio"
-                            name="tone"
-                            value="friendly"
-                            checked={selectedTone === "friendly"}
-                            onChange={(e) =>
-                                onToneChange(e.target.value as ToneStyle)
-                            }
-                            className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                            aria-describedby="tone-friendly-description"
-                        />
-                        <div className="flex-1">
-                            <span className="text-sm font-medium group-hover:text-foreground">
-                                {TONE_STYLE_NAMES["friendly"]}
-                            </span>
-                            <p
-                                id="tone-friendly-description"
-                                className="text-xs text-muted-foreground mt-0.5"
-                            >
-                                {TONE_STYLE_DESCRIPTIONS["friendly"]}
-                                <span className="block mt-1 text-blue-600 dark:text-blue-400 font-medium">
-                                    ⭐ Polecany dla: Facebook Marketplace, Vinted
-                                </span>
-                            </p>
-                        </div>
-                    </label>
-
-                    <label
-                        className="flex items-start gap-3 cursor-pointer group"
-                    >
-                        <input
-                            type="radio"
-                            name="tone"
-                            value="casual"
-                            checked={selectedTone === "casual"}
-                            onChange={(e) =>
-                                onToneChange(e.target.value as ToneStyle)
-                            }
-                            className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                            aria-describedby="tone-casual-description"
-                        />
-                        <div className="flex-1">
-                            <span className="text-sm font-medium group-hover:text-foreground">
-                                {TONE_STYLE_NAMES["casual"]}
-                            </span>
-                            <p
-                                id="tone-casual-description"
-                                className="text-xs text-muted-foreground mt-0.5"
-                            >
-                                {TONE_STYLE_DESCRIPTIONS["casual"]}
-                                <span className="block mt-1 text-blue-600 dark:text-blue-400 font-medium">
-                                    ⭐ Polecany dla: OLX
-                                </span>
-                            </p>
-                        </div>
-                    </label>
-                </div>
-            </fieldset>
+            <ToneSelector
+                selectedTone={selectedTone}
+                onToneChange={onToneChange}
+            />
 
             {/* Product Name */}
             <div className="space-y-2">
@@ -228,37 +110,10 @@ export function ProductForm({
                 </p>
             </div>
 
-            {/* Condition */}
-            <fieldset className="space-y-3">
-                <legend className="text-sm font-medium leading-none">
-                    Stan produktu <span className="text-destructive">*</span>
-                </legend>
-                <div className="space-y-2">
-                    {(Object.entries(CONDITION_NAMES) as [ProductCondition, string][]).map(
-                        ([value, label]) => (
-                            <label
-                                key={value}
-                                className="flex items-center gap-3 cursor-pointer group"
-                            >
-                                <input
-                                    type="radio"
-                                    name="condition"
-                                    value={value}
-                                    checked={condition === value}
-                                    onChange={(e) =>
-                                        onConditionChange(e.target.value as ProductCondition)
-                                    }
-                                    className="h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                                    aria-required="true"
-                                />
-                                <span className="text-sm font-medium group-hover:text-foreground">
-                                    {label}
-                                </span>
-                            </label>
-                        )
-                    )}
-                </div>
-            </fieldset>
+            <ConditionSegmentedControl
+                condition={condition}
+                onConditionChange={onConditionChange}
+            />
 
             {/* Price Type */}
             <fieldset className="space-y-3">
@@ -279,7 +134,7 @@ export function ProductForm({
                         />
                         <div className="flex-1">
                             <span className="text-sm font-medium group-hover:text-foreground">
-                                Zasugeruj cenę
+                                AI zasugeruje cenę
                             </span>
                             <p className="text-xs text-muted-foreground mt-0.5">
                                 AI zaproponuje odpowiednią cenę na podstawie produktu
