@@ -139,11 +139,11 @@ export function UploadDropzone({ onImagesChange, images }: UploadDropzoneProps) 
         <div className="space-y-4">
             {/* Image Grid */}
             {images.length > 0 && (
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
                     {images.map((image, index) => (
                         <div
                             key={`${image.filename}-${index}`}
-                            className="relative group aspect-square rounded-md border-2 border-border bg-muted overflow-hidden hover:border-primary transition-all"
+                            className="relative group aspect-square rounded-lg border-2 border-border bg-muted overflow-hidden hover:border-primary transition-all"
                         >
                             <img
                                 src={image.preview}
@@ -224,15 +224,15 @@ export function UploadDropzone({ onImagesChange, images }: UploadDropzoneProps) 
                     <div className="flex flex-col items-center gap-4 text-center pointer-events-none">
                         <div className="rounded-full bg-muted p-6 group-hover:bg-primary/10 transition-colors">
                             <Upload className={cn(
-                                "h-10 w-10 text-muted-foreground group-hover:text-primary transition-colors",
+                                "h-12 w-12 text-muted-foreground group-hover:text-primary transition-colors",
                                 isCompressing && "animate-pulse"
                             )} aria-hidden="true" />
                         </div>
                         <div className="space-y-2">
-                            <p className="text-lg font-semibold">
+                            <p className="text-xl font-semibold">
                                 {isCompressing ? "Przetwarzanie…" : "Przeciągnij zdjęcia tutaj"}
                             </p>
-                            <p className="text-sm text-muted-foreground leading-relaxed">
+                            <p className="text-base text-muted-foreground leading-relaxed">
                                 {isCompressing ? "Optymalizacja obrazów…" : "lub kliknij, aby wybrać pliki"}
                             </p>
                         </div>
