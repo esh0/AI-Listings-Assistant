@@ -77,7 +77,7 @@ export function ToneSelector({ selectedTone, onToneChange }: ToneSelectorProps) 
 
             {/* Description (shown below when selected) */}
             <div
-                className="text-sm text-muted-foreground space-y-1 animate-in fade-in slide-in-from-top-1 duration-200"
+                className="text-sm text-muted-foreground space-y-1 transition-opacity duration-200"
                 aria-live="polite"
             >
                 <p>{TONE_STYLE_DESCRIPTIONS[selectedTone]}</p>
