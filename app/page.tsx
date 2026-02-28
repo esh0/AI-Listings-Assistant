@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CardWrapper } from "@/components/ui/card-wrapper";
 import { UploadDropzone } from "@/components/UploadDropzone";
-import { ProductForm } from "@/components/ProductForm";
+import { ProductForm, ProductParameters, NotesAndCTA } from "@/components/ProductForm";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { fileToBase64, getImageMimeType } from "@/lib/utils";
 
@@ -296,21 +296,36 @@ export default function HomePage() {
                             <CardWrapper>
                                 <ProductForm
                                     platform={platform}
+                                    selectedTone={selectedTone}
+                                    onPlatformChange={setPlatform}
+                                    onToneChange={setSelectedTone}
+                                />
+                            </CardWrapper>
+
+                            {/* Card 3: Parameters */}
+                            <CardWrapper>
+                                <ProductParameters
                                     productName={productName}
                                     condition={condition}
                                     price={price}
                                     delivery={delivery}
-                                    notes={notes}
-                                    selectedTone={selectedTone}
                                     priceType={priceType}
-                                    onPlatformChange={setPlatform}
                                     onProductNameChange={setProductName}
                                     onConditionChange={setCondition}
                                     onPriceChange={setPrice}
                                     onDeliveryChange={setDelivery}
-                                    onNotesChange={setNotes}
-                                    onToneChange={setSelectedTone}
                                     onPriceTypeChange={setPriceType}
+                                />
+                            </CardWrapper>
+
+                            {/* Card 4: Notes + CTA */}
+                            <CardWrapper className="flex flex-col">
+                                <NotesAndCTA
+                                    notes={notes}
+                                    canSubmit={canSubmit}
+                                    isOffline={isOffline}
+                                    onNotesChange={setNotes}
+                                    onSubmit={handleSubmit}
                                 />
                             </CardWrapper>
                         </div>
@@ -334,23 +349,6 @@ export default function HomePage() {
                         </Alert>
                     )}
 
-                    {/* Submit Button - full width at bottom */}
-                    {!result && (
-                        <div className="mt-8">
-                            <Button
-                                type="button"
-                                size="lg"
-                                className="w-full sm:w-auto sm:min-w-[300px] text-base font-semibold transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
-                                onClick={handleSubmit}
-                                disabled={!canSubmit || isOffline}
-                                aria-label="Generuj ogłoszenie sprzedażowe"
-                                title={isOffline ? "Brak połączenia z internetem" : undefined}
-                            >
-                                <Send className="h-5 w-5 mr-2" aria-hidden="true" />
-                                {isOffline ? "Brak połączenia" : "Generuj ogłoszenie"}
-                            </Button>
-                        </div>
-                    )}
                     {/* Result Section - Editorial Layout */}
                     {result && (
                         <section aria-labelledby="result-heading" className="space-y-8 animate-fade-in">
