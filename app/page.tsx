@@ -285,7 +285,7 @@ export default function HomePage() {
                     {!result && (
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             {/* Card 1: Photos */}
-                            <CardWrapper title="Zdjęcia produktu" icon={Camera}>
+                            <CardWrapper title="Zdjęcia produktu" icon={Camera} className="min-h-[400px]">
                                 <UploadDropzone
                                     images={images}
                                     onImagesChange={setImages}
@@ -293,7 +293,7 @@ export default function HomePage() {
                             </CardWrapper>
 
                             {/* Card 2: Platform + Tone */}
-                            <CardWrapper>
+                            <CardWrapper className="min-h-[400px]">
                                 <ProductForm
                                     platform={platform}
                                     selectedTone={selectedTone}
@@ -303,7 +303,7 @@ export default function HomePage() {
                             </CardWrapper>
 
                             {/* Card 3: Parameters */}
-                            <CardWrapper>
+                            <CardWrapper className="min-h-[500px]">
                                 <ProductParameters
                                     productName={productName}
                                     condition={condition}
@@ -319,7 +319,7 @@ export default function HomePage() {
                             </CardWrapper>
 
                             {/* Card 4: Notes + CTA */}
-                            <CardWrapper className="flex flex-col">
+                            <CardWrapper className="min-h-[500px] flex flex-col">
                                 <NotesAndCTA
                                     notes={notes}
                                     canSubmit={canSubmit}
