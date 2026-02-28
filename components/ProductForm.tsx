@@ -140,17 +140,17 @@ export function ProductParameters({
                         </div>
                     </label>
 
-                    <label className="flex items-start gap-3 cursor-pointer group">
-                        <input
-                            type="radio"
-                            name="priceType"
-                            value="user_provided"
-                            checked={priceType === "user_provided"}
-                            onChange={(e) => onPriceTypeChange(e.target.value as PriceType)}
-                            className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                        />
-                        <div className="flex-1 space-y-2">
-                            <div>
+                    <div className="flex items-start gap-3">
+                        <label className="flex items-start gap-3 cursor-pointer group flex-1">
+                            <input
+                                type="radio"
+                                name="priceType"
+                                value="user_provided"
+                                checked={priceType === "user_provided"}
+                                onChange={(e) => onPriceTypeChange(e.target.value as PriceType)}
+                                className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                            />
+                            <div className="flex-1">
                                 <span className="text-sm font-medium group-hover:text-foreground">
                                     Podaję swoją cenę
                                 </span>
@@ -158,30 +158,31 @@ export function ProductParameters({
                                     Wprowadź konkretną kwotę
                                 </p>
                             </div>
-                            <div className="relative w-32">
-                                <Input
-                                    id="userPrice"
-                                    name="price"
-                                    type="text"
-                                    inputMode="decimal"
-                                    value={price}
-                                    onChange={(e) => {
-                                        const val = e.target.value.replace(/[^0-9.]/g, '');
-                                        onPriceChange(val);
-                                    }}
-                                    placeholder="0"
-                                    disabled={priceType !== "user_provided"}
-                                    className="pr-12 h-10 text-right [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                    aria-label="Cena produktu"
-                                    autoComplete="off"
-                                    required={priceType === "user_provided"}
-                                />
-                                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm" aria-label="Waluta">
-                                    PLN
-                                </span>
-                            </div>
+                        </label>
+
+                        <div className="relative w-32 flex-shrink-0">
+                            <Input
+                                id="userPrice"
+                                name="price"
+                                type="text"
+                                inputMode="decimal"
+                                value={price}
+                                onChange={(e) => {
+                                    const val = e.target.value.replace(/[^0-9.]/g, '');
+                                    onPriceChange(val);
+                                }}
+                                placeholder="0"
+                                disabled={priceType !== "user_provided"}
+                                className="pr-12 h-10 text-right [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                aria-label="Cena produktu"
+                                autoComplete="off"
+                                required={priceType === "user_provided"}
+                            />
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm" aria-label="Waluta">
+                                PLN
+                            </span>
                         </div>
-                    </label>
+                    </div>
 
                     <label className="flex items-start gap-3 cursor-pointer group">
                         <input
