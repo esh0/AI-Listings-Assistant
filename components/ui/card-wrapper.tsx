@@ -12,27 +12,28 @@ interface CardWrapperProps {
     headerClassName?: string;
 }
 
-export function CardWrapper({
-    children,
-    title,
-    icon: Icon,
-    className,
-    headerClassName,
-}: CardWrapperProps) {
-    return (
-        <div
-            className={cn(
-                "bg-card border border-border rounded-xl shadow-sm p-6 transition-shadow duration-200 hover:shadow-md",
-                className
-            )}
-        >
-            {title && (
-                <div className={cn("mb-4 flex items-center gap-2", headerClassName)}>
-                    {Icon && <Icon className="h-5 w-5 text-primary" aria-hidden="true" />}
-                    <h2 className="text-lg font-semibold">{title}</h2>
-                </div>
-            )}
-            {children}
-        </div>
-    );
-}
+const CardWrapperComponent = React.forwardRef<HTMLDivElement, CardWrapperProps>(
+    ({ children, title, icon: Icon, className, headerClassName }, ref) => {
+        return (
+            <div
+                ref={ref}
+                className={cn(
+                    "bg-card border border-border rounded-xl shadow-sm p-6 transition-shadow duration-200 hover:shadow-md",
+                    className
+                )}
+            >
+                {title && (
+                    <div className={cn("mb-4 flex items-center gap-2", headerClassName)}>
+                        {Icon && <Icon className="h-5 w-5 text-primary" aria-hidden="true" />}
+                        <h2 className="text-lg font-semibold">{title}</h2>
+                    </div>
+                )}
+                {children}
+            </div>
+        );
+    }
+);
+
+CardWrapperComponent.displayName = "CardWrapper";
+
+export const CardWrapper = React.memo(CardWrapperComponent);
