@@ -140,24 +140,50 @@ export function ProductParameters({
                         </div>
                     </label>
 
-                    <label className="flex items-start gap-3 cursor-pointer group">
-                        <input
-                            type="radio"
-                            name="priceType"
-                            value="user_provided"
-                            checked={priceType === "user_provided"}
-                            onChange={(e) => onPriceTypeChange(e.target.value as PriceType)}
-                            className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                        />
-                        <div className="flex-1">
-                            <span className="text-sm font-medium group-hover:text-foreground">
-                                Podaję swoją cenę
-                            </span>
-                            <p className="text-xs text-muted-foreground mt-0.5">
-                                Wprowadź konkretną kwotę do ogłoszenia
-                            </p>
-                        </div>
-                    </label>
+                    <div className="flex items-start gap-3">
+                        <label className="flex items-start gap-3 cursor-pointer group flex-1">
+                            <input
+                                type="radio"
+                                name="priceType"
+                                value="user_provided"
+                                checked={priceType === "user_provided"}
+                                onChange={(e) => onPriceTypeChange(e.target.value as PriceType)}
+                                className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                            />
+                            <div className="flex-1">
+                                <span className="text-sm font-medium group-hover:text-foreground">
+                                    Podaję swoją cenę
+                                </span>
+                                <p className="text-xs text-muted-foreground mt-0.5">
+                                    Wprowadź konkretną kwotę
+                                </p>
+                            </div>
+                        </label>
+
+                        {priceType === "user_provided" && (
+                            <div className="relative w-32 flex-shrink-0">
+                                <Input
+                                    id="userPrice"
+                                    name="price"
+                                    type="number"
+                                    inputMode="decimal"
+                                    min="0"
+                                    max="999999"
+                                    step="0.01"
+                                    value={price}
+                                    onChange={(e) => onPriceChange(e.target.value)}
+                                    placeholder="0.00"
+                                    className="pr-12 h-10"
+                                    aria-label="Cena produktu"
+                                    autoComplete="off"
+                                    required
+                                />
+                                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm" aria-label="Waluta">
+                                    PLN
+                                </span>
+                            </div>
+                        )}
+                    </div>
 
                     <label className="flex items-start gap-3 cursor-pointer group">
                         <input
@@ -178,35 +204,6 @@ export function ProductParameters({
                         </div>
                     </label>
                 </div>
-
-                {priceType === "user_provided" && (
-                    <div className="space-y-2 pt-2">
-                        <label htmlFor="userPrice" className="text-sm font-medium leading-none">
-                            Twoja cena <span className="text-destructive">*</span>
-                        </label>
-                        <div className="relative">
-                            <Input
-                                id="userPrice"
-                                name="price"
-                                type="number"
-                                inputMode="decimal"
-                                min="0"
-                                max="999999"
-                                step="0.01"
-                                value={price}
-                                onChange={(e) => onPriceChange(e.target.value)}
-                                placeholder="0.00"
-                                className="pr-12"
-                                aria-label="Cena produktu"
-                                autoComplete="off"
-                                required
-                            />
-                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm" aria-label="Waluta">
-                                PLN
-                            </span>
-                        </div>
-                    </div>
-                )}
             </fieldset>
 
             {/* Delivery */}
