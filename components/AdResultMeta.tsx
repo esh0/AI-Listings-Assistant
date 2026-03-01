@@ -81,34 +81,34 @@ export const AdResultMeta: React.FC<AdResultMetaProps> = ({
         <div className="space-y-3 text-sm">
           <div className="flex justify-between">
             <span className="text-gray-500 dark:text-gray-500">Platforma:</span>
-            <span className="font-semibold text-foreground">{PLATFORM_NAMES[platform]}</span>
+            <span className="font-medium text-foreground">{PLATFORM_NAMES[platform]}</span>
           </div>
 
           {productName && (
             <div className="flex justify-between">
               <span className="text-gray-500 dark:text-gray-500">Nazwa:</span>
-              <span className="font-semibold text-foreground">{productName}</span>
+              <span className="font-medium text-foreground">{productName}</span>
             </div>
           )}
 
           <div className="flex justify-between">
             <span className="text-gray-500 dark:text-gray-500">Stan:</span>
-            <span className="font-semibold text-foreground">{CONDITION_NAMES[condition]}</span>
+            <span className="font-medium text-foreground">{CONDITION_NAMES[condition]}</span>
           </div>
 
           <div className="flex justify-between">
             <span className="text-gray-500 dark:text-gray-500">Cena:</span>
-            <span className="font-semibold text-foreground">{getPriceDisplay()}</span>
+            <span className="font-medium text-foreground">{getPriceDisplay()}</span>
           </div>
 
           <div className="flex justify-between">
             <span className="text-gray-500 dark:text-gray-500">Dostawa:</span>
-            <span className="font-semibold text-foreground text-right">{delivery}</span>
+            <span className="font-medium text-foreground text-right">{delivery}</span>
           </div>
 
           <div className="flex justify-between">
             <span className="text-gray-500 dark:text-gray-500">Styl:</span>
-            <span className="font-semibold text-foreground">{TONE_STYLE_NAMES[selectedTone]}</span>
+            <span className="font-medium text-foreground">{TONE_STYLE_NAMES[selectedTone]}</span>
           </div>
         </div>
       </CardWrapper>
