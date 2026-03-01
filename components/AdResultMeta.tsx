@@ -80,35 +80,35 @@ export const AdResultMeta: React.FC<AdResultMetaProps> = ({
       >
         <div className="space-y-3 text-sm">
           <div className="flex justify-between">
-            <span className="text-muted-foreground">Platforma:</span>
-            <span className="font-medium">{PLATFORM_NAMES[platform]}</span>
+            <span className="text-gray-400 dark:text-gray-500">Platforma:</span>
+            <span className="font-semibold text-foreground">{PLATFORM_NAMES[platform]}</span>
           </div>
 
           {productName && (
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Nazwa:</span>
-              <span className="font-medium">{productName}</span>
+              <span className="text-gray-400 dark:text-gray-500">Nazwa:</span>
+              <span className="font-semibold text-foreground">{productName}</span>
             </div>
           )}
 
           <div className="flex justify-between">
-            <span className="text-muted-foreground">Stan:</span>
-            <span className="font-medium">{CONDITION_NAMES[condition]}</span>
+            <span className="text-gray-400 dark:text-gray-500">Stan:</span>
+            <span className="font-semibold text-foreground">{CONDITION_NAMES[condition]}</span>
           </div>
 
           <div className="flex justify-between">
-            <span className="text-muted-foreground">Cena:</span>
-            <span className="font-medium">{getPriceDisplay()}</span>
+            <span className="text-gray-400 dark:text-gray-500">Cena:</span>
+            <span className="font-semibold text-foreground">{getPriceDisplay()}</span>
           </div>
 
           <div className="flex justify-between">
-            <span className="text-muted-foreground">Dostawa:</span>
-            <span className="font-medium text-right">{delivery}</span>
+            <span className="text-gray-400 dark:text-gray-500">Dostawa:</span>
+            <span className="font-semibold text-foreground text-right">{delivery}</span>
           </div>
 
           <div className="flex justify-between">
-            <span className="text-muted-foreground">Styl:</span>
-            <span className="font-medium">{TONE_STYLE_NAMES[selectedTone]}</span>
+            <span className="text-gray-400 dark:text-gray-500">Styl:</span>
+            <span className="font-semibold text-foreground">{TONE_STYLE_NAMES[selectedTone]}</span>
           </div>
         </div>
       </CardWrapper>
