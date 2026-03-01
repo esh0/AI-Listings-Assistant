@@ -376,9 +376,9 @@ export default function HomePage() {
                     {result && (
                         <section aria-labelledby="result-heading" className="space-y-8 animate-fade-in">
                             {/* Results Header */}
-                            <div className="flex items-start justify-between gap-4 pb-6 border-b-2 border-foreground">
+                            <div className="flex items-start justify-between gap-4 pb-6 border-b">
                                 <div>
-                                    <h2 id="result-heading" className="font-serif text-3xl sm:text-4xl font-normal mb-2 tracking-tight">
+                                    <h2 id="result-heading" className="font-sans text-3xl sm:text-4xl font-bold mb-2 tracking-tight">
                                         Twoje ogłoszenie
                                     </h2>
                                     <p className="text-muted-foreground leading-relaxed">
@@ -386,11 +386,11 @@ export default function HomePage() {
                                     </p>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <Button variant="ghost" size="sm" onClick={handleEdit} aria-label="Edytuj dane produktu" className="transition-all hover:scale-105 active:scale-95">
+                                    <Button variant="outline" size="sm" onClick={handleEdit} aria-label="Edytuj dane produktu" className="border-gray-200 text-gray-700 hover:border-orange-500 hover:text-orange-500 transition-colors">
                                         <Pencil className="h-4 w-4 mr-1.5" aria-hidden="true" />
                                         Edytuj
                                     </Button>
-                                    <Button variant="ghost" size="sm" onClick={handleReset} aria-label="Zacznij od nowa" className="transition-all hover:scale-105 active:scale-95">
+                                    <Button variant="outline" size="sm" onClick={handleReset} aria-label="Zacznij od nowa" className="border-gray-200 text-gray-700 hover:border-orange-500 hover:text-orange-500 transition-colors">
                                         <RotateCcw className="h-4 w-4 mr-1.5" aria-hidden="true" />
                                         Nowe
                                     </Button>
