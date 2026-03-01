@@ -202,16 +202,17 @@ Trzy style komunikacji:
 ### Tech Stack
 - **Frontend:** Next.js 15, React, TypeScript, Tailwind CSS
 - **AI:** OpenAI GPT-4o (vision + text)
-- **Infrastructure:** Vercel (hosting), Cloudflare (CDN)
+- **Infrastructure:** Vercel (hosting + CDN + edge functions)
 - **Analytics:** PostHog (product), Stripe (payments)
+- **Total monthly cost:** $20-50 (depends on usage)
 
 ### Koszty Operacyjne (monthly at scale)
 - **OpenAI API:** $0.006/ad × 50K ads = **$300** (!)
-- **Infrastructure:** Vercel Pro $20 + Cloudflare $20 = $40
-- **Tools:** $200 (analytics, monitoring, dev tools)
-- **Total:** ~$540/month
+- **Infrastructure:** Vercel Pro $20
+- **Tools:** $100 (analytics, monitoring - mostly free tiers at start)
+- **Total:** ~$420/month
 
-**Gross Margin at Scale:** 99.4% (software margins!)
+**Gross Margin at Scale:** 99.6% (software margins!)
 
 ### Skalowalność
 - **Current capacity:** 10,000 requests/day
