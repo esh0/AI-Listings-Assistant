@@ -19,7 +19,7 @@ const CardWrapperComponent = React.forwardRef<HTMLDivElement, CardWrapperProps>(
             <div
                 ref={ref}
                 className={cn(
-                    "bg-card border border-border rounded-xl shadow-sm p-6 transition-shadow duration-200 hover:shadow-md",
+                    "bg-card border border-border rounded-xl shadow-sm p-6 transition-shadow duration-200",
                     className
                 )}
             >
