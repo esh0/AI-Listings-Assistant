@@ -12,6 +12,60 @@
 
 ---
 
+## ⚠️ Critical Implementation Notes
+
+### 1. NextAuth v5 Session Typing (Task 5)
+
+**Problem:** NextAuth v5's default `Session.user.id` is optional (`string | undefined`), but our app requires it to always exist for logged-in users.
+
+**Solution:** Extend `DefaultSession["user"]` instead of overriding the entire user object:
+
+```typescript
+import { DefaultSession } from "next-auth";
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string; // Force required
+      plan?: Plan;
+      creditsUsed?: number;
+    } & DefaultSession["user"]; // Inherit name, email, image
+  }
+}
+```
+
+This prevents TypeScript conflicts in auth callbacks while enforcing our requirement.
+
+### 2. Vercel Serverless Background Tasks (Task 10)
+
+**Problem:** Vercel serverless functions terminate immediately after returning a response, killing any async tasks (like image uploads) that haven't completed.
+
+**Solution:** Use Next.js 15's `unstable_after` API:
+
+```typescript
+const { unstable_after } = await import('next/server');
+
+unstable_after(async () => {
+  await uploadImagesToStorage(...);
+});
+
+return NextResponse.json({ ... }); // Response returns, but upload continues
+```
+
+**Requires:** Enable in `next.config.js`:
+
+```javascript
+module.exports = {
+  experimental: {
+    after: true,
+  },
+};
+```
+
+**Alternative for Next.js 14:** Await uploads synchronously (slower) or use Vercel Queues/Inngest for background jobs.
+
+---
+
 ## Phase 1: Foundation (Database & Auth Setup)
 
 ### Task 1: Install Dependencies
@@ -419,24 +473,26 @@ export const { GET, POST } = handlers;
 Add to `lib/types.ts`:
 
 ```typescript
+import { DefaultSession } from "next-auth";
+
 // Auth types
 export type Plan = 'FREE' | 'PREMIUM';
 export type AdStatus = 'DRAFT' | 'PUBLISHED' | 'SOLD' | 'ARCHIVED';
 
 // Extend NextAuth session type
+// CRITICAL: Must extend DefaultSession["user"] to avoid TypeScript conflicts
 declare module "next-auth" {
   interface Session {
     user: {
-      id: string;
-      email: string;
-      name?: string;
-      image?: string;
+      id: string; // Force id to be required (default is optional)
       plan?: Plan;
       creditsUsed?: number;
-    };
+    } & DefaultSession["user"]; // Inherit name, email, image from default
   }
 }
 ```
+
+**Why this pattern?** NextAuth v5's default Session.user has `id?: string` (optional). Our app requires logged-in users to always have an ID, but directly overriding the user object causes TypeScript conflicts in auth callbacks. By extending `DefaultSession["user"]`, we inherit the base fields (name, email, image) and only override `id` to be required.
 
 **Step 4: Add environment variables**
 
@@ -817,8 +873,27 @@ export async function POST(req: NextRequest) {
         data: { creditsUsed: { increment: 1 } }
       });
 
-      // Background image upload (non-blocking)
-      uploadImagesToStorage(ad.id, user.id, validatedData.images).catch(console.error);
+      // CRITICAL: Vercel serverless background task
+      // Use Next.js 15's unstable_after to ensure upload completes after response
+      // Without this, Vercel kills the function immediately after return
+      const { unstable_after } = await import('next/server');
+      unstable_after(async () => {
+        try {
+          const uploadedImages = await uploadImagesToStorage(
+            ad.id,
+            user.id,
+            validatedData.images
+          );
+
+          // Update ad with Supabase URLs
+          await prisma.ad.update({
+            where: { id: ad.id },
+            data: { images: uploadedImages }
+          });
+        } catch (error) {
+          console.error('Background image upload failed:', error);
+        }
+      });
 
       return NextResponse.json({
         ...result,
@@ -855,7 +930,37 @@ export async function POST(req: NextRequest) {
 }
 ```
 
-**Step 3: Test endpoint manually**
+**IMPORTANT:** Next.js 15's `unstable_after` requires enabling in `next.config.js`:
+
+```javascript
+// next.config.js
+module.exports = {
+  experimental: {
+    after: true,
+  },
+};
+```
+
+**Why this matters:** Vercel's serverless functions terminate immediately after returning a response. Without `unstable_after`, the image upload Promise would be killed mid-execution, resulting in images never reaching Supabase Storage. This API tells Vercel to keep the function alive until background tasks complete.
+
+**Alternative for Next.js 14:** If using Next.js 14 (before `unstable_after`), you must await the upload synchronously (slower response) or use a separate background job service like Vercel Queues or Inngest.
+
+**Step 3: Enable experimental flag**
+
+Modify or create `next.config.js`:
+
+```javascript
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  experimental: {
+    after: true, // Required for unstable_after in API routes
+  },
+};
+
+module.exports = nextConfig;
+```
+
+**Step 4: Test endpoint manually**
 
 Run dev server: `npm run dev`
 
@@ -868,11 +973,17 @@ curl -X POST http://localhost:3000/api/generate-ad \
 
 Expected: Returns `requiresAuth: true` for guest
 
-**Step 4: Commit**
+**Step 5: Commit**
 
 ```bash
-git add app/api/generate-ad/route.ts
-git commit -m "feat: extend generate-ad endpoint with auth and DB save"
+git add app/api/generate-ad/route.ts next.config.js
+git commit -m "feat: extend generate-ad endpoint with auth and DB save
+
+- Add auth check with NextAuth v5
+- Save ads to database for logged users
+- Increment credits on successful generation
+- Use unstable_after for Vercel serverless background upload
+- Return requiresAuth flag for guests (soft-wall)"
 ```
 
 ---
