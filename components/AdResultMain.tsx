@@ -69,12 +69,7 @@ export const AdResultMain = React.memo(function AdResultMain({
           </Button>
         }
       >
-        <div className="space-y-3">
-          <p className="text-xs uppercase tracking-wider text-gray-400 dark:text-gray-500 font-semibold mb-2">
-            Wygenerowany tytuł
-          </p>
-          <p className="text-lg font-semibold leading-relaxed">{title}</p>
-        </div>
+        <p className="text-base leading-relaxed">{title}</p>
       </CardWrapper>
 
       {/* Description Card */}
@@ -106,14 +101,9 @@ export const AdResultMain = React.memo(function AdResultMain({
           </Button>
         }
       >
-        <div className="space-y-3">
-          <p className="text-xs uppercase tracking-wider text-gray-400 dark:text-gray-500 font-semibold mb-2">
-            Wygenerowany opis
-          </p>
-          <p className="text-base leading-relaxed whitespace-pre-wrap">
-            {description}
-          </p>
-        </div>
+        <p className="text-base leading-relaxed whitespace-pre-wrap">
+          {description}
+        </p>
       </CardWrapper>
     </div>
   );
