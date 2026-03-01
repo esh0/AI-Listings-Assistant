@@ -50,8 +50,9 @@ export const AdResultMain = React.memo(function AdResultMain({
             size="sm"
             onClick={handleCopyTitle}
             className={cn(
-              "gap-2 transition-all duration-200 hover:scale-105 active:scale-95",
-              copiedTitle && "text-green-600"
+              "gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-md transition-all duration-200",
+              "hover:bg-orange-50 hover:text-orange-600 hover:border-orange-200 dark:hover:bg-orange-950 dark:hover:text-orange-400",
+              copiedTitle && "bg-green-50 text-green-600 dark:bg-green-950 dark:text-green-400"
             )}
           >
             {copiedTitle ? (
@@ -69,7 +70,7 @@ export const AdResultMain = React.memo(function AdResultMain({
         }
       >
         <div className="space-y-3">
-          <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+          <p className="text-xs uppercase tracking-wider text-gray-400 dark:text-gray-500 font-semibold mb-2">
             Wygenerowany tytuł
           </p>
           <p className="text-lg font-semibold leading-relaxed">{title}</p>
@@ -86,8 +87,9 @@ export const AdResultMain = React.memo(function AdResultMain({
             size="sm"
             onClick={handleCopyDescription}
             className={cn(
-              "gap-2 transition-all duration-200 hover:scale-105 active:scale-95",
-              copiedDescription && "text-green-600"
+              "gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-md transition-all duration-200",
+              "hover:bg-orange-50 hover:text-orange-600 hover:border-orange-200 dark:hover:bg-orange-950 dark:hover:text-orange-400",
+              copiedDescription && "bg-green-50 text-green-600 dark:bg-green-950 dark:text-green-400"
             )}
           >
             {copiedDescription ? (
@@ -105,7 +107,7 @@ export const AdResultMain = React.memo(function AdResultMain({
         }
       >
         <div className="space-y-3">
-          <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+          <p className="text-xs uppercase tracking-wider text-gray-400 dark:text-gray-500 font-semibold mb-2">
             Wygenerowany opis
           </p>
           <p className="text-base leading-relaxed whitespace-pre-wrap">

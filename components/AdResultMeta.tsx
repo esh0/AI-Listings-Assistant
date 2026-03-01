@@ -71,7 +71,7 @@ export const AdResultMeta: React.FC<AdResultMetaProps> = ({
             size="sm"
             onClick={onEdit}
             aria-label="Popraw parametry"
-            className="gap-2 transition-all duration-200 hover:scale-105 active:scale-95"
+            className="gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-md transition-all duration-200 hover:bg-orange-50 hover:text-orange-600 hover:border-orange-200 dark:hover:bg-orange-950 dark:hover:text-orange-400"
           >
             <Pencil className="h-4 w-4" />
             Popraw
@@ -126,7 +126,7 @@ export const AdResultMeta: React.FC<AdResultMetaProps> = ({
           </CardHeader>
           <CardContent className="space-y-4">
             {images.map((image, index) => (
-              <div key={index} className="flex gap-3">
+              <div key={index} className="flex gap-4">
                 {/* Thumbnail with badge */}
                 <div className="relative w-24 h-24 flex-shrink-0 rounded-md overflow-hidden bg-muted">
                   <Image
@@ -141,14 +141,14 @@ export const AdResultMeta: React.FC<AdResultMetaProps> = ({
                     {image.isValid ? (
                       <Badge
                         variant="outline"
-                        className="bg-green-50 text-green-700 border-green-200"
+                        className="bg-green-50/80 text-green-600 border-green-200/80 dark:bg-green-950/50 dark:text-green-400 dark:border-green-800"
                       >
                         OK
                       </Badge>
                     ) : (
                       <Badge
                         variant="outline"
-                        className="bg-yellow-50 text-yellow-700 border-yellow-200"
+                        className="bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-950/50 dark:text-yellow-400 dark:border-yellow-800"
                       >
                         Uwaga
                       </Badge>
