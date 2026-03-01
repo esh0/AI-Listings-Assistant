@@ -88,18 +88,18 @@ Trzy style komunikacji:
 
 #### Faza 1: Freemium (Launch)
 - **Free tier:** 5 ogłoszeń/miesiąc, podstawowe funkcje
-- **Premium ($9.99/mies):** nielimitowane ogłoszenia, wszystkie platformy, priorytetowe wsparcie
-- **Business ($29.99/mies):** API access, bulk generation, white-label
+- **Premium (39 zł/mies):** nielimitowane ogłoszenia, wszystkie platformy, priorytetowe wsparcie
+- **Business (119 zł/mies):** API access, bulk generation, white-label
 
 #### Faza 2: Rozszerzenia
-- **Pay-per-use:** $0.99 za pojedyncze ogłoszenie (bez subskrypcji)
+- **Pay-per-use:** 3.99 zł za pojedyncze ogłoszenie (bez subskrypcji)
 - **Credits system:** pakiety 10/50/100 ogłoszeń z rabatem
-- **Marketplace integrations:** automatyczna publikacja na platformy ($4.99/mies)
+- **Marketplace integrations:** automatyczna publikacja na platformy (19.99 zł/mies)
 
 #### Faza 3: Ekosystem
 - **Affiliate z platformami:** prowizja od sprzedaży (partnership z OLX, Allegro)
-- **Premium templates:** gotowe szablony dla kategorii produktów ($1.99/kategoria)
-- **Analytics dashboard:** statystyki sprzedaży, A/B testing opisów ($14.99/mies)
+- **Premium templates:** gotowe szablony dla kategorii produktów (7.99 zł/kategoria)
+- **Analytics dashboard:** statystyki sprzedaży, A/B testing opisów (59 zł/mies)
 
 ---
 
@@ -136,7 +136,7 @@ Trzy style komunikacji:
 - SEO - blog posty "jak sprzedać X na Y"
 
 **Metryki:**
-- CAC < $5
+- CAC < 20 zł
 - Activation rate > 40% (signup → first ad)
 - Retention D7 > 20%
 
@@ -147,12 +147,12 @@ Trzy style komunikacji:
 - Google Ads - keywords "generator ogłoszeń", "jak sprzedać na olx"
 - Facebook Ads - targetowanie sprzedających
 - Influencer marketing - nano-influencers (1K-10K followers)
-- Referral program - $5 credit za polecenie
+- Referral program - 20 zł kredytu za polecenie
 
 **Metryki:**
-- CAC < $10
+- CAC < 40 zł
 - Free-to-paid conversion > 5%
-- MRR > $5,000
+- MRR > 20,000 zł
 
 ### Faza 3: Scale (Miesiące 10-18)
 **Cel:** 100,000 użytkowników, profitable unit economics
@@ -164,8 +164,8 @@ Trzy style komunikacji:
 - PR - tech media, startup competitions
 
 **Metryki:**
-- CAC < $15
-- LTV > $100
+- CAC < 60 zł
+- LTV > 400 zł
 - LTV:CAC > 3:1
 - Churn < 5%/month
 
@@ -174,25 +174,25 @@ Trzy style komunikacji:
 ## 💰 Prognozy Finansowe (18 miesięcy)
 
 ### Założenia
-- Średnia cena subskrypcji: $12/user/month
+- Średnia cena subskrypcji: 48 zł/user/month (~50% Premium, ~50% Business)
 - Free-to-paid conversion: 8%
 - Miesięczny churn: 5%
-- Średni koszt AI per ad: $0.006
+- Średni koszt AI per ad: 0.024 zł ($0.006)
 - Średnio 1.5 ads per paid user per month
 
 ### Scenariusz Bazowy
 
-| Miesiąc | Users | Paid Users | MRR | Koszty AI | CAC Investment | Burn Rate |
-|---------|-------|------------|-----|-----------|----------------|-----------|
-| 3 | 1,000 | 50 | $600 | $9 | $5,000 | $7,800 |
-| 6 | 3,500 | 240 | $2,880 | $31 | $12,000 | $17,200 |
-| 9 | 10,000 | 700 | $8,400 | $90 | $25,000 | $33,800 |
-| 12 | 25,000 | 1,800 | $21,600 | $225 | $40,000 | $48,000 |
-| 18 | 100,000 | 8,000 | $96,000 | $900 | $80,000 | $60,000 |
+| Miesiąc | Users | Paid Users | MRR (zł) | Koszty AI (zł) | CAC Investment (zł) | Burn Rate (zł) |
+|---------|-------|------------|----------|----------------|---------------------|----------------|
+| 3 | 1,000 | 50 | 2,400 | 36 | 20,000 | 31,200 |
+| 6 | 3,500 | 240 | 11,520 | 124 | 48,000 | 68,800 |
+| 9 | 10,000 | 700 | 33,600 | 360 | 100,000 | 135,200 |
+| 12 | 25,000 | 1,800 | 86,400 | 900 | 160,000 | 192,000 |
+| 18 | 100,000 | 8,000 | 384,000 | 3,600 | 320,000 | 240,000 |
 
 **Break-even:** Miesiąc 12-13
-**Total Burn (18M):** ~$320,000
-**ARR at M18:** $1,152,000
+**Total Burn (18M):** ~1,280,000 zł
+**ARR at M18:** 4,608,000 zł (~$1.15M)
 **Gross Margin:** 99%+
 
 ---
@@ -203,16 +203,43 @@ Trzy style komunikacji:
 - **Frontend:** Next.js 15, React, TypeScript, Tailwind CSS
 - **AI:** OpenAI GPT-4o (vision + text)
 - **Infrastructure:** Vercel Pro (hosting + CDN + edge functions)
-- **Analytics:** PostHog (product), Stripe (payments)
-- **Monthly fixed cost:** $20 (Vercel Pro)
+- **Payments:** PayU + Stripe (BLIK, karty, przelewy)
+- **Analytics:** PostHog (product analytics)
+- **Monthly fixed cost:** 80 zł (Vercel Pro)
+
+### Koszty Płatności (Polski Rynek)
+
+**PayU (główny gateway dla polskich płatności):**
+- **Prowizja:** 1.9% + 0.25 zł per transakcja
+- **BLIK:** wspierany natywnie (najpopularniejsza metoda w PL)
+- **Przelewy24:** integracja standardowa
+- **Karty:** Visa, Mastercard (1.9% + 0.25 zł)
+- **Brak minimum** transakcji
+- **Wypłaty:** automatyczne na konto firmowe, T+2
+
+**Stripe (backup + karty międzynarodowe):**
+- **Prowizja:** 1.4% + 1 zł per transakcja (European cards)
+- **Minimum:** brak
+- **Zastosowanie:** płatności kartami spoza Polski, integracje API
+
+**Przykładowe koszty transakcyjne:**
+- Subskrypcja Premium (39 zł): 0.99 zł prowizji (2.5%)
+- Subskrypcja Business (119 zł): 2.51 zł prowizji (2.1%)
+- Pay-per-use (3.99 zł): 0.33 zł prowizji (8.3% - wysokie dla małych kwot)
+
+**Strategia:**
+- PayU jako główny gateway (niższe koszty, BLIK)
+- Stripe dla płatności międzynarodowych i API integrations
+- Potencjalna negocjacja rabatu przy >10K zł MRR (1.5% możliwe)
 
 ### Koszty Operacyjne (monthly at scale)
-- **OpenAI API:** $0.006/ad × 50K ads = $300
-- **Infrastructure:** Vercel Pro $20/month
-- **Tools:** $100 (analytics, monitoring)
-- **Total:** ~$420/month
+- **OpenAI API:** 0.024 zł/ad × 50K ads = 1,200 zł
+- **Infrastructure:** Vercel Pro 80 zł/month
+- **Payments:** ~2% × 384K zł MRR = 7,680 zł (PayU fees at scale)
+- **Tools:** 400 zł (analytics, monitoring)
+- **Total:** ~9,360 zł/month at 384K zł MRR
 
-**Gross Margin at Scale:** 99.6%
+**Net Margin at Scale:** 97.6% (po kosztach płatności)
 
 ### Skalowalność
 - **Current capacity:** 10,000 requests/day
@@ -249,24 +276,24 @@ Trzy style komunikacji:
 
 ## 🎯 Funding Ask
 
-### Pre-Seed Round: $250,000
+### Pre-Seed Round: 1,000,000 zł (~$250K)
 
 **Use of Funds:**
-- **Team (60% - $150K):** Hire CEO/Product + Head of Growth + 1 engineer
-- **Marketing (30% - $75K):** User acquisition, content, partnerships
-- **Operations (10% - $25K):** Tools, legal, runway buffer
+- **Team (60% - 600K zł):** Hire CEO/Product + Head of Growth + 1 engineer
+- **Marketing (30% - 300K zł):** User acquisition, content, partnerships
+- **Operations (10% - 100K zł):** Tools, legal, runway buffer
 
 **Milestones (12 months):**
 - ✅ 10,000+ registered users
-- ✅ $10,000+ MRR
+- ✅ 40,000+ zł MRR
 - ✅ 5% free-to-paid conversion
 - ✅ Product-market fit validated
-- ✅ Ready for Seed round ($1-2M)
+- ✅ Ready for Seed round (4-8M zł)
 
 **Terms:**
-- **Valuation:** $1.5M post-money
+- **Valuation:** 6M zł post-money (~$1.5M)
 - **Equity:** 16.7%
-- **Instrument:** SAFE or equity
+- **Instrument:** SAFE lub udziały
 - **Investor involvement:** Quarterly updates, strategic advice
 
 ---
@@ -314,7 +341,7 @@ Trzy style komunikacji:
 ### Rok 3: Ekspansja CEE
 - Wejście na rynki: Czechy, Słowacja, Węgry, Rumunia
 - Lokalizacja UI i reguł platform
-- 1M+ users, $10M+ ARR
+- 1M+ users, 40M+ zł ARR
 
 ### Rok 4-5: Beyond Listings
 - **AI Shopping Assistant** - pomoc w zakupach (nie tylko sprzedaży)
