@@ -1,6 +1,8 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Image from "next/image";
-import { Pencil, Settings } from "lucide-react";
+import { Pencil, Settings, Maximize2, X } from "lucide-react";
 import type { Platform, ProductCondition, PriceType, ToneStyle } from "@/lib/types";
 import { PLATFORM_NAMES, CONDITION_NAMES, TONE_STYLE_NAMES } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
@@ -48,6 +50,8 @@ export const AdResultMeta: React.FC<AdResultMetaProps> = ({
   isFree,
   onEdit,
 }) => {
+  const [lightboxImage, setLightboxImage] = useState<string | null>(null);
+
   // Format price type for display
   const getPriceDisplay = () => {
     if (priceType === "free") {
@@ -127,8 +131,8 @@ export const AdResultMeta: React.FC<AdResultMetaProps> = ({
           <CardContent className="space-y-4">
             {images.map((image, index) => (
               <div key={index} className="flex gap-4">
-                {/* Thumbnail with badge */}
-                <div className="relative w-24 h-24 flex-shrink-0 rounded-md overflow-hidden bg-muted">
+                {/* Thumbnail with badge and zoom button */}
+                <div className="relative w-24 h-24 flex-shrink-0 rounded-md overflow-hidden bg-muted group">
                   <Image
                     src={imagePreviews[index]}
                     alt={`Zdjęcie ${index + 1}`}
@@ -136,8 +140,18 @@ export const AdResultMeta: React.FC<AdResultMetaProps> = ({
                     className="object-cover"
                     sizes="96px"
                   />
-                  {/* Status badge - top-right corner */}
-                  <div className="absolute top-1 right-1">
+
+                  {/* Zoom button - top-right corner */}
+                  <button
+                    onClick={() => setLightboxImage(imagePreviews[index])}
+                    className="absolute top-1 right-1 p-1.5 bg-black/60 hover:bg-black/80 text-white rounded-md transition-all opacity-0 group-hover:opacity-100"
+                    aria-label="Powiększ zdjęcie"
+                  >
+                    <Maximize2 className="h-3 w-3" />
+                  </button>
+
+                  {/* Status badge - bottom-right corner */}
+                  <div className="absolute bottom-1 right-1">
                     {image.isValid ? (
                       <Badge
                         variant="outline"
@@ -170,6 +184,32 @@ export const AdResultMeta: React.FC<AdResultMetaProps> = ({
             ))}
           </CardContent>
         </Card>
+      )}
+
+      {/* Lightbox Modal */}
+      {lightboxImage && (
+        <div
+          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 animate-fade-in"
+          onClick={() => setLightboxImage(null)}
+        >
+          <button
+            onClick={() => setLightboxImage(null)}
+            className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 text-white rounded-md transition-all"
+            aria-label="Zamknij podgląd"
+          >
+            <X className="h-6 w-6" />
+          </button>
+          <div className="relative max-w-7xl max-h-[90vh] w-full h-full">
+            <Image
+              src={lightboxImage}
+              alt="Podgląd zdjęcia"
+              fill
+              className="object-contain"
+              sizes="100vw"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+        </div>
       )}
     </div>
   );
