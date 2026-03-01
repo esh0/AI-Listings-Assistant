@@ -10,10 +10,11 @@ interface CardWrapperProps {
     icon?: LucideIcon;
     className?: string;
     headerClassName?: string;
+    headerAction?: React.ReactNode;
 }
 
 const CardWrapperComponent = React.forwardRef<HTMLDivElement, CardWrapperProps>(
-    ({ children, title, icon: Icon, className, headerClassName }, ref) => {
+    ({ children, title, icon: Icon, className, headerClassName, headerAction }, ref) => {
         return (
             <div
                 ref={ref}
@@ -23,9 +24,12 @@ const CardWrapperComponent = React.forwardRef<HTMLDivElement, CardWrapperProps>(
                 )}
             >
                 {title && (
-                    <div className={cn("mb-4 flex items-center gap-2", headerClassName)}>
-                        {Icon && <Icon className="h-5 w-5 text-primary" aria-hidden="true" />}
-                        <h2 className="text-lg font-semibold">{title}</h2>
+                    <div className={cn("mb-4 flex items-center justify-between gap-2", headerClassName)}>
+                        <div className="flex items-center gap-2">
+                            {Icon && <Icon className="h-5 w-5 text-primary" aria-hidden="true" />}
+                            <h2 className="text-lg font-semibold">{title}</h2>
+                        </div>
+                        {headerAction && <div>{headerAction}</div>}
                     </div>
                 )}
                 {children}

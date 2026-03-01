@@ -41,14 +41,16 @@ export const AdResultMain = React.memo(function AdResultMain({
   return (
     <div className="space-y-6">
       {/* Title Card */}
-      <CardWrapper title="Tytuł ogłoszenia" icon={Tag}>
-        <div className="space-y-3 relative">
+      <CardWrapper
+        title="Tytuł ogłoszenia"
+        icon={Tag}
+        headerAction={
           <Button
             variant="ghost"
             size="sm"
             onClick={handleCopyTitle}
             className={cn(
-              "absolute top-0 right-0 gap-2 transition-all duration-200",
+              "gap-2 transition-all duration-200 hover:scale-105 active:scale-95",
               copiedTitle && "text-green-600"
             )}
           >
@@ -64,22 +66,27 @@ export const AdResultMain = React.memo(function AdResultMain({
               </>
             )}
           </Button>
+        }
+      >
+        <div className="space-y-3">
           <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
             Wygenerowany tytuł
           </p>
-          <p className="text-lg font-semibold leading-relaxed pr-24">{title}</p>
+          <p className="text-lg font-semibold leading-relaxed">{title}</p>
         </div>
       </CardWrapper>
 
       {/* Description Card */}
-      <CardWrapper title="Opis ogłoszenia" icon={FileText}>
-        <div className="space-y-3 relative">
+      <CardWrapper
+        title="Opis ogłoszenia"
+        icon={FileText}
+        headerAction={
           <Button
             variant="ghost"
             size="sm"
             onClick={handleCopyDescription}
             className={cn(
-              "absolute top-0 right-0 gap-2 transition-all duration-200",
+              "gap-2 transition-all duration-200 hover:scale-105 active:scale-95",
               copiedDescription && "text-green-600"
             )}
           >
@@ -95,10 +102,13 @@ export const AdResultMain = React.memo(function AdResultMain({
               </>
             )}
           </Button>
+        }
+      >
+        <div className="space-y-3">
           <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
             Wygenerowany opis
           </p>
-          <p className="text-base leading-relaxed whitespace-pre-wrap pr-24">
+          <p className="text-base leading-relaxed whitespace-pre-wrap">
             {description}
           </p>
         </div>
