@@ -21,6 +21,10 @@ export function FullscreenLoading({
     const [progress, setProgress] = useState(0);
     const [isIndeterminate, setIsIndeterminate] = useState(false);
 
+    // Calculate duration based on image count: 10 base + 1 second per image
+    const calculatedDuration = 10 + imageCount * 1;
+    const effectiveDuration = calculatedDuration;
+
     useEffect(() => {
         if (!isLoading) {
             setProgress(0);
@@ -30,12 +34,12 @@ export function FullscreenLoading({
 
         // Start progress animation
         const startTime = Date.now();
-        const endTime = startTime + duration * 1000;
+        const endTime = startTime + effectiveDuration * 1000;
 
         const updateProgress = () => {
             const now = Date.now();
             const elapsed = now - startTime;
-            const percentage = Math.min((elapsed / (duration * 1000)) * 100, 100);
+            const percentage = Math.min((elapsed / (effectiveDuration * 1000)) * 100, 100);
 
             if (percentage >= 100) {
                 setIsIndeterminate(true);
@@ -50,7 +54,7 @@ export function FullscreenLoading({
         updateProgress(); // Initial call
 
         return () => clearInterval(interval);
-    }, [isLoading, duration]);
+    }, [isLoading, effectiveDuration, imageCount]);
 
     if (!isLoading) return null;
 
