@@ -123,7 +123,7 @@ export function FullscreenLoading({
 
                 {/* Text */}
                 <div className="space-y-3">
-                    <h2 className="font-sans text-2xl font-normal tracking-tight">
+                    <h2 className="text-2xl font-bold tracking-tight">
                         AI pracuje...
                     </h2>
                     <p className="text-muted-foreground text-base leading-relaxed transition-opacity duration-300">
@@ -150,7 +150,7 @@ export function FullscreenLoading({
                             />
                         )}
                     </div>
-                    <p className="text-sm text-muted-foreground font-mono tabular-nums tracking-wide">
+                    <p className="text-sm text-muted-foreground tabular-nums">
                         {isIndeterminate
                             ? "Finalizowanie..."
                             : `${Math.round(progress)}%`}
