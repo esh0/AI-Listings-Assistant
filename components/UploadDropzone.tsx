@@ -139,11 +139,11 @@ export function UploadDropzone({ onImagesChange, images }: UploadDropzoneProps) 
         <div className="space-y-4">
             {/* Image Grid */}
             {images.length > 0 && (
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
                     {images.map((image, index) => (
                         <div
                             key={`${image.filename}-${index}`}
-                            className="relative group aspect-square rounded-md border-2 border-border bg-muted overflow-hidden hover:border-primary transition-all"
+                            className="relative group aspect-square rounded-lg border-2 border-border bg-muted overflow-hidden hover:border-primary transition-all"
                         >
                             <img
                                 src={image.preview}
@@ -205,7 +205,7 @@ export function UploadDropzone({ onImagesChange, images }: UploadDropzoneProps) 
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
                     className={cn(
-                        "relative flex flex-col items-center justify-center rounded-md border-2 border-dashed p-12 transition-all cursor-pointer min-h-[300px] group",
+                        "relative flex flex-col items-center justify-center rounded-md border-2 border-dashed p-8 transition-all cursor-pointer min-h-[200px] group",
                         isDragging
                             ? "border-primary bg-primary/5 scale-[1.01]"
                             : "border-border hover:border-primary/50 hover:bg-muted/30",
@@ -221,14 +221,14 @@ export function UploadDropzone({ onImagesChange, images }: UploadDropzoneProps) 
                         aria-label="Wybierz zdjęcia produktu"
                         tabIndex={0}
                     />
-                    <div className="flex flex-col items-center gap-4 text-center pointer-events-none">
-                        <div className="rounded-full bg-muted p-6 group-hover:bg-primary/10 transition-colors">
+                    <div className="flex flex-col items-center gap-3 text-center pointer-events-none">
+                        <div className="rounded-full bg-muted p-4 group-hover:bg-primary/10 transition-colors">
                             <Upload className={cn(
                                 "h-10 w-10 text-muted-foreground group-hover:text-primary transition-colors",
                                 isCompressing && "animate-pulse"
                             )} aria-hidden="true" />
                         </div>
-                        <div className="space-y-2">
+                        <div className="space-y-1">
                             <p className="text-lg font-semibold">
                                 {isCompressing ? "Przetwarzanie…" : "Przeciągnij zdjęcia tutaj"}
                             </p>

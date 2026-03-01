@@ -6,7 +6,7 @@ import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 
 export function ThemeToggle() {
-    const { resolvedTheme, setTheme } = useTheme();
+    const { theme, setTheme, systemTheme } = useTheme();
     const [mounted, setMounted] = React.useState(false);
 
     React.useEffect(() => {
@@ -15,13 +15,15 @@ export function ThemeToggle() {
 
     if (!mounted) {
         return (
-            <Button variant="ghost" size="icon" disabled>
+            <Button variant="ghost" size="icon" disabled aria-label="Ładowanie motywu">
                 <Sun className="h-5 w-5" />
             </Button>
         );
     }
 
-    const isDark = resolvedTheme === "dark";
+    // Determine current theme: use theme if set, otherwise use system theme
+    const currentTheme = theme === "system" ? systemTheme : theme;
+    const isDark = currentTheme === "dark";
 
     return (
         <Button

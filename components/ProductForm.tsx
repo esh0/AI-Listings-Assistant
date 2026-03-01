@@ -1,9 +1,14 @@
 "use client";
 
 import React, { memo, useCallback } from "react";
+import { Send } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { PlatformSelector } from "@/components/PlatformSelector";
+import { ToneSelector } from "@/components/ToneSelector";
+import { ConditionSegmentedControl } from "@/components/ConditionSegmentedControl";
 import {
     Platform,
     ProductCondition,
@@ -39,28 +44,39 @@ interface ProductFormProps {
 
 export function ProductForm({
     platform,
-    productName,
+    selectedTone,
+    onPlatformChange,
+    onToneChange,
+}: Pick<ProductFormProps, 'platform' | 'selectedTone' | 'onPlatformChange' | 'onToneChange'>) {
+    return (
+        <div className="space-y-6">
+            <PlatformSelector
+                platform={platform}
+                onPlatformChange={onPlatformChange}
+            />
+
+            <ToneSelector
+                selectedTone={selectedTone}
+                onToneChange={onToneChange}
+            />
+        </div>
+    );
+}
+
+// Component for Card 3: Product Parameters
+export function ProductParameters({
     condition,
     price,
     delivery,
-    notes,
-    selectedTone,
     priceType,
-    onPlatformChange,
-    onProductNameChange,
     onConditionChange,
     onPriceChange,
     onDeliveryChange,
-    onNotesChange,
-    onToneChange,
     onPriceTypeChange,
-}: ProductFormProps) {
-    // Memoize delivery toggle to prevent recreation on every render
-    // Uses functional setState to avoid dependency on delivery array
+}: Omit<ProductFormProps, 'platform' | 'notes' | 'selectedTone' | 'productName' | 'onPlatformChange' | 'onNotesChange' | 'onToneChange' | 'onProductNameChange'>) {
     const handleDeliveryToggle = useCallback((option: DeliveryOption) => {
         onDeliveryChange((prevDelivery) => {
             if (prevDelivery.includes(option)) {
-                // Only remove if more than one option selected
                 if (prevDelivery.length > 1) {
                     return prevDelivery.filter((d) => d !== option);
                 }
@@ -72,193 +88,12 @@ export function ProductForm({
     }, [onDeliveryChange]);
 
     return (
-        <div className="space-y-4">
-            {/* Platform */}
-            <fieldset className="space-y-3">
-                <legend className="text-sm font-medium leading-none">
-                    Platforma sprzedażowa{" "}
-                    <span className="text-destructive">*</span>
-                </legend>
-                <div className="space-y-2">
-                    {(Object.entries(PLATFORM_NAMES) as [Platform, string][]).map(
-                        ([value, label]) => (
-                            <label
-                                key={value}
-                                className="flex items-center gap-3 cursor-pointer group"
-                            >
-                                <input
-                                    type="radio"
-                                    name="platform"
-                                    value={value}
-                                    checked={platform === value}
-                                    onChange={(e) =>
-                                        onPlatformChange(e.target.value as Platform)
-                                    }
-                                    className="h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                                    aria-required="true"
-                                />
-                                <span className="text-sm font-medium group-hover:text-foreground">
-                                    {label}
-                                </span>
-                            </label>
-                        )
-                    )}
-                </div>
-            </fieldset>
-
-            {/* Tone Style */}
-            <fieldset className="space-y-3">
-                <legend className="text-sm font-medium leading-none">
-                    Styl komunikacji <span className="text-destructive">*</span>
-                </legend>
-                <div className="space-y-2">
-                    <label
-                        className="flex items-start gap-3 cursor-pointer group"
-                    >
-                        <input
-                            type="radio"
-                            name="tone"
-                            value="professional"
-                            checked={selectedTone === "professional"}
-                            onChange={(e) =>
-                                onToneChange(e.target.value as ToneStyle)
-                            }
-                            className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                            aria-describedby="tone-professional-description"
-                        />
-                        <div className="flex-1">
-                            <span className="text-sm font-medium group-hover:text-foreground">
-                                {TONE_STYLE_NAMES["professional"]}
-                            </span>
-                            <p
-                                id="tone-professional-description"
-                                className="text-xs text-muted-foreground mt-0.5"
-                            >
-                                {TONE_STYLE_DESCRIPTIONS["professional"]}
-                                <span className="block mt-1 text-blue-600 dark:text-blue-400 font-medium">
-                                    ⭐ Polecany dla: Allegro Lokalnie
-                                </span>
-                            </p>
-                        </div>
-                    </label>
-
-                    <label
-                        className="flex items-start gap-3 cursor-pointer group"
-                    >
-                        <input
-                            type="radio"
-                            name="tone"
-                            value="friendly"
-                            checked={selectedTone === "friendly"}
-                            onChange={(e) =>
-                                onToneChange(e.target.value as ToneStyle)
-                            }
-                            className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                            aria-describedby="tone-friendly-description"
-                        />
-                        <div className="flex-1">
-                            <span className="text-sm font-medium group-hover:text-foreground">
-                                {TONE_STYLE_NAMES["friendly"]}
-                            </span>
-                            <p
-                                id="tone-friendly-description"
-                                className="text-xs text-muted-foreground mt-0.5"
-                            >
-                                {TONE_STYLE_DESCRIPTIONS["friendly"]}
-                                <span className="block mt-1 text-blue-600 dark:text-blue-400 font-medium">
-                                    ⭐ Polecany dla: Facebook Marketplace, Vinted
-                                </span>
-                            </p>
-                        </div>
-                    </label>
-
-                    <label
-                        className="flex items-start gap-3 cursor-pointer group"
-                    >
-                        <input
-                            type="radio"
-                            name="tone"
-                            value="casual"
-                            checked={selectedTone === "casual"}
-                            onChange={(e) =>
-                                onToneChange(e.target.value as ToneStyle)
-                            }
-                            className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                            aria-describedby="tone-casual-description"
-                        />
-                        <div className="flex-1">
-                            <span className="text-sm font-medium group-hover:text-foreground">
-                                {TONE_STYLE_NAMES["casual"]}
-                            </span>
-                            <p
-                                id="tone-casual-description"
-                                className="text-xs text-muted-foreground mt-0.5"
-                            >
-                                {TONE_STYLE_DESCRIPTIONS["casual"]}
-                                <span className="block mt-1 text-blue-600 dark:text-blue-400 font-medium">
-                                    ⭐ Polecany dla: OLX
-                                </span>
-                            </p>
-                        </div>
-                    </label>
-                </div>
-            </fieldset>
-
-            {/* Product Name */}
-            <div className="space-y-2">
-                <label
-                    htmlFor="productName"
-                    className="text-sm font-medium leading-none"
-                >
-                    Nazwa produktu{" "}
-                    <span className="text-muted-foreground text-xs">
-                        (opcjonalne)
-                    </span>
-                </label>
-                <Input
-                    id="productName"
-                    value={productName}
-                    onChange={(e) => onProductNameChange(e.target.value)}
-                    placeholder="np. iPhone 13 Pro, Krzesło IKEA, Kurtka zimowa…"
-                    maxLength={200}
-                    aria-describedby="productName-hint"
-                />
-                <p id="productName-hint" className="text-xs text-muted-foreground">
-                    Jeśli nie podasz nazwy, AI rozpozna produkt ze zdjęcia
-                </p>
-            </div>
-
+        <div className="space-y-6">
             {/* Condition */}
-            <fieldset className="space-y-3">
-                <legend className="text-sm font-medium leading-none">
-                    Stan produktu <span className="text-destructive">*</span>
-                </legend>
-                <div className="space-y-2">
-                    {(Object.entries(CONDITION_NAMES) as [ProductCondition, string][]).map(
-                        ([value, label]) => (
-                            <label
-                                key={value}
-                                className="flex items-center gap-3 cursor-pointer group"
-                            >
-                                <input
-                                    type="radio"
-                                    name="condition"
-                                    value={value}
-                                    checked={condition === value}
-                                    onChange={(e) =>
-                                        onConditionChange(e.target.value as ProductCondition)
-                                    }
-                                    className="h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                                    aria-required="true"
-                                />
-                                <span className="text-sm font-medium group-hover:text-foreground">
-                                    {label}
-                                </span>
-                            </label>
-                        )
-                    )}
-                </div>
-            </fieldset>
+            <ConditionSegmentedControl
+                condition={condition}
+                onConditionChange={onConditionChange}
+            />
 
             {/* Price Type */}
             <fieldset className="space-y-3">
@@ -272,14 +107,12 @@ export function ProductForm({
                             name="priceType"
                             value="ai_suggest"
                             checked={priceType === "ai_suggest"}
-                            onChange={(e) =>
-                                onPriceTypeChange(e.target.value as PriceType)
-                            }
+                            onChange={(e) => onPriceTypeChange(e.target.value as PriceType)}
                             className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                         />
                         <div className="flex-1">
                             <span className="text-sm font-medium group-hover:text-foreground">
-                                Zasugeruj cenę
+                                AI zasugeruje cenę
                             </span>
                             <p className="text-xs text-muted-foreground mt-0.5">
                                 AI zaproponuje odpowiednią cenę na podstawie produktu
@@ -287,26 +120,49 @@ export function ProductForm({
                         </div>
                     </label>
 
-                    <label className="flex items-start gap-3 cursor-pointer group">
-                        <input
-                            type="radio"
-                            name="priceType"
-                            value="user_provided"
-                            checked={priceType === "user_provided"}
-                            onChange={(e) =>
-                                onPriceTypeChange(e.target.value as PriceType)
-                            }
-                            className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                        />
-                        <div className="flex-1">
-                            <span className="text-sm font-medium group-hover:text-foreground">
-                                Podaję swoją cenę
+                    <div className="flex items-start gap-3">
+                        <label className="flex items-start gap-3 cursor-pointer group flex-1">
+                            <input
+                                type="radio"
+                                name="priceType"
+                                value="user_provided"
+                                checked={priceType === "user_provided"}
+                                onChange={(e) => onPriceTypeChange(e.target.value as PriceType)}
+                                className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                            />
+                            <div className="flex-1">
+                                <span className="text-sm font-medium group-hover:text-foreground">
+                                    Podaję swoją cenę
+                                </span>
+                                <p className="text-xs text-muted-foreground mt-0.5">
+                                    Wprowadź konkretną kwotę
+                                </p>
+                            </div>
+                        </label>
+
+                        <div className="relative w-32 flex-shrink-0">
+                            <Input
+                                id="userPrice"
+                                name="price"
+                                type="text"
+                                inputMode="decimal"
+                                value={price}
+                                onChange={(e) => {
+                                    const val = e.target.value.replace(/[^0-9.]/g, '');
+                                    onPriceChange(val);
+                                }}
+                                placeholder="0"
+                                disabled={priceType !== "user_provided"}
+                                className="pr-12 h-10 text-right [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                aria-label="Cena produktu"
+                                autoComplete="off"
+                                required={priceType === "user_provided"}
+                            />
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm" aria-label="Waluta">
+                                PLN
                             </span>
-                            <p className="text-xs text-muted-foreground mt-0.5">
-                                Wprowadź konkretną kwotę do ogłoszenia
-                            </p>
                         </div>
-                    </label>
+                    </div>
 
                     <label className="flex items-start gap-3 cursor-pointer group">
                         <input
@@ -314,9 +170,7 @@ export function ProductForm({
                             name="priceType"
                             value="free"
                             checked={priceType === "free"}
-                            onChange={(e) =>
-                                onPriceTypeChange(e.target.value as PriceType)
-                            }
+                            onChange={(e) => onPriceTypeChange(e.target.value as PriceType)}
                             className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                         />
                         <div className="flex-1">
@@ -329,41 +183,6 @@ export function ProductForm({
                         </div>
                     </label>
                 </div>
-
-                {priceType === "user_provided" && (
-                    <div className="space-y-2 pt-2">
-                        <label
-                            htmlFor="userPrice"
-                            className="text-sm font-medium leading-none"
-                        >
-                            Twoja cena <span className="text-destructive">*</span>
-                        </label>
-                        <div className="relative">
-                            <Input
-                                id="userPrice"
-                                name="price"
-                                type="number"
-                                inputMode="decimal"
-                                min="0"
-                                max="999999"
-                                step="0.01"
-                                value={price}
-                                onChange={(e) => onPriceChange(e.target.value)}
-                                placeholder="0.00"
-                                className="pr-12"
-                                aria-label="Cena produktu"
-                                autoComplete="off"
-                                required
-                            />
-                            <span
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm"
-                                aria-label="Waluta"
-                            >
-                                PLN
-                            </span>
-                        </div>
-                    </div>
-                )}
             </fieldset>
 
             {/* Delivery */}
@@ -371,17 +190,9 @@ export function ProductForm({
                 <legend className="text-sm font-medium leading-none">
                     Sposób dostawy <span className="text-destructive">*</span>
                 </legend>
-                <div className="flex flex-wrap gap-2" role="group" aria-label="Wybór sposobu dostawy">
-                    {(
-                        Object.entries(DELIVERY_NAMES) as [
-                            DeliveryOption,
-                            string
-                        ][]
-                    ).map(([value, label]) => (
-                        <label
-                            key={value}
-                            className="flex items-center gap-2 cursor-pointer group"
-                        >
+                <div className="flex flex-wrap gap-4" role="group" aria-label="Wybór sposobu dostawy">
+                    {(Object.entries(DELIVERY_NAMES) as [DeliveryOption, string][]).map(([value, label]) => (
+                        <label key={value} className="flex items-center gap-2 cursor-pointer group">
                             <input
                                 type="checkbox"
                                 checked={delivery.includes(value)}
@@ -399,30 +210,60 @@ export function ProductForm({
                     </p>
                 )}
             </fieldset>
+        </div>
+    );
+}
 
-            {/* Notes */}
+// Component for Card 4: Notes + CTA
+export function NotesAndCTA({
+    notes,
+    canSubmit,
+    isOffline,
+    onNotesChange,
+    onSubmit,
+}: {
+    notes: string;
+    canSubmit: boolean;
+    isOffline: boolean;
+    onNotesChange: (value: string) => void;
+    onSubmit: () => void;
+}) {
+    return (
+        <div className="flex flex-col">
+            {/* Notes textarea */}
             <div className="space-y-2">
-                <label
-                    htmlFor="notes"
-                    className="text-sm font-medium leading-none"
-                >
-                    Dodatkowe informacje{" "}
-                    <span className="text-muted-foreground text-xs">
-                        (opcjonalne)
-                    </span>
+                <label htmlFor="notes" className="text-sm font-medium leading-none">
+                    Dodatkowe informacje <span className="text-muted-foreground text-xs">(opcjonalne)</span>
                 </label>
                 <Textarea
                     id="notes"
                     value={notes}
                     onChange={(e) => onNotesChange(e.target.value)}
                     placeholder="np. uszkodzenia, braki, wymiary, historia produktu…"
-                    rows={3}
+                    rows={8}
                     maxLength={1000}
                     aria-describedby="notes-hint"
+                    className="min-h-[200px] resize-none"
                 />
                 <p id="notes-hint" className="text-xs text-muted-foreground">
                     {notes.length}/1000 znaków
                 </p>
+            </div>
+
+            {/* CTA Button - sticky */}
+            <div className="sticky bottom-0 pt-4 bg-card">
+                <Button
+                    type="button"
+                    size="lg"
+                    className="w-full h-14 text-lg font-bold bg-orange-500 hover:bg-orange-600 text-white shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                    onClick={onSubmit}
+                    disabled={!canSubmit || isOffline}
+                    aria-label="Generuj ogłoszenie sprzedażowe"
+                    title={isOffline ? "Brak połączenia z internetem" : undefined}
+                >
+                    <Send className="h-5 w-5 mr-2" aria-hidden="true" />
+                    {isOffline ? "Brak połączenia" : "Generuj ogłoszenie"}
+                </Button>
             </div>
         </div>
     );

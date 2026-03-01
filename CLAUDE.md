@@ -68,11 +68,11 @@ The `OPENAI_API_KEY` is required for the app to function. Copy from `.env.exampl
    - Multiple images with high-detail analysis
    - Structured JSON response format
 5. **Result Display** (`components/AdResult.tsx`) - Shows:
-   - Generation parameters summary (platform, product name, condition, price type, delivery, tone)
-   - Generated title and description with copy-to-clipboard buttons
-   - AI-suggested price range with reasoning (if applicable)
-   - Free listing badge (if applicable)
-   - Image quality analysis and suggestions for each photo
+   - Grid layout: 65% main content (left), 35% metadata (right)
+   - Main content: Title and description cards with copy buttons in headers
+   - Metadata: Parameters card with "Popraw" button, conditional price card, image analysis
+   - Image analysis with lightbox: thumbnails show quality badges (bottom-right) and zoom buttons (top-right on hover)
+   - Action buttons styled with visual hierarchy (gray/orange for actions, prominent orange for "Nowe ogłoszenie")
 
 ### Tone Variations
 
@@ -129,9 +129,17 @@ Each rules file includes:
 These markdown files are loaded at runtime and injected into the AI prompt to ensure platform-appropriate content generation.
 
 **UI Components:**
-- `components/ProductForm.tsx` - Main form with radio button groups for platform, tone (with recommendations), condition, and price type; checkboxes for delivery options
-- `components/UploadDropzone.tsx` - Drag-and-drop image upload with validation
-- `components/AdResult.tsx` - Display generated listing with generation parameters summary, copy buttons, and conditional free listing badge
+- `components/ui/card-wrapper.tsx` - Reusable card wrapper with optional header, icon, and headerAction slot for buttons
+- `components/PlatformSelector.tsx` - 2x2 grid of platform tiles with lucide-react icons
+- `components/ToneSelector.tsx` - Horizontal segmented control for tone selection with descriptions
+- `components/ConditionSegmentedControl.tsx` - Responsive condition selector (segmented control on desktop, radio buttons on mobile)
+- `components/ProductForm.tsx` - Split into modular components (Platform+Tone, Parameters, Notes+CTA)
+- `components/UploadDropzone.tsx` - Drag-and-drop image upload with 3-4 column grid
+- `components/FullscreenLoading.tsx` - Dynamic loading screen with progress bar and platform-specific messages
+- `components/AdResult.tsx` - Results container with 65/35 grid layout
+- `components/AdResultMain.tsx` - Title and description cards with copy buttons
+- `components/AdResultMeta.tsx` - Parameters, price, and image analysis cards with lightbox modal
+- `components/PriceCard.tsx` - AI price suggestions or free listing badge
 - `components/ThemeProvider.tsx` & `components/ThemeToggle.tsx` - Dark/light mode
 - `components/ui/*` - Reusable UI primitives (buttons, inputs, cards, badges, etc.)
 
@@ -140,6 +148,46 @@ These markdown files are loaded at runtime and injected into the AI prompt to en
 - `app/layout.tsx` - Root layout with metadata, fonts, and theme provider
 
 ### Important Patterns
+
+**Layout Pattern (2x2 Dashboard Grid):**
+- Desktop (≥1024px): 2x2 grid with 4 cards using `grid-cols-2 gap-6`
+  - Card 1: Photo upload dropzone with CardWrapper (min-h-[400px])
+  - Card 2: Platform tiles + Tone segmented control (min-h-[400px])
+  - Card 3: Product parameters (name, condition, price, delivery) (min-h-[500px])
+  - Card 4: Notes textarea + sticky CTA button (min-h-[500px])
+- Mobile (<1024px): Vertical stack of same cards using `grid-cols-1`
+- Cards: Consistent styling via CardWrapper component with `rounded-xl shadow-sm` (no hover effect)
+
+**Results Screen Layout:**
+- 65/35 asymmetric grid: main content (left) takes more space, metadata (right) is narrower
+- Desktop: `grid-cols-[65fr_35fr]`, Mobile: `grid-cols-1` (stacks vertically)
+- Header and footer always visible (unlike form screen)
+- Visual hierarchy optimized for primary task: copying generated text
+
+**Action Button Hierarchy:**
+Primary actions (copy, edit):
+- Background: `bg-gray-100 dark:bg-gray-800`
+- Hover: `hover:bg-orange-50 hover:text-orange-600` (brand orange)
+- Success state: `bg-green-50 text-green-600`
+- Positioned in card headers via `headerAction` slot
+
+Secondary action (new listing):
+- Prominent CTA style: `bg-orange-500 hover:bg-orange-600`
+- Large size: `h-14 text-lg font-bold`
+- Shadow: `shadow-lg hover:shadow-xl`
+
+**Typography Refinements:**
+- Parameter labels: `text-gray-500` (lighter, secondary)
+- Parameter values: `font-medium text-foreground` (prominent, readable)
+- Title and description: Unified `text-base leading-relaxed` (no font size hierarchy between them)
+- No subtitle labels - card headers provide sufficient context
+
+**Image Lightbox:**
+- Thumbnails: 96x96px with `rounded-md overflow-hidden`
+- Quality badge: positioned `bottom-1 right-1` (doesn't compete with zoom)
+- Zoom button: positioned `top-1 right-1`, shows on hover (`opacity-0 group-hover:opacity-100`)
+- Modal: fullscreen `fixed inset-0 z-50 bg-black/90` with centered image
+- Interactions: click zoom button or thumbnail to open, click outside or X to close
 
 **Image Handling:**
 - Images are converted to base64 in the browser before API submission
@@ -169,7 +217,22 @@ These markdown files are loaded at runtime and injected into the AI prompt to en
 - Checkboxes and radio buttons use explicit `accent-blue-600` to remain visible when window loses focus
 - Default delivery options: both "odbiór osobisty" and "wysyłka" pre-selected
 - Platform recommendations shown in tone selector (e.g., "⭐ Polecany dla: OLX")
-- Generation parameters summary card displays all selected options in results view
+
+**Results Screen Layout:**
+- 65/35 grid layout: main content (left) and metadata (right)
+- Header and footer always visible on results page
+- Action buttons with visual hierarchy:
+  - "Kopiuj" buttons: gray background with orange hover (`bg-gray-100 hover:bg-orange-50 hover:text-orange-600`)
+  - "Popraw" button: same styling as copy buttons
+  - "Nowe ogłoszenie" button: prominent CTA style (`bg-orange-500 hover:bg-orange-600`)
+- CardWrapper with `headerAction` slot for buttons in card headers
+- Image lightbox: click zoom button to view full-size images with dark overlay modal
+
+**Results Components:**
+- `AdResultMain.tsx`: Title and description cards with copy buttons in headers
+- `AdResultMeta.tsx`: Parameters card, price card (conditional), and image analysis card
+- `PriceCard.tsx`: AI price suggestions or "Za darmo" badge
+- Image analysis with thumbnails (96x96px), quality badges (bottom-right), and zoom buttons (top-right, hover-visible)
 
 ## Code Style
 
@@ -179,6 +242,13 @@ These markdown files are loaded at runtime and injected into the AI prompt to en
 - **Imports**: Use `@/*` path alias for imports from root directory
 - **Styling**: Tailwind classes using `cn()` utility for conditional classes
 - **Naming**: camelCase for variables/functions, PascalCase for components/types
+
+**Component Patterns:**
+- Segmented controls: Horizontal button group in muted container with roving tabindex
+- Platform tiles: 2x2 grid with icons, hover scale effects, and aria-radio roles
+- Responsive components: Desktop segmented control, mobile radio buttons (ConditionSegmentedControl)
+- Sticky CTA: Bottom-positioned button in Card 4 with `sticky bottom-0` for easy access
+- Card composition: CardWrapper with forwardRef and React.memo for performance
 
 ## Performance Best Practices
 
