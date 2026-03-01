@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import type { Platform, Condition, PriceType, DeliveryOption, ToneStyle } from "@/lib/types";
+import type { Platform, Condition, PriceType, ToneStyle } from "@/lib/types";
 import { PLATFORM_NAMES, CONDITION_NAMES, TONE_STYLE_NAMES } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,8 +16,8 @@ interface AdResultMetaProps {
   productName?: string;
   condition: Condition;
   priceType: PriceType;
-  userPrice?: number;
-  delivery: DeliveryOption[];
+  userPrice?: number | string;
+  delivery: string;
   selectedTone: ToneStyle;
   images: ImageAnalysis[];
   imagePreviews: string[];
@@ -38,21 +38,11 @@ export const AdResultMeta: React.FC<AdResultMetaProps> = ({
   const getPriceDisplay = () => {
     if (priceType === "free") {
       return "Za darmo";
-    } else if (priceType === "user" && userPrice) {
-      return `${userPrice} zł (podana przez użytkownika)`;
+    } else if (priceType === "user_provided" && userPrice) {
+      return `${userPrice} zł`;
     } else {
-      return "Sugerowana przez AI";
+      return "AI zasugerowała";
     }
-  };
-
-  // Format delivery options for display
-  const getDeliveryDisplay = () => {
-    if (delivery.length === 0) return "Nie wybrano";
-    return delivery
-      .map((option) =>
-        option === "odbiór osobisty" ? "Odbiór osobisty" : "Wysyłka"
-      )
-      .join(", ");
   };
 
   return (
@@ -87,7 +77,7 @@ export const AdResultMeta: React.FC<AdResultMetaProps> = ({
 
           <div className="flex justify-between">
             <span className="text-muted-foreground">Dostawa:</span>
-            <span className="font-medium">{getDeliveryDisplay()}</span>
+            <span className="font-medium text-right">{delivery}</span>
           </div>
 
           <div className="flex justify-between">
