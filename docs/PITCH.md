@@ -80,16 +80,14 @@ Trzy style komunikacji:
 
 **B2B - Komercyjni sprzedający:**
 - Małe sklepy online (cross-posting na wiele platform)
-- Komisanty i skupy (volume selling)
-- Agencje nieruchomości (ogłoszenia mieszkań, lokali)
-- Second-handy i lombardy
+- Komisanty i skupy (regularnie dodają nowe produkty)
+- Second-handy i lombardy (volume selling)
 
 ### Strategie Monetyzacji
 
 #### Faza 1: Freemium (Launch)
 - **Free tier:** 5 ogłoszeń/miesiąc, podstawowe funkcje
 - **Premium (39 zł/mies):** nielimitowane ogłoszenia, wszystkie platformy, priorytetowe wsparcie
-- **Business (119 zł/mies):** API access, bulk generation, white-label
 
 #### Faza 2: Rozszerzenia
 - **Pay-per-use:** 3.99 zł za pojedyncze ogłoszenie (bez subskrypcji)
@@ -174,25 +172,25 @@ Trzy style komunikacji:
 ## 💰 Prognozy Finansowe (18 miesięcy)
 
 ### Założenia
-- Średnia cena subskrypcji: 48 zł/user/month (~50% Premium, ~50% Business)
+- Cena subskrypcji Premium: 39 zł/user/month
 - Free-to-paid conversion: 8%
 - Miesięczny churn: 5%
 - Średni koszt AI per ad: 0.024 zł ($0.006)
-- Średnio 1.5 ads per paid user per month
+- Średnio 2 ads per paid user per month
 
 ### Scenariusz Bazowy
 
 | Miesiąc | Users | Paid Users | MRR (zł) | Koszty AI (zł) | CAC Investment (zł) | Burn Rate (zł) |
 |---------|-------|------------|----------|----------------|---------------------|----------------|
-| 3 | 1,000 | 50 | 2,400 | 36 | 20,000 | 31,200 |
-| 6 | 3,500 | 240 | 11,520 | 124 | 48,000 | 68,800 |
-| 9 | 10,000 | 700 | 33,600 | 360 | 100,000 | 135,200 |
-| 12 | 25,000 | 1,800 | 86,400 | 900 | 160,000 | 192,000 |
-| 18 | 100,000 | 8,000 | 384,000 | 3,600 | 320,000 | 240,000 |
+| 3 | 1,000 | 50 | 1,950 | 48 | 20,000 | 30,000 |
+| 6 | 3,500 | 240 | 9,360 | 230 | 48,000 | 65,000 |
+| 9 | 10,000 | 700 | 27,300 | 672 | 100,000 | 128,000 |
+| 12 | 25,000 | 1,800 | 70,200 | 1,728 | 160,000 | 180,000 |
+| 18 | 100,000 | 8,000 | 312,000 | 7,680 | 320,000 | 220,000 |
 
-**Break-even:** Miesiąc 12-13
-**Total Burn (18M):** ~1,280,000 zł
-**ARR at M18:** 4,608,000 zł (~$1.15M)
+**Break-even:** Miesiąc 13-14
+**Total Burn (18M):** ~1,150,000 zł
+**ARR at M18:** 3,744,000 zł (~$935K)
 **Gross Margin:** 99%+
 
 ---
@@ -224,8 +222,8 @@ Trzy style komunikacji:
 
 **Przykładowe koszty transakcyjne:**
 - Subskrypcja Premium (39 zł): 0.99 zł prowizji (2.5%)
-- Subskrypcja Business (119 zł): 2.51 zł prowizji (2.1%)
 - Pay-per-use (3.99 zł): 0.33 zł prowizji (8.3% - wysokie dla małych kwot)
+- Credits 10 pack (35 zł): 0.92 zł prowizji (2.6%)
 
 **Strategia:**
 - PayU jako główny gateway (niższe koszty, BLIK)
@@ -233,13 +231,13 @@ Trzy style komunikacji:
 - Potencjalna negocjacja rabatu przy >10K zł MRR (1.5% możliwe)
 
 ### Koszty Operacyjne (monthly at scale)
-- **OpenAI API:** 0.024 zł/ad × 50K ads = 1,200 zł
+- **OpenAI API:** 0.024 zł/ad × 64K ads = 1,536 zł
 - **Infrastructure:** Vercel Pro 80 zł/month
-- **Payments:** ~2% × 384K zł MRR = 7,680 zł (PayU fees at scale)
+- **Payments:** ~2% × 312K zł MRR = 6,240 zł (PayU fees at scale)
 - **Tools:** 400 zł (analytics, monitoring)
-- **Total:** ~9,360 zł/month at 384K zł MRR
+- **Total:** ~8,256 zł/month at 312K zł MRR
 
-**Net Margin at Scale:** 97.6% (po kosztach płatności)
+**Net Margin at Scale:** 97.4% (po kosztach płatności)
 
 ### Skalowalność
 - **Current capacity:** 10,000 requests/day
