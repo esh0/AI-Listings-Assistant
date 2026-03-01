@@ -3,15 +3,20 @@
 import React, { useEffect, useState } from "react";
 import { Loader2, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Platform, PLATFORM_NAMES } from "@/lib/types";
 
 interface FullscreenLoadingProps {
     isLoading: boolean;
     duration?: number; // Duration in seconds for the progress bar
+    imageCount: number;
+    platform: Platform;
 }
 
 export function FullscreenLoading({
     isLoading,
     duration = 15,
+    imageCount,
+    platform,
 }: FullscreenLoadingProps) {
     const [progress, setProgress] = useState(0);
     const [isIndeterminate, setIsIndeterminate] = useState(false);
@@ -68,7 +73,7 @@ export function FullscreenLoading({
 
                 {/* Text */}
                 <div className="space-y-3">
-                    <h2 className="font-serif text-2xl font-normal tracking-tight">
+                    <h2 className="font-sans text-2xl font-normal tracking-tight">
                         AI pracuje...
                     </h2>
                     <p className="text-muted-foreground text-base leading-relaxed">
