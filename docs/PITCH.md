@@ -177,21 +177,23 @@ Trzy style komunikacji:
 - Średnia cena subskrypcji: $12/user/month
 - Free-to-paid conversion: 8%
 - Miesięczny churn: 5%
-- Średni koszt AI per ad: $0.15
+- **Średni koszt AI per ad: $0.006** (validated in production)
+- Średnio 1.5 ads per paid user per month
 
 ### Scenariusz Bazowy
 
 | Miesiąc | Users | Paid Users | MRR | Koszty AI | CAC Investment | Burn Rate |
 |---------|-------|------------|-----|-----------|----------------|-----------|
-| 3 | 1,000 | 50 | $600 | $225 | $5,000 | $8,000 |
-| 6 | 3,500 | 240 | $2,880 | $788 | $12,000 | $18,000 |
-| 9 | 10,000 | 700 | $8,400 | $2,250 | $25,000 | $35,000 |
-| 12 | 25,000 | 1,800 | $21,600 | $5,625 | $40,000 | $50,000 |
-| 18 | 100,000 | 8,000 | $96,000 | $22,500 | $80,000 | $70,000 |
+| 3 | 1,000 | 50 | $600 | $9 | $5,000 | $7,800 |
+| 6 | 3,500 | 240 | $2,880 | $31 | $12,000 | $17,200 |
+| 9 | 10,000 | 700 | $8,400 | $90 | $25,000 | $33,800 |
+| 12 | 25,000 | 1,800 | $21,600 | $225 | $40,000 | $48,000 |
+| 18 | 100,000 | 8,000 | $96,000 | $900 | $80,000 | $60,000 |
 
-**Break-even:** Miesiąc 15-16
-**Total Burn (18M):** ~$400,000
+**Break-even:** Miesiąc 12-13 (3 miesiące wcześniej!)
+**Total Burn (18M):** ~$320,000 (20% mniej)
 **ARR at M18:** $1,152,000
+**Gross Margin:** 99%+ (AI costs negligible)
 
 ---
 
@@ -204,10 +206,12 @@ Trzy style komunikacji:
 - **Analytics:** PostHog (product), Stripe (payments)
 
 ### Koszty Operacyjne (monthly at scale)
-- **OpenAI API:** $0.15/ad × 50K ads = $7,500
+- **OpenAI API:** $0.006/ad × 50K ads = **$300** (!)
 - **Infrastructure:** Vercel Pro $20 + Cloudflare $20 = $40
 - **Tools:** $200 (analytics, monitoring, dev tools)
-- **Total:** ~$7,750/month
+- **Total:** ~$540/month
+
+**Gross Margin at Scale:** 99.4% (software margins!)
 
 ### Skalowalność
 - **Current capacity:** 10,000 requests/day
@@ -285,9 +289,10 @@ Trzy style komunikacji:
 ### 3. Koszty AI
 **Ryzyko:** Ceny OpenAI mogą wzrosnąć
 **Mitigation:**
+- **Current costs są już minimalne** ($0.006/ad = 0.05% revenue)
 - Model agnostic architecture (można przełączyć na Anthropic, local models)
 - Caching strategies (podobne zapytania)
-- Tiered pricing (heavy users płacą więcej)
+- Nawet 10x wzrost ceny = wciąż 0.5% revenue
 
 ### 4. Adoption
 **Ryzyko:** Sprzedający mogą nie chcieć płacić za narzędzie
