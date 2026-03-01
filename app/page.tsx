@@ -237,7 +237,13 @@ export default function HomePage() {
 
     // Show fullscreen loading during generation
     if (isLoading) {
-        return <FullscreenLoading isLoading={isLoading} duration={15} />;
+        return (
+            <FullscreenLoading
+                isLoading={isLoading}
+                imageCount={images.length}
+                platform={platform}
+            />
+        );
     }
 
     return (
