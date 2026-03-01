@@ -1,9 +1,10 @@
 import React from "react";
 import Image from "next/image";
-import type { Platform, Condition, PriceType, ToneStyle } from "@/lib/types";
+import type { Platform, ProductCondition, PriceType, ToneStyle } from "@/lib/types";
 import { PLATFORM_NAMES, CONDITION_NAMES, TONE_STYLE_NAMES } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PriceCard } from "@/components/PriceCard";
 
 interface ImageAnalysis {
   isValid: boolean;
@@ -14,13 +15,19 @@ interface ImageAnalysis {
 interface AdResultMetaProps {
   platform: Platform;
   productName?: string;
-  condition: Condition;
+  condition: ProductCondition;
   priceType: PriceType;
   userPrice?: number | string;
   delivery: string;
   selectedTone: ToneStyle;
   images: ImageAnalysis[];
-  imagePreviews: string[];
+  imagePreviews?: string[];
+  price?: {
+    min: number;
+    max: number;
+    reason: string;
+  };
+  isFree: boolean;
 }
 
 export const AdResultMeta: React.FC<AdResultMetaProps> = ({
@@ -33,6 +40,8 @@ export const AdResultMeta: React.FC<AdResultMetaProps> = ({
   selectedTone,
   images,
   imagePreviews,
+  price,
+  isFree,
 }) => {
   // Format price type for display
   const getPriceDisplay = () => {
@@ -87,8 +96,13 @@ export const AdResultMeta: React.FC<AdResultMetaProps> = ({
         </CardContent>
       </Card>
 
+      {/* Price Card - conditional rendering */}
+      {(priceType === "ai_suggest" || isFree) && (
+        <PriceCard price={price} isFree={isFree} />
+      )}
+
       {/* Image Analysis Card - Only show if there are images */}
-      {images.length > 0 && (
+      {images.length > 0 && imagePreviews && imagePreviews.length > 0 && (
         <Card>
           <CardHeader>
             <CardTitle className="text-lg">Analiza zdjęć</CardTitle>
@@ -96,49 +110,43 @@ export const AdResultMeta: React.FC<AdResultMetaProps> = ({
           <CardContent className="space-y-4">
             {images.map((image, index) => (
               <div key={index} className="flex gap-3">
-                {/* Thumbnail */}
-                <div className="relative w-12 h-12 flex-shrink-0 rounded-md overflow-hidden bg-muted">
+                {/* Thumbnail with badge */}
+                <div className="relative w-24 h-24 flex-shrink-0 rounded-md overflow-hidden bg-muted">
                   <Image
                     src={imagePreviews[index]}
                     alt={`Zdjęcie ${index + 1}`}
                     fill
                     className="object-cover"
-                    sizes="48px"
+                    sizes="96px"
                   />
+                  {/* Status badge - top-right corner */}
+                  <div className="absolute top-1 right-1">
+                    {image.isValid ? (
+                      <Badge
+                        variant="outline"
+                        className="bg-green-50 text-green-700 border-green-200"
+                      >
+                        OK
+                      </Badge>
+                    ) : (
+                      <Badge
+                        variant="outline"
+                        className="bg-yellow-50 text-yellow-700 border-yellow-200"
+                      >
+                        Uwaga
+                      </Badge>
+                    )}
+                  </div>
                 </div>
 
                 {/* Analysis content */}
                 <div className="flex-1 min-w-0 space-y-1.5">
-                  {/* Status badge */}
-                  {image.isValid ? (
-                    <Badge
-                      variant="outline"
-                      className="bg-green-50 text-green-700 border-green-200"
-                    >
-                      OK
-                    </Badge>
-                  ) : (
-                    <Badge
-                      variant="outline"
-                      className="bg-yellow-50 text-yellow-700 border-yellow-200"
-                    >
-                      Uwaga
-                    </Badge>
-                  )}
-
-                  {/* Quality text */}
-                  {image.quality && (
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {image.quality}
-                    </p>
-                  )}
-
-                  {/* Suggestions text */}
+                  {/* Suggestions text - formatted like Parametry */}
                   {image.suggestions && (
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      <span className="font-medium">Sugestie:</span>{" "}
-                      {image.suggestions}
-                    </p>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Sugestie:</span>
+                      <span className="font-medium text-right">{image.suggestions}</span>
+                    </div>
                   )}
                 </div>
               </div>

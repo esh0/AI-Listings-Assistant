@@ -46,9 +46,6 @@ export function AdResult({ result, imagePreviews, platform, productName, conditi
             <AdResultMain
                 title={displayContent.title!}
                 description={displayContent.description!}
-                price={result.price}
-                isFree={result.isFree}
-                priceType={priceType}
             />
 
             {/* Right Column - Metadata */}
@@ -62,6 +59,8 @@ export function AdResult({ result, imagePreviews, platform, productName, conditi
                 selectedTone={selectedTone}
                 images={result.images || []}
                 imagePreviews={imagePreviews}
+                price={result.price || undefined}
+                isFree={result.isFree || false}
             />
         </div>
     );

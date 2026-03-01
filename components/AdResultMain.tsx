@@ -4,28 +4,16 @@ import React, { useState, useCallback } from "react";
 import { Copy, Check, Tag, FileText } from "lucide-react";
 import { CardWrapper } from "@/components/ui/card-wrapper";
 import { Button } from "@/components/ui/button";
-import { PriceCard } from "@/components/PriceCard";
-import { PriceType } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 interface AdResultMainProps {
   title: string;
   description: string;
-  price?: {
-    min: number;
-    max: number;
-    reasoning: string;
-  };
-  isFree: boolean;
-  priceType: PriceType;
 }
 
 export const AdResultMain = React.memo(function AdResultMain({
   title,
   description,
-  price,
-  isFree,
-  priceType,
 }: AdResultMainProps) {
   const [copiedTitle, setCopiedTitle] = useState(false);
   const [copiedDescription, setCopiedDescription] = useState(false);
@@ -54,17 +42,13 @@ export const AdResultMain = React.memo(function AdResultMain({
     <div className="space-y-6">
       {/* Title Card */}
       <CardWrapper title="Tytuł ogłoszenia" icon={Tag}>
-        <div className="space-y-3">
-          <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
-            Wygenerowany tytuł
-          </p>
-          <p className="text-lg font-semibold leading-relaxed">{title}</p>
+        <div className="space-y-3 relative">
           <Button
             variant="ghost"
             size="sm"
             onClick={handleCopyTitle}
             className={cn(
-              "gap-2 transition-all duration-200",
+              "absolute top-0 right-0 gap-2 transition-all duration-200",
               copiedTitle && "text-green-600"
             )}
           >
@@ -76,28 +60,26 @@ export const AdResultMain = React.memo(function AdResultMain({
             ) : (
               <>
                 <Copy className="h-4 w-4" />
-                Kopiuj tytuł
+                Kopiuj
               </>
             )}
           </Button>
+          <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+            Wygenerowany tytuł
+          </p>
+          <p className="text-lg font-semibold leading-relaxed pr-24">{title}</p>
         </div>
       </CardWrapper>
 
       {/* Description Card */}
       <CardWrapper title="Opis ogłoszenia" icon={FileText}>
-        <div className="space-y-3">
-          <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
-            Wygenerowany opis
-          </p>
-          <p className="text-base leading-relaxed whitespace-pre-wrap">
-            {description}
-          </p>
+        <div className="space-y-3 relative">
           <Button
             variant="ghost"
             size="sm"
             onClick={handleCopyDescription}
             className={cn(
-              "gap-2 transition-all duration-200",
+              "absolute top-0 right-0 gap-2 transition-all duration-200",
               copiedDescription && "text-green-600"
             )}
           >
@@ -109,17 +91,18 @@ export const AdResultMain = React.memo(function AdResultMain({
             ) : (
               <>
                 <Copy className="h-4 w-4" />
-                Kopiuj opis
+                Kopiuj
               </>
             )}
           </Button>
+          <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+            Wygenerowany opis
+          </p>
+          <p className="text-base leading-relaxed whitespace-pre-wrap pr-24">
+            {description}
+          </p>
         </div>
       </CardWrapper>
-
-      {/* Price Card - conditional rendering */}
-      {(priceType === "ai_suggest" || isFree) && (
-        <PriceCard price={price} isFree={isFree} />
-      )}
     </div>
   );
 });

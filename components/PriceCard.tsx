@@ -7,7 +7,7 @@ interface PriceCardProps {
   price?: {
     min: number;
     max: number;
-    reasoning: string;
+    reason: string;
   };
   isFree: boolean;
 }
@@ -49,8 +49,8 @@ export const PriceCard = React.memo(function PriceCard({
               {price.max} zł
             </Badge>
           </div>
-          {price.reasoning && (
-            <p className="text-sm text-gray-500">{price.reasoning}</p>
+          {price.reason && (
+            <p className="text-sm text-gray-500">{price.reason}</p>
           )}
         </div>
       ) : (
