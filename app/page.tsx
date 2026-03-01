@@ -255,22 +255,20 @@ export default function HomePage() {
                 </div>
             )}
 
-            {/* Header - simplified, no sticky */}
-            {!result && (
-                <header className="border-b bg-background" role="banner">
-                    <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center transition-transform hover:scale-105">
-                                <ShoppingBag className="h-5 w-5 text-primary-foreground" aria-hidden="true" />
-                            </div>
-                            <span className="font-bold text-lg tracking-tight">
-                                Marketplace AI
-                            </span>
+            {/* Header - always visible */}
+            <header className="border-b bg-background" role="banner">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center transition-transform hover:scale-105">
+                            <ShoppingBag className="h-5 w-5 text-primary-foreground" aria-hidden="true" />
                         </div>
-                        <ThemeToggle />
+                        <span className="font-bold text-lg tracking-tight">
+                            Marketplace AI
+                        </span>
                     </div>
-                </header>
-            )}
+                    <ThemeToggle />
+                </div>
+            </header>
 
             {/* Main Content */}
             <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12" role="main">
@@ -386,13 +384,14 @@ export default function HomePage() {
                                     </p>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <Button variant="outline" size="sm" onClick={handleEdit} aria-label="Edytuj dane produktu" className="border-gray-200 text-gray-700 hover:border-orange-500 hover:text-orange-500 transition-colors">
-                                        <Pencil className="h-4 w-4 mr-1.5" aria-hidden="true" />
-                                        Edytuj
-                                    </Button>
-                                    <Button variant="outline" size="sm" onClick={handleReset} aria-label="Zacznij od nowa" className="border-gray-200 text-gray-700 hover:border-orange-500 hover:text-orange-500 transition-colors">
-                                        <RotateCcw className="h-4 w-4 mr-1.5" aria-hidden="true" />
-                                        Nowe
+                                    <Button
+                                        size="lg"
+                                        onClick={handleReset}
+                                        aria-label="Zacznij od nowa"
+                                        className="bg-orange-500 hover:bg-orange-600 text-white h-14 text-lg font-bold transition-colors shadow-lg hover:shadow-xl"
+                                    >
+                                        <RotateCcw className="h-5 w-5 mr-2" aria-hidden="true" />
+                                        Nowe ogłoszenie
                                     </Button>
                                 </div>
                             </div>
@@ -407,16 +406,15 @@ export default function HomePage() {
                                 userPrice={price}
                                 delivery={delivery.join(", ")}
                                 selectedTone={selectedTone}
+                                onEdit={handleEdit}
                             />
                         </section>
                     )}
 
-                    {/* Footer - simplified */}
-                    {!result && (
-                        <footer className="mt-16 pt-8 border-t text-center text-sm text-muted-foreground">
-                            <p>Obsługuje: OLX • Allegro Lokalnie • Facebook Marketplace • Vinted</p>
-                        </footer>
-                    )}
+                    {/* Footer - always visible */}
+                    <footer className="mt-16 pt-8 border-t text-center text-sm text-muted-foreground">
+                        <p>Obsługuje: OLX • Allegro Lokalnie • Facebook Marketplace • Vinted</p>
+                    </footer>
                 </div>
             </main>
         </div>

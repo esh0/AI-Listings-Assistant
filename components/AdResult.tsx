@@ -18,9 +18,10 @@ interface AdResultProps {
     userPrice?: string;
     delivery: string;
     selectedTone: ToneStyle;
+    onEdit: () => void;
 }
 
-export function AdResult({ result, imagePreviews, platform, productName, condition, priceType, userPrice, delivery, selectedTone }: AdResultProps) {
+export function AdResult({ result, imagePreviews, platform, productName, condition, priceType, userPrice, delivery, selectedTone, onEdit }: AdResultProps) {
     if (!result.isValid) {
         return (
             <Alert variant="destructive" role="alert" aria-live="assertive">
@@ -61,6 +62,7 @@ export function AdResult({ result, imagePreviews, platform, productName, conditi
                 imagePreviews={imagePreviews}
                 price={result.price || undefined}
                 isFree={result.isFree || false}
+                onEdit={onEdit}
             />
         </div>
     );

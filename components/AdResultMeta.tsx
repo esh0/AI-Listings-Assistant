@@ -1,8 +1,10 @@
 import React from "react";
 import Image from "next/image";
+import { Pencil } from "lucide-react";
 import type { Platform, ProductCondition, PriceType, ToneStyle } from "@/lib/types";
 import { PLATFORM_NAMES, CONDITION_NAMES, TONE_STYLE_NAMES } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PriceCard } from "@/components/PriceCard";
 
@@ -28,6 +30,7 @@ interface AdResultMetaProps {
     reason: string;
   };
   isFree: boolean;
+  onEdit: () => void;
 }
 
 export const AdResultMeta: React.FC<AdResultMetaProps> = ({
@@ -42,6 +45,7 @@ export const AdResultMeta: React.FC<AdResultMetaProps> = ({
   imagePreviews,
   price,
   isFree,
+  onEdit,
 }) => {
   // Format price type for display
   const getPriceDisplay = () => {
@@ -57,7 +61,7 @@ export const AdResultMeta: React.FC<AdResultMetaProps> = ({
   return (
     <div className="space-y-6">
       {/* Parameters Card */}
-      <Card>
+      <Card className="relative">
         <CardHeader>
           <CardTitle className="text-lg">Parametry generowania</CardTitle>
         </CardHeader>
@@ -94,6 +98,18 @@ export const AdResultMeta: React.FC<AdResultMetaProps> = ({
             <span className="font-medium">{TONE_STYLE_NAMES[selectedTone]}</span>
           </div>
         </CardContent>
+
+        {/* Popraw Button - Top Right Corner */}
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onEdit}
+          aria-label="Popraw parametry"
+          className="absolute top-2 right-2 transition-all duration-200 hover:scale-105 active:scale-95"
+        >
+          <Pencil className="h-4 w-4 mr-1.5" aria-hidden="true" />
+          Popraw
+        </Button>
       </Card>
 
       {/* Price Card - conditional rendering */}
