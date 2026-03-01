@@ -177,7 +177,7 @@ Trzy style komunikacji:
 - Średnia cena subskrypcji: $12/user/month
 - Free-to-paid conversion: 8%
 - Miesięczny churn: 5%
-- **Średni koszt AI per ad: $0.006** (validated in production)
+- Średni koszt AI per ad: $0.006
 - Średnio 1.5 ads per paid user per month
 
 ### Scenariusz Bazowy
@@ -190,10 +190,10 @@ Trzy style komunikacji:
 | 12 | 25,000 | 1,800 | $21,600 | $225 | $40,000 | $48,000 |
 | 18 | 100,000 | 8,000 | $96,000 | $900 | $80,000 | $60,000 |
 
-**Break-even:** Miesiąc 12-13 (3 miesiące wcześniej!)
-**Total Burn (18M):** ~$320,000 (20% mniej)
+**Break-even:** Miesiąc 12-13
+**Total Burn (18M):** ~$320,000
 **ARR at M18:** $1,152,000
-**Gross Margin:** 99%+ (AI costs negligible)
+**Gross Margin:** 99%+
 
 ---
 
@@ -204,17 +204,15 @@ Trzy style komunikacji:
 - **AI:** OpenAI GPT-4o (vision + text)
 - **Infrastructure:** Vercel Pro (hosting + CDN + edge functions)
 - **Analytics:** PostHog (product), Stripe (payments)
-- **Monthly fixed cost:** $20 (Vercel Pro) - required for commercial use
+- **Monthly fixed cost:** $20 (Vercel Pro)
 
 ### Koszty Operacyjne (monthly at scale)
-- **OpenAI API:** $0.006/ad × 50K ads = **$300**
-- **Infrastructure:** Vercel Pro $20/month (required for commercial use)
-- **Tools:** $100 (analytics, monitoring - free tiers initially)
+- **OpenAI API:** $0.006/ad × 50K ads = $300
+- **Infrastructure:** Vercel Pro $20/month
+- **Tools:** $100 (analytics, monitoring)
 - **Total:** ~$420/month
 
-**Note:** Even at launch, Vercel Pro is required (Hobby tier prohibits commercial use).
-
-**Gross Margin at Scale:** 99.6% (software margins!)
+**Gross Margin at Scale:** 99.6%
 
 ### Skalowalność
 - **Current capacity:** 10,000 requests/day
@@ -292,10 +290,10 @@ Trzy style komunikacji:
 ### 3. Koszty AI
 **Ryzyko:** Ceny OpenAI mogą wzrosnąć
 **Mitigation:**
-- **Current costs są już minimalne** ($0.006/ad = 0.05% revenue)
-- Model agnostic architecture (można przełączyć na Anthropic, local models)
-- Caching strategies (podobne zapytania)
-- Nawet 10x wzrost ceny = wciąż 0.5% revenue
+- Obecne koszty AI stanowią <1% przychodu
+- Model agnostic architecture (elastyczność w wyborze dostawcy)
+- Caching i optymalizacje zapytań
+- Skalowanie kosztów liniowe z wzrostem użycia
 
 ### 4. Adoption
 **Ryzyko:** Sprzedający mogą nie chcieć płacić za narzędzie
