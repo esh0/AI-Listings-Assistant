@@ -60,6 +60,9 @@ export function AdGeneratorForm() {
     const [isOffline, setIsOffline] = useState(false);
     const [showSoftWall, setShowSoftWall] = useState(false);
 
+    // Store original base64 images for softwall to upload to Supabase
+    const [base64Images, setBase64Images] = useState<Array<{ base64: string; filename: string; mimeType: string }>>([]);
+
     const abortControllerRef = useRef<AbortController | null>(null);
 
     const imagePreviewsList = useMemo(() => {
@@ -145,6 +148,9 @@ export function AdGeneratorForm() {
                     mimeType: getImageMimeType(img.filename),
                 }))
             );
+
+            // Store base64 images for softwall to upload to Supabase
+            setBase64Images(imagesForRequest);
 
             const response = await fetch("/api/generate-ad", {
                 method: "POST",
@@ -378,8 +384,8 @@ export function AdGeneratorForm() {
                         priceMin: result.price?.min,
                         priceMax: result.price?.max,
                         priceReasoning: result.price?.reason,
-                        images: (result.images || []).map((img) => ({
-                            url: imagePreviewsList[result.images?.indexOf(img) || 0] || "",
+                        images: (result.images || []).map((img, index) => ({
+                            url: `data:${base64Images[index]?.mimeType || "image/jpeg"};base64,${base64Images[index]?.base64 || ""}`,
                             quality: img.quality || "",
                             suggestions: img.suggestions || "",
                         })),

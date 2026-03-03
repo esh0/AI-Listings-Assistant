@@ -1,23 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { getPendingAd, clearPendingAd } from "@/lib/storage";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CheckCircle } from "lucide-react";
 
-// Helper to convert blob URL to base64
-async function blobUrlToBase64(blobUrl: string): Promise<string> {
-    const response = await fetch(blobUrl);
-    const blob = await response.blob();
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-    });
-}
-
 export function PendingAdHandler() {
+    const router = useRouter();
     const [message, setMessage] = useState<string | null>(null);
 
     useEffect(() => {
@@ -34,27 +24,10 @@ export function PendingAdHandler() {
                 return; // No pending ad
             }
 
-            console.log("[PendingAdHandler] Converting blob URLs to base64...");
-
-            // Convert blob URLs to base64
-            const imagesWithBase64 = await Promise.all(
-                pendingAd.images.map(async (img: any) => {
-                    if (img.url.startsWith("blob:")) {
-                        try {
-                            const base64 = await blobUrlToBase64(img.url);
-                            return { ...img, url: base64 };
-                        } catch (error) {
-                            console.error("[PendingAdHandler] Failed to convert blob:", error);
-                            return img; // Keep original if conversion fails
-                        }
-                    }
-                    return img;
-                })
-            );
-
             console.log("[PendingAdHandler] Saving pending ad to database...");
 
             // Save pending ad to database via API
+            // Images are already base64 data URLs from AdGeneratorForm
             const response = await fetch("/api/ads", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -65,7 +38,7 @@ export function PendingAdHandler() {
                     status: "DRAFT",
                     priceMin: pendingAd.priceMin,
                     priceMax: pendingAd.priceMax,
-                    images: imagesWithBase64, // Now with base64 instead of blob URLs
+                    images: pendingAd.images, // Base64 data URLs, API will upload to Supabase
                     parameters: pendingAd.parameters,
                 }),
             });
@@ -82,6 +55,9 @@ export function PendingAdHandler() {
             // Clear from IndexedDB after successful save
             await clearPendingAd();
             console.log("[PendingAdHandler] Cleared from IndexedDB");
+
+            // Refresh the page to show the newly saved ad
+            router.refresh();
 
             // Show success message
             setMessage("Ogłoszenie zostało zapisane w Twoim panelu!");
