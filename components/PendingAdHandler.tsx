@@ -85,13 +85,20 @@ export function PendingAdHandler() {
             console.log("[PendingAdHandler] Cleared from IndexedDB");
 
             // Update session to refresh credits in sidebar
-            // This triggers NextAuth jwt callback with trigger="update"
-            await update();
-            console.log("[PendingAdHandler] Session updated");
+            // NextAuth v5 update() may not work reliably, so we force full reload instead
+            try {
+                await update();
+                console.log("[PendingAdHandler] Session update called");
+            } catch (error) {
+                console.warn("[PendingAdHandler] Session update failed:", error);
+            }
 
-            // Refresh the page to show the newly saved ad
-            router.refresh();
+            // Force full page reload to ensure credits are refreshed from server
+            // router.refresh() only revalidates Server Components but keeps client state
+            console.log("[PendingAdHandler] Forcing full page reload to refresh credits");
+            window.location.reload();
 
+            // Note: Code below won't execute due to page reload, but kept for reference
             // Show success message
             setIsError(false);
             setMessage("Ogłoszenie zostało zapisane w Twoim panelu!");
