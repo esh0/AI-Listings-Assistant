@@ -87,9 +87,9 @@ export function AdGeneratorForm() {
         };
     }, []);
 
-    // Show soft-wall for unauthenticated users
+    // Show soft-wall for unauthenticated users (only on successful generation)
     useEffect(() => {
-        if (result && !isLoading && status === "unauthenticated") {
+        if (result && result.isValid && !isLoading && status === "unauthenticated") {
             setTimeout(() => {
                 setShowSoftWall(true);
             }, 1500);

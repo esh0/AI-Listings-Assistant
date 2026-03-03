@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { getPendingAd, clearPendingAd } from "@/lib/storage";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CheckCircle, XCircle } from "lucide-react";
 
 export function PendingAdHandler() {
     const router = useRouter();
+    const { update } = useSession();
     const [message, setMessage] = useState<string | null>(null);
     const [isError, setIsError] = useState(false);
 
@@ -81,6 +83,11 @@ export function PendingAdHandler() {
             // Clear from IndexedDB after successful save
             await clearPendingAd();
             console.log("[PendingAdHandler] Cleared from IndexedDB");
+
+            // Update session to refresh credits in sidebar
+            // This triggers NextAuth jwt callback with trigger="update"
+            await update();
+            console.log("[PendingAdHandler] Session updated");
 
             // Refresh the page to show the newly saved ad
             router.refresh();
