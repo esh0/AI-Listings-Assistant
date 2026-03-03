@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { Loader2, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Platform, PLATFORM_NAMES } from "@/lib/types";
@@ -57,6 +58,12 @@ export function FullscreenLoading({
     const [progress, setProgress] = useState(0);
     const [isIndeterminate, setIsIndeterminate] = useState(false);
     const [indeterminateTime, setIndeterminateTime] = useState(0);
+    const [mounted, setMounted] = useState(false);
+
+    // Ensure we only render on client
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     // Calculate duration based on image count: 10 base + 1 second per image
     const calculatedDuration = 10 + imageCount * 1;
@@ -102,11 +109,11 @@ export function FullscreenLoading({
         return () => clearInterval(interval);
     }, [isLoading, effectiveDuration, imageCount]);
 
-    if (!isLoading) return null;
+    if (!isLoading || !mounted) return null;
 
-    return (
+    const loadingContent = (
         <div
-            className="fixed inset-0 z-50 bg-background flex flex-col items-center justify-center p-4 animate-fade-in"
+            className="fixed inset-0 z-[9999] bg-background flex flex-col items-center justify-center p-4 animate-fade-in"
             role="status"
             aria-live="polite"
             aria-atomic="true"
@@ -159,4 +166,7 @@ export function FullscreenLoading({
             </div>
         </div>
     );
+
+    // Use portal to render outside of dashboard layout
+    return createPortal(loadingContent, document.body);
 }

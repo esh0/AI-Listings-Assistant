@@ -77,3 +77,5 @@ lerna-debug.log*
 *.temp
 
 /lib/generated/prisma
+.env.local.backup*
+.env.test

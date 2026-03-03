@@ -4,12 +4,26 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-AI Generator Ogłoszeń Sprzedażowych (AI Sales Listing Generator) - A Next.js application that uses OpenAI GPT-4o to automatically generate professional sales listings for Polish marketplace platforms (OLX, Allegro Lokalnie, Facebook Marketplace, Vinted). The app analyzes product images and generates platform-specific titles, descriptions, price suggestions, and image quality assessments.
+AI Generator Ogłoszeń Sprzedażowych (Marketplace Assistant) - A Next.js application that uses OpenAI GPT-4o to automatically generate professional sales listings for Polish marketplace platforms (OLX, Allegro Lokalnie, Facebook Marketplace, Vinted). The app features user authentication, credit-based usage system, ad management dashboard, and AI-powered content generation with image analysis.
+
+**Key Features:**
+- 🤖 AI-powered ad generation with image analysis
+- 🔐 Google OAuth authentication via NextAuth
+- 💳 Credit system (FREE: 3/month, PREMIUM: unlimited)
+- 📊 Dashboard with ad management (CRUD operations)
+- 🔍 Advanced filtering, sorting, and search
+- 📄 Pagination (20 ads per page)
+- 🎨 Dark/light mode support
+- 📱 Fully responsive design
 
 ## Technology Stack
 
 - **Framework**: Next.js 15 (App Router)
 - **Language**: TypeScript 5.7
+- **Database**: PostgreSQL (via Supabase)
+- **ORM**: Prisma 5.22.0
+- **Authentication**: NextAuth v5 (JWT strategy)
+- **Storage**: Supabase Storage (image uploads with sharp resizing)
 - **Styling**: Tailwind CSS 3.4
 - **AI**: OpenAI API (o4-mini model)
 - **Validation**: Zod schemas
@@ -43,36 +57,55 @@ npm run lint
 
 Create `.env.local` with:
 ```
+# OpenAI API
 OPENAI_API_KEY=sk-your-api-key-here
+
+# Database (Supabase PostgreSQL)
+DATABASE_URL=postgresql://user:password@host:port/database
+
+# NextAuth
+AUTH_SECRET=your-random-secret-here
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+
+# Supabase Storage
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 ```
 
-The `OPENAI_API_KEY` is required for the app to function. Copy from `.env.example` and add your OpenAI API key with GPT-4o access.
+**Required keys:**
+- `OPENAI_API_KEY` - OpenAI API with GPT-4o access
+- `DATABASE_URL` - PostgreSQL connection string (Supabase provides this)
+- `AUTH_SECRET` - Generate with `openssl rand -base64 32`
+- `GOOGLE_CLIENT_ID` & `GOOGLE_CLIENT_SECRET` - OAuth credentials from Google Cloud Console
+- Supabase keys - Available in Supabase project settings
 
 ## Architecture
 
 ### Application Flow
 
-1. **Image Upload** (`components/UploadDropzone.tsx`) - User uploads up to 8 product images via drag-and-drop or file picker. Images are validated for size (max 10MB) and format (JPG/PNG/WEBP), then converted to base64
-2. **Form Input** (`components/ProductForm.tsx`) - User selects:
-   - Platform (radio buttons: OLX, Allegro Lokalnie, Facebook Marketplace, Vinted)
-   - Tone style (radio buttons: Professional, Friendly, Casual) with platform recommendations
-   - Product condition (radio buttons: nowy, idealny, używany w dobrym stanie, ślady używania)
-   - Price type (radio buttons: AI suggest, user provided, free)
-   - Delivery options (checkboxes: pickup and/or shipping - both selected by default)
-   - Optional: product name and notes
-3. **API Request** (`app/api/generate-ad/route.ts`) - Form data and images sent to Next.js API route
-4. **AI Processing** (`lib/openai.ts`) - OpenAI Vision API analyzes images and generates platform-specific listings using:
-   - Modular system prompt with accuracy improvements
-   - Platform-specific rules loaded from `lib/rules/*.md` files
-   - Tone-specific style injection
-   - Multiple images with high-detail analysis
-   - Structured JSON response format
-5. **Result Display** (`components/AdResult.tsx`) - Shows:
-   - Grid layout: 65% main content (left), 35% metadata (right)
-   - Main content: Title and description cards with copy buttons in headers
-   - Metadata: Parameters card with "Popraw" button, conditional price card, image analysis
-   - Image analysis with lightbox: thumbnails show quality badges (bottom-right) and zoom buttons (top-right on hover)
-   - Action buttons styled with visual hierarchy (gray/orange for actions, prominent orange for "Nowe ogłoszenie")
+**Unauthenticated User (Soft-wall):**
+1. User visits home page → sees ad creation form
+2. Creates ad without login → sees results
+3. After generation → prompted to sign in to save ad
+
+**Authenticated User:**
+1. User signs in with Google OAuth → redirected to dashboard
+2. Dashboard shows: recent ads, statistics, quick actions
+3. Click "Nowe ogłoszenie" → `/dashboard/new` page with ad creation form
+4. **Image Upload** - Up to 8 images (max 10MB each, JPG/PNG/WEBP)
+5. **Form Input** - Platform, tone, condition, price, delivery, notes
+6. **AI Processing** - OpenAI generates ad with image analysis
+7. **Save to Database** - Ad saved with DRAFT status, images uploaded to Supabase Storage
+8. **View Results** - User can edit parameters, copy content, mark as published/sold
+9. **Manage Ads** - `/dashboard/ads` page with filtering, sorting, search, pagination
+
+**Credits System:**
+- FREE users: 3 credits/month (resets monthly)
+- PREMIUM users: Unlimited credits (9999)
+- Credit consumed on each ad generation
+- Tracked in `User.creditsAvailable` field
 
 ### Tone Variations
 
@@ -105,95 +138,82 @@ The system uses a modular prompt architecture with:
 
 ### Key Files and Responsibilities
 
+**Authentication & Database:**
+- `auth.ts` - NextAuth v5 configuration with Google OAuth provider, JWT strategy
+- `prisma/schema.prisma` - Database schema (User, Account, Session, Ad models)
+- `lib/prisma.ts` - Prisma client singleton
+- `lib/credits.ts` - Credit management (hasCredits, consumeCredit, resetCredits, upgradeToPremium)
+- `lib/image-upload.ts` - Supabase Storage integration with sharp image resizing
+
 **API Layer:**
-- `app/api/generate-ad/route.ts` - POST endpoint that validates request, calls OpenAI, returns JSON response
+- `app/api/generate-ad/route.ts` - POST endpoint for ad generation (validates request, consumes credit, calls OpenAI, saves to DB)
+- `app/api/ads/[id]/route.ts` - GET/PATCH/DELETE endpoints for ad management
+- `app/api/ads/export/route.ts` - CSV export endpoint
+- `app/api/auth/[...nextauth]/route.ts` - NextAuth API routes
 
 **Core Logic:**
-- `lib/openai.ts` - OpenAI client initialization, modular prompt engineering (6 modules), platform rules loading, tone-specific injection, API error handling
-- `lib/types.ts` - TypeScript interfaces for all data structures including ToneStyle, PriceType, ToneVariant, platform defaults
-- `lib/schemas.ts` - Zod validation schemas for form and API inputs (includes `tone`, `priceType` fields with conditional validation)
-- `lib/utils.ts` - Utility functions (cn for className merging, file conversions)
+- `lib/openai.ts` - OpenAI client, modular prompt engineering, platform rules loading, tone injection
+- `lib/types.ts` - TypeScript interfaces for all data structures
+- `lib/schemas.ts` - Zod validation schemas for forms and API
+- `lib/utils.ts` - Utility functions (cn, file conversions)
 
 **Platform Rules:**
-- `lib/rules/olx_rules.md` - OLX-specific listing guidelines with tone variations (Professional, Friendly, Casual)
-- `lib/rules/allegro_lokalnie_rules.md` - Allegro Lokalnie guidelines with tone variations
-- `lib/rules/facebook_marketplace_rules.md` - Facebook Marketplace guidelines with tone variations
-- `lib/rules/vinted_rules.md` - Vinted guidelines with tone variations
+- `lib/rules/*.md` - Platform-specific listing guidelines with tone variations
 
-Each rules file includes:
-- Default recommended tone for the platform
-- Tone-specific phrasing examples (introductions, CTAs, condition descriptions, negotiation language)
-- Free listing guidelines specific to each platform
-- Platform-specific best practices and requirements
+**Dashboard Components:**
+- `components/Sidebar.tsx` - Navigation sidebar with user info and credits display
+- `components/AdsList.tsx` - Ad list with filtering, sorting, search, pagination
+- `components/AdCard.tsx` - Compact ad card (144px height, date in title row, actions aligned with description bottom)
+- `components/AdGeneratorForm.tsx` - Reusable ad creation form
 
-These markdown files are loaded at runtime and injected into the AI prompt to ensure platform-appropriate content generation.
-
-**UI Components:**
-- `components/ui/card-wrapper.tsx` - Reusable card wrapper with optional header, icon, and headerAction slot for buttons
-- `components/PlatformSelector.tsx` - 2x2 grid of platform tiles with lucide-react icons
-- `components/ToneSelector.tsx` - Horizontal segmented control for tone selection with descriptions
-- `components/ConditionSegmentedControl.tsx` - Responsive condition selector (segmented control on desktop, radio buttons on mobile)
-- `components/ProductForm.tsx` - Split into modular components (Platform+Tone, Parameters, Notes+CTA)
-- `components/UploadDropzone.tsx` - Drag-and-drop image upload with 3-4 column grid
-- `components/FullscreenLoading.tsx` - Dynamic loading screen with progress bar and platform-specific messages
-- `components/AdResult.tsx` - Results container with 65/35 grid layout
-- `components/AdResultMain.tsx` - Title and description cards with copy buttons
-- `components/AdResultMeta.tsx` - Parameters, price, and image analysis cards with lightbox modal
-- `components/PriceCard.tsx` - AI price suggestions or free listing badge
-- `components/ThemeProvider.tsx` & `components/ThemeToggle.tsx` - Dark/light mode
-- `components/ui/*` - Reusable UI primitives (buttons, inputs, cards, badges, etc.)
+**Ad Creation Components:**
+- `components/UploadDropzone.tsx` - Drag-and-drop image upload
+- `components/ProductForm.tsx` - Form with platform, tone, condition, price, delivery
+- `components/FullscreenLoading.tsx` - Loading screen with React Portal (renders to document.body, z-9999)
+- `components/AdResult.tsx` - Results display with 65/35 grid layout
 
 **Pages:**
-- `app/page.tsx` - Main application page that orchestrates the entire flow
-- `app/layout.tsx` - Root layout with metadata, fonts, and theme provider
+- `app/page.tsx` - Home page (redirects authenticated users to dashboard, shows form for guests)
+- `app/dashboard/page.tsx` - Dashboard overview
+- `app/dashboard/new/page.tsx` - Ad creation page
+- `app/dashboard/ads/page.tsx` - Ad management page (server component with filtering/sorting/search/pagination)
+- `app/dashboard/ads/[id]/page.tsx` - Ad details page
+- `app/dashboard/layout.tsx` - Dashboard layout with sidebar
 
 ### Important Patterns
 
-**Layout Pattern (2x2 Dashboard Grid):**
-- Desktop (≥1024px): 2x2 grid with 4 cards using `grid-cols-2 gap-6`
-  - Card 1: Photo upload dropzone with CardWrapper (min-h-[400px])
-  - Card 2: Platform tiles + Tone segmented control (min-h-[400px])
-  - Card 3: Product parameters (name, condition, price, delivery) (min-h-[500px])
-  - Card 4: Notes textarea + sticky CTA button (min-h-[500px])
-- Mobile (<1024px): Vertical stack of same cards using `grid-cols-1`
-- Cards: Consistent styling via CardWrapper component with `rounded-xl shadow-sm` (no hover effect)
+**Dashboard Layout:**
+- Fixed sidebar on desktop (lg:w-72), mobile overlay with hamburger menu
+- Main content area with lg:pl-72 padding to account for sidebar
+- Sidebar shows user info, plan badge, credits counter (∞ for PREMIUM)
 
-**Results Screen Layout:**
-- 65/35 asymmetric grid: main content (left) takes more space, metadata (right) is narrower
-- Desktop: `grid-cols-[65fr_35fr]`, Mobile: `grid-cols-1` (stacks vertically)
-- Header and footer always visible (unlike form screen)
-- Visual hierarchy optimized for primary task: copying generated text
+**Ad List Filtering & Search:**
+- Server-side filtering by status (DRAFT/PUBLISHED/SOLD), platform, search query
+- Client-side UI with collapsible filters panel, active filter count badge
+- Debounced search (500ms delay) - no form submission needed
+- Sorting by createdAt, updatedAt, title (asc/desc)
+- Pagination: 20 ads per page with Prisma skip/take
+- URL-based state management via searchParams
 
-**Action Button Hierarchy:**
-Primary actions (copy, edit):
-- Background: `bg-gray-100 dark:bg-gray-800`
-- Hover: `hover:bg-orange-50 hover:text-orange-600` (brand orange)
-- Success state: `bg-green-50 text-green-600`
-- Positioned in card headers via `headerAction` slot
+**Ad Card Layout (Compact):**
+```
++------------------------------------------------------------------+
+| [Image  ] [Title]                                         [Date] |
+| [144px  ] [Platform] [Status] [Price]                            |
+| [h-36   ] [Description line 1, line 2, line 3…]   [Action btns] |
++------------------------------------------------------------------+
+```
+- Padding: `p-4`, Gap: `gap-4`
+- Image: `h-36 w-36` (144px square)
+- Content: `flex-1 flex flex-col min-h-[144px]`
+- Description + Actions: `flex items-end` (aligns buttons to bottom of last line)
+- Date moved to title row (top-right)
 
-Secondary action (new listing):
-- Prominent CTA style: `bg-orange-500 hover:bg-orange-600`
-- Large size: `h-14 text-lg font-bold`
-- Shadow: `shadow-lg hover:shadow-xl`
-
-**Typography Refinements:**
-- Parameter labels: `text-gray-500` (lighter, secondary)
-- Parameter values: `font-medium text-foreground` (prominent, readable)
-- Title and description: Unified `text-base leading-relaxed` (no font size hierarchy between them)
-- No subtitle labels - card headers provide sufficient context
-
-**Image Lightbox:**
-- Thumbnails: 96x96px with `rounded-md overflow-hidden`
-- Quality badge: positioned `bottom-1 right-1` (doesn't compete with zoom)
-- Zoom button: positioned `top-1 right-1`, shows on hover (`opacity-0 group-hover:opacity-100`)
-- Modal: fullscreen `fixed inset-0 z-50 bg-black/90` with centered image
-- Interactions: click zoom button or thumbnail to open, click outside or X to close
-
-**Image Handling:**
-- Images are converted to base64 in the browser before API submission
-- The OpenAI API receives images as data URLs: `data:image/jpeg;base64,...`
-- Multiple images (up to 8) are sent in a single request for comprehensive analysis
-- Each image gets individual quality assessment and suggestions in the response
+**Image Storage:**
+- Images uploaded to Supabase Storage (`marketplace-ads` bucket)
+- Sharp resizes to 800px width, 85% JPEG quality
+- Stored as thumbnails, original base64 discarded after upload
+- RLS policies allow authenticated uploads
 
 **Platform-Specific Content:**
 - Platform rules are markdown files loaded server-side via `fs.readFileSync`
@@ -205,34 +225,19 @@ Secondary action (new listing):
 - API validates requests with Zod schemas
 - OpenAI errors are caught and mapped to user-friendly Polish messages
 - Rate limiting (429), auth errors (401), and generic errors are handled separately
+- Credit exhaustion shows upgrade prompt
 
 **State Management:**
 - React state for form data and images (no external state library)
-- Platform change triggers automatic tone update to platform's recommended default
-- Form submission triggers loading state and API call
-- Results are displayed in a separate component with generation parameters summary
+- NextAuth session for authentication state
+- Prisma for database state
+- URL searchParams for filter/sort/pagination state
 
-**UI/UX Patterns:**
-- All form controls use radio buttons (no dropdowns) for better accessibility
-- Checkboxes and radio buttons use explicit `accent-blue-600` to remain visible when window loses focus
-- Default delivery options: both "odbiór osobisty" and "wysyłka" pre-selected
-- Platform recommendations shown in tone selector (e.g., "⭐ Polecany dla: OLX")
-
-**Results Screen Layout:**
-- 65/35 grid layout: main content (left) and metadata (right)
-- Header and footer always visible on results page
-- Action buttons with visual hierarchy:
-  - "Kopiuj" buttons: gray background with orange hover (`bg-gray-100 hover:bg-orange-50 hover:text-orange-600`)
-  - "Popraw" button: same styling as copy buttons
-  - "Nowe ogłoszenie" button: prominent CTA style (`bg-orange-500 hover:bg-orange-600`)
-- CardWrapper with `headerAction` slot for buttons in card headers
-- Image lightbox: click zoom button to view full-size images with dark overlay modal
-
-**Results Components:**
-- `AdResultMain.tsx`: Title and description cards with copy buttons in headers
-- `AdResultMeta.tsx`: Parameters card, price card (conditional), and image analysis card
-- `PriceCard.tsx`: AI price suggestions or "Za darmo" badge
-- Image analysis with thumbnails (96x96px), quality badges (bottom-right), and zoom buttons (top-right, hover-visible)
+**Authentication Flow:**
+- Google OAuth via NextAuth v5
+- JWT strategy (no database sessions)
+- User created on first sign-in with default FREE plan (3 credits)
+- Session contains: id, name, email, image, plan, creditsAvailable
 
 ## Code Style
 

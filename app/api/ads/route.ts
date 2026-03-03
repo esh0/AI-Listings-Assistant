@@ -1,0 +1,149 @@
+import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/auth";
+import { prisma } from "@/lib/prisma";
+import { AdStatus } from "@prisma/client";
+import { uploadImageFromBase64 } from "@/lib/image-upload";
+
+export const runtime = "nodejs";
+
+/**
+ * GET /api/ads - List user's ads with optional filtering
+ * Query params: status (optional), limit (default 50), offset (default 0)
+ */
+export async function GET(request: NextRequest) {
+    try {
+        const session = await auth();
+
+        if (!session?.user?.id) {
+            return NextResponse.json(
+                { error: "Unauthorized" },
+                { status: 401 }
+            );
+        }
+
+        const { searchParams } = new URL(request.url);
+        const statusParam = searchParams.get("status");
+        const limit = parseInt(searchParams.get("limit") || "50");
+        const offset = parseInt(searchParams.get("offset") || "0");
+
+        // Validate status if provided
+        let status: AdStatus | undefined;
+        if (statusParam && ["DRAFT", "PUBLISHED", "SOLD", "ARCHIVED"].includes(statusParam)) {
+            status = statusParam as AdStatus;
+        }
+
+        const where = {
+            userId: session.user.id,
+            ...(status && { status }),
+        };
+
+        const [ads, total] = await Promise.all([
+            prisma.ad.findMany({
+                where,
+                orderBy: { createdAt: "desc" },
+                take: limit,
+                skip: offset,
+            }),
+            prisma.ad.count({ where }),
+        ]);
+
+        return NextResponse.json({
+            ads,
+            pagination: {
+                total,
+                limit,
+                offset,
+                hasMore: offset + limit < total,
+            },
+        });
+    } catch (error) {
+        console.error("GET /api/ads error:", error);
+        return NextResponse.json(
+            { error: "Failed to fetch ads" },
+            { status: 500 }
+        );
+    }
+}
+
+/**
+ * POST /api/ads - Create new ad manually (not from generator)
+ * Body: { platform, title, description, status?, priceMin?, priceMax?, images, parameters }
+ * Images can be base64 data URLs - will be uploaded to Supabase Storage as thumbnails
+ */
+export async function POST(request: NextRequest) {
+    try {
+        const session = await auth();
+
+        if (!session?.user?.id) {
+            return NextResponse.json(
+                { error: "Unauthorized" },
+                { status: 401 }
+            );
+        }
+
+        const body = await request.json();
+        const {
+            platform,
+            title,
+            description,
+            status = "DRAFT",
+            priceMin,
+            priceMax,
+            images = [],
+            parameters = {},
+        } = body;
+
+        // Basic validation
+        if (!platform || !title || !description) {
+            return NextResponse.json(
+                { error: "Missing required fields: platform, title, description" },
+                { status: 400 }
+            );
+        }
+
+        // Upload images to Supabase Storage if they're base64
+        const uploadedImages = await Promise.all(
+            images.map(async (img: any) => {
+                // If URL is base64 data URL, upload to Supabase
+                if (img.url && img.url.startsWith("data:image/")) {
+                    try {
+                        const supabaseUrl = await uploadImageFromBase64(
+                            img.url,
+                            session.user.id!,
+                            800 // Max width for thumbnails
+                        );
+                        return { ...img, url: supabaseUrl };
+                    } catch (error) {
+                        console.error("Failed to upload image:", error);
+                        // Keep original if upload fails
+                        return img;
+                    }
+                }
+                // If already a Supabase URL or other URL, keep as is
+                return img;
+            })
+        );
+
+        const ad = await prisma.ad.create({
+            data: {
+                userId: session.user.id,
+                platform,
+                title,
+                description,
+                status,
+                priceMin,
+                priceMax,
+                images: JSON.parse(JSON.stringify(uploadedImages)),
+                parameters: JSON.parse(JSON.stringify(parameters)),
+            },
+        });
+
+        return NextResponse.json(ad, { status: 201 });
+    } catch (error) {
+        console.error("POST /api/ads error:", error);
+        return NextResponse.json(
+            { error: "Failed to create ad" },
+            { status: 500 }
+        );
+    }
+}

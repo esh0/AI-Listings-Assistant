@@ -4,6 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 // ===== NextAuth Required Models =====
@@ -47,15 +48,15 @@ model VerificationToken {
 
 // ===== Application Models =====
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  name          String?
-  image         String?
-  emailVerified DateTime?
-  createdAt     DateTime  @default(now())
-  plan          Plan      @default(FREE)
-  creditsUsed   Int       @default(0)
-  creditsReset  DateTime  @default(now())
+  id               String    @id @default(cuid())
+  email            String    @unique
+  name             String?
+  image            String?
+  emailVerified    DateTime?
+  createdAt        DateTime  @default(now())
+  plan             Plan      @default(FREE)
+  creditsAvailable Int       @default(3) // FREE: 3, PREMIUM: unlimited (9999)
+  creditsResetAt   DateTime  @default(now()) // For monthly reset
 
   ads       Ad[]
   templates Template[]

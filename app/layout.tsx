@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { AuthProvider } from "@/components/AuthProvider";
 
 const spaceGrotesk = Space_Grotesk({
     subsets: ["latin", "latin-ext"],
@@ -72,14 +73,16 @@ export default function RootLayout({
                 <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
             </head>
             <body className={`${spaceGrotesk.variable} ${instrumentSerif.variable} font-sans antialiased`}>
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="system"
-                    enableSystem
-                    disableTransitionOnChange
-                >
-                    {children}
-                </ThemeProvider>
+                <AuthProvider>
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="system"
+                        enableSystem
+                        disableTransitionOnChange
+                    >
+                        {children}
+                    </ThemeProvider>
+                </AuthProvider>
             </body>
         </html>
     );
