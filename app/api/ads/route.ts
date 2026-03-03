@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { AdStatus } from "@prisma/client";
 import { uploadImageFromBase64 } from "@/lib/image-upload";
+import { consumeCredit } from "@/lib/credits";
 
 export const runtime = "nodejs";
 
@@ -67,8 +68,9 @@ export async function GET(request: NextRequest) {
 
 /**
  * POST /api/ads - Create new ad manually (not from generator)
- * Body: { platform, title, description, status?, priceMin?, priceMax?, images, parameters }
+ * Body: { platform, title, description, status?, priceMin?, priceMax?, images, parameters, fromSoftwall? }
  * Images can be base64 data URLs - will be uploaded to Supabase Storage as thumbnails
+ * fromSoftwall: If true, consume credit (prevents abuse by existing users logging out)
  */
 export async function POST(request: NextRequest) {
     try {
@@ -91,6 +93,7 @@ export async function POST(request: NextRequest) {
             priceMax,
             images = [],
             parameters = {},
+            fromSoftwall = false,
         } = body;
 
         // Basic validation
@@ -99,6 +102,22 @@ export async function POST(request: NextRequest) {
                 { error: "Missing required fields: platform, title, description" },
                 { status: 400 }
             );
+        }
+
+        // Consume credit if this ad comes from softwall (existing user logged in)
+        // This prevents abuse: user logs out → generates ad → logs back in → bypasses credit check
+        if (fromSoftwall) {
+            try {
+                await consumeCredit(session.user.id);
+                console.log("[POST /api/ads] Credit consumed for softwall ad");
+            } catch (error) {
+                return NextResponse.json(
+                    {
+                        error: error instanceof Error ? error.message : "Brak dostępnych kredytów.",
+                    },
+                    { status: 403 }
+                );
+            }
         }
 
         // Upload images to Supabase Storage if they're base64
