@@ -18,8 +18,8 @@ export default async function DashboardPage() {
         redirect("/auth/signin");
     }
 
-    // Fetch aggregated stats
-    const [totalAds, draftAds, publishedAds, soldAds] = await Promise.all([
+    // Parallelize all database queries (stats + recent ads)
+    const [totalAds, draftAds, publishedAds, soldAds, recentAds] = await Promise.all([
         prisma.ad.count({
             where: { userId: session.user.id },
         }),
@@ -32,14 +32,12 @@ export default async function DashboardPage() {
         prisma.ad.count({
             where: { userId: session.user.id, status: "SOLD" },
         }),
+        prisma.ad.findMany({
+            where: { userId: session.user.id },
+            orderBy: { createdAt: "desc" },
+            take: 5,
+        }),
     ]);
-
-    // Fetch recent 5 ads
-    const recentAds = await prisma.ad.findMany({
-        where: { userId: session.user.id },
-        orderBy: { createdAt: "desc" },
-        take: 5,
-    });
 
     return (
         <div className="space-y-8">

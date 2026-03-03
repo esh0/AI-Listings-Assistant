@@ -15,13 +15,16 @@ export const runtime = "nodejs";
 type Params = Promise<{ id: string }>;
 
 export default async function AdDetailPage(props: { params: Params }) {
-    const session = await auth();
+    // Parallelize auth and params resolution
+    const [session, params] = await Promise.all([
+        auth(),
+        props.params
+    ]);
 
     if (!session?.user?.id) {
         redirect("/auth/signin");
     }
 
-    const params = await props.params;
     const ad = await prisma.ad.findUnique({
         where: {
             id: params.id,

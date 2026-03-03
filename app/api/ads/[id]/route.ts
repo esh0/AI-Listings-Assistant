@@ -13,7 +13,11 @@ export async function GET(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const session = await auth();
+        // Parallelize auth and params resolution
+        const [session, { id }] = await Promise.all([
+            auth(),
+            params
+        ]);
 
         if (!session?.user?.id) {
             return NextResponse.json(
@@ -21,8 +25,6 @@ export async function GET(
                 { status: 401 }
             );
         }
-
-        const { id } = await params;
 
         const ad = await prisma.ad.findFirst({
             where: {
@@ -57,7 +59,12 @@ export async function PATCH(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const session = await auth();
+        // Parallelize auth, params, and body parsing
+        const [session, { id }, body] = await Promise.all([
+            auth(),
+            params,
+            request.json()
+        ]);
 
         if (!session?.user?.id) {
             return NextResponse.json(
@@ -65,8 +72,6 @@ export async function PATCH(
                 { status: 401 }
             );
         }
-
-        const { id } = await params;
 
         // Check ownership
         const existingAd = await prisma.ad.findFirst({
@@ -83,7 +88,6 @@ export async function PATCH(
             );
         }
 
-        const body = await request.json();
         const {
             title,
             description,
@@ -137,7 +141,11 @@ export async function DELETE(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const session = await auth();
+        // Parallelize auth and params resolution
+        const [session, { id }] = await Promise.all([
+            auth(),
+            params
+        ]);
 
         if (!session?.user?.id) {
             return NextResponse.json(
@@ -145,8 +153,6 @@ export async function DELETE(
                 { status: 401 }
             );
         }
-
-        const { id } = await params;
 
         // Check ownership
         const existingAd = await prisma.ad.findFirst({

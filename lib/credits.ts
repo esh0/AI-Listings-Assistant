@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { cache } from "react";
 
 /**
  * Credit limits per plan
@@ -9,43 +10,10 @@ export const CREDIT_LIMITS = {
 } as const;
 
 /**
- * Check if user has available credits
- * @returns true if user has credits, false otherwise
+ * Internal function to get user data
+ * Cached per-request to avoid duplicate database queries
  */
-export async function hasCredits(userId: string): Promise<boolean> {
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { creditsAvailable: true },
-  });
-
-  if (!user) {
-    throw new Error("User not found");
-  }
-
-  return user.creditsAvailable > 0;
-}
-
-/**
- * Get user's available credits
- */
-export async function getAvailableCredits(userId: string): Promise<number> {
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { creditsAvailable: true },
-  });
-
-  if (!user) {
-    throw new Error("User not found");
-  }
-
-  return user.creditsAvailable;
-}
-
-/**
- * Consume one credit for ad generation
- * Throws error if no credits available
- */
-export async function consumeCredit(userId: string): Promise<void> {
+const getUserData = cache(async (userId: string) => {
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: { creditsAvailable: true, plan: true },
@@ -54,6 +22,34 @@ export async function consumeCredit(userId: string): Promise<void> {
   if (!user) {
     throw new Error("User not found");
   }
+
+  return user;
+});
+
+/**
+ * Check if user has available credits
+ * @returns true if user has credits, false otherwise
+ */
+export async function hasCredits(userId: string): Promise<boolean> {
+  const user = await getUserData(userId);
+  return user.creditsAvailable > 0;
+}
+
+/**
+ * Get user's available credits
+ */
+export async function getAvailableCredits(userId: string): Promise<number> {
+  const user = await getUserData(userId);
+  return user.creditsAvailable;
+}
+
+/**
+ * Consume one credit for ad generation
+ * Throws error if no credits available
+ */
+export async function consumeCredit(userId: string): Promise<void> {
+  // Use cached user data for initial check
+  const user = await getUserData(userId);
 
   if (user.creditsAvailable <= 0) {
     if (user.plan === "FREE") {
@@ -80,15 +76,8 @@ export async function consumeCredit(userId: string): Promise<void> {
  * Called monthly or when upgrading plan
  */
 export async function resetCredits(userId: string): Promise<void> {
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { plan: true },
-  });
-
-  if (!user) {
-    throw new Error("User not found");
-  }
-
+  // Use cached user data to get plan
+  const user = await getUserData(userId);
   const newCredits = CREDIT_LIMITS[user.plan];
 
   await prisma.user.update({

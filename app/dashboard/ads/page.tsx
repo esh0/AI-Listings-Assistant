@@ -12,14 +12,17 @@ export const runtime = "nodejs";
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
 export default async function AdsPage(props: { searchParams: SearchParams }) {
-    const session = await auth();
+    // Parallelize auth and searchParams resolution
+    const [session, searchParams] = await Promise.all([
+        auth(),
+        props.searchParams
+    ]);
 
     if (!session?.user?.id) {
         redirect("/auth/signin?callbackUrl=/dashboard/ads");
     }
 
     // Get filters and sort from search params
-    const searchParams = await props.searchParams;
     const statusFilter = searchParams.status as string | undefined;
     const platformFilter = searchParams.platform as string | undefined;
     const searchQuery = searchParams.search as string | undefined;
@@ -71,8 +74,8 @@ export default async function AdsPage(props: { searchParams: SearchParams }) {
         orderBy.createdAt = sortDirection || "desc";
     }
 
-    // Fetch ads with filters, sorting, and pagination
-    const [ads, totalFilteredCount] = await Promise.all([
+    // Parallelize all database queries (ads + counts)
+    const [ads, totalFilteredCount, totalCount, draftCount, publishedCount, soldCount] = await Promise.all([
         prisma.ad.findMany({
             where,
             orderBy,
@@ -80,17 +83,13 @@ export default async function AdsPage(props: { searchParams: SearchParams }) {
             take: pageSize,
         }),
         prisma.ad.count({ where }),
-    ]);
-
-    const totalPages = Math.ceil(totalFilteredCount / pageSize);
-
-    // Count by status
-    const [totalCount, draftCount, publishedCount, soldCount] = await Promise.all([
         prisma.ad.count({ where: { userId: session.user.id } }),
         prisma.ad.count({ where: { userId: session.user.id, status: "DRAFT" } }),
         prisma.ad.count({ where: { userId: session.user.id, status: "PUBLISHED" } }),
         prisma.ad.count({ where: { userId: session.user.id, status: "SOLD" } }),
     ]);
+
+    const totalPages = Math.ceil(totalFilteredCount / pageSize);
 
     return (
         <div className="space-y-8">

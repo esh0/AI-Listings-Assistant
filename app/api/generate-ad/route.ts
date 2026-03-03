@@ -11,8 +11,11 @@ export const maxDuration = 60; // 60 seconds timeout
 
 export async function POST(request: NextRequest) {
     try {
-        // Parse request body
-        const body = await request.json();
+        // Parallelize body parsing and auth check (independent operations)
+        const [body, session] = await Promise.all([
+            request.json(),
+            auth()
+        ]);
 
         // Validate request
         const validationResult = generateAdRequestSchema.safeParse(body);
@@ -41,7 +44,6 @@ export async function POST(request: NextRequest) {
         }
 
         // Check authentication and credits (optional - soft-wall)
-        const session = await auth();
         let userId: string | null = null;
 
         if (session?.user?.id) {

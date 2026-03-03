@@ -3,8 +3,9 @@ import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
 import type { Plan } from "@prisma/client";
+import { cache } from "react";
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+const { handlers, auth: uncachedAuth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   secret: process.env.AUTH_SECRET,
   providers: [
@@ -53,3 +54,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
   },
 });
+
+// Wrap auth() with React.cache() for automatic per-request deduplication
+// This ensures auth is only called once per server request, even if used in multiple components
+export const auth = cache(uncachedAuth);
+export { handlers, signIn, signOut };
