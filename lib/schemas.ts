@@ -24,7 +24,6 @@ export const productFormSchema = z.object({
     price: z.string().optional(),
     priceType: PriceTypeSchema,
     tone: ToneStyleSchema,
-    generateAllTones: z.boolean(),
     delivery: z
         .array(z.enum(["odbiór osobisty", "wysyłka"]))
         .min(1, "Wybierz przynajmniej jedną opcję dostawy"),
@@ -60,7 +59,6 @@ export const generateAdRequestSchema = z
         price: z.string().optional(),
         priceType: PriceTypeSchema,
         tone: ToneStyleSchema,
-        generateAllTones: z.boolean(),
         delivery: z.string(),
         notes: z.string(),
         images: z

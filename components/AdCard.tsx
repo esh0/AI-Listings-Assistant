@@ -7,6 +7,7 @@ import { PLATFORM_NAMES } from "@/lib/types";
 import { Eye, Edit, Trash2, CheckCircle } from "lucide-react";
 import { useState } from "react";
 import { AdStatus, Platform } from "@prisma/client";
+import { cn } from "@/lib/utils";
 
 interface AdCardProps {
     ad: {
@@ -26,6 +27,8 @@ interface AdCardProps {
     onEdit?: (id: string) => void;
     onDelete?: (id: string) => void;
     onMarkAsSold?: (id: string) => void;
+    onClick?: (id: string) => void; // For clickable cards (dashboard)
+    showTooltips?: boolean; // Show tooltips on action buttons
 }
 
 const STATUS_LABELS: Record<AdStatus, string> = {
@@ -48,6 +51,8 @@ export function AdCard({
     onEdit,
     onDelete,
     onMarkAsSold,
+    onClick,
+    showTooltips = false,
 }: AdCardProps) {
     const [isDeleting, setIsDeleting] = useState(false);
 
@@ -78,8 +83,24 @@ export function AdCard({
         }
     };
 
+    const handleCardClick = () => {
+        if (onClick) {
+            onClick(ad.id);
+        }
+    };
+
+    // Determine if card should have hover effect and be clickable
+    const hasActions = !!(onView || onEdit || onDelete || onMarkAsSold);
+    const isClickable = !!onClick;
+
     return (
-        <Card className="overflow-hidden transition-shadow p-4">
+        <Card
+            className={cn(
+                "overflow-hidden p-4",
+                isClickable && "cursor-pointer transition-all hover:shadow-md hover:scale-[1.01]"
+            )}
+            onClick={isClickable ? handleCardClick : undefined}
+        >
             <div className="flex flex-col sm:flex-row gap-4">
                 {/* Thumbnail */}
                 <div className="w-full sm:w-36 h-36 bg-gray-100 dark:bg-gray-800 flex-shrink-0">
@@ -132,7 +153,12 @@ export function AdCard({
                                 <Button
                                     size="sm"
                                     variant="outline"
-                                    onClick={() => onView(ad.id)}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onView(ad.id);
+                                    }}
+                                    title={showTooltips ? "Zobacz szczegóły" : undefined}
+                                    aria-label="Zobacz szczegóły"
                                 >
                                     <Eye className="h-4 w-4" />
                                 </Button>
@@ -141,7 +167,12 @@ export function AdCard({
                                 <Button
                                     size="sm"
                                     variant="outline"
-                                    onClick={() => onEdit(ad.id)}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onEdit(ad.id);
+                                    }}
+                                    title={showTooltips ? "Edytuj ogłoszenie" : undefined}
+                                    aria-label="Edytuj ogłoszenie"
                                 >
                                     <Edit className="h-4 w-4" />
                                 </Button>
@@ -150,8 +181,13 @@ export function AdCard({
                                 <Button
                                     size="sm"
                                     variant="outline"
-                                    onClick={() => onMarkAsSold(ad.id)}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onMarkAsSold(ad.id);
+                                    }}
                                     className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                                    title={showTooltips ? "Oznacz jako sprzedane" : undefined}
+                                    aria-label="Oznacz jako sprzedane"
                                 >
                                     <CheckCircle className="h-4 w-4" />
                                 </Button>
@@ -160,9 +196,17 @@ export function AdCard({
                                 <Button
                                     size="sm"
                                     variant="outline"
-                                    onClick={handleDelete}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDelete();
+                                    }}
                                     disabled={isDeleting}
-                                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                    className={cn(
+                                        "text-red-600 hover:text-red-700 hover:bg-red-50",
+                                        isDeleting && "opacity-50 cursor-not-allowed"
+                                    )}
+                                    title={showTooltips ? "Usuń ogłoszenie" : undefined}
+                                    aria-label="Usuń ogłoszenie"
                                 >
                                     <Trash2 className="h-4 w-4" />
                                 </Button>

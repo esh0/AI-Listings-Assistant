@@ -261,45 +261,10 @@ Odpowiedz TYLKO w formacie JSON zgodnym z poniższym schematem:`;
 }
 
 /**
- * Build JSON schema based on whether multi-tone generation is enabled
- * @param generateAllTones - If true, returns schema with toneVariants array; if false, returns single tone schema
+ * Build JSON schema for single-tone response
  * @returns JSON schema string for AI response format
  */
-function buildJsonSchema(generateAllTones: boolean): string {
-  if (generateAllTones) {
-    // Multi-tone response schema
-    return `{
-  "isValid": boolean,
-  "error": string (tylko jeśli isValid=false),
-  "toneVariants": [
-    {
-      "tone": "professional" | "friendly" | "casual",
-      "title": string,
-      "description": string
-    }
-  ],
-  "price": {
-    "min": number,
-    "max": number,
-    "reason": string
-  } | null,
-  "isFree": boolean (true jeśli priceType="free"),
-  "images": [
-    {
-      "filename": string,
-      "quality": string,
-      "suggestions": string,
-      "isValid": boolean,
-      "reason": string
-    }
-  ],
-  "confidence": {
-    "productIdentification": "high" | "medium" | "low",
-    "specifications": "high" | "medium" | "low"
-  }
-}`;
-  } else {
-    // Single tone response schema
+function buildJsonSchema(): string {
     return `{
   "isValid": boolean,
   "error": string (tylko jeśli isValid=false),
@@ -325,7 +290,6 @@ function buildJsonSchema(generateAllTones: boolean): string {
     "specifications": "high" | "medium" | "low"
   }
 }`;
-  }
 }
 
 export async function generateAd(
@@ -347,9 +311,7 @@ export async function generateAd(
     }
 
     // Build tone context
-    const toneContext = request.generateAllTones
-        ? "Wygeneruj 3 wersje ogłoszenia w TRZECH RÓŻNYCH TONACH: professional, friendly, casual. Każda wersja powinna być wyraźnie inna stylistycznie."
-        : `Wygeneruj ogłoszenie w stylu: ${request.tone.toUpperCase()}`;
+    const toneContext = `Wygeneruj ogłoszenie w stylu: ${request.tone.toUpperCase()}`;
 
     const userPrompt = `## Dane wejściowe:
 - Platforma sprzedażowa: ${request.platform}
@@ -394,15 +356,15 @@ Wygeneruj ogłoszenie sprzedażowe w formacie JSON zgodnie z powyższymi zasadam
             });
         }
 
-        // Determine system tone: use friendly for multi-tone, otherwise use requested tone
-        const systemTone = request.generateAllTones ? "friendly" : request.tone;
+        // Determine system tone: use requested tone
+        const systemTone = request.tone;
 
         const response = await openai.chat.completions.create({
             model: "o4-mini",
             messages: [
                 {
                     role: "system",
-                    content: `${buildSystemPrompt(systemTone)}\n\n${buildJsonSchema(request.generateAllTones)}`,
+                    content: `${buildSystemPrompt(systemTone)}\n\n${buildJsonSchema()}`,
                 },
                 {
                     role: "user",
@@ -410,7 +372,7 @@ Wygeneruj ogłoszenie sprzedażowe w formacie JSON zgodnie z powyższymi zasadam
                 },
             ],
             response_format: { type: "json_object" },
-            max_completion_tokens: request.generateAllTones ? 6000 : 4000,
+            max_completion_tokens: 4000,
         });
 
         const content = response.choices[0]?.message?.content;

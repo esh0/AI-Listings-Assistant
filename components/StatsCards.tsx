@@ -48,7 +48,7 @@ export function StatsCards({ stats }: StatsCardsProps) {
                 const Icon = card.icon;
 
                 return (
-                    <Card key={card.title} className="p-6">
+                    <Card key={card.title} className="p-4">
                         <div className="flex items-center gap-4">
                             <div
                                 className={`p-3 rounded-lg ${card.bgColor}`}

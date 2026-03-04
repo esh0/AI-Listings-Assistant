@@ -18,7 +18,7 @@ export default function HomePage() {
         if (status === "authenticated") {
             router.push("/dashboard");
         }
-    }, [status, router]);
+    }, [status]);
 
     // Show loading while checking auth
     if (status === "loading") {

@@ -68,8 +68,6 @@ export async function POST(request: NextRequest) {
 
         // If user is logged in, save ad to database with images uploaded to Supabase
         if (userId && result.isValid && result.title && result.description) {
-            console.log("[generate-ad] User logged in, uploading images to Supabase...");
-
             // Upload images to Supabase Storage
             const uploadedImages = await Promise.all(
                 (result.images || []).map(async (img, index) => {
@@ -80,8 +78,6 @@ export async function POST(request: NextRequest) {
 
                         // Upload with resize to 800px thumbnail
                         const supabaseUrl = await uploadImageFromBase64(base64Url, userId, 800);
-
-                        console.log(`[generate-ad] Image ${index} uploaded:`, supabaseUrl);
 
                         return {
                             ...img,
@@ -94,8 +90,6 @@ export async function POST(request: NextRequest) {
                     }
                 })
             );
-
-            console.log("[generate-ad] Creating ad in database...");
 
             const ad = await prisma.ad.create({
                 data: {
@@ -118,8 +112,6 @@ export async function POST(request: NextRequest) {
                     },
                 },
             });
-
-            console.log("[generate-ad] Ad created:", ad.id);
 
             // Add adId to response for frontend
             return NextResponse.json({ ...result, adId: ad.id });

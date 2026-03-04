@@ -9,7 +9,6 @@ import { CheckCircle, XCircle } from "lucide-react";
 
 export function PendingAdHandler() {
     const router = useRouter();
-    const { update } = useSession();
     const [message, setMessage] = useState<string | null>(null);
     const [isError, setIsError] = useState(false);
 
@@ -20,14 +19,10 @@ export function PendingAdHandler() {
     const handlePendingAd = async () => {
         try {
             const pendingAd = await getPendingAd();
-            console.log("[PendingAdHandler] Pending ad from IndexedDB:", pendingAd);
 
             if (!pendingAd) {
-                console.log("[PendingAdHandler] No pending ad found");
                 return; // No pending ad
             }
-
-            console.log("[PendingAdHandler] Saving pending ad to database...");
 
             // Save pending ad to database via API
             // Images are already base64 data URLs from AdGeneratorForm
@@ -78,24 +73,12 @@ export function PendingAdHandler() {
             }
 
             const savedAd = await response.json();
-            console.log("[PendingAdHandler] Ad saved successfully:", savedAd);
 
             // Clear from IndexedDB after successful save
             await clearPendingAd();
-            console.log("[PendingAdHandler] Cleared from IndexedDB");
-
-            // Update session to refresh credits in sidebar
-            // NextAuth v5 update() may not work reliably, so we force full reload instead
-            try {
-                await update();
-                console.log("[PendingAdHandler] Session update called");
-            } catch (error) {
-                console.warn("[PendingAdHandler] Session update failed:", error);
-            }
 
             // Force full page reload to ensure credits are refreshed from server
             // router.refresh() only revalidates Server Components but keeps client state
-            console.log("[PendingAdHandler] Forcing full page reload to refresh credits");
             window.location.reload();
 
             // Note: Code below won't execute due to page reload, but kept for reference

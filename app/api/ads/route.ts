@@ -109,7 +109,6 @@ export async function POST(request: NextRequest) {
         if (fromSoftwall) {
             try {
                 await consumeCredit(session.user.id);
-                console.log("[POST /api/ads] Credit consumed for softwall ad");
             } catch (error) {
                 return NextResponse.json(
                     {

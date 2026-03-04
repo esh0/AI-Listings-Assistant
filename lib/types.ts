@@ -57,7 +57,6 @@ export interface GenerateAdRequest {
     price?: string;
     priceType: PriceType;
     tone: ToneStyle;
-    generateAllTones: boolean;
     delivery: string;
     notes: string;
     images: ImageForRequest[];

@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { StatsCards } from "@/components/StatsCards";
-import { AdCard } from "@/components/AdCard";
+import { RecentAdsList } from "@/components/RecentAdsList";
 import { PendingAdHandler } from "@/components/PendingAdHandler";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -73,43 +73,7 @@ export default async function DashboardPage() {
             />
 
             {/* Recent Ads */}
-            <div>
-                <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-2xl font-bold text-foreground">
-                        Ostatnie ogłoszenia
-                    </h2>
-                    {recentAds.length > 0 && (
-                        <Link href="/dashboard/ads">
-                            <Button variant="outline" size="sm">
-                                Zobacz wszystkie
-                            </Button>
-                        </Link>
-                    )}
-                </div>
-
-                {recentAds.length === 0 ? (
-                    <div className="text-center py-12 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800">
-                        <p className="text-gray-600 dark:text-gray-400 mb-4">
-                            Nie masz jeszcze żadnych ogłoszeń
-                        </p>
-                        <Link href="/dashboard/new">
-                            <Button className="bg-orange-500 hover:bg-orange-600">
-                                <Plus className="h-4 w-4 mr-2" />
-                                Utwórz pierwsze ogłoszenie
-                            </Button>
-                        </Link>
-                    </div>
-                ) : (
-                    <div className="space-y-4">
-                        {recentAds.map((ad) => (
-                            <AdCard
-                                key={ad.id}
-                                ad={ad}
-                            />
-                        ))}
-                    </div>
-                )}
-            </div>
+            <RecentAdsList ads={recentAds} />
         </div>
     );
 }

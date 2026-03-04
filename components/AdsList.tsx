@@ -340,6 +340,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                                 onEdit={handleEdit}
                                 onDelete={handleDelete}
                                 onMarkAsSold={handleMarkAsSold}
+                                showTooltips={true}
                             />
                         ))}
                     </div>

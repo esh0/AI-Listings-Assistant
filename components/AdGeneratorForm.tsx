@@ -105,15 +105,6 @@ export function AdGeneratorForm() {
         };
     }, []);
 
-    // If authenticated and result with adId, redirect to dashboard
-    useEffect(() => {
-        if (result && (result as any).adId && status === "authenticated") {
-            setTimeout(() => {
-                router.push("/dashboard");
-            }, 2000); // Show result for 2 seconds then redirect
-        }
-    }, [result, status, router]);
-
     const handleSubmit = useCallback(async () => {
         if (images.length === 0) {
             setError("Dodaj przynajmniej jedno zdjęcie produktu");
@@ -149,8 +140,10 @@ export function AdGeneratorForm() {
                 }))
             );
 
-            // Store base64 images for softwall to upload to Supabase
-            setBase64Images(imagesForRequest);
+            // Store base64 images only for unauthenticated users (for softwall modal to upload to Supabase)
+            if (status === "unauthenticated") {
+                setBase64Images(imagesForRequest);
+            }
 
             const response = await fetch("/api/generate-ad", {
                 method: "POST",
@@ -167,7 +160,6 @@ export function AdGeneratorForm() {
                     notes,
                     images: imagesForRequest,
                     tone: selectedTone,
-                    generateAllTones: false,
                 }),
                 signal: abortControllerRef.current.signal,
             });
@@ -183,6 +175,13 @@ export function AdGeneratorForm() {
                     throw new Error("Błąd serwera. Spróbuj ponownie za chwilę.");
                 }
                 throw new Error(data.error || "Wystąpił błąd podczas generowania ogłoszenia");
+            }
+
+            // For authenticated users, redirect immediately to refresh credits
+            // Using full page reload to ensure credits refresh from database
+            if (status === "authenticated" && data.adId) {
+                window.location.href = "/dashboard/ads";
+                return;
             }
 
             setResult(data);

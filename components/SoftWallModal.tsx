@@ -61,9 +61,7 @@ export function SoftWallModal({ adData, isVisible, onClose }: SoftWallModalProps
                 timestamp: Date.now(),
             };
 
-            console.log("[SoftWallModal] Saving pending ad to IndexedDB:", pendingAd);
             await savePendingAd(pendingAd);
-            console.log("[SoftWallModal] Successfully saved to IndexedDB");
 
             // Redirect to sign in with callback to dashboard
             router.push("/auth/signin?callbackUrl=/dashboard");
