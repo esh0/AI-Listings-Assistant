@@ -114,6 +114,14 @@ export function AdGeneratorForm() {
         }
     }, [result]);
 
+    // Validation for edited content
+    const isTitleValid = useMemo(() => editedTitle.trim().length > 0, [editedTitle]);
+    const isDescriptionValid = useMemo(() => editedDescription.trim().length > 0, [editedDescription]);
+    const canSave = useMemo(() =>
+        isTitleValid && isDescriptionValid && !isSaving && result?.isValid === true,
+        [isTitleValid, isDescriptionValid, isSaving, result]
+    );
+
     // Refresh session after successful ad generation for authenticated users
     useEffect(() => {
         if (result && result.isValid && !isLoading && status === "authenticated") {
@@ -442,9 +450,9 @@ export function AdGeneratorForm() {
                                 <Button
                                     size="lg"
                                     onClick={handleSave}
-                                    disabled={isSaving}
+                                    disabled={!canSave}
                                     aria-label="Zapisz ogłoszenie"
-                                    className="bg-green-500 hover:bg-green-600 text-white h-14 text-lg font-bold transition-colors shadow-lg hover:shadow-xl disabled:opacity-50"
+                                    className="bg-green-500 hover:bg-green-600 text-white h-14 text-lg font-bold transition-colors shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     <Save className="h-5 w-5 mr-2" aria-hidden="true" />
                                     {isSaving ? "Zapisywanie…" : "Zapisz"}
