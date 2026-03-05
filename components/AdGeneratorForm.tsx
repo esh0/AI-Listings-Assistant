@@ -53,6 +53,10 @@ export function AdGeneratorForm() {
     const [selectedTone, setSelectedTone] = useState<ToneStyle>(DEFAULT_TONE);
     const [priceType, setPriceType] = useState<PriceType>(DEFAULT_PRICE_TYPE);
 
+    // Editable content state
+    const [editedTitle, setEditedTitle] = useState<string>("");
+    const [editedDescription, setEditedDescription] = useState<string>("");
+
     // UI state
     const [isLoading, setIsLoading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
@@ -65,6 +69,7 @@ export function AdGeneratorForm() {
     const [base64Images, setBase64Images] = useState<Array<{ base64: string; filename: string; mimeType: string }>>([]);
 
     const abortControllerRef = useRef<AbortController | null>(null);
+    const hasInitializedEdits = useRef(false);
 
     const imagePreviewsList = useMemo(() => {
         return images.map((img) => img.preview);
@@ -96,6 +101,18 @@ export function AdGeneratorForm() {
             }, 1500);
         }
     }, [result, isLoading, status]);
+
+    // Initialize edited values from AI result (only once)
+    useEffect(() => {
+        if (result && !hasInitializedEdits.current) {
+            if (result.title) setEditedTitle(result.title);
+            if (result.description) setEditedDescription(result.description);
+            hasInitializedEdits.current = true;
+        }
+        if (!result) {
+            hasInitializedEdits.current = false;
+        }
+    }, [result]);
 
     // Refresh session after successful ad generation for authenticated users
     useEffect(() => {
@@ -277,11 +294,16 @@ export function AdGeneratorForm() {
         setPriceType(DEFAULT_PRICE_TYPE);
         setResult(null);
         setError(null);
+        setEditedTitle("");
+        setEditedDescription("");
+        hasInitializedEdits.current = false;
     }, [images]);
 
     const handleEdit = useCallback(() => {
         setResult(null);
         setError(null);
+        setEditedTitle("");
+        setEditedDescription("");
     }, []);
 
     if (isLoading) {
