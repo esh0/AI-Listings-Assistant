@@ -53,6 +53,19 @@ npm start
 npm run lint
 ```
 
+**IMPORTANT - Development Server Management:**
+Before starting the dev server, ALWAYS kill any processes running on ports 3000 and 3001:
+```bash
+# Kill processes on ports 3000 and 3001
+lsof -ti:3000 | xargs kill -9 2>/dev/null || true
+lsof -ti:3001 | xargs kill -9 2>/dev/null || true
+
+# Then start the dev server
+npm run dev
+```
+
+This ensures a clean restart and prevents port conflicts. Use this command sequence every time you need to restart the development server.
+
 ## Environment Variables
 
 Create `.env.local` with:
@@ -96,15 +109,15 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 3. Click "Nowe ogłoszenie" → `/dashboard/new` page with ad creation form
 4. **Image Upload** - Up to 8 images (max 10MB each, JPG/PNG/WEBP)
 5. **Form Input** - Platform, tone, condition, price, delivery, notes
-6. **AI Processing** - OpenAI generates ad with image analysis
-7. **Save to Database** - Ad saved with DRAFT status, images uploaded to Supabase Storage
-8. **View Results** - User can edit parameters, copy content, mark as published/sold
+6. **AI Processing** - OpenAI generates ad with image analysis, credit consumed
+7. **Review Results** - User sees generated title, description, price suggestions
+8. **Save to Database** - Click "Zapisz" button to save ad with DRAFT status, images uploaded to Supabase Storage
 9. **Manage Ads** - `/dashboard/ads` page with filtering, sorting, search, pagination
 
 **Credits System:**
 - FREE users: 3 credits/month (resets monthly)
 - PREMIUM users: Unlimited credits (9999)
-- Credit consumed on each ad generation
+- **Credit consumed on generation** (before saving) - prevents abuse
 - Tracked in `User.creditsAvailable` field
 
 ### Tone Variations
@@ -146,7 +159,8 @@ The system uses a modular prompt architecture with:
 - `lib/image-upload.ts` - Supabase Storage integration with sharp image resizing
 
 **API Layer:**
-- `app/api/generate-ad/route.ts` - POST endpoint for ad generation (validates request, consumes credit, calls OpenAI, saves to DB)
+- `app/api/generate-ad/route.ts` - POST endpoint for ad generation (validates request, consumes credit, calls OpenAI - **does not save to DB**)
+- `app/api/ads/route.ts` - POST endpoint for saving ads (uploads images to Supabase, saves to DB)
 - `app/api/ads/[id]/route.ts` - GET/PATCH/DELETE endpoints for ad management
 - `app/api/ads/export/route.ts` - CSV export endpoint
 - `app/api/auth/[...nextauth]/route.ts` - NextAuth API routes
@@ -163,8 +177,9 @@ The system uses a modular prompt architecture with:
 **Dashboard Components:**
 - `components/Sidebar.tsx` - Navigation sidebar with user info and credits display
 - `components/AdsList.tsx` - Ad list with filtering, sorting, search, pagination
-- `components/AdCard.tsx` - Compact ad card (144px height, date in title row, actions aligned with description bottom)
-- `components/AdGeneratorForm.tsx` - Reusable ad creation form
+- `components/AdCard.tsx` - Compact ad card with platform icons, status badges, action buttons (Publish/Sold)
+- `components/StatsCards.tsx` - Dashboard statistics cards (uses text-lg font-semibold for numbers)
+- `components/AdGeneratorForm.tsx` - Reusable ad creation form with header and save flow
 
 **Ad Creation Components:**
 - `components/UploadDropzone.tsx` - Drag-and-drop image upload
@@ -175,12 +190,20 @@ The system uses a modular prompt architecture with:
 **Pages:**
 - `app/page.tsx` - Home page (redirects authenticated users to dashboard, shows form for guests)
 - `app/dashboard/page.tsx` - Dashboard overview
-- `app/dashboard/new/page.tsx` - Ad creation page
+- `app/dashboard/new/page.tsx` - Ad creation page (client component, includes header in form)
 - `app/dashboard/ads/page.tsx` - Ad management page (server component with filtering/sorting/search/pagination)
 - `app/dashboard/ads/[id]/page.tsx` - Ad details page
 - `app/dashboard/layout.tsx` - Dashboard layout with sidebar
 
 ### Important Patterns
+
+**Ad Generation & Saving Flow:**
+1. User fills form and clicks "Generuj ogłoszenie"
+2. API `/api/generate-ad` consumes credit and generates content (does NOT save)
+3. User reviews results on same page
+4. Authenticated users click "Zapisz" to save via `/api/ads` POST
+5. Unauthenticated users see soft-wall modal after 1.5s
+6. Credits consumed on generation (not on save) to prevent abuse
 
 **Dashboard Layout:**
 - Fixed sidebar on desktop (lg:w-72), mobile overlay with hamburger menu
@@ -199,15 +222,20 @@ The system uses a modular prompt architecture with:
 ```
 +------------------------------------------------------------------+
 | [Image  ] [Title]                                         [Date] |
-| [144px  ] [Platform] [Status] [Price]                            |
+| [144px  ] [Icon] [Status] [Price]                                |
 | [h-36   ] [Description line 1, line 2, line 3…]   [Action btns] |
 +------------------------------------------------------------------+
 ```
 - Padding: `p-4`, Gap: `gap-4`
 - Image: `h-36 w-36` (144px square)
+- **Platform Icon**: Colored icon instead of text badge (ShoppingBag, Store, Facebook, Shirt)
 - Content: `flex-1 flex flex-col min-h-[144px]`
 - Description + Actions: `flex items-end` (aligns buttons to bottom of last line)
 - Date moved to title row (top-right)
+- **Action Buttons**:
+  - DRAFT → "Opublikuj" (green CheckCircle)
+  - PUBLISHED → "Sprzedane" (orange CircleDollarSign)
+  - All states → View (Eye), Edit, Delete (Trash2)
 
 **Image Storage:**
 - Images uploaded to Supabase Storage (`marketplace-ads` bucket)

@@ -4,7 +4,7 @@ import React, { useState, useCallback, useMemo, useEffect, useRef } from "react"
 import dynamic from "next/dynamic";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { RotateCcw, Camera } from "lucide-react";
+import { RotateCcw, Camera, CheckCircle, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
@@ -55,6 +55,7 @@ export function AdGeneratorForm() {
 
     // UI state
     const [isLoading, setIsLoading] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [result, setResult] = useState<GenerateAdResponse | null>(null);
     const [isOffline, setIsOffline] = useState(false);
@@ -95,6 +96,65 @@ export function AdGeneratorForm() {
             }, 1500);
         }
     }, [result, isLoading, status]);
+
+    // Refresh session after successful ad generation for authenticated users
+    useEffect(() => {
+        if (result && result.isValid && !isLoading && status === "authenticated") {
+            // Refresh to update credits in sidebar after generation
+            router.refresh();
+        }
+    }, [result, isLoading, status, router]);
+
+    const handleSave = useCallback(async () => {
+        if (!result || !result.isValid || !result.title || !result.description) {
+            return;
+        }
+
+        setIsSaving(true);
+
+        try {
+            // Save ad to database via /api/ads endpoint
+            const response = await fetch("/api/ads", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    platform,
+                    title: result.title,
+                    description: result.description,
+                    status: "DRAFT",
+                    priceMin: result.price?.min,
+                    priceMax: result.price?.max,
+                    images: base64Images.map((img, index) => ({
+                        url: `data:${img.mimeType};base64,${img.base64}`,
+                        quality: result.images?.[index]?.quality || "",
+                        suggestions: result.images?.[index]?.suggestions || "",
+                    })),
+                    parameters: {
+                        platform,
+                        tone: selectedTone,
+                        condition,
+                        delivery,
+                        productName,
+                        notes,
+                        priceType,
+                        userPrice: priceType === "user_provided" ? parseFloat(price) : undefined,
+                    },
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to save ad");
+            }
+
+            // Redirect to ads list
+            router.push("/dashboard/ads");
+        } catch (error) {
+            console.error("Failed to save ad:", error);
+            alert("Nie udało się zapisać ogłoszenia. Spróbuj ponownie.");
+        } finally {
+            setIsSaving(false);
+        }
+    }, [result, platform, selectedTone, condition, delivery, productName, notes, priceType, price, base64Images, router]);
 
     // Cleanup abort controller
     useEffect(() => {
@@ -140,10 +200,8 @@ export function AdGeneratorForm() {
                 }))
             );
 
-            // Store base64 images only for unauthenticated users (for softwall modal to upload to Supabase)
-            if (status === "unauthenticated") {
-                setBase64Images(imagesForRequest);
-            }
+            // Store base64 images for saving later (both authenticated and unauthenticated users)
+            setBase64Images(imagesForRequest);
 
             const response = await fetch("/api/generate-ad", {
                 method: "POST",
@@ -177,13 +235,7 @@ export function AdGeneratorForm() {
                 throw new Error(data.error || "Wystąpił błąd podczas generowania ogłoszenia");
             }
 
-            // For authenticated users, redirect immediately to refresh credits
-            // Using full page reload to ensure credits refresh from database
-            if (status === "authenticated" && data.adId) {
-                window.location.href = "/dashboard/ads";
-                return;
-            }
-
+            // Show result for all users (authenticated and unauthenticated)
             setResult(data);
         } catch (err) {
             if (err instanceof Error && err.name === "AbortError") {
@@ -248,6 +300,20 @@ export function AdGeneratorForm() {
             {isOffline && (
                 <div className="fixed top-0 left-0 right-0 z-50 bg-destructive text-destructive-foreground py-2 text-center text-sm font-medium" role="alert" aria-live="assertive">
                     Brak połączenia z internetem
+                </div>
+            )}
+
+            {/* Header - only show when not showing result */}
+            {!result && (
+                <div className="space-y-8 mb-8">
+                    <div>
+                        <h1 className="text-3xl font-bold text-foreground">
+                            Nowe ogłoszenie
+                        </h1>
+                        <p className="text-gray-600 dark:text-gray-400 mt-1">
+                            Wgraj zdjęcia i wygeneruj profesjonalne ogłoszenie
+                        </p>
+                    </div>
                 </div>
             )}
 
@@ -343,15 +409,31 @@ export function AdGeneratorForm() {
                                 Twoje ogłoszenie
                             </h2>
                             <p className="text-muted-foreground leading-relaxed">
-                                Gotowe do skopiowania i wklejenia
+                                {status === "authenticated"
+                                    ? "Sprawdź treść i zapisz w swoim panelu"
+                                    : "Gotowe do skopiowania i wklejenia"
+                                }
                             </p>
                         </div>
                         <div className="flex items-center gap-2">
+                            {status === "authenticated" && (
+                                <Button
+                                    size="lg"
+                                    onClick={handleSave}
+                                    disabled={isSaving}
+                                    aria-label="Zapisz ogłoszenie"
+                                    className="bg-green-500 hover:bg-green-600 text-white h-14 text-lg font-bold transition-colors shadow-lg hover:shadow-xl disabled:opacity-50"
+                                >
+                                    <Save className="h-5 w-5 mr-2" aria-hidden="true" />
+                                    {isSaving ? "Zapisywanie…" : "Zapisz"}
+                                </Button>
+                            )}
                             <Button
                                 size="lg"
                                 onClick={handleReset}
+                                disabled={isSaving}
                                 aria-label="Zacznij od nowa"
-                                className="bg-orange-500 hover:bg-orange-600 text-white h-14 text-lg font-bold transition-colors shadow-lg hover:shadow-xl"
+                                className="bg-orange-500 hover:bg-orange-600 text-white h-14 text-lg font-bold transition-colors shadow-lg hover:shadow-xl disabled:opacity-50"
                             >
                                 <RotateCcw className="h-5 w-5 mr-2" aria-hidden="true" />
                                 Nowe ogłoszenie

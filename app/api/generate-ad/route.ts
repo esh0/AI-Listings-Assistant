@@ -3,8 +3,6 @@ import { generateAdRequestSchema } from "@/lib/schemas";
 import { generateAd } from "@/lib/openai";
 import { auth } from "@/auth";
 import { consumeCredit } from "@/lib/credits";
-import { prisma } from "@/lib/prisma";
-import { uploadImageFromBase64 } from "@/lib/image-upload";
 
 export const runtime = "nodejs";
 export const maxDuration = 60; // 60 seconds timeout
@@ -66,57 +64,7 @@ export async function POST(request: NextRequest) {
         // Generate ad using OpenAI
         const result = await generateAd(validationResult.data);
 
-        // If user is logged in, save ad to database with images uploaded to Supabase
-        if (userId && result.isValid && result.title && result.description) {
-            // Upload images to Supabase Storage
-            const uploadedImages = await Promise.all(
-                (result.images || []).map(async (img, index) => {
-                    try {
-                        // Convert to base64 data URL
-                        const imageData = validationResult.data.images[index];
-                        const base64Url = `data:${imageData.mimeType};base64,${imageData.base64}`;
-
-                        // Upload with resize to 800px thumbnail
-                        const supabaseUrl = await uploadImageFromBase64(base64Url, userId, 800);
-
-                        return {
-                            ...img,
-                            url: supabaseUrl,
-                        };
-                    } catch (error) {
-                        console.error(`[generate-ad] Failed to upload image ${index}:`, error);
-                        // Keep original metadata without URL if upload fails
-                        return img;
-                    }
-                })
-            );
-
-            const ad = await prisma.ad.create({
-                data: {
-                    userId,
-                    platform: validationResult.data.platform,
-                    title: result.title,
-                    description: result.description,
-                    status: "DRAFT",
-                    priceMin: result.price?.min,
-                    priceMax: result.price?.max,
-                    images: JSON.parse(JSON.stringify(uploadedImages)),
-                    parameters: {
-                        condition: validationResult.data.condition,
-                        tone: validationResult.data.tone,
-                        delivery: validationResult.data.delivery.split(", "),
-                        productName: validationResult.data.productName || "",
-                        notes: validationResult.data.notes || "",
-                        priceType: validationResult.data.priceType,
-                        price: validationResult.data.price,
-                    },
-                },
-            });
-
-            // Add adId to response for frontend
-            return NextResponse.json({ ...result, adId: ad.id });
-        }
-
+        // Return result without saving (user will save manually)
         return NextResponse.json(result);
     } catch (error) {
         console.error("API error:", error);

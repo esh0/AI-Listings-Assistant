@@ -174,6 +174,30 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
         }
     };
 
+    const handleMarkAsPublished = async (id: string) => {
+        const confirmed = confirm("Czy oznaczyć to ogłoszenie jako opublikowane?");
+        if (!confirmed) return;
+
+        try {
+            const response = await fetch(`/api/ads/${id}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    status: "PUBLISHED",
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to mark ad as published");
+            }
+
+            router.refresh();
+        } catch (error) {
+            console.error("Failed to mark ad as published:", error);
+            alert("Nie udało się oznaczyć ogłoszenia jako opublikowane");
+        }
+    };
+
     const activeFiltersCount = [
         currentFilter !== "all" ? 1 : 0,
         currentPlatform !== "all" ? 1 : 0,
@@ -340,6 +364,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                                 onEdit={handleEdit}
                                 onDelete={handleDelete}
                                 onMarkAsSold={handleMarkAsSold}
+                                onMarkAsPublished={handleMarkAsPublished}
                                 showTooltips={true}
                             />
                         ))}

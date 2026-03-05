@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PLATFORM_NAMES } from "@/lib/types";
-import { Eye, Edit, Trash2, CheckCircle } from "lucide-react";
+import { Eye, Edit, Trash2, CheckCircle, ShoppingBag, Store, Facebook, Shirt, CircleDollarSign } from "lucide-react";
 import { useState } from "react";
 import { AdStatus, Platform } from "@prisma/client";
 import { cn } from "@/lib/utils";
@@ -27,6 +27,7 @@ interface AdCardProps {
     onEdit?: (id: string) => void;
     onDelete?: (id: string) => void;
     onMarkAsSold?: (id: string) => void;
+    onMarkAsPublished?: (id: string) => void;
     onClick?: (id: string) => void; // For clickable cards (dashboard)
     showTooltips?: boolean; // Show tooltips on action buttons
 }
@@ -45,12 +46,27 @@ const STATUS_COLORS: Record<AdStatus, string> = {
     ARCHIVED: "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400",
 };
 
+const PLATFORM_ICONS = {
+    olx: ShoppingBag,
+    allegro_lokalnie: Store,
+    facebook_marketplace: Facebook,
+    vinted: Shirt,
+} as const;
+
+const PLATFORM_COLORS = {
+    olx: "text-orange-500",
+    allegro_lokalnie: "text-green-600",
+    facebook_marketplace: "text-blue-600",
+    vinted: "text-teal-600",
+} as const;
+
 export function AdCard({
     ad,
     onView,
     onEdit,
     onDelete,
     onMarkAsSold,
+    onMarkAsPublished,
     onClick,
     showTooltips = false,
 }: AdCardProps) {
@@ -90,8 +106,12 @@ export function AdCard({
     };
 
     // Determine if card should have hover effect and be clickable
-    const hasActions = !!(onView || onEdit || onDelete || onMarkAsSold);
+    const hasActions = !!(onView || onEdit || onDelete || onMarkAsSold || onMarkAsPublished);
     const isClickable = !!onClick;
+
+    // Platform icon
+    const PlatformIcon = PLATFORM_ICONS[ad.platform];
+    const platformColor = PLATFORM_COLORS[ad.platform];
 
     return (
         <Card
@@ -127,9 +147,12 @@ export function AdCard({
                             </span>
                         </div>
                         <div className="flex flex-wrap items-center gap-2">
-                            <Badge variant="outline">
-                                {PLATFORM_NAMES[ad.platform]}
-                            </Badge>
+                            <div
+                                className="flex items-center gap-1.5"
+                                title={PLATFORM_NAMES[ad.platform]}
+                            >
+                                <PlatformIcon className={cn("h-4 w-4", platformColor)} aria-hidden="true" />
+                            </div>
                             <Badge
                                 className={STATUS_COLORS[ad.status]}
                                 variant="secondary"
@@ -177,6 +200,21 @@ export function AdCard({
                                     <Edit className="h-4 w-4" />
                                 </Button>
                             )}
+                            {onMarkAsPublished && ad.status === "DRAFT" && (
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onMarkAsPublished(ad.id);
+                                    }}
+                                    className="text-green-600 hover:text-green-700 hover:bg-green-50 dark:hover:bg-green-950"
+                                    title={showTooltips ? "Oznacz jako opublikowane" : undefined}
+                                    aria-label="Oznacz jako opublikowane"
+                                >
+                                    <CheckCircle className="h-4 w-4" />
+                                </Button>
+                            )}
                             {onMarkAsSold && ad.status === "PUBLISHED" && (
                                 <Button
                                     size="sm"
@@ -185,11 +223,11 @@ export function AdCard({
                                         e.stopPropagation();
                                         onMarkAsSold(ad.id);
                                     }}
-                                    className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                                    className="text-orange-600 hover:text-orange-700 hover:bg-orange-50 dark:hover:bg-orange-950"
                                     title={showTooltips ? "Oznacz jako sprzedane" : undefined}
                                     aria-label="Oznacz jako sprzedane"
                                 >
-                                    <CheckCircle className="h-4 w-4" />
+                                    <CircleDollarSign className="h-4 w-4" />
                                 </Button>
                             )}
                             {onDelete && (
