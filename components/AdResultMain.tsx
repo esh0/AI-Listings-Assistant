@@ -37,15 +37,36 @@ export const AdResultMain = React.memo(function AdResultMain({
   const titleInputRef = useRef<HTMLInputElement>(null);
   const descInputRef = useRef<HTMLTextAreaElement>(null);
 
+  // Title edit handlers
+  const handleEditTitle = useCallback(() => {
+    setIsEditingTitle(true);
+    setTimeout(() => titleInputRef.current?.focus(), 0);
+  }, []);
+
+  const handleCancelEditTitle = useCallback(() => {
+    setIsEditingTitle(false);
+  }, []);
+
+  const handleTitleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      handleCancelEditTitle();
+    }
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+      e.preventDefault();
+      handleCancelEditTitle();
+    }
+  }, [handleCancelEditTitle]);
+
   const handleCopyTitle = useCallback(async () => {
     try {
-      await navigator.clipboard.writeText(title);
+      await navigator.clipboard.writeText(editedTitle);
       setCopiedTitle(true);
       setTimeout(() => setCopiedTitle(false), 2000);
     } catch (error) {
       console.error("Nie udało się skopiować tytułu:", error);
     }
-  }, [title]);
+  }, [editedTitle]);
 
   const handleCopyDescription = useCallback(async () => {
     try {
