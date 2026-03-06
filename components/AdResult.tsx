@@ -55,6 +55,7 @@ export function AdResult({ result, imagePreviews, platform, productName, conditi
                 editedDescription={editedDescription}
                 onTitleChange={onTitleChange}
                 onDescriptionChange={onDescriptionChange}
+                platform={platform}
             />
 
             {/* Right Column - Metadata */}

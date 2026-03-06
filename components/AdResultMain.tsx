@@ -1,12 +1,21 @@
 "use client";
 
 import React, { useState, useCallback, useRef, useEffect } from "react";
-import { Copy, Check, Tag, FileText, Pencil, X } from "lucide-react";
+import { Copy, Check, Tag, FileText, Pencil } from "lucide-react";
 import { CardWrapper } from "@/components/ui/card-wrapper";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import type { Platform } from "@/lib/types";
+
+// Platform-specific character limits based on lib/rules/*.md
+const PLATFORM_LIMITS = {
+  olx: { title: 70, description: 1500 },
+  allegro_lokalnie: { title: 75, description: 1500 },
+  facebook_marketplace: { title: 60, description: 1000 },
+  vinted: { title: 100, description: 750 },
+} as const;
 
 interface AdResultMainProps {
   title: string;
@@ -15,6 +24,7 @@ interface AdResultMainProps {
   editedDescription: string;
   onTitleChange: (value: string) => void;
   onDescriptionChange: (value: string) => void;
+  platform: Platform;
 }
 
 export const AdResultMain = React.memo(function AdResultMain({
@@ -24,7 +34,13 @@ export const AdResultMain = React.memo(function AdResultMain({
   editedDescription,
   onTitleChange,
   onDescriptionChange,
+  platform,
 }: AdResultMainProps) {
+  // Get platform-specific limits
+  const titleLimit = PLATFORM_LIMITS[platform].title;
+  const descriptionLimit = PLATFORM_LIMITS[platform].description;
+  const titleWarningThreshold = Math.floor(titleLimit * 0.9);
+  const descWarningThreshold = Math.floor(descriptionLimit * 0.9);
   // Copy state
   const [copiedTitle, setCopiedTitle] = useState(false);
   const [copiedDescription, setCopiedDescription] = useState(false);
@@ -124,13 +140,13 @@ export const AdResultMain = React.memo(function AdResultMain({
               className={cn(
                 "gap-2 px-3 py-1.5 rounded-md transition-all duration-200",
                 isEditingTitle
-                  ? "bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-950 dark:text-red-400 dark:hover:bg-red-900"
+                  ? "bg-green-50 text-green-600 hover:bg-green-100 dark:bg-green-950 dark:text-green-400 dark:hover:bg-green-900"
                   : "bg-gray-100 dark:bg-gray-800 hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-orange-950 dark:hover:text-orange-400"
               )}
-              title={isEditingTitle ? "Anuluj edycję" : "Edytuj"}
+              title={isEditingTitle ? "Zatwierdź zmiany" : "Edytuj"}
             >
               {isEditingTitle ? (
-                <X className="h-4 w-4" />
+                <Check className="h-4 w-4" />
               ) : (
                 <Pencil className="h-4 w-4" />
               )}
@@ -171,7 +187,7 @@ export const AdResultMain = React.memo(function AdResultMain({
               onChange={(e) => onTitleChange(e.target.value)}
               onKeyDown={handleTitleKeyDown}
               placeholder="Wprowadź tytuł…"
-              maxLength={200}
+              maxLength={titleLimit}
               className={cn(
                 "text-base",
                 editedTitle.trim().length === 0 && "border-red-500 focus:border-red-500 focus:ring-red-500"
@@ -183,9 +199,9 @@ export const AdResultMain = React.memo(function AdResultMain({
             )}
             <p className={cn(
               "text-xs mt-1",
-              editedTitle.length > 180 ? "text-red-600" : "text-gray-500 dark:text-gray-400"
+              editedTitle.length > titleWarningThreshold ? "text-red-600" : "text-gray-500 dark:text-gray-400"
             )}>
-              {editedTitle.length} / 200 znaków
+              {editedTitle.length} / {titleLimit} znaków
             </p>
           </div>
         ) : (
@@ -207,13 +223,13 @@ export const AdResultMain = React.memo(function AdResultMain({
               className={cn(
                 "gap-2 px-3 py-1.5 rounded-md transition-all duration-200",
                 isEditingDescription
-                  ? "bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-950 dark:text-red-400 dark:hover:bg-red-900"
+                  ? "bg-green-50 text-green-600 hover:bg-green-100 dark:bg-green-950 dark:text-green-400 dark:hover:bg-green-900"
                   : "bg-gray-100 dark:bg-gray-800 hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-orange-950 dark:hover:text-orange-400"
               )}
-              title={isEditingDescription ? "Anuluj edycję" : "Edytuj"}
+              title={isEditingDescription ? "Zatwierdź zmiany" : "Edytuj"}
             >
               {isEditingDescription ? (
-                <X className="h-4 w-4" />
+                <Check className="h-4 w-4" />
               ) : (
                 <Pencil className="h-4 w-4" />
               )}
@@ -253,7 +269,7 @@ export const AdResultMain = React.memo(function AdResultMain({
               onChange={(e) => onDescriptionChange(e.target.value)}
               onKeyDown={handleDescriptionKeyDown}
               placeholder="Wprowadź opis…"
-              maxLength={5000}
+              maxLength={descriptionLimit}
               rows={12}
               className={cn(
                 "text-base resize-y",
@@ -266,9 +282,9 @@ export const AdResultMain = React.memo(function AdResultMain({
             )}
             <p className={cn(
               "text-xs mt-1",
-              editedDescription.length > 4500 ? "text-red-600" : "text-gray-500 dark:text-gray-400"
+              editedDescription.length > descWarningThreshold ? "text-red-600" : "text-gray-500 dark:text-gray-400"
             )}>
-              {editedDescription.length} / 5000 znaków
+              {editedDescription.length} / {descriptionLimit} znaków
             </p>
           </div>
         ) : (

@@ -4,7 +4,7 @@ import React, { useState, useCallback, useMemo, useEffect, useRef } from "react"
 import dynamic from "next/dynamic";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { RotateCcw, Camera, CheckCircle, Save } from "lucide-react";
+import { RotateCcw, Camera, CheckCircle, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
@@ -454,7 +454,7 @@ export function AdGeneratorForm() {
                                     aria-label="Zapisz ogłoszenie"
                                     className="bg-green-500 hover:bg-green-600 text-white h-14 text-lg font-bold transition-colors shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    <Save className="h-5 w-5 mr-2" aria-hidden="true" />
+                                    <Check className="h-5 w-5 mr-2" aria-hidden="true" />
                                     {isSaving ? "Zapisywanie…" : "Zapisz"}
                                 </Button>
                             )}
@@ -466,7 +466,7 @@ export function AdGeneratorForm() {
                                 className="bg-orange-500 hover:bg-orange-600 text-white h-14 text-lg font-bold transition-colors shadow-lg hover:shadow-xl disabled:opacity-50"
                             >
                                 <RotateCcw className="h-5 w-5 mr-2" aria-hidden="true" />
-                                Nowe ogłoszenie
+                                Zapisz i stwórz następne
                             </Button>
                         </div>
                     </div>
