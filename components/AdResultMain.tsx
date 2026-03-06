@@ -1,22 +1,41 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
-import { Copy, Check, Tag, FileText } from "lucide-react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
+import { Copy, Check, Tag, FileText, Pencil, X } from "lucide-react";
 import { CardWrapper } from "@/components/ui/card-wrapper";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
 interface AdResultMainProps {
   title: string;
   description: string;
+  editedTitle: string;
+  editedDescription: string;
+  onTitleChange: (value: string) => void;
+  onDescriptionChange: (value: string) => void;
 }
 
 export const AdResultMain = React.memo(function AdResultMain({
   title,
   description,
+  editedTitle,
+  editedDescription,
+  onTitleChange,
+  onDescriptionChange,
 }: AdResultMainProps) {
+  // Copy state
   const [copiedTitle, setCopiedTitle] = useState(false);
   const [copiedDescription, setCopiedDescription] = useState(false);
+
+  // Edit mode state
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [isEditingDescription, setIsEditingDescription] = useState(false);
+
+  // Refs for auto-focus
+  const titleInputRef = useRef<HTMLInputElement>(null);
+  const descInputRef = useRef<HTMLTextAreaElement>(null);
 
   const handleCopyTitle = useCallback(async () => {
     try {
