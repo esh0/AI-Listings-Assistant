@@ -198,33 +198,84 @@ export const AdResultMain = React.memo(function AdResultMain({
         title="Opis ogłoszenia"
         icon={FileText}
         headerAction={
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleCopyDescription}
-            className={cn(
-              "gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-md transition-all duration-200",
-              "hover:bg-orange-50 hover:text-orange-600 hover:border-orange-200 dark:hover:bg-orange-950 dark:hover:text-orange-400",
-              copiedDescription && "bg-green-50 text-green-600 dark:bg-green-950 dark:text-green-400"
-            )}
-          >
-            {copiedDescription ? (
-              <>
-                <Check className="h-4 w-4" />
-                Skopiowano!
-              </>
-            ) : (
-              <>
-                <Copy className="h-4 w-4" />
-                Kopiuj
-              </>
-            )}
-          </Button>
+          <div className="flex items-center gap-2">
+            {/* Edit/Cancel button */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={isEditingDescription ? handleCancelEditDescription : handleEditDescription}
+              className={cn(
+                "gap-2 px-3 py-1.5 rounded-md transition-all duration-200",
+                isEditingDescription
+                  ? "bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-950 dark:text-red-400 dark:hover:bg-red-900"
+                  : "bg-gray-100 dark:bg-gray-800 hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-orange-950 dark:hover:text-orange-400"
+              )}
+              title={isEditingDescription ? "Anuluj edycję" : "Edytuj"}
+            >
+              {isEditingDescription ? (
+                <X className="h-4 w-4" />
+              ) : (
+                <Pencil className="h-4 w-4" />
+              )}
+            </Button>
+
+            {/* Copy button */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleCopyDescription}
+              className={cn(
+                "gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-md transition-all duration-200",
+                "hover:bg-orange-50 hover:text-orange-600 hover:border-orange-200 dark:hover:bg-orange-950 dark:hover:text-orange-400",
+                copiedDescription && "bg-green-50 text-green-600 dark:bg-green-950 dark:text-green-400"
+              )}
+            >
+              {copiedDescription ? (
+                <>
+                  <Check className="h-4 w-4" />
+                  Skopiowano!
+                </>
+              ) : (
+                <>
+                  <Copy className="h-4 w-4" />
+                  Kopiuj
+                </>
+              )}
+            </Button>
+          </div>
         }
       >
-        <p className="text-base leading-relaxed whitespace-pre-wrap">
-          {description}
-        </p>
+        {isEditingDescription ? (
+          <div>
+            <Textarea
+              ref={descInputRef}
+              value={editedDescription}
+              onChange={(e) => onDescriptionChange(e.target.value)}
+              onKeyDown={handleDescriptionKeyDown}
+              placeholder="Wprowadź opis…"
+              maxLength={5000}
+              rows={12}
+              className={cn(
+                "text-base resize-y",
+                editedDescription.trim().length === 0 && "border-red-500 focus:border-red-500 focus:ring-red-500"
+              )}
+              aria-label="Edytuj opis ogłoszenia"
+            />
+            {editedDescription.trim().length === 0 && (
+              <p className="text-xs text-red-600 mt-1">Pole nie może być puste</p>
+            )}
+            <p className={cn(
+              "text-xs mt-1",
+              editedDescription.length > 4500 ? "text-red-600" : "text-gray-500 dark:text-gray-400"
+            )}>
+              {editedDescription.length} / 5000 znaków
+            </p>
+          </div>
+        ) : (
+          <p className="text-base leading-relaxed whitespace-pre-wrap">
+            {editedDescription}
+          </p>
+        )}
       </CardWrapper>
     </div>
   );
