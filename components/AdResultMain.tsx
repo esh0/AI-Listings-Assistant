@@ -70,13 +70,43 @@ export const AdResultMain = React.memo(function AdResultMain({
 
   const handleCopyDescription = useCallback(async () => {
     try {
-      await navigator.clipboard.writeText(description);
+      await navigator.clipboard.writeText(editedDescription);
       setCopiedDescription(true);
       setTimeout(() => setCopiedDescription(false), 2000);
     } catch (error) {
       console.error("Nie udało się skopiować opisu:", error);
     }
-  }, [description]);
+  }, [editedDescription]);
+
+  // Description edit handlers
+  const handleEditDescription = useCallback(() => {
+    setIsEditingDescription(true);
+    setTimeout(() => descInputRef.current?.focus(), 0);
+  }, []);
+
+  const handleCancelEditDescription = useCallback(() => {
+    setIsEditingDescription(false);
+  }, []);
+
+  const handleDescriptionKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      handleCancelEditDescription();
+    }
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+      e.preventDefault();
+      handleCancelEditDescription();
+    }
+  }, [handleCancelEditDescription]);
+
+  // Auto-resize textarea
+  useEffect(() => {
+    const textarea = descInputRef.current;
+    if (textarea && isEditingDescription) {
+      textarea.style.height = 'auto';
+      textarea.style.height = textarea.scrollHeight + 'px';
+    }
+  }, [editedDescription, isEditingDescription]);
 
   return (
     <div className="space-y-6">
