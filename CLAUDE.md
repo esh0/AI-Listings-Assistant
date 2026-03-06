@@ -209,12 +209,17 @@ The system uses a modular prompt architecture with:
 **Inline Editing Pattern:**
 1. User sees generated title/description with Pencil icon in card header
 2. Click Pencil → field becomes editable input/textarea with auto-focus
-3. Icon changes to X (red hover), Copy button remains active
-4. Keyboard shortcuts: Escape (cancel edit), Cmd/Ctrl+Enter (confirm and exit)
+3. Icon changes to green Check, Copy button remains active
+4. Keyboard shortcuts: Escape (exit edit), Cmd/Ctrl+Enter (exit edit)
 5. Validation: empty fields show red border + error, disable Save button
-6. Character counter: shows current/max, turns red > 90% limit
-7. Changes saved in parent state, main "Zapisz" button uses edited values
-8. Reset clears all edited state
+6. Character counter: shows current/max (platform-specific), turns red > 90% limit
+7. Changes saved in parent state, main "Zapisz" (Check icon) button uses edited values
+8. Reset button: "Zapisz i stwórz następne" clears all edited state
+9. **Platform-specific limits:**
+   - OLX: 70 chars title, 1500 chars description
+   - Allegro Lokalnie: 75 chars title, 1500 chars description
+   - Facebook Marketplace: 60 chars title, 1000 chars description
+   - Vinted: 100 chars title, 750 chars description
 
 **Dashboard Layout:**
 - Fixed sidebar on desktop (lg:w-72), mobile overlay with hamburger menu
