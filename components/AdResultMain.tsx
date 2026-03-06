@@ -115,31 +115,82 @@ export const AdResultMain = React.memo(function AdResultMain({
         title="Tytuł ogłoszenia"
         icon={Tag}
         headerAction={
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleCopyTitle}
-            className={cn(
-              "gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-md transition-all duration-200",
-              "hover:bg-orange-50 hover:text-orange-600 hover:border-orange-200 dark:hover:bg-orange-950 dark:hover:text-orange-400",
-              copiedTitle && "bg-green-50 text-green-600 dark:bg-green-950 dark:text-green-400"
-            )}
-          >
-            {copiedTitle ? (
-              <>
-                <Check className="h-4 w-4" />
-                Skopiowano!
-              </>
-            ) : (
-              <>
-                <Copy className="h-4 w-4" />
-                Kopiuj
-              </>
-            )}
-          </Button>
+          <div className="flex items-center gap-2">
+            {/* Edit/Cancel button */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={isEditingTitle ? handleCancelEditTitle : handleEditTitle}
+              className={cn(
+                "gap-2 px-3 py-1.5 rounded-md transition-all duration-200",
+                isEditingTitle
+                  ? "bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-950 dark:text-red-400 dark:hover:bg-red-900"
+                  : "bg-gray-100 dark:bg-gray-800 hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-orange-950 dark:hover:text-orange-400"
+              )}
+              title={isEditingTitle ? "Anuluj edycję" : "Edytuj"}
+            >
+              {isEditingTitle ? (
+                <X className="h-4 w-4" />
+              ) : (
+                <Pencil className="h-4 w-4" />
+              )}
+            </Button>
+
+            {/* Copy button */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleCopyTitle}
+              className={cn(
+                "gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-md transition-all duration-200",
+                "hover:bg-orange-50 hover:text-orange-600 hover:border-orange-200 dark:hover:bg-orange-950 dark:hover:text-orange-400",
+                copiedTitle && "bg-green-50 text-green-600 dark:bg-green-950 dark:text-green-400"
+              )}
+            >
+              {copiedTitle ? (
+                <>
+                  <Check className="h-4 w-4" />
+                  Skopiowano!
+                </>
+              ) : (
+                <>
+                  <Copy className="h-4 w-4" />
+                  Kopiuj
+                </>
+              )}
+            </Button>
+          </div>
         }
       >
-        <p className="text-base leading-relaxed">{title}</p>
+        {isEditingTitle ? (
+          <div>
+            <Input
+              ref={titleInputRef}
+              type="text"
+              value={editedTitle}
+              onChange={(e) => onTitleChange(e.target.value)}
+              onKeyDown={handleTitleKeyDown}
+              placeholder="Wprowadź tytuł…"
+              maxLength={200}
+              className={cn(
+                "text-base",
+                editedTitle.trim().length === 0 && "border-red-500 focus:border-red-500 focus:ring-red-500"
+              )}
+              aria-label="Edytuj tytuł ogłoszenia"
+            />
+            {editedTitle.trim().length === 0 && (
+              <p className="text-xs text-red-600 mt-1">Pole nie może być puste</p>
+            )}
+            <p className={cn(
+              "text-xs mt-1",
+              editedTitle.length > 180 ? "text-red-600" : "text-gray-500 dark:text-gray-400"
+            )}>
+              {editedTitle.length} / 200 znaków
+            </p>
+          </div>
+        ) : (
+          <p className="text-base leading-relaxed">{editedTitle}</p>
+        )}
       </CardWrapper>
 
       {/* Description Card */}
