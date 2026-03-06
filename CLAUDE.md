@@ -185,7 +185,8 @@ The system uses a modular prompt architecture with:
 - `components/UploadDropzone.tsx` - Drag-and-drop image upload
 - `components/ProductForm.tsx` - Form with platform, tone, condition, price, delivery
 - `components/FullscreenLoading.tsx` - Loading screen with React Portal (renders to document.body, z-9999)
-- `components/AdResult.tsx` - Results display with 65/35 grid layout
+- `components/AdResult.tsx` - Results display with 65/35 grid layout, passes edit state to AdResultMain
+- `components/AdResultMain.tsx` - Displays title/description with inline edit capability (toggle view/edit mode)
 
 **Pages:**
 - `app/page.tsx` - Home page (redirects authenticated users to dashboard, shows form for guests)
@@ -204,6 +205,16 @@ The system uses a modular prompt architecture with:
 4. Authenticated users click "Zapisz" to save via `/api/ads` POST
 5. Unauthenticated users see soft-wall modal after 1.5s
 6. Credits consumed on generation (not on save) to prevent abuse
+
+**Inline Editing Pattern:**
+1. User sees generated title/description with Pencil icon in card header
+2. Click Pencil → field becomes editable input/textarea with auto-focus
+3. Icon changes to X (red hover), Copy button remains active
+4. Keyboard shortcuts: Escape (cancel edit), Cmd/Ctrl+Enter (confirm and exit)
+5. Validation: empty fields show red border + error, disable Save button
+6. Character counter: shows current/max, turns red > 90% limit
+7. Changes saved in parent state, main "Zapisz" button uses edited values
+8. Reset clears all edited state
 
 **Dashboard Layout:**
 - Fixed sidebar on desktop (lg:w-72), mobile overlay with hamburger menu
