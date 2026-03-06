@@ -185,8 +185,8 @@ The system uses a modular prompt architecture with:
 - `components/UploadDropzone.tsx` - Drag-and-drop image upload
 - `components/ProductForm.tsx` - Form with platform, tone, condition, price, delivery
 - `components/FullscreenLoading.tsx` - Loading screen with React Portal (renders to document.body, z-9999)
-- `components/AdResult.tsx` - Results display with 65/35 grid layout, passes edit state to AdResultMain
-- `components/AdResultMain.tsx` - Displays title/description with inline edit capability (toggle view/edit mode)
+- `components/AdResult.tsx` - Results display with 65/35 grid layout, passes platform and edit state to AdResultMain
+- `components/AdResultMain.tsx` - Displays title/description with inline editing (platform-specific character limits, Check icon confirmation)
 
 **Pages:**
 - `app/page.tsx` - Home page (redirects authenticated users to dashboard, shows form for guests)
@@ -202,9 +202,11 @@ The system uses a modular prompt architecture with:
 1. User fills form and clicks "Generuj ogłoszenie"
 2. API `/api/generate-ad` consumes credit and generates content (does NOT save)
 3. User reviews results on same page
-4. Authenticated users click "Zapisz" to save via `/api/ads` POST
-5. Unauthenticated users see soft-wall modal after 1.5s
-6. Credits consumed on generation (not on save) to prevent abuse
+4. User can edit title/description with platform-specific character limits
+5. Authenticated users click "Zapisz" (Check icon) to save via `/api/ads` POST
+6. Unauthenticated users see soft-wall modal after 1.5s
+7. After save, user can click "Zapisz i stwórz następne" (RotateCcw icon) to reset form
+8. Credits consumed on generation (not on save) to prevent abuse
 
 **Inline Editing Pattern:**
 1. User sees generated title/description with Pencil icon in card header
