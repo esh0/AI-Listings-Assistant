@@ -131,7 +131,7 @@ export function AdGeneratorForm() {
     }, [result, isLoading, status, router]);
 
     const handleSave = useCallback(async () => {
-        if (!result || !result.isValid || !result.title || !result.description) {
+        if (!result || !result.isValid || !editedTitle || !editedDescription) {
             return;
         }
 
@@ -144,8 +144,8 @@ export function AdGeneratorForm() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     platform,
-                    title: result.title,
-                    description: result.description,
+                    title: editedTitle,
+                    description: editedDescription,
                     status: "DRAFT",
                     priceMin: result.price?.min,
                     priceMax: result.price?.max,
@@ -179,7 +179,7 @@ export function AdGeneratorForm() {
         } finally {
             setIsSaving(false);
         }
-    }, [result, platform, selectedTone, condition, delivery, productName, notes, priceType, price, base64Images, router]);
+    }, [result, platform, selectedTone, condition, delivery, productName, notes, priceType, price, base64Images, router, editedTitle, editedDescription]);
 
     // Cleanup abort controller
     useEffect(() => {
