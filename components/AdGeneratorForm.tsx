@@ -482,6 +482,10 @@ export function AdGeneratorForm() {
                         delivery={delivery.join(", ")}
                         selectedTone={selectedTone}
                         onEdit={handleEdit}
+                        editedTitle={editedTitle}
+                        editedDescription={editedDescription}
+                        onTitleChange={setEditedTitle}
+                        onDescriptionChange={setEditedDescription}
                     />
                 </section>
             )}

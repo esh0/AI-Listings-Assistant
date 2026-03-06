@@ -19,9 +19,13 @@ interface AdResultProps {
     delivery: string;
     selectedTone: ToneStyle;
     onEdit: () => void;
+    editedTitle: string;
+    editedDescription: string;
+    onTitleChange: (value: string) => void;
+    onDescriptionChange: (value: string) => void;
 }
 
-export function AdResult({ result, imagePreviews, platform, productName, condition, priceType, userPrice, delivery, selectedTone, onEdit }: AdResultProps) {
+export function AdResult({ result, imagePreviews, platform, productName, condition, priceType, userPrice, delivery, selectedTone, onEdit, editedTitle, editedDescription, onTitleChange, onDescriptionChange }: AdResultProps) {
     if (!result.isValid) {
         return (
             <Alert variant="destructive" role="alert" aria-live="assertive">
@@ -47,6 +51,10 @@ export function AdResult({ result, imagePreviews, platform, productName, conditi
             <AdResultMain
                 title={displayContent.title!}
                 description={displayContent.description!}
+                editedTitle={editedTitle}
+                editedDescription={editedDescription}
+                onTitleChange={onTitleChange}
+                onDescriptionChange={onDescriptionChange}
             />
 
             {/* Right Column - Metadata */}
