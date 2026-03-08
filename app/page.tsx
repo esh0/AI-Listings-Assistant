@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { ShoppingBag } from "lucide-react";
@@ -12,6 +12,7 @@ import Link from "next/link";
 export default function HomePage() {
     const { data: session, status } = useSession();
     const router = useRouter();
+    const [hasResult, setHasResult] = useState(false);
 
     // Redirect authenticated users to dashboard
     useEffect(() => {
@@ -73,6 +74,7 @@ export default function HomePage() {
             <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12" role="main">
                 <div className="max-w-7xl mx-auto">
                     {/* Hero Section */}
+                    {!hasResult && (
                     <section aria-labelledby="page-title" className="mb-12 sm:mb-16">
                         <h1 id="page-title" className="text-4xl sm:text-5xl font-bold mb-4 leading-tight tracking-tight">
                             Sprzedaj szybciej <br className="hidden sm:inline" />
@@ -82,9 +84,10 @@ export default function HomePage() {
                             Wrzuć zdjęcia, AI stworzy profesjonalne ogłoszenie gotowe na OLX, Allegro, Facebook i Vinted.
                         </p>
                     </section>
+                    )}
 
                     {/* Form */}
-                    <AdGeneratorForm />
+                    <AdGeneratorForm onResultChange={setHasResult} />
 
                     {/* Footer */}
                     <footer className="mt-16 pt-8 border-t text-center text-sm text-muted-foreground">

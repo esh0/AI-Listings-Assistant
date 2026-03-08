@@ -13,6 +13,7 @@ import { UploadDropzone } from "@/components/UploadDropzone";
 import { ProductForm, ProductParameters, NotesAndCTA } from "@/components/ProductForm";
 import { SoftWallModal } from "@/components/SoftWallModal";
 import { fileToBase64, getImageMimeType } from "@/lib/utils";
+import { getGuestId } from "@/lib/guest-id";
 import type {
     UploadedImage,
     Platform,
@@ -38,7 +39,7 @@ const DEFAULT_DELIVERY: DeliveryOption[] = ["odbiór osobisty", "wysyłka"];
 const DEFAULT_TONE: ToneStyle = "friendly";
 const DEFAULT_PRICE_TYPE: PriceType = "ai_suggest";
 
-export function AdGeneratorForm() {
+export function AdGeneratorForm({ onResultChange }: { onResultChange?: (hasResult: boolean) => void }) {
     const router = useRouter();
     const { data: session, status } = useSession();
 
@@ -92,6 +93,11 @@ export function AdGeneratorForm() {
             window.removeEventListener("offline", handleOffline);
         };
     }, []);
+
+    // Notify parent when result appears/disappears
+    useEffect(() => {
+        onResultChange?.(!!result);
+    }, [result, onResultChange]);
 
     // Show soft-wall for unauthenticated users (only on successful generation)
     useEffect(() => {
@@ -243,6 +249,7 @@ export function AdGeneratorForm() {
                     notes,
                     images: imagesForRequest,
                     tone: selectedTone,
+                    ...(!session?.user?.id && { guestId: getGuestId() }),
                 }),
                 signal: abortControllerRef.current.signal,
             });
@@ -251,7 +258,8 @@ export function AdGeneratorForm() {
 
             if (!response.ok) {
                 if (response.status === 429) {
-                    throw new Error("Zbyt wiele próśb. Poczekaj chwilę i spróbuj ponownie.");
+                    setShowSoftWall(true);
+                    return;
                 } else if (response.status === 401 || response.status === 403) {
                     throw new Error("Brak autoryzacji. Sprawdź konfigurację API.");
                 } else if (response.status >= 500) {
@@ -494,7 +502,7 @@ export function AdGeneratorForm() {
                                         className="bg-orange-500 hover:bg-orange-600 text-white h-14 text-lg font-bold transition-colors shadow-lg hover:shadow-xl disabled:opacity-50"
                                     >
                                         <RotateCcw className="h-5 w-5 mr-2" aria-hidden="true" />
-                                        Zapisz i stwórz następne
+                                        {status === "authenticated" ? "Zapisz i stwórz następne" : "Nowe ogłoszenie"}
                                     </Button>
                                 </>
                             )}
@@ -521,9 +529,10 @@ export function AdGeneratorForm() {
             )}
 
             {/* Soft-wall modal for unauthenticated users */}
-            {result && showSoftWall && status === "unauthenticated" && (
+            {showSoftWall && status === "unauthenticated" && (
                 <SoftWallModal
-                    adData={{
+                    mode={result ? "save" : "limit"}
+                    adData={result ? {
                         title: result.title || "",
                         description: result.description || "",
                         priceMin: result.price?.min,
@@ -544,7 +553,7 @@ export function AdGeneratorForm() {
                             priceType,
                             userPrice: price ? parseFloat(price) : undefined,
                         },
-                    }}
+                    } : undefined}
                     isVisible={showSoftWall}
                     onClose={() => setShowSoftWall(false)}
                 />

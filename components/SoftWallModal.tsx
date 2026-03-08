@@ -9,7 +9,7 @@ import { savePendingAd, type PendingAd } from "@/lib/storage";
 import { useRouter } from "next/navigation";
 
 interface SoftWallModalProps {
-    adData: {
+    adData?: {
         title: string;
         description: string;
         priceMin?: number;
@@ -31,14 +31,17 @@ interface SoftWallModalProps {
             userPrice?: number;
         };
     };
+    mode?: "save" | "limit";
     isVisible: boolean;
     onClose: () => void;
 }
 
-export function SoftWallModal({ adData, isVisible, onClose }: SoftWallModalProps) {
+export function SoftWallModal({ adData, mode = "save", isVisible, onClose }: SoftWallModalProps) {
     const { data: session, status } = useSession();
     const router = useRouter();
     const [isSaving, setIsSaving] = useState(false);
+
+    const isLimitMode = mode === "limit";
 
     // Auto-hide if user is already logged in
     useEffect(() => {
@@ -55,13 +58,14 @@ export function SoftWallModal({ adData, isVisible, onClose }: SoftWallModalProps
         setIsSaving(true);
 
         try {
-            // Save ad to IndexedDB before redirecting to sign in
-            const pendingAd: PendingAd = {
-                ...adData,
-                timestamp: Date.now(),
-            };
-
-            await savePendingAd(pendingAd);
+            // Save ad to IndexedDB before redirecting (only in save mode with data)
+            if (!isLimitMode && adData) {
+                const pendingAd: PendingAd = {
+                    ...adData,
+                    timestamp: Date.now(),
+                };
+                await savePendingAd(pendingAd);
+            }
 
             // Redirect to sign in with callback to dashboard
             router.push("/auth/signin?callbackUrl=/dashboard");
@@ -91,7 +95,7 @@ export function SoftWallModal({ adData, isVisible, onClose }: SoftWallModalProps
 
                 {/* Icon */}
                 <div className="flex justify-center mb-6">
-                    <div className="p-4 bg-orange-50 dark:bg-orange-950 rounded-full">
+                    <div className="p-4 rounded-full bg-orange-50 dark:bg-orange-950">
                         <Save className="h-8 w-8 text-orange-600 dark:text-orange-400" />
                     </div>
                 </div>
@@ -99,12 +103,16 @@ export function SoftWallModal({ adData, isVisible, onClose }: SoftWallModalProps
                 {/* Content */}
                 <div className="text-center mb-8">
                     <h2 className="text-2xl font-bold text-foreground mb-3">
-                        Zapisz swoje ogłoszenie
+                        {isLimitMode
+                            ? "Darmowy limit wyczerpany"
+                            : "Zapisz swoje ogłoszenie"
+                        }
                     </h2>
                     <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                        Zaloguj się, aby zapisać to ogłoszenie w swoim panelu. Będziesz mógł je
-                        edytować, śledzić status i zarządzać wszystkimi ogłoszeniami w jednym
-                        miejscu.
+                        {isLimitMode
+                            ? "Zarejestruj się za darmo i otrzymaj 5 generacji miesięcznie. To zajmie tylko chwilę!"
+                            : "Zaloguj się, aby zapisać to ogłoszenie w swoim panelu. Będziesz mógł je edytować, śledzić status i zarządzać wszystkimi ogłoszeniami w jednym miejscu."
+                        }
                     </p>
                 </div>
 
@@ -123,10 +131,6 @@ export function SoftWallModal({ adData, isVisible, onClose }: SoftWallModalProps
                             <span className="text-green-600 dark:text-green-400 mt-0.5">✓</span>
                             <span>Śledź status: wersje robocze, opublikowane, sprzedane</span>
                         </li>
-                        <li className="flex items-start gap-2">
-                            <span className="text-green-600 dark:text-green-400 mt-0.5">✓</span>
-                            <span>Zapisuj szablony dla często używanych ustawień</span>
-                        </li>
                     </ul>
                 </div>
 
@@ -138,8 +142,14 @@ export function SoftWallModal({ adData, isVisible, onClose }: SoftWallModalProps
                         className="w-full h-12 bg-orange-500 hover:bg-orange-600 text-white font-semibold"
                     >
                         <LogIn className="h-5 w-5 mr-2" />
-                        {isSaving ? "Zapisywanie…" : "Zaloguj się i zapisz"}
+                        {isSaving
+                            ? "Zapisywanie…"
+                            : isLimitMode
+                                ? "Zarejestruj się za darmo"
+                                : "Zaloguj się i zapisz"
+                        }
                     </Button>
+                    {!isLimitMode && (
                     <Button
                         onClick={handleContinue}
                         variant="outline"
@@ -147,6 +157,7 @@ export function SoftWallModal({ adData, isVisible, onClose }: SoftWallModalProps
                     >
                         Kontynuuj bez zapisywania
                     </Button>
+                    )}
                 </div>
 
                 {/* Privacy note */}

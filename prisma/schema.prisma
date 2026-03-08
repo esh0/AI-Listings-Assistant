@@ -102,6 +102,17 @@ model Template {
   @@index([userId, isDefault])
 }
 
+model GuestUsage {
+  id              String   @id @default(cuid())
+  guestId         String   @unique
+  ipHash          String
+  generationsUsed Int      @default(0)
+  firstUsedAt     DateTime @default(now())
+  lastUsedAt      DateTime @updatedAt
+
+  @@index([ipHash])
+}
+
 enum Plan {
   FREE
   PREMIUM
