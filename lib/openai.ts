@@ -360,7 +360,7 @@ Wygeneruj ogłoszenie sprzedażowe w formacie JSON zgodnie z powyższymi zasadam
         const systemTone = request.tone;
 
         const response = await openai.chat.completions.create({
-            model: "o4-mini",
+            model: "gpt-4.1-mini",
             messages: [
                 {
                     role: "system",
@@ -372,7 +372,7 @@ Wygeneruj ogłoszenie sprzedażowe w formacie JSON zgodnie z powyższymi zasadam
                 },
             ],
             response_format: { type: "json_object" },
-            max_completion_tokens: 4000,
+            max_tokens: 4000,
         });
 
         const content = response.choices[0]?.message?.content;

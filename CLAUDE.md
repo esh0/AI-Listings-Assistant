@@ -416,9 +416,9 @@ When adding new features or components:
 
 ## AI Model Configuration
 
-The app uses OpenAI's `o4-mini` model with:
+The app uses OpenAI's `gpt-4.1-mini` model with:
 - `response_format: { type: "json_object" }` for structured output
-- `max_completion_tokens: 4000` for comprehensive single-tone listings
+- `max_tokens: 4000` for comprehensive single-tone listings
 - `detail: "high"` for image analysis
 - Images sent as base64 data URLs in the content array
 - Dynamic system prompt built from modular components based on selected tone
