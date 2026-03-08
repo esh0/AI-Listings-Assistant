@@ -4,7 +4,7 @@ import React, { useState, useCallback, useMemo, useEffect, useRef } from "react"
 import dynamic from "next/dynamic";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { RotateCcw, Camera, CheckCircle, Check } from "lucide-react";
+import { RotateCcw, Camera, CheckCircle, Check, ArrowLeft, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
@@ -307,6 +307,11 @@ export function AdGeneratorForm() {
         hasInitializedEdits.current = false;
     }, [images]);
 
+    const handleRetry = useCallback(() => {
+        setResult(null);
+        setError(null);
+    }, []);
+
     const handleEdit = useCallback(() => {
         setResult(null);
         setError(null);
@@ -446,28 +451,53 @@ export function AdGeneratorForm() {
                             </p>
                         </div>
                         <div className="flex items-center gap-2">
-                            {status === "authenticated" && (
-                                <Button
-                                    size="lg"
-                                    onClick={handleSave}
-                                    disabled={!canSave}
-                                    aria-label="Zapisz ogłoszenie"
-                                    className="bg-green-500 hover:bg-green-600 text-white h-14 text-lg font-bold transition-colors shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                    <Check className="h-5 w-5 mr-2" aria-hidden="true" />
-                                    {isSaving ? "Zapisywanie…" : "Zapisz"}
-                                </Button>
+                            {result.isValid === false ? (
+                                <>
+                                    <Button
+                                        size="lg"
+                                        onClick={handleRetry}
+                                        aria-label="Popraw ogłoszenie"
+                                        className="bg-blue-500 hover:bg-blue-600 text-white h-14 text-lg font-bold transition-colors shadow-lg hover:shadow-xl"
+                                    >
+                                        <ArrowLeft className="h-5 w-5 mr-2" aria-hidden="true" />
+                                        Popraw
+                                    </Button>
+                                    <Button
+                                        size="lg"
+                                        onClick={handleReset}
+                                        aria-label="Stwórz nowe ogłoszenie"
+                                        className="bg-orange-500 hover:bg-orange-600 text-white h-14 text-lg font-bold transition-colors shadow-lg hover:shadow-xl"
+                                    >
+                                        <Plus className="h-5 w-5 mr-2" aria-hidden="true" />
+                                        Nowe ogłoszenie
+                                    </Button>
+                                </>
+                            ) : (
+                                <>
+                                    {status === "authenticated" && (
+                                        <Button
+                                            size="lg"
+                                            onClick={handleSave}
+                                            disabled={!canSave}
+                                            aria-label="Zapisz ogłoszenie"
+                                            className="bg-green-500 hover:bg-green-600 text-white h-14 text-lg font-bold transition-colors shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                                        >
+                                            <Check className="h-5 w-5 mr-2" aria-hidden="true" />
+                                            {isSaving ? "Zapisywanie…" : "Zapisz"}
+                                        </Button>
+                                    )}
+                                    <Button
+                                        size="lg"
+                                        onClick={handleReset}
+                                        disabled={isSaving}
+                                        aria-label="Zacznij od nowa"
+                                        className="bg-orange-500 hover:bg-orange-600 text-white h-14 text-lg font-bold transition-colors shadow-lg hover:shadow-xl disabled:opacity-50"
+                                    >
+                                        <RotateCcw className="h-5 w-5 mr-2" aria-hidden="true" />
+                                        Zapisz i stwórz następne
+                                    </Button>
+                                </>
                             )}
-                            <Button
-                                size="lg"
-                                onClick={handleReset}
-                                disabled={isSaving}
-                                aria-label="Zacznij od nowa"
-                                className="bg-orange-500 hover:bg-orange-600 text-white h-14 text-lg font-bold transition-colors shadow-lg hover:shadow-xl disabled:opacity-50"
-                            >
-                                <RotateCcw className="h-5 w-5 mr-2" aria-hidden="true" />
-                                Zapisz i stwórz następne
-                            </Button>
                         </div>
                     </div>
 
