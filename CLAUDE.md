@@ -76,7 +76,8 @@ Create `.env.local` with:
 OPENAI_API_KEY=sk-your-api-key-here
 
 # Database (Supabase PostgreSQL)
-DATABASE_URL=postgresql://user:password@host:port/database
+DATABASE_URL=postgresql://user:password@host:6543/database
+DIRECT_URL=postgresql://user:password@host:5432/database
 
 # NextAuth
 AUTH_SECRET=your-random-secret-here
@@ -102,7 +103,8 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
 **Required keys:**
 - `OPENAI_API_KEY` - OpenAI API with GPT-4.1-mini access
-- `DATABASE_URL` - PostgreSQL connection string (Supabase provides this)
+- `DATABASE_URL` - Supabase **pooled** connection string (port 6543, via PgBouncer)
+- `DIRECT_URL` - Supabase **direct** connection string (port 5432, for migrations)
 - `AUTH_SECRET` - Generate with `openssl rand -base64 32`
 - `GOOGLE_CLIENT_ID` & `GOOGLE_CLIENT_SECRET` - OAuth credentials from Google Cloud Console
 - Supabase keys - Available in Supabase project settings
@@ -184,7 +186,7 @@ The system uses a modular prompt architecture with:
 **Authentication & Database:**
 - `auth.ts` - NextAuth v5 configuration with Google OAuth provider, JWT strategy
 - `prisma/schema.prisma` - Database schema (User, Account, Session, Ad, GuestUsage models)
-- `lib/prisma.ts` - Prisma client singleton
+- `lib/prisma.ts` - Prisma client singleton with PgBouncer support (appends `pgbouncer=true&connection_limit=5`)
 - `lib/credits.ts` - Credit management (hasCredits, consumeCredit, resetCredits, changePlan, addBoostCredits)
 - `lib/image-upload.ts` - Supabase Storage integration with sharp image resizing
 - `lib/guest-tracking.ts` - Guest rate limiting (UUID + IP hash, checkGuestLimit, consumeGuestCredit)
@@ -613,5 +615,12 @@ vercel --prod
 **Database Migrations:**
 - Using `prisma db push` (not `prisma migrate`) due to broken migration history
 - Always run `npx prisma db push` after schema changes
+- `prisma db push` uses `DIRECT_URL` (port 5432), runtime queries use `DATABASE_URL` (port 6543 via PgBouncer)
+
+**Database Connection Pooling:**
+- Supabase PgBouncer runs in Session mode with a small pool limit
+- `lib/prisma.ts` automatically appends `pgbouncer=true&connection_limit=5` to `DATABASE_URL`
+- Dashboard pages use `groupBy` instead of multiple `count()` queries to minimize concurrent connections
+- Avoid `Promise.all` with more than 3-4 Prisma queries — use `groupBy` or `$transaction` to batch
 
 Alternative: Docker (see README.md for Dockerfile)
