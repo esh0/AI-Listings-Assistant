@@ -145,12 +145,16 @@ export function AdGeneratorForm({ onResultChange }: { onResultChange?: (hasResul
         [isTitleValid, isDescriptionValid, isSaving, result]
     );
 
-    // Refresh session after successful ad generation for authenticated users
+    // Refresh session after successful ad generation for authenticated users (once)
+    const hasRefreshedSession = useRef(false);
     useEffect(() => {
-        if (result && result.isValid && !isLoading && status === "authenticated") {
-            // Refresh server components (sidebar) and client session (credits)
+        if (result && result.isValid && !isLoading && status === "authenticated" && !hasRefreshedSession.current) {
+            hasRefreshedSession.current = true;
             router.refresh();
             updateSession();
+        }
+        if (!result) {
+            hasRefreshedSession.current = false;
         }
     }, [result, isLoading, status, router, updateSession]);
 
