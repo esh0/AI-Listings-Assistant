@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -40,6 +40,8 @@ export function SoftWallModal({ adData, mode = "save", isVisible, onClose }: Sof
     const { data: session, status } = useSession();
     const router = useRouter();
     const [isSaving, setIsSaving] = useState(false);
+    const modalRef = useRef<HTMLDivElement>(null);
+    const previouslyFocusedRef = useRef<HTMLElement | null>(null);
 
     const isLimitMode = mode === "limit";
 
@@ -49,6 +51,59 @@ export function SoftWallModal({ adData, mode = "save", isVisible, onClose }: Sof
             onClose();
         }
     }, [status, onClose]);
+
+    // Focus trap + Escape key + body scroll lock
+    useEffect(() => {
+        if (!isVisible || status === "authenticated") return;
+
+        // Store previously focused element for restoration
+        previouslyFocusedRef.current = document.activeElement as HTMLElement;
+
+        // Lock body scroll
+        document.body.style.overflow = "hidden";
+
+        // Focus the modal
+        const timer = setTimeout(() => {
+            modalRef.current?.focus();
+        }, 0);
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                e.preventDefault();
+                onClose();
+                return;
+            }
+
+            // Focus trap
+            if (e.key === "Tab" && modalRef.current) {
+                const focusable = modalRef.current.querySelectorAll<HTMLElement>(
+                    'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+                );
+                if (focusable.length === 0) return;
+
+                const first = focusable[0];
+                const last = focusable[focusable.length - 1];
+
+                if (e.shiftKey && document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                } else if (!e.shiftKey && document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
+            }
+        };
+
+        document.addEventListener("keydown", handleKeyDown);
+
+        return () => {
+            clearTimeout(timer);
+            document.removeEventListener("keydown", handleKeyDown);
+            document.body.style.overflow = "";
+            // Restore focus
+            previouslyFocusedRef.current?.focus();
+        };
+    }, [isVisible, status, onClose]);
 
     if (!isVisible || status === "authenticated") {
         return null;
@@ -82,13 +137,20 @@ export function SoftWallModal({ adData, mode = "save", isVisible, onClose }: Sof
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-            <Card className="relative max-w-lg w-full p-8">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" aria-hidden="true">
+            <Card
+                ref={modalRef}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="softwall-title"
+                tabIndex={-1}
+                className="relative max-w-lg w-full p-8 outline-none"
+            >
                 {/* Close button */}
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"
-                    aria-label="Close"
+                    className="absolute top-3 right-3 p-2 text-muted-foreground hover:text-foreground rounded-md transition-colors"
+                    aria-label="Zamknij"
                 >
                     <X className="h-5 w-5" />
                 </button>
@@ -102,7 +164,7 @@ export function SoftWallModal({ adData, mode = "save", isVisible, onClose }: Sof
 
                 {/* Content */}
                 <div className="text-center mb-8">
-                    <h2 className="text-2xl font-bold text-foreground mb-3">
+                    <h2 id="softwall-title" className="text-2xl font-bold text-foreground mb-3">
                         {isLimitMode
                             ? "Darmowy limit wyczerpany"
                             : "Zapisz swoje ogłoszenie"

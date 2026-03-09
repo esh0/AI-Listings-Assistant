@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import { Pencil, Settings, Maximize2, X } from "lucide-react";
 import type { Platform, ProductCondition, PriceType, ToneStyle } from "@/lib/types";
@@ -51,6 +51,30 @@ export const AdResultMeta: React.FC<AdResultMetaProps> = ({
   onEdit,
 }) => {
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
+  const lightboxRef = useRef<HTMLDivElement>(null);
+
+  // Lightbox: Escape key + body scroll lock + focus management
+  useEffect(() => {
+    if (!lightboxImage) return;
+
+    document.body.style.overflow = "hidden";
+
+    const timer = setTimeout(() => lightboxRef.current?.focus(), 0);
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        setLightboxImage(null);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [lightboxImage]);
 
   // Format price type for display
   const getPriceDisplay = () => {
@@ -144,10 +168,10 @@ export const AdResultMeta: React.FC<AdResultMetaProps> = ({
                   {/* Zoom button - top-right corner */}
                   <button
                     onClick={() => setLightboxImage(imagePreviews[index])}
-                    className="absolute top-1 right-1 p-1.5 bg-black/60 hover:bg-black/80 text-white rounded-md transition-all opacity-0 group-hover:opacity-100"
-                    aria-label="Powiększ zdjęcie"
+                    className="absolute top-1 right-1 p-2 bg-black/60 hover:bg-black/80 text-white rounded-md transition-colors sm:opacity-0 sm:group-hover:opacity-100"
+                    aria-label={`Powiększ zdjęcie ${index + 1}`}
                   >
-                    <Maximize2 className="h-3 w-3" />
+                    <Maximize2 className="h-4 w-4" />
                   </button>
 
                   {/* Status badge - bottom-right corner */}
@@ -189,12 +213,17 @@ export const AdResultMeta: React.FC<AdResultMetaProps> = ({
       {/* Lightbox Modal */}
       {lightboxImage && (
         <div
-          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 animate-fade-in"
+          ref={lightboxRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Podgląd zdjęcia"
+          tabIndex={-1}
+          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 animate-fade-in outline-none"
           onClick={() => setLightboxImage(null)}
         >
           <button
             onClick={() => setLightboxImage(null)}
-            className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 text-white rounded-md transition-all"
+            className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 text-white rounded-md transition-colors"
             aria-label="Zamknij podgląd"
           >
             <X className="h-6 w-6" />

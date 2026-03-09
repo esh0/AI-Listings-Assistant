@@ -193,11 +193,13 @@ export const AdResultMain = React.memo(function AdResultMain({
                 editedTitle.trim().length === 0 && "border-destructive focus:border-destructive focus:ring-destructive"
               )}
               aria-label="Edytuj tytuł ogłoszenia"
+              aria-describedby="title-error title-counter"
+              aria-invalid={editedTitle.trim().length === 0}
             />
             {editedTitle.trim().length === 0 && (
-              <p className="text-xs text-destructive mt-1">Pole nie może być puste</p>
+              <p id="title-error" className="text-xs text-destructive mt-1">Pole nie może być puste</p>
             )}
-            <p className={cn(
+            <p id="title-counter" className={cn(
               "text-xs mt-1",
               editedTitle.length > titleWarningThreshold ? "text-destructive" : "text-muted-foreground"
             )}>
@@ -276,11 +278,13 @@ export const AdResultMain = React.memo(function AdResultMain({
                 editedDescription.trim().length === 0 && "border-destructive focus:border-destructive focus:ring-destructive"
               )}
               aria-label="Edytuj opis ogłoszenia"
+              aria-describedby="desc-error desc-counter"
+              aria-invalid={editedDescription.trim().length === 0}
             />
             {editedDescription.trim().length === 0 && (
-              <p className="text-xs text-destructive mt-1">Pole nie może być puste</p>
+              <p id="desc-error" className="text-xs text-destructive mt-1">Pole nie może być puste</p>
             )}
-            <p className={cn(
+            <p id="desc-counter" className={cn(
               "text-xs mt-1",
               editedDescription.length > descWarningThreshold ? "text-destructive" : "text-muted-foreground"
             )}>

@@ -164,7 +164,7 @@ export function UploadDropzone({ onImagesChange, images, maxImages }: UploadDrop
                                     variant="destructive"
                                     size="icon"
                                     onClick={() => handleRemove(index)}
-                                    className="h-8 w-8 transition-transform hover:scale-110 active:scale-95"
+                                    className="transition-transform hover:scale-110 active:scale-95"
                                     aria-label={`Usuń zdjęcie ${index + 1}: ${image.filename}`}
                                 >
                                     <X className="h-4 w-4" aria-hidden="true" />

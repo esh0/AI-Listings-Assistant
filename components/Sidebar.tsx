@@ -57,10 +57,18 @@ export function Sidebar({ user }: SidebarProps) {
         setIsPortalLoading(true);
         try {
             const res = await fetch("/api/stripe/portal", { method: "POST" });
+            if (!res.ok) {
+                throw new Error("Portal request failed");
+            }
             const data = await res.json();
             if (data.url) {
                 window.location.href = data.url;
+            } else {
+                throw new Error("No portal URL returned");
             }
+        } catch (error) {
+            console.error("Portal error:", error);
+            alert("Nie udało się otworzyć panelu subskrypcji. Spróbuj ponownie.");
         } finally {
             setIsPortalLoading(false);
         }
@@ -241,7 +249,8 @@ export function Sidebar({ user }: SidebarProps) {
             <button
                 onClick={() => setIsMobileOpen(!isMobileOpen)}
                 className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-card rounded-lg shadow-lg"
-                aria-label="Toggle menu"
+                aria-label={isMobileOpen ? "Zamknij menu" : "Otwórz menu"}
+                aria-expanded={isMobileOpen}
             >
                 {isMobileOpen ? (
                     <X className="h-6 w-6" />

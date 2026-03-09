@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Upload, Archive, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { AdStatus, Platform } from "@prisma/client";
 
 interface AdDetailActionsProps {
@@ -17,8 +17,11 @@ interface AdDetailActionsProps {
 export function AdDetailActions({ ad }: AdDetailActionsProps) {
     const router = useRouter();
     const [isUpdating, setIsUpdating] = useState(false);
+    const isProcessingRef = useRef(false);
 
     const handleMarkAsPublished = async () => {
+        if (isProcessingRef.current) return;
+        isProcessingRef.current = true;
         setIsUpdating(true);
         try {
             const response = await fetch(`/api/ads/${ad.id}`, {
@@ -37,6 +40,7 @@ export function AdDetailActions({ ad }: AdDetailActionsProps) {
             alert("Nie udało się oznaczyć jako opublikowane");
         } finally {
             setIsUpdating(false);
+            isProcessingRef.current = false;
         }
     };
 
@@ -50,6 +54,8 @@ export function AdDetailActions({ ad }: AdDetailActionsProps) {
             return;
         }
 
+        if (isProcessingRef.current) return;
+        isProcessingRef.current = true;
         setIsUpdating(true);
         try {
             const response = await fetch(`/api/ads/${ad.id}`, {
@@ -71,6 +77,7 @@ export function AdDetailActions({ ad }: AdDetailActionsProps) {
             alert("Nie udało się oznaczyć jako sprzedane");
         } finally {
             setIsUpdating(false);
+            isProcessingRef.current = false;
         }
     };
 
@@ -78,6 +85,8 @@ export function AdDetailActions({ ad }: AdDetailActionsProps) {
         const confirmed = confirm("Czy na pewno chcesz zarchiwizować to ogłoszenie?");
         if (!confirmed) return;
 
+        if (isProcessingRef.current) return;
+        isProcessingRef.current = true;
         setIsUpdating(true);
         try {
             const response = await fetch(`/api/ads/${ad.id}`, {
@@ -96,6 +105,7 @@ export function AdDetailActions({ ad }: AdDetailActionsProps) {
             alert("Nie udało się zarchiwizować ogłoszenia");
         } finally {
             setIsUpdating(false);
+            isProcessingRef.current = false;
         }
     };
 
@@ -105,6 +115,8 @@ export function AdDetailActions({ ad }: AdDetailActionsProps) {
         );
         if (!confirmed) return;
 
+        if (isProcessingRef.current) return;
+        isProcessingRef.current = true;
         setIsUpdating(true);
         try {
             const response = await fetch(`/api/ads/${ad.id}`, {
@@ -120,6 +132,7 @@ export function AdDetailActions({ ad }: AdDetailActionsProps) {
             console.error("Failed to delete ad:", error);
             alert("Nie udało się usunąć ogłoszenia");
             setIsUpdating(false);
+            isProcessingRef.current = false;
         }
     };
 

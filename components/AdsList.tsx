@@ -4,7 +4,7 @@ import { AdCard } from "@/components/AdCard";
 import { Button } from "@/components/ui/button";
 import { AdStatus, Platform } from "@prisma/client";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { PLATFORM_NAMES } from "@/lib/types";
 import { ArrowUpDown, Filter, Search, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -67,6 +67,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
     const [deletingId, setDeletingId] = useState<string | null>(null);
     const [showFilters, setShowFilters] = useState(false);
     const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
+    const processingRef = useRef<Set<string>>(new Set());
 
     const currentPlatform = searchParams.get("platform") || "all";
     const currentSort = searchParams.get("sort") || "createdAt-desc";
@@ -124,6 +125,8 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
     };
 
     const handleDelete = async (id: string) => {
+        if (processingRef.current.has(id)) return;
+        processingRef.current.add(id);
         setDeletingId(id);
         try {
             const response = await fetch(`/api/ads/${id}`, {
@@ -140,6 +143,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
             alert("Nie udało się usunąć ogłoszenia");
         } finally {
             setDeletingId(null);
+            processingRef.current.delete(id);
         }
     };
 
@@ -152,6 +156,9 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
             alert("Nieprawidłowa cena");
             return;
         }
+
+        if (processingRef.current.has(id)) return;
+        processingRef.current.add(id);
 
         try {
             const response = await fetch(`/api/ads/${id}`, {
@@ -171,12 +178,17 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
         } catch (error) {
             console.error("Failed to mark ad as sold:", error);
             alert("Nie udało się oznaczyć ogłoszenia jako sprzedane");
+        } finally {
+            processingRef.current.delete(id);
         }
     };
 
     const handleMarkAsPublished = async (id: string) => {
         const confirmed = confirm("Czy oznaczyć to ogłoszenie jako opublikowane?");
         if (!confirmed) return;
+
+        if (processingRef.current.has(id)) return;
+        processingRef.current.add(id);
 
         try {
             const response = await fetch(`/api/ads/${id}`, {
@@ -195,6 +207,8 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
         } catch (error) {
             console.error("Failed to mark ad as published:", error);
             alert("Nie udało się oznaczyć ogłoszenia jako opublikowane");
+        } finally {
+            processingRef.current.delete(id);
         }
     };
 
@@ -407,9 +421,11 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                                                     variant={currentPage === pageNum ? "default" : "outline"}
                                                     size="sm"
                                                     onClick={() => handlePageChange(pageNum)}
+                                                    aria-label={`Strona ${pageNum}`}
+                                                    aria-current={currentPage === pageNum ? "page" : undefined}
                                                     className={
                                                         currentPage === pageNum
-                                                            ? "bg-orange-500 hover:bg-orange-600 min-w-[40px]"
+                                                            ? "bg-primary hover:bg-primary/90 min-w-[40px]"
                                                             : "min-w-[40px]"
                                                     }
                                                 >
