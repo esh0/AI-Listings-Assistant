@@ -60,6 +60,9 @@ export default function HomePage() {
                         </span>
                     </div>
                     <div className="flex items-center gap-3">
+                        <Link href="/pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                            Cennik
+                        </Link>
                         <Link href="/auth/signin?callbackUrl=/dashboard">
                             <Button variant="outline" size="sm">
                                 Zaloguj się

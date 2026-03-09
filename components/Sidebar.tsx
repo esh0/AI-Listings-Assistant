@@ -11,10 +11,11 @@ import {
     CreditCard,
     Menu,
     X,
+    Tag,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
 
 interface SidebarProps {
@@ -46,9 +47,23 @@ const PLAN_CREDITS: Record<string, number> = {
 export function Sidebar({ user }: SidebarProps) {
     const pathname = usePathname();
     const [isMobileOpen, setIsMobileOpen] = useState(false);
+    const [isPortalLoading, setIsPortalLoading] = useState(false);
 
     const plan = user.plan ?? "FREE";
     const isPaid = plan !== "FREE";
+
+    const handlePortal = useCallback(async () => {
+        setIsPortalLoading(true);
+        try {
+            const res = await fetch("/api/stripe/portal", { method: "POST" });
+            const data = await res.json();
+            if (data.url) {
+                window.location.href = data.url;
+            }
+        } finally {
+            setIsPortalLoading(false);
+        }
+    }, []);
     const credits = user.creditsAvailable ?? 0;
     const boost = user.boostCredits ?? 0;
     const planLimit = PLAN_CREDITS[plan] ?? 5;
@@ -80,6 +95,11 @@ export function Sidebar({ user }: SidebarProps) {
             href: "/dashboard/templates",
             label: "Szablony",
             icon: Bookmark,
+        },
+        {
+            href: "/pricing",
+            label: "Cennik",
+            icon: Tag,
         },
     ];
 
@@ -152,8 +172,17 @@ export function Sidebar({ user }: SidebarProps) {
                         href="/pricing"
                         className="block text-xs text-center text-orange-600 dark:text-orange-400 font-medium hover:underline pt-1"
                     >
-                        Zmień plan lub dokup kredyty
+                        {isPaid ? "Zmień plan lub dokup kredyty" : "Zmień plan lub dokup kredyty"}
                     </Link>
+                    {isPaid && (
+                        <button
+                            onClick={handlePortal}
+                            disabled={isPortalLoading}
+                            className="block w-full text-xs text-center text-muted-foreground hover:text-foreground hover:underline pt-1 transition-colors disabled:opacity-50"
+                        >
+                            {isPortalLoading ? "Przekierowuję…" : "Zarządzaj subskrypcją"}
+                        </button>
+                    )}
                 </div>
 
                 {/* User Info */}
