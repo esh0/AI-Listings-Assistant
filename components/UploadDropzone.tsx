@@ -145,7 +145,7 @@ export function UploadDropzone({ onImagesChange, images, maxImages }: UploadDrop
                     {images.map((image, index) => (
                         <div
                             key={`${image.filename}-${index}`}
-                            className="relative group aspect-square rounded-lg border-2 border-border bg-muted overflow-hidden hover:border-primary transition-all"
+                            className="relative group aspect-square rounded-lg border-2 border-border bg-muted overflow-hidden hover:border-primary transition-colors"
                         >
                             <img
                                 src={image.preview}

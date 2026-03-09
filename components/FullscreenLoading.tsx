@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { Loader2, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -77,36 +77,44 @@ export function FullscreenLoading({
             return;
         }
 
-        // Start progress animation
+        // Start progress animation using requestAnimationFrame
         const startTime = Date.now();
-        const endTime = startTime + effectiveDuration * 1000;
         let indeterminateStartTime: number | null = null;
+        let rafId: number;
+        let lastRoundedProgress = -1;
+        let lastMessageKey = "";
 
-        const updateProgress = () => {
+        const tick = () => {
             const now = Date.now();
             const elapsed = now - startTime;
             const percentage = Math.min((elapsed / (effectiveDuration * 1000)) * 100, 100);
+            const rounded = Math.round(percentage);
 
             if (percentage >= 100) {
-                setIsIndeterminate(true);
-                setProgress(100);
-
-                // Track indeterminate time
                 if (indeterminateStartTime === null) {
                     indeterminateStartTime = now;
                 }
                 const indeterminateElapsed = now - indeterminateStartTime;
-                setIndeterminateTime(indeterminateElapsed);
-            } else {
+                // Only update state when tip message changes (every 5s)
+                const tipKey = `ind-${Math.floor(indeterminateElapsed / 5000)}`;
+                if (tipKey !== lastMessageKey) {
+                    lastMessageKey = tipKey;
+                    setIsIndeterminate(true);
+                    setProgress(100);
+                    setIndeterminateTime(indeterminateElapsed);
+                }
+            } else if (rounded !== lastRoundedProgress) {
+                // Only update state when the rounded % changes
+                lastRoundedProgress = rounded;
                 setProgress(percentage);
             }
+
+            rafId = requestAnimationFrame(tick);
         };
 
-        // Update every 100ms for smooth animation
-        const interval = setInterval(updateProgress, 100);
-        updateProgress(); // Initial call
+        rafId = requestAnimationFrame(tick);
 
-        return () => clearInterval(interval);
+        return () => cancelAnimationFrame(rafId);
     }, [isLoading, effectiveDuration, imageCount]);
 
     if (!isLoading || !mounted) return null;

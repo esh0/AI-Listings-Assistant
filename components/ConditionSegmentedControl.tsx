@@ -74,7 +74,7 @@ export function ConditionSegmentedControl({
                             onClick={() => onConditionChange(conditionValue)}
                             onKeyDown={(e) => handleKeyDown(e, conditionValue)}
                             className={cn(
-                                "flex-1 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 whitespace-nowrap",
+                                "flex-1 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 whitespace-nowrap",
                                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                                 isSelected
                                     ? "bg-background shadow-sm text-foreground"

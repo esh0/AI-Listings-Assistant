@@ -52,6 +52,16 @@ export const AdResultMain = React.memo(function AdResultMain({
   // Refs for auto-focus
   const titleInputRef = useRef<HTMLInputElement>(null);
   const descInputRef = useRef<HTMLTextAreaElement>(null);
+  const copyTitleTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const copyDescTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  // Cleanup timers on unmount
+  useEffect(() => {
+    return () => {
+      clearTimeout(copyTitleTimerRef.current);
+      clearTimeout(copyDescTimerRef.current);
+    };
+  }, []);
 
   // Title edit handlers
   const handleEditTitle = useCallback(() => {
@@ -78,7 +88,8 @@ export const AdResultMain = React.memo(function AdResultMain({
     try {
       await navigator.clipboard.writeText(editedTitle);
       setCopiedTitle(true);
-      setTimeout(() => setCopiedTitle(false), 2000);
+      clearTimeout(copyTitleTimerRef.current);
+      copyTitleTimerRef.current = setTimeout(() => setCopiedTitle(false), 2000);
     } catch (error) {
       console.error("Nie udało się skopiować tytułu:", error);
     }
@@ -88,7 +99,8 @@ export const AdResultMain = React.memo(function AdResultMain({
     try {
       await navigator.clipboard.writeText(editedDescription);
       setCopiedDescription(true);
-      setTimeout(() => setCopiedDescription(false), 2000);
+      clearTimeout(copyDescTimerRef.current);
+      copyDescTimerRef.current = setTimeout(() => setCopiedDescription(false), 2000);
     } catch (error) {
       console.error("Nie udało się skopiować opisu:", error);
     }
@@ -138,7 +150,7 @@ export const AdResultMain = React.memo(function AdResultMain({
               size="sm"
               onClick={isEditingTitle ? handleCancelEditTitle : handleEditTitle}
               className={cn(
-                "gap-2 px-3 py-1.5 rounded-md transition-all duration-200",
+                "gap-2 px-3 py-1.5 rounded-md transition-colors duration-200",
                 isEditingTitle
                   ? "bg-success/10 text-success hover:bg-success/20"
                   : "bg-muted hover:bg-primary/10 hover:text-primary"
@@ -158,7 +170,7 @@ export const AdResultMain = React.memo(function AdResultMain({
               size="sm"
               onClick={handleCopyTitle}
               className={cn(
-                "gap-2 bg-muted px-3 py-1.5 rounded-md transition-all duration-200",
+                "gap-2 bg-muted px-3 py-1.5 rounded-md transition-colors duration-200",
                 "hover:bg-primary/10 hover:text-primary",
                 copiedTitle && "bg-success/10 text-success"
               )}
@@ -223,7 +235,7 @@ export const AdResultMain = React.memo(function AdResultMain({
               size="sm"
               onClick={isEditingDescription ? handleCancelEditDescription : handleEditDescription}
               className={cn(
-                "gap-2 px-3 py-1.5 rounded-md transition-all duration-200",
+                "gap-2 px-3 py-1.5 rounded-md transition-colors duration-200",
                 isEditingDescription
                   ? "bg-success/10 text-success hover:bg-success/20"
                   : "bg-muted hover:bg-primary/10 hover:text-primary"
@@ -243,7 +255,7 @@ export const AdResultMain = React.memo(function AdResultMain({
               size="sm"
               onClick={handleCopyDescription}
               className={cn(
-                "gap-2 bg-muted px-3 py-1.5 rounded-md transition-all duration-200",
+                "gap-2 bg-muted px-3 py-1.5 rounded-md transition-colors duration-200",
                 "hover:bg-primary/10 hover:text-primary",
                 copiedDescription && "bg-success/10 text-success"
               )}

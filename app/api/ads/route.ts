@@ -151,8 +151,8 @@ export async function POST(request: NextRequest) {
                 status,
                 priceMin,
                 priceMax,
-                images: JSON.parse(JSON.stringify(uploadedImages)),
-                parameters: JSON.parse(JSON.stringify(parameters)),
+                images: structuredClone(uploadedImages),
+                parameters: structuredClone(parameters),
             },
         });
 

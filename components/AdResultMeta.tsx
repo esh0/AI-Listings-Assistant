@@ -99,7 +99,7 @@ export const AdResultMeta: React.FC<AdResultMetaProps> = ({
             size="sm"
             onClick={onEdit}
             aria-label="Popraw parametry"
-            className="gap-2 bg-muted px-3 py-1.5 rounded-md transition-all duration-200 hover:bg-primary/10 hover:text-primary"
+            className="gap-2 bg-muted px-3 py-1.5 rounded-md transition-colors duration-200 hover:bg-primary/10 hover:text-primary"
           >
             <Pencil className="h-4 w-4" />
             Popraw

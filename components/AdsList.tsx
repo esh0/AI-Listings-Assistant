@@ -4,7 +4,7 @@ import { AdCard } from "@/components/AdCard";
 import { Button } from "@/components/ui/button";
 import { AdStatus, Platform } from "@prisma/client";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { PLATFORM_NAMES } from "@/lib/types";
 import { ArrowUpDown, Filter, Search, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -113,7 +113,8 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
 
     const handlePageChange = (newPage: number) => {
         updateParams({ page: newPage.toString() });
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
     };
 
     const handleView = (id: string) => {
@@ -212,11 +213,19 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
         }
     };
 
-    const activeFiltersCount = [
-        currentFilter !== "all" ? 1 : 0,
-        currentPlatform !== "all" ? 1 : 0,
-        searchQuery ? 1 : 0,
-    ].reduce((a, b) => a + b, 0);
+    const activeFiltersCount =
+        (currentFilter !== "all" ? 1 : 0) +
+        (currentPlatform !== "all" ? 1 : 0) +
+        (searchQuery ? 1 : 0);
+
+    const paginationPages = useMemo(() => {
+        return Array.from({ length: totalPages }, (_, i) => i + 1)
+            .filter((pageNum) =>
+                pageNum === 1 ||
+                pageNum === totalPages ||
+                Math.abs(pageNum - currentPage) <= 1
+            );
+    }, [totalPages, currentPage]);
 
     return (
         <div className="space-y-6">
@@ -398,24 +407,14 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                             </Button>
 
                             <div className="flex items-center gap-1">
-                                {Array.from({ length: totalPages }, (_, i) => i + 1)
-                                    .filter((pageNum) => {
-                                        // Show first page, last page, current page, and pages around current
-                                        return (
-                                            pageNum === 1 ||
-                                            pageNum === totalPages ||
-                                            Math.abs(pageNum - currentPage) <= 1
-                                        );
-                                    })
-                                    .map((pageNum, index, array) => {
-                                        // Add ellipsis if there's a gap
-                                        const prevPageNum = array[index - 1];
+                                {paginationPages.map((pageNum, index) => {
+                                        const prevPageNum = paginationPages[index - 1];
                                         const showEllipsis = prevPageNum && pageNum - prevPageNum > 1;
 
                                         return (
                                             <div key={pageNum} className="flex items-center gap-1">
                                                 {showEllipsis && (
-                                                    <span className="px-2 text-muted-foreground">…</span>
+                                                    <span className="px-2 text-muted-foreground" aria-hidden="true">…</span>
                                                 )}
                                                 <Button
                                                     variant={currentPage === pageNum ? "default" : "outline"}
