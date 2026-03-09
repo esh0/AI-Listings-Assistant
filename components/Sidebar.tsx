@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface SidebarProps {
     user: {
@@ -218,15 +219,18 @@ export function Sidebar({ user }: SidebarProps) {
                     </Badge>
                 </div>
 
-                {/* Sign Out Button */}
-                <Button
-                    variant="outline"
-                    onClick={handleSignOut}
-                    className="w-full flex items-center gap-2"
-                >
-                    <LogOut className="h-4 w-4" />
-                    Wyloguj się
-                </Button>
+                {/* Theme Toggle & Sign Out */}
+                <div className="flex gap-2">
+                    <Button
+                        variant="outline"
+                        onClick={handleSignOut}
+                        className="flex-1 flex items-center gap-2"
+                    >
+                        <LogOut className="h-4 w-4" />
+                        Wyloguj się
+                    </Button>
+                    <ThemeToggle />
+                </div>
             </div>
         </div>
     );
