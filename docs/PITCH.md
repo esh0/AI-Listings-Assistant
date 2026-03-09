@@ -32,7 +32,7 @@ Sprzedaż rzeczy online na platformach takich jak OLX, Allegro Lokalnie, Faceboo
 ## 🚀 Kluczowe Funkcje
 
 ### 1. **Analiza Wizualna AI**
-- Rozpoznawanie produktów ze zdjęć (GPT-4o Vision)
+- Rozpoznawanie produktów ze zdjęć (GPT-4.1-mini Vision)
 - Ocena stanu przedmiotu
 - Analiza jakości zdjęć z sugestiami poprawy
 
@@ -104,7 +104,7 @@ Trzy style komunikacji:
 ## 🎨 Przewaga Konkurencyjna
 
 ### Technologia
-- **GPT-4o Vision** - najnowszy model AI z analizą obrazu
+- **GPT-4.1-mini Vision** - najnowszy model AI z analizą obrazu
 - **Modular prompt architecture** - elastyczne i skalowalne prompty
 - **Accuracy features** - system niepewności języka, hierarchia informacji
 - **Performance optimized** - Next.js 15, dynamic imports, sub-second response
@@ -199,7 +199,7 @@ Trzy style komunikacji:
 
 ### Tech Stack
 - **Frontend:** Next.js 15, React, TypeScript, Tailwind CSS
-- **AI:** OpenAI GPT-4o (vision + text)
+- **AI:** OpenAI GPT-4.1-mini (vision + text)
 - **Infrastructure:** Vercel Pro (hosting + CDN + edge functions)
 - **Payments:** PayU + Stripe (BLIK, karty, przelewy)
 - **Analytics:** PostHog (product analytics)

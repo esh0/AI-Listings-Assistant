@@ -215,7 +215,7 @@ The system uses a modular prompt architecture with:
 - `components/Sidebar.tsx` - Navigation sidebar with user info, credits display (available/limit + boost + reset date), plan badge, pricing link, Stripe portal link for paid plans
 - `components/AdsList.tsx` - Ad list with filtering, sorting, search, pagination
 - `components/AdCard.tsx` - Compact ad card with platform icons, status badges, action buttons (Publish/Sold)
-- `components/StatsCards.tsx` - Dashboard statistics cards (uses text-lg font-semibold for numbers)
+- `components/StatsCards.tsx` - Dashboard statistics cards (uses text-3xl font-bold for numbers, staggered entrance animation)
 - `components/AdGeneratorForm.tsx` - Reusable ad creation form with header and save flow
 
 **Ad Creation Components:**
@@ -286,7 +286,7 @@ The system uses a modular prompt architecture with:
 | [h-36   ] [Description line 1, line 2, line 3…]   [Action btns] |
 +------------------------------------------------------------------+
 ```
-- Padding: `p-4`, Gap: `gap-4`
+- Padding: `p-5`, Gap: `gap-4`
 - Image: `h-36 w-36` (144px square)
 - **Platform Icon**: Colored icon instead of text badge (ShoppingBag, Store, Facebook, Shirt)
 - Content: `flex-1 flex flex-col min-h-[144px]`
@@ -394,8 +394,15 @@ className="border-gray-300 accent-blue-600 focus:ring-blue-500"
 - Segmented controls: Horizontal button group in muted container with roving tabindex
 - Platform tiles: 2x2 grid with icons, hover scale effects, and aria-radio roles
 - Responsive components: Desktop segmented control, mobile radio buttons (ConditionSegmentedControl)
-- Sticky CTA: Bottom-positioned button in Card 4 (no longer sticky to avoid clipping CTA text below)
+- Sticky CTA: Bottom-positioned button in Card 4 (not sticky, avoids clipping CTA text below)
 - Card composition: CardWrapper with forwardRef and React.memo for performance
+
+**Visual Identity:**
+- Brand name: "Marketplace AI" — with "AI" in Instrument Serif italic primary color
+- Typography: Space Grotesk (sans-serif primary), Instrument Serif (accent/italic)
+- Page headings use `text-4xl font-bold tracking-tight`
+- Serif italic accent used for brand, user names in greetings, and hero headlines
+- Staggered entrance animations on dashboard stats cards (`animate-stagger-1` through `4`)
 
 ## Performance Best Practices
 
