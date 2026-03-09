@@ -179,10 +179,12 @@ export default function PricingPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {PLANS.map((plan) => {
                         const Icon = plan.icon;
-                        const isCurrent = currentPlan === plan.key;
+                        const isCurrent = isAuthenticated && currentPlan === plan.key;
                         const isFreePlan = plan.key === "FREE";
-                        const isUpgrade = !isFreePlan && currentPlan === "FREE";
-                        const isDowngrade = isFreePlan && currentPlan !== "FREE";
+                        const isDowngrade = isFreePlan && currentPlan !== "FREE" && isAuthenticated;
+
+                        // For unauthenticated users, all buttons go to sign in
+                        const ctaLabel = isFreePlan ? "Zacznij za darmo" : plan.cta;
 
                         return (
                             <Card
@@ -227,7 +229,7 @@ export default function PricingPage() {
                                         <Button variant="outline" className="w-full" disabled>
                                             Obecny plan
                                         </Button>
-                                    ) : isFreePlan && isDowngrade ? (
+                                    ) : isDowngrade ? (
                                         <Button
                                             variant="outline"
                                             className="w-full"
@@ -243,10 +245,13 @@ export default function PricingPage() {
                                                     ? "bg-orange-500 hover:bg-orange-600 text-white"
                                                     : ""
                                             }`}
-                                            onClick={() => handleCheckout(plan.key)}
+                                            onClick={() => isFreePlan && !isAuthenticated
+                                                ? (window.location.href = "/auth/signin?callbackUrl=/dashboard")
+                                                : handleCheckout(plan.key)
+                                            }
                                             disabled={loadingPlan === plan.key}
                                         >
-                                            {loadingPlan === plan.key ? "Przekierowuję…" : plan.cta}
+                                            {loadingPlan === plan.key ? "Przekierowuję…" : ctaLabel}
                                         </Button>
                                     )}
                                 </div>
@@ -255,7 +260,8 @@ export default function PricingPage() {
                     })}
                 </div>
 
-                {/* Boost Credits */}
+                {/* Boost Credits - only for authenticated users */}
+                {isAuthenticated && (
                 <div className="space-y-6">
                     <div className="text-center space-y-2">
                         <h2 className="text-2xl font-bold">Doładuj kredyty</h2>
@@ -286,6 +292,7 @@ export default function PricingPage() {
                         ))}
                     </div>
                 </div>
+                )}
 
                 {/* FAQ */}
                 <div className="space-y-6 max-w-3xl mx-auto">
