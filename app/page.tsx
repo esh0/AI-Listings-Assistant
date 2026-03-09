@@ -78,12 +78,12 @@ export default function HomePage() {
                 <div className="max-w-7xl mx-auto">
                     {/* Hero Section */}
                     {!hasResult && (
-                    <section aria-labelledby="page-title" className="mb-12 sm:mb-16">
-                        <h1 id="page-title" className="text-4xl sm:text-5xl font-bold mb-4 leading-tight tracking-tight">
-                            Sprzedaj szybciej <br className="hidden sm:inline" />
+                    <section aria-labelledby="page-title" className="mb-6">
+                        <h1 id="page-title" className="text-3xl sm:text-4xl font-bold mb-1 leading-tight tracking-tight">
+                            Sprzedaj szybciej{" "}
                             <span className="text-primary">z lepszym opisem</span>
                         </h1>
-                        <p className="text-lg text-muted-foreground max-w-2xl leading-relaxed">
+                        <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
                             Wrzuć zdjęcia, AI stworzy profesjonalne ogłoszenie gotowe na OLX, Allegro, Facebook i Vinted.
                         </p>
                     </section>
