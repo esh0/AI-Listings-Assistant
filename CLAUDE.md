@@ -347,6 +347,49 @@ The system uses a modular prompt architecture with:
 - **Styling**: Tailwind classes using `cn()` utility for conditional classes
 - **Naming**: camelCase for variables/functions, PascalCase for components/types
 
+**Design Token System (CRITICAL):**
+All colors MUST use CSS variable-based design tokens defined in `globals.css` and mapped in `tailwind.config.ts`. Never use hardcoded Tailwind color classes (e.g., `bg-gray-100`, `text-blue-600`).
+
+Token mapping:
+| Semantic Use | Token | Example |
+|---|---|---|
+| Primary CTA, brand accent | `primary` / `primary-foreground` | `bg-primary hover:bg-primary/90 text-primary-foreground` |
+| Success states, published | `success` / `success-foreground` | `text-success`, `bg-success/10` |
+| Error states, delete | `destructive` / `destructive-foreground` | `text-destructive`, `border-destructive` |
+| Warning, caution | `warning` / `warning-foreground` | `text-warning`, `bg-warning/10` |
+| Secondary backgrounds | `muted` / `muted-foreground` | `bg-muted`, `text-muted-foreground` |
+| Card backgrounds | `card` / `card-foreground` | `bg-card` |
+| Page background | `background` / `foreground` | `bg-background`, `text-foreground` |
+| Borders | `border` | `border-border` |
+| Form input borders | `input` | `border-input` |
+| Focus rings | `ring` | `focus:ring-ring` |
+| Radio/checkbox accent | `primary` | `accent-primary` |
+| Secondary actions | `secondary` / `secondary-foreground` | `bg-secondary` |
+
+**Exceptions — intentional hardcoded colors:**
+- Platform-specific colors in `PLATFORM_COLORS` (OLX=`text-orange-500`, Allegro=`text-green-600`, FB=`text-blue-600`, Vinted=`text-teal-600`)
+- Image overlay backgrounds (`bg-black/60`, `bg-black/90`, `bg-white/10`) — these are translucent overlays, not theme colors
+
+**Common patterns:**
+```typescript
+// ✅ GOOD: Uses design tokens
+className="bg-primary hover:bg-primary/90 text-primary-foreground"
+className="text-muted-foreground"
+className="bg-muted rounded-lg"
+className="border-input accent-primary focus:ring-ring"
+
+// ❌ BAD: Hardcoded colors with dark: variants
+className="bg-orange-500 hover:bg-orange-600 text-white"
+className="text-gray-600 dark:text-gray-400"
+className="bg-gray-50 dark:bg-gray-800"
+className="border-gray-300 accent-blue-600 focus:ring-blue-500"
+```
+
+**Why tokens matter:**
+- Dark mode handled automatically by CSS variables — no need for `dark:` prefixes
+- Theme changes propagate instantly across all components
+- Consistent visual hierarchy maintained across the entire app
+
 **Component Patterns:**
 - Segmented controls: Horizontal button group in muted container with roving tabindex
 - Platform tiles: 2x2 grid with icons, hover scale effects, and aria-radio roles
