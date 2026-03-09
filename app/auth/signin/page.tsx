@@ -20,8 +20,8 @@ function SignInForm() {
         <Card className="max-w-md w-full p-8">
                 {/* Logo */}
                 <div className="flex justify-center mb-6">
-                    <div className="p-4 bg-orange-50 dark:bg-orange-950 rounded-full">
-                        <ShoppingBag className="h-12 w-12 text-orange-600 dark:text-orange-400" />
+                    <div className="p-4 bg-primary/10 rounded-full">
+                        <ShoppingBag className="h-12 w-12 text-primary" />
                     </div>
                 </div>
 
@@ -30,7 +30,7 @@ function SignInForm() {
                     <h1 className="text-3xl font-bold text-foreground mb-2">
                         Marketplace Assistant
                     </h1>
-                    <p className="text-gray-600 dark:text-gray-400">
+                    <p className="text-muted-foreground">
                         Zaloguj się, aby zarządzać swoimi ogłoszeniami
                     </p>
                 </div>
@@ -38,7 +38,7 @@ function SignInForm() {
                 {/* Sign In Button */}
                 <Button
                     onClick={handleGoogleSignIn}
-                    className="w-full h-12 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700"
+                    className="w-full h-12 bg-card hover:bg-muted text-foreground border border-input"
                 >
                     <svg className="h-5 w-5 mr-3" viewBox="0 0 24 24">
                         <path
@@ -62,7 +62,7 @@ function SignInForm() {
                 </Button>
 
                 {/* Privacy */}
-                <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-6">
+                <p className="text-xs text-muted-foreground text-center mt-6">
                     Logując się, akceptujesz naszą politykę prywatności.
                     <br />
                     Nie wysyłamy spamu i nie udostępniamy Twoich danych.
@@ -72,7 +72,7 @@ function SignInForm() {
                 <div className="text-center mt-8">
                     <Link
                         href="/"
-                        className="text-sm text-gray-600 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400"
+                        className="text-sm text-muted-foreground hover:text-primary"
                     >
                         ← Wróć do strony głównej
                     </Link>
@@ -83,7 +83,7 @@ function SignInForm() {
 
 export default function SignInPage() {
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 p-4">
+        <div className="min-h-screen flex items-center justify-center bg-muted p-4">
             <Suspense fallback={<div>Loading...</div>}>
                 <SignInForm />
             </Suspense>

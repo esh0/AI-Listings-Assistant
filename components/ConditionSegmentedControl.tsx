@@ -100,7 +100,7 @@ export function ConditionSegmentedControl({
                             value={conditionValue}
                             checked={condition === conditionValue}
                             onChange={(e) => onConditionChange(e.target.value as ProductCondition)}
-                            className="h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                            className="h-4 w-4 border-input accent-primary focus:ring-2 focus:ring-ring focus:ring-offset-2"
                             aria-required="true"
                         />
                         <span className="text-sm font-medium group-hover:text-foreground">

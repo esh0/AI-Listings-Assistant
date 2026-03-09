@@ -140,8 +140,8 @@ export const AdResultMain = React.memo(function AdResultMain({
               className={cn(
                 "gap-2 px-3 py-1.5 rounded-md transition-all duration-200",
                 isEditingTitle
-                  ? "bg-green-50 text-green-600 hover:bg-green-100 dark:bg-green-950 dark:text-green-400 dark:hover:bg-green-900"
-                  : "bg-gray-100 dark:bg-gray-800 hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-orange-950 dark:hover:text-orange-400"
+                  ? "bg-success/10 text-success hover:bg-success/20"
+                  : "bg-muted hover:bg-primary/10 hover:text-primary"
               )}
               title={isEditingTitle ? "Zatwierdź zmiany" : "Edytuj"}
             >
@@ -158,9 +158,9 @@ export const AdResultMain = React.memo(function AdResultMain({
               size="sm"
               onClick={handleCopyTitle}
               className={cn(
-                "gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-md transition-all duration-200",
-                "hover:bg-orange-50 hover:text-orange-600 hover:border-orange-200 dark:hover:bg-orange-950 dark:hover:text-orange-400",
-                copiedTitle && "bg-green-50 text-green-600 dark:bg-green-950 dark:text-green-400"
+                "gap-2 bg-muted px-3 py-1.5 rounded-md transition-all duration-200",
+                "hover:bg-primary/10 hover:text-primary",
+                copiedTitle && "bg-success/10 text-success"
               )}
             >
               {copiedTitle ? (
@@ -190,16 +190,16 @@ export const AdResultMain = React.memo(function AdResultMain({
               maxLength={titleLimit}
               className={cn(
                 "text-base",
-                editedTitle.trim().length === 0 && "border-red-500 focus:border-red-500 focus:ring-red-500"
+                editedTitle.trim().length === 0 && "border-destructive focus:border-destructive focus:ring-destructive"
               )}
               aria-label="Edytuj tytuł ogłoszenia"
             />
             {editedTitle.trim().length === 0 && (
-              <p className="text-xs text-red-600 mt-1">Pole nie może być puste</p>
+              <p className="text-xs text-destructive mt-1">Pole nie może być puste</p>
             )}
             <p className={cn(
               "text-xs mt-1",
-              editedTitle.length > titleWarningThreshold ? "text-red-600" : "text-gray-500 dark:text-gray-400"
+              editedTitle.length > titleWarningThreshold ? "text-destructive" : "text-muted-foreground"
             )}>
               {editedTitle.length} / {titleLimit} znaków
             </p>
@@ -223,8 +223,8 @@ export const AdResultMain = React.memo(function AdResultMain({
               className={cn(
                 "gap-2 px-3 py-1.5 rounded-md transition-all duration-200",
                 isEditingDescription
-                  ? "bg-green-50 text-green-600 hover:bg-green-100 dark:bg-green-950 dark:text-green-400 dark:hover:bg-green-900"
-                  : "bg-gray-100 dark:bg-gray-800 hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-orange-950 dark:hover:text-orange-400"
+                  ? "bg-success/10 text-success hover:bg-success/20"
+                  : "bg-muted hover:bg-primary/10 hover:text-primary"
               )}
               title={isEditingDescription ? "Zatwierdź zmiany" : "Edytuj"}
             >
@@ -241,9 +241,9 @@ export const AdResultMain = React.memo(function AdResultMain({
               size="sm"
               onClick={handleCopyDescription}
               className={cn(
-                "gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-md transition-all duration-200",
-                "hover:bg-orange-50 hover:text-orange-600 hover:border-orange-200 dark:hover:bg-orange-950 dark:hover:text-orange-400",
-                copiedDescription && "bg-green-50 text-green-600 dark:bg-green-950 dark:text-green-400"
+                "gap-2 bg-muted px-3 py-1.5 rounded-md transition-all duration-200",
+                "hover:bg-primary/10 hover:text-primary",
+                copiedDescription && "bg-success/10 text-success"
               )}
             >
               {copiedDescription ? (
@@ -273,16 +273,16 @@ export const AdResultMain = React.memo(function AdResultMain({
               rows={12}
               className={cn(
                 "text-base resize-y",
-                editedDescription.trim().length === 0 && "border-red-500 focus:border-red-500 focus:ring-red-500"
+                editedDescription.trim().length === 0 && "border-destructive focus:border-destructive focus:ring-destructive"
               )}
               aria-label="Edytuj opis ogłoszenia"
             />
             {editedDescription.trim().length === 0 && (
-              <p className="text-xs text-red-600 mt-1">Pole nie może być puste</p>
+              <p className="text-xs text-destructive mt-1">Pole nie może być puste</p>
             )}
             <p className={cn(
               "text-xs mt-1",
-              editedDescription.length > descWarningThreshold ? "text-red-600" : "text-gray-500 dark:text-gray-400"
+              editedDescription.length > descWarningThreshold ? "text-destructive" : "text-muted-foreground"
             )}>
               {editedDescription.length} / {descriptionLimit} znaków
             </p>

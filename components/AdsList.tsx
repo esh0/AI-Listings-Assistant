@@ -208,7 +208,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
         <div className="space-y-6">
             {/* Search Bar */}
             <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                     type="text"
                     name="search"
@@ -222,7 +222,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                     <button
                         type="button"
                         onClick={handleClearSearch}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                         aria-label="Wyczyść wyszukiwanie"
                     >
                         <X className="h-4 w-4" />
@@ -240,7 +240,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                             onClick={() => handleStatusChange(filter.value)}
                             className={
                                 currentFilter === filter.value
-                                    ? "bg-orange-500 hover:bg-orange-600"
+                                    ? "bg-primary hover:bg-primary/90"
                                     : ""
                             }
                         >
@@ -259,7 +259,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                     <Filter className="h-4 w-4 mr-2" />
                     Filtry
                     {activeFiltersCount > 0 && (
-                        <span className="ml-2 px-2 py-0.5 bg-orange-500 text-white text-xs rounded-full">
+                        <span className="ml-2 px-2 py-0.5 bg-primary text-primary-foreground text-xs rounded-full">
                             {activeFiltersCount}
                         </span>
                     )}
@@ -268,7 +268,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
 
             {/* Additional Filters (collapsible) */}
             {showFilters && (
-                <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 space-y-4 border">
+                <div className="bg-muted rounded-lg p-4 space-y-4 border">
                     {/* Platform Filter */}
                     <div>
                         <label className="text-sm font-medium mb-2 block">Platforma:</label>
@@ -281,7 +281,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                                     onClick={() => handlePlatformChange(filter.value)}
                                     className={
                                         currentPlatform === filter.value
-                                            ? "bg-orange-500 hover:bg-orange-600"
+                                            ? "bg-primary hover:bg-primary/90"
                                             : ""
                                     }
                                 >
@@ -306,7 +306,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                                     onClick={() => handleSortChange(option.value)}
                                     className={
                                         currentSort === option.value
-                                            ? "bg-orange-500 hover:bg-orange-600"
+                                            ? "bg-primary hover:bg-primary/90"
                                             : ""
                                     }
                                 >
@@ -346,8 +346,8 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
 
             {/* Ads Grid */}
             {ads.length === 0 ? (
-                <div className="text-center py-12 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800">
-                    <p className="text-gray-600 dark:text-gray-400">
+                <div className="text-center py-12 bg-card rounded-lg border border-border">
+                    <p className="text-muted-foreground">
                         {currentFilter === "all" && currentPlatform === "all"
                             ? "Nie masz jeszcze żadnych ogłoszeń"
                             : "Brak ogłoszeń spełniających wybrane kryteria"}
@@ -401,7 +401,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                                         return (
                                             <div key={pageNum} className="flex items-center gap-1">
                                                 {showEllipsis && (
-                                                    <span className="px-2 text-gray-400">…</span>
+                                                    <span className="px-2 text-muted-foreground">…</span>
                                                 )}
                                                 <Button
                                                     variant={currentPage === pageNum ? "default" : "outline"}

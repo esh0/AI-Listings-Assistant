@@ -129,7 +129,7 @@ export function AdDetailActions({ ad }: AdDetailActionsProps) {
                 <Button
                     onClick={handleMarkAsPublished}
                     disabled={isUpdating}
-                    className="bg-green-600 hover:bg-green-700 text-white"
+                    className="bg-success hover:bg-success/90 text-success-foreground"
                 >
                     <Upload className="h-4 w-4 mr-2" />
                     Oznacz jako opublikowane
@@ -140,7 +140,7 @@ export function AdDetailActions({ ad }: AdDetailActionsProps) {
                 <Button
                     onClick={handleMarkAsSold}
                     disabled={isUpdating}
-                    className="bg-orange-600 hover:bg-orange-700 text-white"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground"
                 >
                     <CheckCircle className="h-4 w-4 mr-2" />
                     Oznacz jako sprzedane
@@ -162,7 +162,7 @@ export function AdDetailActions({ ad }: AdDetailActionsProps) {
                 onClick={handleDelete}
                 disabled={isUpdating}
                 variant="outline"
-                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                className="text-destructive hover:text-destructive/80 hover:bg-destructive/10"
             >
                 <Trash2 className="h-4 w-4 mr-2" />
                 Usuń

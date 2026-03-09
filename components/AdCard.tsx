@@ -40,10 +40,10 @@ const STATUS_LABELS: Record<AdStatus, string> = {
 };
 
 const STATUS_COLORS: Record<AdStatus, string> = {
-    DRAFT: "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300",
-    PUBLISHED: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400",
-    SOLD: "bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-400",
-    ARCHIVED: "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400",
+    DRAFT: "bg-muted text-muted-foreground",
+    PUBLISHED: "bg-success/10 text-success",
+    SOLD: "bg-primary/10 text-primary",
+    ARCHIVED: "bg-muted text-muted-foreground",
 };
 
 const PLATFORM_ICONS = {
@@ -123,8 +123,8 @@ export function AdCard({
         >
             <div className="flex flex-col sm:flex-row gap-4">
                 {/* Thumbnail */}
-                <div className="w-full sm:w-36 h-36 bg-gray-100 dark:bg-gray-800 flex-shrink-0">
-                    <div className="w-full h-full overflow-hidden rounded flex items-center justify-center bg-white dark:bg-gray-900">
+                <div className="w-full sm:w-36 h-36 bg-muted flex-shrink-0">
+                    <div className="w-full h-full overflow-hidden rounded flex items-center justify-center bg-card">
                         <img
                             src={thumbnailUrl}
                             alt={ad.title}
@@ -142,7 +142,7 @@ export function AdCard({
                             <h3 className="text-lg font-semibold text-foreground line-clamp-2 flex-1">
                                 {ad.title}
                             </h3>
-                            <span className="text-xs text-gray-500 dark:text-gray-400 flex-shrink-0">
+                            <span className="text-xs text-muted-foreground flex-shrink-0">
                                 {new Date(ad.createdAt).toLocaleDateString("pl-PL")}
                             </span>
                         </div>
@@ -166,7 +166,7 @@ export function AdCard({
                     </div>
 
                     <div className="flex items-end gap-4 flex-1">
-                        <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-3 flex-1">
+                        <p className="text-sm text-muted-foreground line-clamp-3 flex-1">
                             {ad.description}
                         </p>
 
@@ -208,7 +208,7 @@ export function AdCard({
                                         e.stopPropagation();
                                         onMarkAsPublished(ad.id);
                                     }}
-                                    className="text-green-600 hover:text-green-700 hover:bg-green-50 dark:hover:bg-green-950"
+                                    className="text-success hover:text-success/80 hover:bg-success/10"
                                     title={showTooltips ? "Oznacz jako opublikowane" : undefined}
                                     aria-label="Oznacz jako opublikowane"
                                 >
@@ -223,7 +223,7 @@ export function AdCard({
                                         e.stopPropagation();
                                         onMarkAsSold(ad.id);
                                     }}
-                                    className="text-orange-600 hover:text-orange-700 hover:bg-orange-50 dark:hover:bg-orange-950"
+                                    className="text-primary hover:text-primary/80 hover:bg-primary/10"
                                     title={showTooltips ? "Oznacz jako sprzedane" : undefined}
                                     aria-label="Oznacz jako sprzedane"
                                 >
@@ -240,7 +240,7 @@ export function AdCard({
                                     }}
                                     disabled={isDeleting}
                                     className={cn(
-                                        "text-red-600 hover:text-red-700 hover:bg-red-50",
+                                        "text-destructive hover:text-destructive/80 hover:bg-destructive/10",
                                         isDeleting && "opacity-50 cursor-not-allowed"
                                     )}
                                     title={showTooltips ? "Usuń ogłoszenie" : undefined}

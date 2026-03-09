@@ -50,12 +50,12 @@ export default async function DashboardPage() {
                     <h1 className="text-3xl font-bold text-foreground">
                         Pulpit
                     </h1>
-                    <p className="text-gray-600 dark:text-gray-400 mt-1">
+                    <p className="text-muted-foreground mt-1">
                         Witaj ponownie, {session.user.name || "User"}!
                     </p>
                 </div>
                 <Link href="/dashboard/new">
-                    <Button className="bg-orange-500 hover:bg-orange-600">
+                    <Button className="bg-primary hover:bg-primary/90">
                         <Plus className="h-4 w-4 mr-2" />
                         Nowe ogłoszenie
                     </Button>

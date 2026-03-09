@@ -109,7 +109,7 @@ export function ProductParameters({
                             value="ai_suggest"
                             checked={priceType === "ai_suggest"}
                             onChange={(e) => onPriceTypeChange(e.target.value as PriceType)}
-                            className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                            className="mt-0.5 h-4 w-4 border-input accent-primary focus:ring-2 focus:ring-ring focus:ring-offset-2"
                         />
                         <div className="flex-1">
                             <span className="text-sm font-medium group-hover:text-foreground">
@@ -129,7 +129,7 @@ export function ProductParameters({
                                 value="user_provided"
                                 checked={priceType === "user_provided"}
                                 onChange={(e) => onPriceTypeChange(e.target.value as PriceType)}
-                                className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                                className="mt-0.5 h-4 w-4 border-input accent-primary focus:ring-2 focus:ring-ring focus:ring-offset-2"
                             />
                             <div className="flex-1">
                                 <span className="text-sm font-medium group-hover:text-foreground">
@@ -172,7 +172,7 @@ export function ProductParameters({
                             value="free"
                             checked={priceType === "free"}
                             onChange={(e) => onPriceTypeChange(e.target.value as PriceType)}
-                            className="mt-0.5 h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                            className="mt-0.5 h-4 w-4 border-input accent-primary focus:ring-2 focus:ring-ring focus:ring-offset-2"
                         />
                         <div className="flex-1">
                             <span className="text-sm font-medium group-hover:text-foreground">
@@ -198,7 +198,7 @@ export function ProductParameters({
                                 type="checkbox"
                                 checked={delivery.includes(value)}
                                 onChange={() => handleDeliveryToggle(value)}
-                                className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                className="h-4 w-4 rounded border-input text-primary focus:ring-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                                 aria-label={label}
                             />
                             <span className="text-sm group-hover:text-foreground">{label}</span>
@@ -260,7 +260,7 @@ export function NotesAndCTA({
                 <Button
                     type="button"
                     size="lg"
-                    className="w-full h-14 text-lg font-bold bg-orange-500 hover:bg-orange-600 text-white shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                    className="w-full h-14 text-lg font-bold bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
                     onClick={onSubmit}
                     disabled={isDisabled}
                     aria-label="Generuj ogłoszenie sprzedażowe"
@@ -274,7 +274,7 @@ export function NotesAndCTA({
                         <p className="mb-1">Wykorzystałeś wszystkie kredyty w tym miesiącu.</p>
                         <Link
                             href="/pricing"
-                            className="text-orange-600 dark:text-orange-400 font-medium hover:underline"
+                            className="text-primary font-medium hover:underline"
                         >
                             Zmień plan lub dokup kredyty →
                         </Link>

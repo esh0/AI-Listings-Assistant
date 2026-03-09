@@ -46,12 +46,12 @@ export function RecentAdsList({ ads }: RecentAdsListProps) {
             </div>
 
             {ads.length === 0 ? (
-                <div className="text-center py-12 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800">
-                    <p className="text-gray-600 dark:text-gray-400 mb-4">
+                <div className="text-center py-12 bg-card rounded-lg border border-border">
+                    <p className="text-muted-foreground mb-4">
                         Nie masz jeszcze żadnych ogłoszeń
                     </p>
                     <Link href="/dashboard/new">
-                        <Button className="bg-orange-500 hover:bg-orange-600">
+                        <Button className="bg-primary hover:bg-primary/90">
                             <Plus className="h-4 w-4 mr-2" />
                             Utwórz pierwsze ogłoszenie
                         </Button>

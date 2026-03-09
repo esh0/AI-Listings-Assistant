@@ -191,19 +191,19 @@ export default function PricingPage() {
                                 key={plan.key}
                                 className={`relative flex flex-col p-6 ${
                                     plan.highlighted
-                                        ? "border-orange-500 border-2 shadow-lg"
+                                        ? "border-primary border-2 shadow-lg"
                                         : ""
                                 }`}
                             >
                                 {plan.highlighted && "badge" in plan && (
-                                    <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-orange-500 text-white border-0">
+                                    <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground border-0">
                                         {plan.badge}
                                     </Badge>
                                 )}
 
                                 <div className="space-y-4 flex-1">
                                     <div className="flex items-center gap-2">
-                                        <Icon className="h-5 w-5 text-orange-500" />
+                                        <Icon className="h-5 w-5 text-primary" />
                                         <h3 className="text-xl font-bold">{plan.name}</h3>
                                     </div>
 
@@ -217,7 +217,7 @@ export default function PricingPage() {
                                     <ul className="space-y-2">
                                         {plan.features.map((feature) => (
                                             <li key={feature} className="flex items-start gap-2 text-sm">
-                                                <Check className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                                                <Check className="h-4 w-4 text-success mt-0.5 flex-shrink-0" />
                                                 <span>{feature}</span>
                                             </li>
                                         ))}
@@ -242,7 +242,7 @@ export default function PricingPage() {
                                         <Button
                                             className={`w-full ${
                                                 plan.highlighted
-                                                    ? "bg-orange-500 hover:bg-orange-600 text-white"
+                                                    ? "bg-primary hover:bg-primary/90 text-primary-foreground"
                                                     : ""
                                             }`}
                                             onClick={() => isFreePlan && !isAuthenticated

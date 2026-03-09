@@ -102,17 +102,17 @@ export function PendingAdHandler() {
 
     return (
         <Alert className={isError
-            ? "mb-6 bg-red-50 dark:bg-red-950 border-red-200 dark:border-red-800"
-            : "mb-6 bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800"
+            ? "mb-6 bg-destructive/10 border-destructive/50"
+            : "mb-6 bg-success/10 border-success/50"
         }>
             {isError ? (
-                <XCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
+                <XCircle className="h-4 w-4 text-destructive" />
             ) : (
-                <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
+                <CheckCircle className="h-4 w-4 text-success" />
             )}
             <AlertDescription className={isError
-                ? "text-red-800 dark:text-red-200"
-                : "text-green-800 dark:text-green-200"
+                ? "text-destructive"
+                : "text-success"
             }>
                 {message}
             </AlertDescription>

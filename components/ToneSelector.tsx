@@ -87,7 +87,7 @@ export function ToneSelector({ selectedTone, onToneChange }: ToneSelectorProps) 
                                 value={tone}
                                 checked={isSelected}
                                 onChange={() => onToneChange(tone)}
-                                className="h-4 w-4 border-gray-300 accent-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                                className="h-4 w-4 border-input accent-primary focus:ring-2 focus:ring-ring focus:ring-offset-2"
                             />
                             <span className="text-sm font-medium group-hover:text-foreground">
                                 {TONE_STYLE_NAMES[tone]}
@@ -103,7 +103,7 @@ export function ToneSelector({ selectedTone, onToneChange }: ToneSelectorProps) 
                 aria-live="polite"
             >
                 <p>{TONE_STYLE_DESCRIPTIONS[selectedTone]}</p>
-                <p className="text-blue-600 dark:text-blue-400 font-medium">
+                <p className="text-primary font-medium">
                     {TONE_RECOMMENDATIONS[selectedTone]}
                 </p>
             </div>

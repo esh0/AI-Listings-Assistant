@@ -75,7 +75,7 @@ export const AdResultMeta: React.FC<AdResultMetaProps> = ({
             size="sm"
             onClick={onEdit}
             aria-label="Popraw parametry"
-            className="gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-md transition-all duration-200 hover:bg-orange-50 hover:text-orange-600 hover:border-orange-200 dark:hover:bg-orange-950 dark:hover:text-orange-400"
+            className="gap-2 bg-muted px-3 py-1.5 rounded-md transition-all duration-200 hover:bg-primary/10 hover:text-primary"
           >
             <Pencil className="h-4 w-4" />
             Popraw
@@ -84,34 +84,34 @@ export const AdResultMeta: React.FC<AdResultMetaProps> = ({
       >
         <div className="space-y-3 text-sm">
           <div className="flex justify-between">
-            <span className="text-gray-500 dark:text-gray-500">Platforma:</span>
+            <span className="text-muted-foreground">Platforma:</span>
             <span className="font-medium text-foreground">{PLATFORM_NAMES[platform]}</span>
           </div>
 
           {productName && (
             <div className="flex justify-between">
-              <span className="text-gray-500 dark:text-gray-500">Nazwa:</span>
+              <span className="text-muted-foreground">Nazwa:</span>
               <span className="font-medium text-foreground">{productName}</span>
             </div>
           )}
 
           <div className="flex justify-between">
-            <span className="text-gray-500 dark:text-gray-500">Stan:</span>
+            <span className="text-muted-foreground">Stan:</span>
             <span className="font-medium text-foreground">{CONDITION_NAMES[condition]}</span>
           </div>
 
           <div className="flex justify-between">
-            <span className="text-gray-500 dark:text-gray-500">Cena:</span>
+            <span className="text-muted-foreground">Cena:</span>
             <span className="font-medium text-foreground">{getPriceDisplay()}</span>
           </div>
 
           <div className="flex justify-between">
-            <span className="text-gray-500 dark:text-gray-500">Dostawa:</span>
+            <span className="text-muted-foreground">Dostawa:</span>
             <span className="font-medium text-foreground text-right">{delivery}</span>
           </div>
 
           <div className="flex justify-between">
-            <span className="text-gray-500 dark:text-gray-500">Styl:</span>
+            <span className="text-muted-foreground">Styl:</span>
             <span className="font-medium text-foreground">{TONE_STYLE_NAMES[selectedTone]}</span>
           </div>
         </div>
@@ -155,14 +155,14 @@ export const AdResultMeta: React.FC<AdResultMetaProps> = ({
                     {image.isValid ? (
                       <Badge
                         variant="outline"
-                        className="bg-green-50/80 text-green-600 border-green-200/80 dark:bg-green-950/50 dark:text-green-400 dark:border-green-800"
+                        className="bg-success/10 text-success border-success/30"
                       >
                         OK
                       </Badge>
                     ) : (
                       <Badge
                         variant="outline"
-                        className="bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-950/50 dark:text-yellow-400 dark:border-yellow-800"
+                        className="bg-warning/10 text-warning border-warning/30"
                       >
                         Uwaga
                       </Badge>

@@ -21,12 +21,12 @@ export const PriceCard = React.memo(function PriceCard({
       {isFree ? (
         // Free version with green styling
         <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-50">
-            <Gift className="h-6 w-6 text-green-600" />
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-success/10">
+            <Gift className="h-6 w-6 text-success" />
           </div>
           <div>
-            <p className="text-2xl font-bold text-green-600">Za darmo</p>
-            <p className="text-sm text-gray-500">
+            <p className="text-2xl font-bold text-success">Za darmo</p>
+            <p className="text-sm text-muted-foreground">
               Przedmiot oddawany bezpłatnie
             </p>
           </div>
@@ -37,25 +37,25 @@ export const PriceCard = React.memo(function PriceCard({
           <div className="flex flex-wrap items-center gap-3">
             <Badge
               variant="outline"
-              className="bg-orange-50 text-orange-600 border-orange-200 text-lg font-semibold px-4 py-2 hover:scale-105 transition-transform"
+              className="bg-primary/10 text-primary border-primary/30 text-lg font-semibold px-4 py-2 hover:scale-105 transition-transform"
             >
               {price.min} zł
             </Badge>
-            <span className="text-gray-400">-</span>
+            <span className="text-muted-foreground">-</span>
             <Badge
               variant="outline"
-              className="bg-orange-50 text-orange-600 border-orange-200 text-lg font-semibold px-4 py-2 hover:scale-105 transition-transform"
+              className="bg-primary/10 text-primary border-primary/30 text-lg font-semibold px-4 py-2 hover:scale-105 transition-transform"
             >
               {price.max} zł
             </Badge>
           </div>
           {price.reason && (
-            <p className="text-sm text-gray-500">{price.reason}</p>
+            <p className="text-sm text-muted-foreground">{price.reason}</p>
           )}
         </div>
       ) : (
         // Fallback when no price data available
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-muted-foreground">
           Brak sugerowanej ceny dla tego ogłoszenia.
         </p>
       )}

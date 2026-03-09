@@ -16,29 +16,29 @@ export function StatsCards({ stats }: StatsCardsProps) {
             title: "Wszystkie ogłoszenia",
             value: stats.total,
             icon: FileText,
-            color: "text-blue-600 dark:text-blue-400",
-            bgColor: "bg-blue-50 dark:bg-blue-950",
+            color: "text-primary",
+            bgColor: "bg-primary/10",
         },
         {
             title: "Wersje robocze",
             value: stats.drafts,
             icon: Edit,
-            color: "text-gray-600 dark:text-gray-400",
-            bgColor: "bg-gray-50 dark:bg-gray-800",
+            color: "text-muted-foreground",
+            bgColor: "bg-muted",
         },
         {
             title: "Opublikowane",
             value: stats.published,
             icon: CheckCircle,
-            color: "text-green-600 dark:text-green-400",
-            bgColor: "bg-green-50 dark:bg-green-950",
+            color: "text-success",
+            bgColor: "bg-success/10",
         },
         {
             title: "Sprzedane",
             value: stats.sold,
             icon: DollarSign,
-            color: "text-orange-600 dark:text-orange-400",
-            bgColor: "bg-orange-50 dark:bg-orange-950",
+            color: "text-primary",
+            bgColor: "bg-primary/10",
         },
     ];
 
@@ -56,7 +56,7 @@ export function StatsCards({ stats }: StatsCardsProps) {
                                 <Icon className={`h-6 w-6 ${card.color}`} />
                             </div>
                             <div>
-                                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                                <p className="text-sm font-medium text-muted-foreground">
                                     {card.title}
                                 </p>
                                 <p className="text-lg font-semibold text-foreground mt-1">

@@ -378,7 +378,7 @@ export function AdGeneratorForm({ onResultChange }: { onResultChange?: (hasResul
                         <h1 className="text-2xl font-bold text-foreground">
                             Nowe ogłoszenie
                         </h1>
-                        <p className="text-gray-600 dark:text-gray-400 mt-1">
+                        <p className="text-muted-foreground mt-1">
                             Wgraj zdjęcia i wygeneruj profesjonalne ogłoszenie
                         </p>
                     </div>
@@ -492,7 +492,7 @@ export function AdGeneratorForm({ onResultChange }: { onResultChange?: (hasResul
                                         size="lg"
                                         onClick={handleRetry}
                                         aria-label="Popraw ogłoszenie"
-                                        className="bg-blue-500 hover:bg-blue-600 text-white h-14 text-lg font-bold transition-colors shadow-lg hover:shadow-xl"
+                                        className="bg-secondary hover:bg-secondary/80 text-secondary-foreground h-14 text-lg font-bold transition-colors shadow-lg hover:shadow-xl"
                                     >
                                         <ArrowLeft className="h-5 w-5 mr-2" aria-hidden="true" />
                                         Popraw
@@ -501,7 +501,7 @@ export function AdGeneratorForm({ onResultChange }: { onResultChange?: (hasResul
                                         size="lg"
                                         onClick={handleReset}
                                         aria-label="Stwórz nowe ogłoszenie"
-                                        className="bg-orange-500 hover:bg-orange-600 text-white h-14 text-lg font-bold transition-colors shadow-lg hover:shadow-xl"
+                                        className="bg-primary hover:bg-primary/90 text-primary-foreground h-14 text-lg font-bold transition-colors shadow-lg hover:shadow-xl"
                                     >
                                         <Plus className="h-5 w-5 mr-2" aria-hidden="true" />
                                         Nowe ogłoszenie
@@ -515,7 +515,7 @@ export function AdGeneratorForm({ onResultChange }: { onResultChange?: (hasResul
                                             onClick={handleSave}
                                             disabled={!canSave}
                                             aria-label="Zapisz ogłoszenie"
-                                            className="bg-green-500 hover:bg-green-600 text-white h-14 text-lg font-bold transition-colors shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                                            className="bg-success hover:bg-success/90 text-success-foreground h-14 text-lg font-bold transition-colors shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
                                             <Check className="h-5 w-5 mr-2" aria-hidden="true" />
                                             {isSaving ? "Zapisywanie…" : "Zapisz"}
@@ -526,7 +526,7 @@ export function AdGeneratorForm({ onResultChange }: { onResultChange?: (hasResul
                                         onClick={handleReset}
                                         disabled={isSaving}
                                         aria-label="Zacznij od nowa"
-                                        className="bg-orange-500 hover:bg-orange-600 text-white h-14 text-lg font-bold transition-colors shadow-lg hover:shadow-xl disabled:opacity-50"
+                                        className="bg-primary hover:bg-primary/90 text-primary-foreground h-14 text-lg font-bold transition-colors shadow-lg hover:shadow-xl disabled:opacity-50"
                                     >
                                         <RotateCcw className="h-5 w-5 mr-2" aria-hidden="true" />
                                         {status === "authenticated" ? "Zapisz i stwórz następne" : "Nowe ogłoszenie"}

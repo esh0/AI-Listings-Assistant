@@ -87,7 +87,7 @@ export function SoftWallModal({ adData, mode = "save", isVisible, onClose }: Sof
                 {/* Close button */}
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                    className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"
                     aria-label="Close"
                 >
                     <X className="h-5 w-5" />
@@ -95,8 +95,8 @@ export function SoftWallModal({ adData, mode = "save", isVisible, onClose }: Sof
 
                 {/* Icon */}
                 <div className="flex justify-center mb-6">
-                    <div className="p-4 rounded-full bg-orange-50 dark:bg-orange-950">
-                        <Save className="h-8 w-8 text-orange-600 dark:text-orange-400" />
+                    <div className="p-4 rounded-full bg-primary/10">
+                        <Save className="h-8 w-8 text-primary" />
                     </div>
                 </div>
 
@@ -108,7 +108,7 @@ export function SoftWallModal({ adData, mode = "save", isVisible, onClose }: Sof
                             : "Zapisz swoje ogłoszenie"
                         }
                     </h2>
-                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                    <p className="text-muted-foreground leading-relaxed">
                         {isLimitMode
                             ? "Zarejestruj się za darmo i otrzymaj 5 generacji miesięcznie. To zajmie tylko chwilę!"
                             : "Zaloguj się, aby zapisać to ogłoszenie w swoim panelu. Będziesz mógł je edytować, śledzić status i zarządzać wszystkimi ogłoszeniami w jednym miejscu."
@@ -117,18 +117,18 @@ export function SoftWallModal({ adData, mode = "save", isVisible, onClose }: Sof
                 </div>
 
                 {/* Benefits */}
-                <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 mb-6">
-                    <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                <div className="bg-muted rounded-lg p-4 mb-6">
+                    <ul className="space-y-2 text-sm text-foreground">
                         <li className="flex items-start gap-2">
-                            <span className="text-green-600 dark:text-green-400 mt-0.5">✓</span>
+                            <span className="text-success mt-0.5">✓</span>
                             <span>Zarządzaj wszystkimi ogłoszeniami w jednym miejscu</span>
                         </li>
                         <li className="flex items-start gap-2">
-                            <span className="text-green-600 dark:text-green-400 mt-0.5">✓</span>
+                            <span className="text-success mt-0.5">✓</span>
                             <span>Edytuj i aktualizuj ogłoszenia w dowolnym momencie</span>
                         </li>
                         <li className="flex items-start gap-2">
-                            <span className="text-green-600 dark:text-green-400 mt-0.5">✓</span>
+                            <span className="text-success mt-0.5">✓</span>
                             <span>Śledź status: wersje robocze, opublikowane, sprzedane</span>
                         </li>
                     </ul>
@@ -139,7 +139,7 @@ export function SoftWallModal({ adData, mode = "save", isVisible, onClose }: Sof
                     <Button
                         onClick={handleSignIn}
                         disabled={isSaving}
-                        className="w-full h-12 bg-orange-500 hover:bg-orange-600 text-white font-semibold"
+                        className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
                     >
                         <LogIn className="h-5 w-5 mr-2" />
                         {isSaving
@@ -161,7 +161,7 @@ export function SoftWallModal({ adData, mode = "save", isVisible, onClose }: Sof
                 </div>
 
                 {/* Privacy note */}
-                <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-6">
+                <p className="text-xs text-muted-foreground text-center mt-6">
                     Logowanie przez Google. Nie wysyłamy spamu i nie udostępniamy Twoich danych.
                 </p>
             </Card>

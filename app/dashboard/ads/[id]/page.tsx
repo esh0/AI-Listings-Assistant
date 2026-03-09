@@ -47,10 +47,10 @@ export default async function AdDetailPage(props: { params: Params }) {
     };
 
     const STATUS_COLORS: Record<string, string> = {
-        DRAFT: "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300",
-        PUBLISHED: "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400",
-        SOLD: "bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-400",
-        ARCHIVED: "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400",
+        DRAFT: "bg-muted text-muted-foreground",
+        PUBLISHED: "bg-success/10 text-success",
+        SOLD: "bg-primary/10 text-primary",
+        ARCHIVED: "bg-muted text-muted-foreground",
     };
 
     return (
@@ -86,7 +86,7 @@ export default async function AdDetailPage(props: { params: Params }) {
                     {/* Description */}
                     <Card className="p-6">
                         <h2 className="text-xl font-bold mb-4">Opis</h2>
-                        <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+                        <p className="text-foreground whitespace-pre-wrap">
                             {ad.description}
                         </p>
                     </Card>
@@ -99,7 +99,7 @@ export default async function AdDetailPage(props: { params: Params }) {
                                 {images.map((img: any, idx: number) => (
                                     <div
                                         key={idx}
-                                        className="relative aspect-square rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800"
+                                        className="relative aspect-square rounded-lg overflow-hidden bg-muted"
                                     >
                                         <img
                                             src={img.url}
@@ -120,7 +120,7 @@ export default async function AdDetailPage(props: { params: Params }) {
                     {/* Price */}
                     <Card className="p-6">
                         <h3 className="text-lg font-bold mb-3">Cena</h3>
-                        <p className="text-2xl font-bold text-orange-600">
+                        <p className="text-2xl font-bold text-primary">
                             {ad.soldPrice
                                 ? `${ad.soldPrice} zł (sprzedane)`
                                 : ad.priceMin && ad.priceMax
@@ -136,7 +136,7 @@ export default async function AdDetailPage(props: { params: Params }) {
                         <h3 className="text-lg font-bold mb-4">Szczegóły</h3>
                         <div className="space-y-3 text-sm">
                             <div>
-                                <span className="text-gray-500 dark:text-gray-400">
+                                <span className="text-muted-foreground">
                                     Utworzono:
                                 </span>
                                 <br />
@@ -145,7 +145,7 @@ export default async function AdDetailPage(props: { params: Params }) {
                                 </span>
                             </div>
                             <div>
-                                <span className="text-gray-500 dark:text-gray-400">
+                                <span className="text-muted-foreground">
                                     Zaktualizowano:
                                 </span>
                                 <br />
@@ -155,7 +155,7 @@ export default async function AdDetailPage(props: { params: Params }) {
                             </div>
                             {parameters?.condition && (
                                 <div>
-                                    <span className="text-gray-500 dark:text-gray-400">
+                                    <span className="text-muted-foreground">
                                         Stan:
                                     </span>
                                     <br />
@@ -164,7 +164,7 @@ export default async function AdDetailPage(props: { params: Params }) {
                             )}
                             {parameters?.tone && (
                                 <div>
-                                    <span className="text-gray-500 dark:text-gray-400">
+                                    <span className="text-muted-foreground">
                                         Styl opisu:
                                     </span>
                                     <br />
@@ -175,7 +175,7 @@ export default async function AdDetailPage(props: { params: Params }) {
                             )}
                             {parameters?.delivery && Array.isArray(parameters.delivery) && (
                                 <div>
-                                    <span className="text-gray-500 dark:text-gray-400">
+                                    <span className="text-muted-foreground">
                                         Dostawa:
                                     </span>
                                     <br />

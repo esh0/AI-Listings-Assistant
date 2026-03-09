@@ -110,7 +110,7 @@ export function Sidebar({ user }: SidebarProps) {
     const sidebarContent = (
         <div className="flex h-full flex-col">
             {/* Header */}
-            <div className="border-b border-gray-200 dark:border-gray-700 p-6">
+            <div className="border-b border-border p-6">
                 <Link href="/dashboard/new" className="text-xl font-bold text-foreground">
                     Marketplace Assistant
                 </Link>
@@ -130,8 +130,8 @@ export function Sidebar({ user }: SidebarProps) {
                             className={cn(
                                 "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors",
                                 isActive
-                                    ? "bg-orange-50 text-orange-600 dark:bg-orange-950 dark:text-orange-400"
-                                    : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                                    ? "bg-primary/10 text-primary"
+                                    : "text-foreground hover:bg-muted"
                             )}
                         >
                             <Icon className="h-5 w-5" />
@@ -142,13 +142,13 @@ export function Sidebar({ user }: SidebarProps) {
             </nav>
 
             {/* User Info & Credits */}
-            <div className="border-t border-gray-200 dark:border-gray-700 p-4 space-y-4">
+            <div className="border-t border-border p-4 space-y-4">
                 {/* Credits Display */}
-                <div className="px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-lg space-y-2">
+                <div className="px-4 py-3 bg-muted rounded-lg space-y-2">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                            <CreditCard className="h-5 w-5 text-gray-500" />
-                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                            <CreditCard className="h-5 w-5 text-muted-foreground" />
+                            <span className="text-sm font-medium text-foreground">
                                 Kredyty
                             </span>
                         </div>
@@ -160,7 +160,7 @@ export function Sidebar({ user }: SidebarProps) {
                     {boost > 0 && (
                         <div className="flex items-center justify-between text-xs text-muted-foreground">
                             <span>Dostawkowe</span>
-                            <span className="font-medium text-orange-600 dark:text-orange-400">+{boost}</span>
+                            <span className="font-medium text-primary">+{boost}</span>
                         </div>
                     )}
                     {getResetLabel() && (
@@ -170,7 +170,7 @@ export function Sidebar({ user }: SidebarProps) {
                     )}
                     <Link
                         href="/pricing"
-                        className="block text-xs text-center text-orange-600 dark:text-orange-400 font-medium hover:underline pt-1"
+                        className="block text-xs text-center text-primary font-medium hover:underline pt-1"
                     >
                         {isPaid ? "Zmień plan lub dokup kredyty" : "Zmień plan lub dokup kredyty"}
                     </Link>
@@ -186,7 +186,7 @@ export function Sidebar({ user }: SidebarProps) {
                 </div>
 
                 {/* User Info */}
-                <div className="px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                <div className="px-4 py-3 bg-muted rounded-lg">
                     <div className="flex items-center gap-3 mb-2">
                         {user.image ? (
                             <img
@@ -197,15 +197,15 @@ export function Sidebar({ user }: SidebarProps) {
                                 height={40}
                             />
                         ) : (
-                            <div className="h-10 w-10 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold">
+                            <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold">
                                 {user.name?.charAt(0).toUpperCase() || "U"}
                             </div>
                         )}
                         <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                            <p className="text-sm font-medium text-foreground truncate">
                                 {user.name || "User"}
                             </p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                            <p className="text-xs text-muted-foreground truncate">
                                 {user.email}
                             </p>
                         </div>
@@ -236,7 +236,7 @@ export function Sidebar({ user }: SidebarProps) {
             {/* Mobile Menu Button */}
             <button
                 onClick={() => setIsMobileOpen(!isMobileOpen)}
-                className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white dark:bg-gray-900 rounded-lg shadow-lg"
+                className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-card rounded-lg shadow-lg"
                 aria-label="Toggle menu"
             >
                 {isMobileOpen ? (
@@ -258,7 +258,7 @@ export function Sidebar({ user }: SidebarProps) {
             {/* Sidebar - Mobile (overlay) */}
             <aside
                 className={cn(
-                    "lg:hidden fixed inset-y-0 left-0 z-40 w-72 bg-white dark:bg-gray-900 transform transition-transform duration-300",
+                    "lg:hidden fixed inset-y-0 left-0 z-40 w-72 bg-card transform transition-transform duration-300",
                     isMobileOpen ? "translate-x-0" : "-translate-x-full"
                 )}
             >
@@ -266,7 +266,7 @@ export function Sidebar({ user }: SidebarProps) {
             </aside>
 
             {/* Sidebar - Desktop (fixed) */}
-            <aside className="hidden lg:flex lg:flex-col lg:w-72 lg:fixed lg:inset-y-0 lg:bg-white lg:dark:bg-gray-900 lg:border-r lg:border-gray-200 lg:dark:border-gray-700">
+            <aside className="hidden lg:flex lg:flex-col lg:w-72 lg:fixed lg:inset-y-0 lg:bg-card lg:border-r lg:border-border">
                 {sidebarContent}
             </aside>
         </>
