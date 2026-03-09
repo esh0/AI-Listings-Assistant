@@ -27,17 +27,23 @@ const { handlers, auth: uncachedAuth, signIn, signOut } = NextAuth({
         token.id = user.id;
         token.plan = user.plan as Plan | undefined;
         token.creditsAvailable = user.creditsAvailable;
+        token.boostCredits = user.boostCredits;
+        // creditsResetAt comes from Prisma as Date, convert to ISO string for JWT
+        const resetAt = (user as Record<string, unknown>).creditsResetAt;
+        token.creditsResetAt = resetAt instanceof Date ? resetAt.toISOString() : undefined;
       }
 
       // Refresh user data on session update
       if (trigger === "update") {
         const dbUser = await prisma.user.findUnique({
           where: { id: token.id as string },
-          select: { plan: true, creditsAvailable: true },
+          select: { plan: true, creditsAvailable: true, boostCredits: true, creditsResetAt: true },
         });
         if (dbUser) {
           token.plan = dbUser.plan as Plan | undefined;
           token.creditsAvailable = dbUser.creditsAvailable;
+          token.boostCredits = dbUser.boostCredits;
+          token.creditsResetAt = dbUser.creditsResetAt?.toISOString();
         }
       }
 
@@ -49,6 +55,8 @@ const { handlers, auth: uncachedAuth, signIn, signOut } = NextAuth({
         session.user.id = token.id as string;
         session.user.plan = token.plan as Plan | undefined;
         session.user.creditsAvailable = token.creditsAvailable as number | undefined;
+        session.user.boostCredits = token.boostCredits as number | undefined;
+        session.user.creditsResetAt = token.creditsResetAt as string | undefined;
       }
       return session;
     },

@@ -23,6 +23,8 @@ export default async function DashboardLayout({
         select: {
             plan: true,
             creditsAvailable: true,
+            boostCredits: true,
+            creditsResetAt: true,
         },
     });
 
@@ -35,6 +37,8 @@ export default async function DashboardLayout({
                     image: session.user.image,
                     plan: user?.plan || session.user.plan,
                     creditsAvailable: user?.creditsAvailable ?? session.user.creditsAvailable,
+                    boostCredits: user?.boostCredits ?? session.user.boostCredits,
+                    creditsResetAt: user?.creditsResetAt?.toISOString() ?? session.user.creditsResetAt,
                 }}
             />
             <main className="lg:pl-72">

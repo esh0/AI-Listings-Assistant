@@ -3,7 +3,7 @@ import { createHash } from "crypto";
 
 const GUEST_MAX_GENERATIONS_PER_UUID = 3;
 const GUEST_MAX_GENERATIONS_PER_IP_24H = 5;
-const GUEST_MAX_IMAGES = 1;
+const GUEST_MAX_IMAGES = 3;
 
 /**
  * Hash IP address (one-way, RODO-safe)

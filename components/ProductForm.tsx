@@ -3,6 +3,7 @@
 import React, { memo, useCallback } from "react";
 import { Send } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import Link from "next/link";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -218,16 +219,20 @@ export function ProductParameters({
 export function NotesAndCTA({
     notes,
     canSubmit,
+    hasCredits = true,
     isOffline,
     onNotesChange,
     onSubmit,
 }: {
     notes: string;
     canSubmit: boolean;
+    hasCredits?: boolean;
     isOffline: boolean;
     onNotesChange: (value: string) => void;
     onSubmit: () => void;
 }) {
+    const isDisabled = !canSubmit || isOffline || !hasCredits;
+
     return (
         <div className="flex flex-col">
             {/* Notes textarea */}
@@ -250,20 +255,31 @@ export function NotesAndCTA({
                 </p>
             </div>
 
-            {/* CTA Button - sticky */}
-            <div className="sticky bottom-0 pt-4 bg-card">
+            {/* CTA Button */}
+            <div className="pt-4">
                 <Button
                     type="button"
                     size="lg"
                     className="w-full h-14 text-lg font-bold bg-orange-500 hover:bg-orange-600 text-white shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
                     onClick={onSubmit}
-                    disabled={!canSubmit || isOffline}
+                    disabled={isDisabled}
                     aria-label="Generuj ogłoszenie sprzedażowe"
-                    title={isOffline ? "Brak połączenia z internetem" : undefined}
+                    title={isOffline ? "Brak połączenia z internetem" : !hasCredits ? "Brak kredytów" : undefined}
                 >
                     <Send className="h-5 w-5 mr-2" aria-hidden="true" />
                     {isOffline ? "Brak połączenia" : "Generuj ogłoszenie"}
                 </Button>
+                {!hasCredits && (
+                    <div className="mt-3 text-center text-sm text-muted-foreground">
+                        <p className="mb-1">Wykorzystałeś wszystkie kredyty w tym miesiącu.</p>
+                        <Link
+                            href="/pricing"
+                            className="text-orange-600 dark:text-orange-400 font-medium hover:underline"
+                        >
+                            Zmień plan lub dokup kredyty →
+                        </Link>
+                    </div>
+                )}
             </div>
         </div>
     );

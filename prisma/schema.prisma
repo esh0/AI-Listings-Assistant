@@ -55,8 +55,9 @@ model User {
   emailVerified    DateTime?
   createdAt        DateTime  @default(now())
   plan             Plan      @default(FREE)
-  creditsAvailable Int       @default(3) // FREE: 3, PREMIUM: unlimited (9999)
-  creditsResetAt   DateTime  @default(now()) // For monthly reset
+  creditsAvailable Int       @default(5)
+  creditsResetAt   DateTime  @default(now())
+  boostCredits     Int       @default(0)
 
   ads       Ad[]
   templates Template[]
@@ -115,7 +116,9 @@ model GuestUsage {
 
 enum Plan {
   FREE
-  PREMIUM
+  STARTER
+  RESELER
+  BUSINESS
 }
 
 enum AdStatus {

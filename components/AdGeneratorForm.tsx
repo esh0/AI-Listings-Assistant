@@ -38,10 +38,17 @@ const DEFAULT_CONDITION: ProductCondition = "używany, w dobrym stanie";
 const DEFAULT_DELIVERY: DeliveryOption[] = ["odbiór osobisty", "wysyłka"];
 const DEFAULT_TONE: ToneStyle = "friendly";
 const DEFAULT_PRICE_TYPE: PriceType = "ai_suggest";
+const GUEST_MAX_IMAGES = 3;
+const IMAGE_LIMITS: Record<string, number> = {
+    FREE: 3,
+    STARTER: 5,
+    RESELER: 8,
+    BUSINESS: 12,
+};
 
 export function AdGeneratorForm({ onResultChange }: { onResultChange?: (hasResult: boolean) => void }) {
     const router = useRouter();
-    const { data: session, status } = useSession();
+    const { data: session, status, update: updateSession } = useSession();
 
     // Form state
     const [images, setImages] = useState<UploadedImage[]>([]);
@@ -80,6 +87,16 @@ export function AdGeneratorForm({ onResultChange }: { onResultChange?: (hasResul
         images.length > 0 && delivery.length > 0,
         [images.length, delivery.length]
     );
+
+    // Check if authenticated user has credits
+    const userCredits = useMemo(() => {
+        if (status !== "authenticated") return null;
+        const available = session?.user?.creditsAvailable ?? 0;
+        const boost = session?.user?.boostCredits ?? 0;
+        return { available, boost, total: available + boost };
+    }, [status, session?.user?.creditsAvailable, session?.user?.boostCredits]);
+
+    const hasUserCredits = userCredits === null || userCredits.total > 0;
 
     // Detect online/offline status
     useEffect(() => {
@@ -131,10 +148,11 @@ export function AdGeneratorForm({ onResultChange }: { onResultChange?: (hasResul
     // Refresh session after successful ad generation for authenticated users
     useEffect(() => {
         if (result && result.isValid && !isLoading && status === "authenticated") {
-            // Refresh to update credits in sidebar after generation
+            // Refresh server components (sidebar) and client session (credits)
             router.refresh();
+            updateSession();
         }
-    }, [result, isLoading, status, router]);
+    }, [result, isLoading, status, router, updateSession]);
 
     const handleSave = useCallback(async () => {
         if (!result || !result.isValid || !editedTitle || !editedDescription) {
@@ -260,8 +278,11 @@ export function AdGeneratorForm({ onResultChange }: { onResultChange?: (hasResul
                 if (response.status === 429) {
                     setShowSoftWall(true);
                     return;
-                } else if (response.status === 401 || response.status === 403) {
-                    throw new Error("Brak autoryzacji. Sprawdź konfigurację API.");
+                } else if (response.status === 403) {
+                    setResult({ isValid: false, error: data.error || "Brak dostępnych kredytów. Zmień plan lub dokup kredyty." });
+                    return;
+                } else if (response.status === 401) {
+                    throw new Error("Wymagane logowanie. Zaloguj się, aby kontynuować.");
                 } else if (response.status >= 500) {
                     throw new Error("Błąd serwera. Spróbuj ponownie za chwilę.");
                 }
@@ -385,6 +406,7 @@ export function AdGeneratorForm({ onResultChange }: { onResultChange?: (hasResul
                         <UploadDropzone
                             images={images}
                             onImagesChange={setImages}
+                            maxImages={status === "authenticated" ? (IMAGE_LIMITS[session?.user?.plan ?? "FREE"] ?? 3) : GUEST_MAX_IMAGES}
                         />
                     </CardWrapper>
 
@@ -417,6 +439,7 @@ export function AdGeneratorForm({ onResultChange }: { onResultChange?: (hasResul
                         <NotesAndCTA
                             notes={notes}
                             canSubmit={canSubmit}
+                            hasCredits={hasUserCredits}
                             isOffline={isOffline}
                             onNotesChange={setNotes}
                             onSubmit={handleSubmit}

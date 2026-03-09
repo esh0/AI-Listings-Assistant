@@ -1,104 +1,139 @@
 import { prisma } from "@/lib/prisma";
 import { cache } from "react";
+import type { Plan } from "@prisma/client";
 
 /**
  * Credit limits per plan
  */
-export const CREDIT_LIMITS = {
-  FREE: 3,
-  PREMIUM: 9999, // Effectively unlimited
-} as const;
+export const CREDIT_LIMITS: Record<string, number> = {
+    FREE: 5,
+    STARTER: 30,
+    RESELER: 80,
+    BUSINESS: 200,
+};
+
+export const IMAGE_LIMITS: Record<string, number> = {
+    FREE: 3,
+    STARTER: 5,
+    RESELER: 8,
+    BUSINESS: 12,
+};
 
 /**
  * Internal function to get user data
  * Cached per-request to avoid duplicate database queries
  */
 const getUserData = cache(async (userId: string) => {
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { creditsAvailable: true, plan: true },
-  });
+    const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+            creditsAvailable: true,
+            boostCredits: true,
+            plan: true,
+        },
+    });
 
-  if (!user) {
-    throw new Error("User not found");
-  }
+    if (!user) {
+        throw new Error("User not found");
+    }
 
-  return user;
+    return user;
 });
 
 /**
- * Check if user has available credits
- * @returns true if user has credits, false otherwise
+ * Check if user has available credits (subscription + boost)
  */
 export async function hasCredits(userId: string): Promise<boolean> {
-  const user = await getUserData(userId);
-  return user.creditsAvailable > 0;
+    const user = await getUserData(userId);
+    return user.creditsAvailable > 0 || user.boostCredits > 0;
 }
 
 /**
- * Get user's available credits
+ * Get user's total available credits (subscription + boost)
  */
 export async function getAvailableCredits(userId: string): Promise<number> {
-  const user = await getUserData(userId);
-  return user.creditsAvailable;
+    const user = await getUserData(userId);
+    return user.creditsAvailable + user.boostCredits;
 }
 
 /**
- * Consume one credit for ad generation
- * Throws error if no credits available
+ * Consume one credit for ad generation.
+ * Uses subscription credits first, then boost credits.
  */
 export async function consumeCredit(userId: string): Promise<void> {
-  // Use cached user data for initial check
-  const user = await getUserData(userId);
+    const user = await getUserData(userId);
 
-  if (user.creditsAvailable <= 0) {
-    if (user.plan === "FREE") {
-      throw new Error(
-        "Wykorzystałeś wszystkie darmowe kredyty (3/miesiąc). Przejdź na plan PREMIUM dla nieograniczonego dostępu."
-      );
+    // First try subscription credits
+    if (user.creditsAvailable > 0) {
+        await prisma.user.update({
+            where: { id: userId },
+            data: { creditsAvailable: { decrement: 1 } },
+        });
+        return;
     }
-    throw new Error("Brak dostępnych kredytów.");
-  }
 
-  // Decrement credits
-  await prisma.user.update({
-    where: { id: userId },
-    data: {
-      creditsAvailable: {
-        decrement: 1,
-      },
-    },
-  });
+    // Then try boost credits
+    if (user.boostCredits > 0) {
+        await prisma.user.update({
+            where: { id: userId },
+            data: { boostCredits: { decrement: 1 } },
+        });
+        return;
+    }
+
+    // No credits available
+    if (user.plan === "FREE") {
+        throw new Error(
+            "Wykorzystałeś wszystkie darmowe kredyty (5/miesiąc). Przejdź na plan Starter dla 30 generacji miesięcznie."
+        );
+    }
+    throw new Error(
+        "Brak dostępnych kredytów. Dokup pakiet kredytów lub zmień plan na wyższy."
+    );
 }
 
 /**
- * Reset user's credits based on their plan
- * Called monthly or when upgrading plan
+ * Reset user's subscription credits based on their plan
  */
 export async function resetCredits(userId: string): Promise<void> {
-  // Use cached user data to get plan
-  const user = await getUserData(userId);
-  const newCredits = CREDIT_LIMITS[user.plan];
+    const user = await getUserData(userId);
+    const limit = CREDIT_LIMITS[user.plan] ?? CREDIT_LIMITS.FREE;
 
-  await prisma.user.update({
-    where: { id: userId },
-    data: {
-      creditsAvailable: newCredits,
-      creditsResetAt: new Date(),
-    },
-  });
+    await prisma.user.update({
+        where: { id: userId },
+        data: {
+            creditsAvailable: limit,
+            creditsResetAt: new Date(),
+        },
+    });
 }
 
 /**
- * Upgrade user to PREMIUM plan
+ * Change user's plan and reset credits accordingly
  */
-export async function upgradeToPremium(userId: string): Promise<void> {
-  await prisma.user.update({
-    where: { id: userId },
-    data: {
-      plan: "PREMIUM",
-      creditsAvailable: CREDIT_LIMITS.PREMIUM,
-      creditsResetAt: new Date(),
-    },
-  });
+export async function changePlan(userId: string, plan: string): Promise<void> {
+    const limit = CREDIT_LIMITS[plan];
+    const imageLimit = IMAGE_LIMITS[plan];
+    if (limit === undefined || imageLimit === undefined) {
+        throw new Error(`Nieznany plan: ${plan}`);
+    }
+
+    await prisma.user.update({
+        where: { id: userId },
+        data: {
+            plan: plan as Plan,
+            creditsAvailable: limit,
+            creditsResetAt: new Date(),
+        },
+    });
+}
+
+/**
+ * Add boost credits (one-time purchase, don't expire)
+ */
+export async function addBoostCredits(userId: string, amount: number): Promise<void> {
+    await prisma.user.update({
+        where: { id: userId },
+        data: { boostCredits: { increment: amount } },
+    });
 }

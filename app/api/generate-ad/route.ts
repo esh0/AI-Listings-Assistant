@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { generateAdRequestSchema } from "@/lib/schemas";
 import { generateAd } from "@/lib/openai";
 import { auth } from "@/auth";
-import { consumeCredit } from "@/lib/credits";
+import { consumeCredit, IMAGE_LIMITS } from "@/lib/credits";
 import { checkGuestLimit, consumeGuestCredit, hashIP, GUEST_MAX_IMAGES } from "@/lib/guest-tracking";
 
 export const runtime = "nodejs";
@@ -46,6 +46,19 @@ export async function POST(request: NextRequest) {
         const validatedData = validationResult.data;
 
         if (session?.user?.id) {
+            // Enforce per-tier image limit
+            const plan = session.user.plan ?? "FREE";
+            const maxImages = IMAGE_LIMITS[plan] ?? 3;
+            if (validatedData.images.length > maxImages) {
+                return NextResponse.json(
+                    {
+                        isValid: false,
+                        error: `Twój plan pozwala na maksymalnie ${maxImages} zdjęć na generację. Zmień plan na wyższy, aby przesyłać więcej.`,
+                    },
+                    { status: 400 }
+                );
+            }
+
             // Authenticated user: consume credit
             try {
                 await consumeCredit(session.user.id);

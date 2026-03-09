@@ -8,12 +8,15 @@ declare module "next-auth" {
       id: string; // Force required (default is optional)
       plan?: Plan;
       creditsAvailable?: number;
+      boostCredits?: number;
+      creditsResetAt?: string;
     } & DefaultSession["user"]; // Inherit name, email, image
   }
 
   interface User {
     plan?: Plan;
     creditsAvailable?: number;
+    boostCredits?: number;
   }
 }
 
@@ -23,5 +26,7 @@ declare module "next-auth/jwt" {
     id?: string;
     plan?: Plan;
     creditsAvailable?: number;
+    boostCredits?: number;
+    creditsResetAt?: string;
   }
 }

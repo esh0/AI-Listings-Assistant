@@ -22,18 +22,48 @@ interface SidebarProps {
         name?: string | null;
         email?: string | null;
         image?: string | null;
-        plan?: "FREE" | "PREMIUM";
+        plan?: "FREE" | "STARTER" | "RESELER" | "BUSINESS";
         creditsAvailable?: number;
+        boostCredits?: number;
+        creditsResetAt?: string;
     };
 }
+
+const PLAN_LABELS: Record<string, string> = {
+    FREE: "Free",
+    STARTER: "Starter",
+    RESELER: "Reseler",
+    BUSINESS: "Business",
+};
+
+const PLAN_CREDITS: Record<string, number> = {
+    FREE: 5,
+    STARTER: 30,
+    RESELER: 80,
+    BUSINESS: 200,
+};
 
 export function Sidebar({ user }: SidebarProps) {
     const pathname = usePathname();
     const [isMobileOpen, setIsMobileOpen] = useState(false);
 
-    const creditsDisplay = user.plan === "PREMIUM"
-        ? "∞"
-        : (user.creditsAvailable ?? 0);
+    const plan = user.plan ?? "FREE";
+    const isPaid = plan !== "FREE";
+    const credits = user.creditsAvailable ?? 0;
+    const boost = user.boostCredits ?? 0;
+    const planLimit = PLAN_CREDITS[plan] ?? 5;
+
+    // Calculate next reset date (1 month from last reset)
+    const getResetLabel = () => {
+        if (!user.creditsResetAt) return null;
+        const resetDate = new Date(user.creditsResetAt);
+        const nextReset = new Date(resetDate);
+        nextReset.setMonth(nextReset.getMonth() + 1);
+        const days = Math.max(0, Math.ceil((nextReset.getTime() - Date.now()) / (1000 * 60 * 60 * 24)));
+        if (days === 0) return "dziś";
+        if (days === 1) return "jutro";
+        return `za ${days} dni`;
+    };
 
     const navLinks = [
         {
@@ -94,23 +124,36 @@ export function Sidebar({ user }: SidebarProps) {
             {/* User Info & Credits */}
             <div className="border-t border-gray-200 dark:border-gray-700 p-4 space-y-4">
                 {/* Credits Display */}
-                <div className="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                    <div className="flex items-center gap-2">
-                        <CreditCard className="h-5 w-5 text-gray-500" />
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Kredyty
+                <div className="px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-lg space-y-2">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                            <CreditCard className="h-5 w-5 text-gray-500" />
+                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                Kredyty
+                            </span>
+                        </div>
+                        <span className="text-lg font-semibold text-foreground">
+                            {credits}
+                            <span className="text-xs font-normal text-muted-foreground">/{planLimit}</span>
                         </span>
                     </div>
-                    <Badge
-                        variant={user.plan === "PREMIUM" ? "default" : "secondary"}
-                        className={cn(
-                            user.plan === "PREMIUM"
-                                ? "bg-orange-500 hover:bg-orange-600"
-                                : ""
-                        )}
+                    {boost > 0 && (
+                        <div className="flex items-center justify-between text-xs text-muted-foreground">
+                            <span>Dostawkowe</span>
+                            <span className="font-medium text-orange-600 dark:text-orange-400">+{boost}</span>
+                        </div>
+                    )}
+                    {getResetLabel() && (
+                        <p className="text-xs text-muted-foreground">
+                            Odnowienie {getResetLabel()} ({planLimit} kredytów)
+                        </p>
+                    )}
+                    <Link
+                        href="/pricing"
+                        className="block text-xs text-center text-orange-600 dark:text-orange-400 font-medium hover:underline pt-1"
                     >
-                        {creditsDisplay}
-                    </Badge>
+                        Zmień plan lub dokup kredyty
+                    </Link>
                 </div>
 
                 {/* User Info */}
@@ -142,7 +185,7 @@ export function Sidebar({ user }: SidebarProps) {
                         variant="outline"
                         className="w-full justify-center text-xs"
                     >
-                        {user.plan === "PREMIUM" ? "Premium" : "Free"}
+                        {PLAN_LABELS[plan] || plan}
                     </Badge>
                 </div>
 

@@ -11,9 +11,11 @@ import type { UploadedImage } from "@/lib/types";
 interface UploadDropzoneProps {
     onImagesChange: (images: UploadedImage[]) => void;
     images: UploadedImage[];
+    maxImages?: number;
 }
 
-export function UploadDropzone({ onImagesChange, images }: UploadDropzoneProps) {
+export function UploadDropzone({ onImagesChange, images, maxImages }: UploadDropzoneProps) {
+    const imageLimit = maxImages ?? MAX_IMAGES;
     const [isDragging, setIsDragging] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [isCompressing, setIsCompressing] = useState(false);
@@ -29,8 +31,8 @@ export function UploadDropzone({ onImagesChange, images }: UploadDropzoneProps) 
             try {
                 for (const file of fileArray) {
                     // Check if we've reached the limit
-                    if (images.length + newImages.length >= MAX_IMAGES) {
-                        setError(`Maksymalnie ${MAX_IMAGES} zdjęć`);
+                    if (images.length + newImages.length >= imageLimit) {
+                        setError(`Maksymalnie ${imageLimit} zdjęć`);
                         break;
                     }
 
@@ -133,7 +135,7 @@ export function UploadDropzone({ onImagesChange, images }: UploadDropzoneProps) 
         [images, onImagesChange]
     );
 
-    const canAddMore = images.length < MAX_IMAGES;
+    const canAddMore = images.length < imageLimit;
 
     return (
         <div className="space-y-4">
@@ -238,7 +240,7 @@ export function UploadDropzone({ onImagesChange, images }: UploadDropzoneProps) 
                         </div>
                         <div className="flex items-center gap-2 text-xs text-muted-foreground">
                             <ImageIcon className="h-4 w-4" aria-hidden="true" />
-                            <span>JPG, PNG, WEBP • automatyczna optymalizacja • do {MAX_IMAGES} zdjęć</span>
+                            <span>JPG, PNG, WEBP • automatyczna optymalizacja • do {imageLimit} zdjęć</span>
                         </div>
                     </div>
                 </div>
@@ -248,7 +250,7 @@ export function UploadDropzone({ onImagesChange, images }: UploadDropzoneProps) 
             {images.length > 0 && (
                 <div className="flex items-center justify-between text-sm text-muted-foreground">
                     <span>
-                        {images.length} z {MAX_IMAGES} zdjęć
+                        {images.length} z {imageLimit} zdjęć
                     </span>
                     <span>
                         {formatFileSize(
