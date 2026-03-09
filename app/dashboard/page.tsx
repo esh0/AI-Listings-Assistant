@@ -18,19 +18,12 @@ export default async function DashboardPage() {
         redirect("/auth/signin");
     }
 
-    // Parallelize all database queries (stats + recent ads)
-    const [totalAds, draftAds, publishedAds, soldAds, recentAds] = await Promise.all([
-        prisma.ad.count({
+    // 2 queries instead of 5 — reduces connection pool pressure
+    const [statusCounts, recentAds] = await Promise.all([
+        prisma.ad.groupBy({
+            by: ["status"],
             where: { userId: session.user.id },
-        }),
-        prisma.ad.count({
-            where: { userId: session.user.id, status: "DRAFT" },
-        }),
-        prisma.ad.count({
-            where: { userId: session.user.id, status: "PUBLISHED" },
-        }),
-        prisma.ad.count({
-            where: { userId: session.user.id, status: "SOLD" },
+            _count: { status: true },
         }),
         prisma.ad.findMany({
             where: { userId: session.user.id },
@@ -38,6 +31,14 @@ export default async function DashboardPage() {
             take: 5,
         }),
     ]);
+
+    const countByStatus = Object.fromEntries(
+        statusCounts.map((s) => [s.status, s._count.status])
+    );
+    const totalAds = statusCounts.reduce((sum, s) => sum + s._count.status, 0);
+    const draftAds = countByStatus["DRAFT"] ?? 0;
+    const publishedAds = countByStatus["PUBLISHED"] ?? 0;
+    const soldAds = countByStatus["SOLD"] ?? 0;
 
     return (
         <div className="space-y-10">

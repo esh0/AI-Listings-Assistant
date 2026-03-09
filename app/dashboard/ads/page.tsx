@@ -74,8 +74,8 @@ export default async function AdsPage(props: { searchParams: SearchParams }) {
         orderBy.createdAt = sortDirection || "desc";
     }
 
-    // Parallelize all database queries (ads + counts)
-    const [ads, totalFilteredCount, totalCount, draftCount, publishedCount, soldCount] = await Promise.all([
+    // 3 queries instead of 6 — reduces connection pool pressure
+    const [ads, totalFilteredCount, statusCounts] = await Promise.all([
         prisma.ad.findMany({
             where,
             orderBy,
@@ -83,11 +83,20 @@ export default async function AdsPage(props: { searchParams: SearchParams }) {
             take: pageSize,
         }),
         prisma.ad.count({ where }),
-        prisma.ad.count({ where: { userId: session.user.id } }),
-        prisma.ad.count({ where: { userId: session.user.id, status: "DRAFT" } }),
-        prisma.ad.count({ where: { userId: session.user.id, status: "PUBLISHED" } }),
-        prisma.ad.count({ where: { userId: session.user.id, status: "SOLD" } }),
+        prisma.ad.groupBy({
+            by: ["status"],
+            where: { userId: session.user.id },
+            _count: { status: true },
+        }),
     ]);
+
+    const countByStatus = Object.fromEntries(
+        statusCounts.map((s) => [s.status, s._count.status])
+    );
+    const totalCount = statusCounts.reduce((sum, s) => sum + s._count.status, 0);
+    const draftCount = countByStatus["DRAFT"] ?? 0;
+    const publishedCount = countByStatus["PUBLISHED"] ?? 0;
+    const soldCount = countByStatus["SOLD"] ?? 0;
 
     const totalPages = Math.ceil(totalFilteredCount / pageSize);
 
