@@ -72,8 +72,13 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
     const currentPlatform = searchParams.get("platform") || "all";
     const currentSort = searchParams.get("sort") || "createdAt-desc";
 
-    const updateParams = useCallback((updates: Record<string, string | null>) => {
+    const updateParams = useCallback((updates: Record<string, string | null>, resetPage = true) => {
         const params = new URLSearchParams(searchParams.toString());
+
+        // Reset to page 1 when filters change (unless explicitly updating page)
+        if (resetPage && !("page" in updates)) {
+            params.delete("page");
+        }
 
         Object.entries(updates).forEach(([key, value]) => {
             if (value === null || value === "all") {
@@ -112,7 +117,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
     };
 
     const handlePageChange = (newPage: number) => {
-        updateParams({ page: newPage.toString() });
+        updateParams({ page: newPage.toString() }, false);
         const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
     };
