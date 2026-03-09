@@ -10,6 +10,13 @@ interface StatsCardsProps {
     };
 }
 
+const STAGGER_CLASSES = [
+    "animate-stagger-1",
+    "animate-stagger-2",
+    "animate-stagger-3",
+    "animate-stagger-4",
+] as const;
+
 export function StatsCards({ stats }: StatsCardsProps) {
     const cards = [
         {
@@ -44,26 +51,24 @@ export function StatsCards({ stats }: StatsCardsProps) {
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {cards.map((card) => {
+            {cards.map((card, index) => {
                 const Icon = card.icon;
 
                 return (
-                    <Card key={card.title} className="p-4">
-                        <div className="flex items-center gap-4">
+                    <Card key={card.title} className={`p-5 ${STAGGER_CLASSES[index]}`}>
+                        <div className="flex items-center justify-between mb-3">
                             <div
-                                className={`p-3 rounded-lg ${card.bgColor}`}
+                                className={`p-2.5 rounded-lg ${card.bgColor}`}
                             >
-                                <Icon className={`h-6 w-6 ${card.color}`} />
-                            </div>
-                            <div>
-                                <p className="text-sm font-medium text-muted-foreground">
-                                    {card.title}
-                                </p>
-                                <p className="text-lg font-semibold text-foreground mt-1">
-                                    {card.value}
-                                </p>
+                                <Icon className={`h-5 w-5 ${card.color}`} />
                             </div>
                         </div>
+                        <p className="text-3xl font-bold text-foreground tracking-tight">
+                            {card.value}
+                        </p>
+                        <p className="text-sm text-muted-foreground mt-1">
+                            {card.title}
+                        </p>
                     </Card>
                 );
             })}

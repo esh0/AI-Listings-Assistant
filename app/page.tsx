@@ -52,11 +52,11 @@ export default function HomePage() {
             <header className="border-b bg-background" role="banner">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center transition-transform hover:scale-105">
+                        <div className="w-9 h-9 bg-primary rounded-lg flex items-center justify-center transition-transform hover:scale-105">
                             <ShoppingBag className="h-5 w-5 text-primary-foreground" aria-hidden="true" />
                         </div>
-                        <span className="font-bold text-lg tracking-tight">
-                            Marketplace AI
+                        <span className="font-bold text-xl tracking-tight">
+                            Marketplace <span className="font-serif italic text-primary">AI</span>
                         </span>
                     </div>
                     <div className="flex items-center gap-3">
@@ -74,16 +74,16 @@ export default function HomePage() {
             </header>
 
             {/* Hero + Form */}
-            <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12" role="main">
+            <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16" role="main">
                 <div className="max-w-7xl mx-auto">
                     {/* Hero Section */}
                     {!hasResult && (
-                    <section aria-labelledby="page-title" className="mb-6">
-                        <h1 id="page-title" className="text-3xl sm:text-4xl font-bold mb-1 leading-tight tracking-tight">
+                    <section aria-labelledby="page-title" className="mb-10 animate-slide-up">
+                        <h1 id="page-title" className="text-4xl sm:text-5xl font-bold mb-2 leading-tight tracking-tight">
                             Sprzedaj szybciej{" "}
-                            <span className="text-primary">z lepszym opisem</span>
+                            <span className="font-serif italic text-primary">z lepszym opisem</span>
                         </h1>
-                        <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                        <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl">
                             Wrzuć zdjęcia, AI stworzy profesjonalne ogłoszenie gotowe na OLX, Allegro, Facebook i Vinted.
                         </p>
                     </section>
@@ -93,7 +93,7 @@ export default function HomePage() {
                     <AdGeneratorForm onResultChange={setHasResult} />
 
                     {/* Footer */}
-                    <footer className="mt-16 pt-8 border-t text-center text-sm text-muted-foreground">
+                    <footer className="mt-20 pt-8 border-t text-center text-sm text-muted-foreground">
                         <p>Obsługuje: OLX • Allegro Lokalnie • Facebook Marketplace • Vinted</p>
                     </footer>
                 </div>

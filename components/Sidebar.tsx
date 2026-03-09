@@ -120,8 +120,8 @@ export function Sidebar({ user }: SidebarProps) {
         <div className="flex h-full flex-col">
             {/* Header */}
             <div className="border-b border-border p-6">
-                <Link href="/dashboard/new" className="text-xl font-bold text-foreground">
-                    Marketplace Assistant
+                <Link href="/dashboard/new" className="text-xl font-bold text-foreground tracking-tight">
+                    Marketplace <span className="font-serif italic text-primary">AI</span>
                 </Link>
             </div>
 
@@ -137,9 +137,9 @@ export function Sidebar({ user }: SidebarProps) {
                             href={link.href}
                             onClick={() => setIsMobileOpen(false)}
                             className={cn(
-                                "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors",
+                                "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors font-medium",
                                 isActive
-                                    ? "bg-primary/10 text-primary"
+                                    ? "bg-primary/10 text-primary font-bold"
                                     : "text-foreground hover:bg-muted"
                             )}
                         >
@@ -161,7 +161,7 @@ export function Sidebar({ user }: SidebarProps) {
                                 Kredyty
                             </span>
                         </div>
-                        <span className="text-lg font-semibold text-foreground">
+                        <span className="text-xl font-bold text-foreground">
                             {credits}
                             <span className="text-xs font-normal text-muted-foreground">/{planLimit}</span>
                         </span>

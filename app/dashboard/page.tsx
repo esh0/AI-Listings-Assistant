@@ -40,23 +40,23 @@ export default async function DashboardPage() {
     ]);
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-10">
             {/* Pending Ad Handler - saves ad from IndexedDB if exists */}
             <PendingAdHandler />
 
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between animate-fade-in">
                 <div>
-                    <h1 className="text-3xl font-bold text-foreground">
+                    <h1 className="text-4xl font-bold text-foreground tracking-tight">
                         Pulpit
                     </h1>
                     <p className="text-muted-foreground mt-1">
-                        Witaj ponownie, {session.user.name || "User"}!
+                        Witaj ponownie, <span className="font-serif italic text-foreground">{session.user.name || "User"}</span>
                     </p>
                 </div>
                 <Link href="/dashboard/new">
-                    <Button className="bg-primary hover:bg-primary/90">
-                        <Plus className="h-4 w-4 mr-2" />
+                    <Button className="bg-primary hover:bg-primary/90 text-base px-6 py-3 h-auto">
+                        <Plus className="h-5 w-5 mr-2" />
                         Nowe ogłoszenie
                     </Button>
                 </Link>

@@ -137,7 +137,7 @@ export const AdResultMain = React.memo(function AdResultMain({
   }, [editedDescription, isEditingDescription]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Title Card */}
       <CardWrapper
         title="Tytuł ogłoszenia"

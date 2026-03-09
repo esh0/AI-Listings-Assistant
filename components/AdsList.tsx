@@ -233,7 +233,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
     }, [totalPages, currentPage]);
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-8">
             {/* Search Bar */}
             <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -268,8 +268,8 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                             onClick={() => handleStatusChange(filter.value)}
                             className={
                                 currentFilter === filter.value
-                                    ? "bg-primary hover:bg-primary/90"
-                                    : ""
+                                    ? "bg-primary hover:bg-primary/90 font-bold"
+                                    : "font-medium"
                             }
                         >
                             {filter.label}
@@ -364,7 +364,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
 
             {/* Results Info */}
             <div className="text-sm text-muted-foreground">
-                Znaleziono: <span className="font-medium">{totalFilteredCount}</span> ogłoszeń
+                Znaleziono: <span className="font-bold text-foreground">{totalFilteredCount}</span> ogłoszeń
                 {totalPages > 1 && (
                     <span className="ml-2">
                         (strona {currentPage} z {totalPages})

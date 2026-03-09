@@ -92,11 +92,11 @@ export default async function AdsPage(props: { searchParams: SearchParams }) {
     const totalPages = Math.ceil(totalFilteredCount / pageSize);
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-10">
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold text-foreground">
+                    <h1 className="text-4xl font-bold text-foreground tracking-tight">
                         Ogłoszenia
                     </h1>
                     <p className="text-muted-foreground mt-1">
@@ -113,8 +113,8 @@ export default async function AdsPage(props: { searchParams: SearchParams }) {
                         </Link>
                     )}
                     <Link href="/dashboard/new">
-                        <Button className="bg-primary hover:bg-primary/90">
-                            <Plus className="h-4 w-4 mr-2" />
+                        <Button className="bg-primary hover:bg-primary/90 text-base px-6 py-3 h-auto">
+                            <Plus className="h-5 w-5 mr-2" />
                             Nowe ogłoszenie
                         </Button>
                     </Link>
