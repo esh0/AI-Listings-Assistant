@@ -4,12 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-AI Generator Ogłoszeń Sprzedażowych (Marketplace Assistant) - A Next.js application that uses OpenAI GPT-4o to automatically generate professional sales listings for Polish marketplace platforms (OLX, Allegro Lokalnie, Facebook Marketplace, Vinted). The app features user authentication, credit-based usage system, ad management dashboard, and AI-powered content generation with image analysis.
+AI Generator Ogłoszeń Sprzedażowych (Marketplace Assistant) - A Next.js application that uses OpenAI GPT-4.1-mini to automatically generate professional sales listings for Polish marketplace platforms (OLX, Allegro Lokalnie, Facebook Marketplace, Vinted). The app features user authentication, credit-based usage system with 4 subscription tiers, Stripe payments, guest access with rate limiting, ad management dashboard, and AI-powered content generation with image analysis.
 
 **Key Features:**
-- 🤖 AI-powered ad generation with image analysis
+- 🤖 AI-powered ad generation with image analysis (GPT-4.1-mini)
 - 🔐 Google OAuth authentication via NextAuth
-- 💳 Credit system (FREE: 3/month, PREMIUM: unlimited)
+- 💳 4-tier credit system (FREE/STARTER/RESELER/BUSINESS) with Stripe payments
+- 🎁 Guest access with UUID + IP rate limiting (3 generations)
 - 📊 Dashboard with ad management (CRUD operations)
 - 🔍 Advanced filtering, sorting, and search
 - 📄 Pagination (20 ads per page)
@@ -25,7 +26,8 @@ AI Generator Ogłoszeń Sprzedażowych (Marketplace Assistant) - A Next.js appli
 - **Authentication**: NextAuth v5 (JWT strategy)
 - **Storage**: Supabase Storage (image uploads with sharp resizing)
 - **Styling**: Tailwind CSS 3.4
-- **AI**: OpenAI API (o4-mini model)
+- **AI**: OpenAI API (gpt-4.1-mini model)
+- **Payments**: Stripe (subscriptions + one-time boosts)
 - **Validation**: Zod schemas
 - **UI Components**: Custom components styled similar to shadcn/ui
 - **Theme**: next-themes for dark/light mode
@@ -85,14 +87,29 @@ GOOGLE_CLIENT_SECRET=your-google-client-secret
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+
+# Stripe Payments
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+STRIPE_PRICE_STARTER_MONTHLY=price_...
+STRIPE_PRICE_RESELER_MONTHLY=price_...
+STRIPE_PRICE_BUSINESS_MONTHLY=price_...
+STRIPE_PRICE_BOOST_10=price_...
+STRIPE_PRICE_BOOST_30=price_...
+STRIPE_PRICE_BOOST_60=price_...
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
 **Required keys:**
-- `OPENAI_API_KEY` - OpenAI API with GPT-4o access
+- `OPENAI_API_KEY` - OpenAI API with GPT-4.1-mini access
 - `DATABASE_URL` - PostgreSQL connection string (Supabase provides this)
 - `AUTH_SECRET` - Generate with `openssl rand -base64 32`
 - `GOOGLE_CLIENT_ID` & `GOOGLE_CLIENT_SECRET` - OAuth credentials from Google Cloud Console
 - Supabase keys - Available in Supabase project settings
+- `STRIPE_SECRET_KEY` - Stripe secret key (test or live)
+- `STRIPE_WEBHOOK_SECRET` - Stripe webhook signing secret
+- `STRIPE_PRICE_*` - Price IDs from Stripe Dashboard for each plan and boost pack
+- `NEXT_PUBLIC_SITE_URL` - Full URL for Stripe redirect URLs
 
 ## Architecture
 
@@ -100,25 +117,38 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 
 **Unauthenticated User (Soft-wall):**
 1. User visits home page → sees ad creation form
-2. Creates ad without login → sees results
+2. Creates ad without login → sees results (max 3 generations per UUID, 5 per IP/24h)
 3. After generation → prompted to sign in to save ad
+4. After limit exhaustion → SoftWall modal (orange, limit mode) shown immediately
 
 **Authenticated User:**
 1. User signs in with Google OAuth → redirected to dashboard
 2. Dashboard shows: recent ads, statistics, quick actions
 3. Click "Nowe ogłoszenie" → `/dashboard/new` page with ad creation form
-4. **Image Upload** - Up to 8 images (max 10MB each, JPG/PNG/WEBP)
+4. **Image Upload** - Up to plan limit images (FREE: 3, STARTER: 5, RESELER: 8, BUSINESS: 12)
 5. **Form Input** - Platform, tone, condition, price, delivery, notes
 6. **AI Processing** - OpenAI generates ad with image analysis, credit consumed
 7. **Review Results** - User sees generated title, description, price suggestions
 8. **Save to Database** - Click "Zapisz" button to save ad with DRAFT status, images uploaded to Supabase Storage
 9. **Manage Ads** - `/dashboard/ads` page with filtering, sorting, search, pagination
 
-**Credits System:**
-- FREE users: 3 credits/month (resets monthly)
-- PREMIUM users: Unlimited credits (9999)
-- **Credit consumed on generation** (before saving) - prevents abuse
-- Tracked in `User.creditsAvailable` field
+**Credits System (4 Tiers):**
+- **FREE**: 5 credits/month, 3 images max
+- **STARTER** (19.99 zł/mo): 30 credits/month, 5 images max
+- **RESELER** (49.99 zł/mo): 80 credits/month, 8 images max
+- **BUSINESS** (99.99 zł/mo): 200 credits/month, 12 images max
+- **Boost credits**: One-time purchases (10/30/60 credits), don't expire monthly
+- Credits consumed on generation (before saving) - prevents abuse
+- Subscription credits used first, then boost credits
+- Tracked in `User.creditsAvailable` + `User.boostCredits` fields
+- When 0 credits: generate button disabled, CTA "Zmień plan lub dokup kredyty" shown
+
+**Guest Tracking (3-layer rate limiting):**
+- UUID stored in localStorage (max 3 generations per UUID)
+- IP hash via SHA-256 (max 5 generations per IP in 24h)
+- Hard wall: SoftWall modal in limit mode after exhaustion
+- Guest image limit: 3 max
+- Tracked in `GuestUsage` table (guestId, ipHash, generationsUsed)
 
 ### Tone Variations
 
@@ -153,17 +183,24 @@ The system uses a modular prompt architecture with:
 
 **Authentication & Database:**
 - `auth.ts` - NextAuth v5 configuration with Google OAuth provider, JWT strategy
-- `prisma/schema.prisma` - Database schema (User, Account, Session, Ad models)
+- `prisma/schema.prisma` - Database schema (User, Account, Session, Ad, GuestUsage models)
 - `lib/prisma.ts` - Prisma client singleton
-- `lib/credits.ts` - Credit management (hasCredits, consumeCredit, resetCredits, upgradeToPremium)
+- `lib/credits.ts` - Credit management (hasCredits, consumeCredit, resetCredits, changePlan, addBoostCredits)
 - `lib/image-upload.ts` - Supabase Storage integration with sharp image resizing
+- `lib/guest-tracking.ts` - Guest rate limiting (UUID + IP hash, checkGuestLimit, consumeGuestCredit)
+- `lib/guest-id.ts` - Client-side guest UUID generation via localStorage
+- `lib/stripe.ts` - Stripe client, plan/boost price mappings
 
 **API Layer:**
-- `app/api/generate-ad/route.ts` - POST endpoint for ad generation (validates request, consumes credit, calls OpenAI - **does not save to DB**)
+- `app/api/generate-ad/route.ts` - POST endpoint for ad generation (validates request, enforces per-tier image limits, consumes credit, calls OpenAI - **does not save to DB**; guest path validates guestId + IP limits)
 - `app/api/ads/route.ts` - POST endpoint for saving ads (uploads images to Supabase, saves to DB)
 - `app/api/ads/[id]/route.ts` - GET/PATCH/DELETE endpoints for ad management
 - `app/api/ads/export/route.ts` - CSV export endpoint
 - `app/api/auth/[...nextauth]/route.ts` - NextAuth API routes
+- `app/api/stripe/checkout/route.ts` - Creates Stripe Checkout session for subscriptions (card + BLIK)
+- `app/api/stripe/boost/route.ts` - Creates Stripe Checkout session for one-time credit boosts
+- `app/api/stripe/webhook/route.ts` - Stripe webhook handler (checkout.session.completed, invoice.paid, customer.subscription.deleted)
+- `app/api/stripe/portal/route.ts` - Stripe Customer Portal session for subscription management
 
 **Core Logic:**
 - `lib/openai.ts` - OpenAI client, modular prompt engineering, platform rules loading, tone injection
@@ -175,38 +212,43 @@ The system uses a modular prompt architecture with:
 - `lib/rules/*.md` - Platform-specific listing guidelines with tone variations
 
 **Dashboard Components:**
-- `components/Sidebar.tsx` - Navigation sidebar with user info and credits display
+- `components/Sidebar.tsx` - Navigation sidebar with user info, credits display (available/limit + boost + reset date), plan badge, pricing link, Stripe portal link for paid plans
 - `components/AdsList.tsx` - Ad list with filtering, sorting, search, pagination
 - `components/AdCard.tsx` - Compact ad card with platform icons, status badges, action buttons (Publish/Sold)
 - `components/StatsCards.tsx` - Dashboard statistics cards (uses text-lg font-semibold for numbers)
 - `components/AdGeneratorForm.tsx` - Reusable ad creation form with header and save flow
 
 **Ad Creation Components:**
-- `components/UploadDropzone.tsx` - Drag-and-drop image upload
+- `components/UploadDropzone.tsx` - Drag-and-drop image upload with dynamic max images per plan
 - `components/ProductForm.tsx` - Form with platform, tone, condition, price, delivery
 - `components/FullscreenLoading.tsx` - Loading screen with React Portal (renders to document.body, z-9999)
 - `components/AdResult.tsx` - Results display with 65/35 grid layout, passes platform and edit state to AdResultMain
 - `components/AdResultMain.tsx` - Displays title/description with inline editing (platform-specific character limits, Check icon confirmation)
+- `components/SoftWallModal.tsx` - Two modes: "save" (prompt to sign in to save) and "limit" (guest limit exhausted, orange, no continue button)
 
 **Pages:**
-- `app/page.tsx` - Home page (redirects authenticated users to dashboard, shows form for guests)
+- `app/page.tsx` - Home page (redirects authenticated users to dashboard, shows compact hero + form for guests, pricing link in header)
 - `app/dashboard/page.tsx` - Dashboard overview
 - `app/dashboard/new/page.tsx` - Ad creation page (client component, includes header in form)
 - `app/dashboard/ads/page.tsx` - Ad management page (server component with filtering/sorting/search/pagination)
 - `app/dashboard/ads/[id]/page.tsx` - Ad details page
-- `app/dashboard/layout.tsx` - Dashboard layout with sidebar
+- `app/dashboard/layout.tsx` - Dashboard layout with sidebar (passes boostCredits, creditsResetAt)
+- `app/pricing/page.tsx` - Public pricing page with 4 tiers, boost packs, FAQ (unauthenticated: all CTAs → sign in, no boost section; authenticated: Stripe checkout)
 
 ### Important Patterns
 
 **Ad Generation & Saving Flow:**
 1. User fills form and clicks "Generuj ogłoszenie"
 2. API `/api/generate-ad` consumes credit and generates content (does NOT save)
-3. User reviews results on same page
-4. User can edit title/description with platform-specific character limits
-5. Authenticated users click "Zapisz" (Check icon) to save via `/api/ads` POST
-6. Unauthenticated users see soft-wall modal after 1.5s
-7. After save, user can click "Zapisz i stwórz następne" (RotateCcw icon) to reset form
-8. Credits consumed on generation (not on save) to prevent abuse
+3. Session refreshed via `updateSession()` + `router.refresh()` (once, guarded by ref)
+4. User reviews results on same page
+5. User can edit title/description with platform-specific character limits
+6. Authenticated users click "Zapisz" (Check icon) to save via `/api/ads` POST
+7. Unauthenticated users see soft-wall modal after 1.5s
+8. After save, user can click "Zapisz i stwórz następne" (RotateCcw icon) to reset form
+9. On error: shows "Popraw" (retry with form data) and "Nowe ogłoszenie" (full reset) buttons
+10. Guest users see "Nowe ogłoszenie" instead of "Zapisz i stwórz następne"
+11. Credits consumed on generation (not on save) to prevent abuse
 
 **Inline Editing Pattern:**
 1. User sees generated title/description with Pencil icon in card header
@@ -226,7 +268,7 @@ The system uses a modular prompt architecture with:
 **Dashboard Layout:**
 - Fixed sidebar on desktop (lg:w-72), mobile overlay with hamburger menu
 - Main content area with lg:pl-72 padding to account for sidebar
-- Sidebar shows user info, plan badge, credits counter (∞ for PREMIUM)
+- Sidebar shows: navigation (Pulpit, Ogłoszenia, Szablony, Cennik), credits display (available/limit + boost + reset date + pricing link + portal link for paid plans), user info with plan badge
 
 **Ad List Filtering & Search:**
 - Server-side filtering by status (DRAFT/PUBLISHED/SOLD), platform, search query
@@ -271,7 +313,7 @@ The system uses a modular prompt architecture with:
 - API validates requests with Zod schemas
 - OpenAI errors are caught and mapped to user-friendly Polish messages
 - Rate limiting (429), auth errors (401), and generic errors are handled separately
-- Credit exhaustion shows upgrade prompt
+- Credit exhaustion shows CTA under disabled generate button + link to /pricing
 
 **State Management:**
 - React state for form data and images (no external state library)
@@ -282,8 +324,19 @@ The system uses a modular prompt architecture with:
 **Authentication Flow:**
 - Google OAuth via NextAuth v5
 - JWT strategy (no database sessions)
-- User created on first sign-in with default FREE plan (3 credits)
-- Session contains: id, name, email, image, plan, creditsAvailable
+- User created on first sign-in with default FREE plan (5 credits)
+- Session contains: id, name, email, image, plan, creditsAvailable, boostCredits, creditsResetAt
+- JWT refreshed from DB on `trigger === "update"` (called via `updateSession()` after generation)
+
+**Stripe Payments:**
+- `lib/stripe.ts` - Stripe client singleton with plan/boost price ID mappings
+- Subscriptions: STARTER/RESELER/BUSINESS via Stripe Checkout (card + BLIK)
+- Boost credits: One-time purchases (10/30/60 credits) via Stripe Checkout
+- Webhook handler processes: `checkout.session.completed` (upgrade/boost), `invoice.paid` (monthly renewal), `customer.subscription.deleted` (downgrade to FREE)
+- Customer Portal: Paid users can manage subscription, payment methods, invoices
+- User model stores `stripeCustomerId` and `stripeSubscriptionId`
+- Pricing page (`/pricing`): 4 tier cards, boost packs (authenticated only), FAQ
+- Unauthenticated visitors: all CTAs redirect to sign in
 
 ## Code Style
 
@@ -298,7 +351,7 @@ The system uses a modular prompt architecture with:
 - Segmented controls: Horizontal button group in muted container with roving tabindex
 - Platform tiles: 2x2 grid with icons, hover scale effects, and aria-radio roles
 - Responsive components: Desktop segmented control, mobile radio buttons (ConditionSegmentedControl)
-- Sticky CTA: Bottom-positioned button in Card 4 with `sticky bottom-0` for easy access
+- Sticky CTA: Bottom-positioned button in Card 4 (no longer sticky to avoid clipping CTA text below)
 - Card composition: CardWrapper with forwardRef and React.memo for performance
 
 ## Performance Best Practices
@@ -441,7 +494,7 @@ Each platform has:
 
 1. Ensure `.env.local` has valid `OPENAI_API_KEY`
 2. Run `npm run dev`
-3. Upload 1-8 product images
+3. Upload 1-3 product images (guest limit; authenticated: up to plan limit)
 4. Select platform (radio button) - tone will auto-select to platform's recommended default
 5. Optionally override tone selection if needed
 6. Select product condition (radio button)
@@ -453,6 +506,13 @@ Each platform has:
 12. Verify generated title, description, and price suggestions (if applicable)
 13. Check image quality feedback and suggestions
 14. Use copy buttons to copy content to clipboard
+
+**Testing Stripe (requires Stripe keys in .env.local):**
+1. Visit `/pricing` as unauthenticated → all buttons should redirect to sign in
+2. Visit `/pricing` as authenticated → "Obecny plan" on current tier, checkout buttons on others
+3. Boost section visible only for authenticated users
+4. Sidebar shows credits/limit, boost credits, reset date, pricing link
+5. Paid plan users see "Zarządzaj subskrypcją" link in sidebar
 
 ## Common Modifications
 
@@ -478,8 +538,9 @@ Each platform has:
 5. Add radio button option in `components/ProductForm.tsx` with platform recommendations
 
 **To change image limits:**
-- Update `MAX_IMAGES` constant in `lib/types.ts`
-- Update validation in `components/UploadDropzone.tsx`
+- Update `IMAGE_LIMITS` in `lib/credits.ts` (per-plan limits) and `GUEST_MAX_IMAGES` in `lib/guest-tracking.ts`
+- Update client-side `IMAGE_LIMITS` and `GUEST_MAX_IMAGES` in `components/AdGeneratorForm.tsx`
+- Update validation in `components/UploadDropzone.tsx` (accepts `maxImages` prop)
 
 ## Deployment
 
@@ -487,7 +548,20 @@ Recommended: Vercel (optimized for Next.js)
 ```bash
 vercel
 vercel env add OPENAI_API_KEY
+vercel env add STRIPE_SECRET_KEY
+vercel env add STRIPE_WEBHOOK_SECRET
+# ... add all other env vars
 vercel --prod
 ```
+
+**Stripe Webhook Setup:**
+1. In Stripe Dashboard → Webhooks → Add endpoint
+2. URL: `https://your-domain.com/api/stripe/webhook`
+3. Events to listen for: `checkout.session.completed`, `invoice.paid`, `customer.subscription.deleted`
+4. Copy signing secret to `STRIPE_WEBHOOK_SECRET`
+
+**Database Migrations:**
+- Using `prisma db push` (not `prisma migrate`) due to broken migration history
+- Always run `npx prisma db push` after schema changes
 
 Alternative: Docker (see README.md for Dockerfile)
