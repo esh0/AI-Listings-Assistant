@@ -33,7 +33,7 @@ export function RecentAdsList({ ads }: RecentAdsListProps) {
     return (
         <div>
             <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-foreground">
+                <h2 className="text-xl sm:text-2xl font-bold text-foreground">
                     Ostatnie ogłoszenia
                 </h2>
                 {ads.length > 0 && (

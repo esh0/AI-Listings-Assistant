@@ -4,13 +4,12 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle, Upload, Archive, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useRef } from "react";
-import { AdStatus, Platform } from "@prisma/client";
+import { AdStatus } from "@prisma/client";
 
 interface AdDetailActionsProps {
     ad: {
         id: string;
         status: AdStatus;
-        platform: Platform;
     };
 }
 
@@ -20,6 +19,9 @@ export function AdDetailActions({ ad }: AdDetailActionsProps) {
     const isProcessingRef = useRef(false);
 
     const handleMarkAsPublished = async () => {
+        const confirmed = confirm("Czy na pewno chcesz oznaczyć to ogłoszenie jako opublikowane?");
+        if (!confirmed) return;
+
         if (isProcessingRef.current) return;
         isProcessingRef.current = true;
         setIsUpdating(true);
@@ -29,15 +31,10 @@ export function AdDetailActions({ ad }: AdDetailActionsProps) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ status: "PUBLISHED" }),
             });
-
-            if (!response.ok) {
-                throw new Error("Failed to update ad");
-            }
-
+            if (!response.ok) throw new Error("Failed to update ad");
             router.refresh();
         } catch (error) {
             console.error("Failed to mark as published:", error);
-            alert("Nie udało się oznaczyć jako opublikowane");
         } finally {
             setIsUpdating(false);
             isProcessingRef.current = false;
@@ -49,10 +46,7 @@ export function AdDetailActions({ ad }: AdDetailActionsProps) {
         if (!price) return;
 
         const soldPrice = parseFloat(price);
-        if (isNaN(soldPrice) || soldPrice <= 0) {
-            alert("Nieprawidłowa cena");
-            return;
-        }
+        if (isNaN(soldPrice) || soldPrice <= 0) return;
 
         if (isProcessingRef.current) return;
         isProcessingRef.current = true;
@@ -61,20 +55,12 @@ export function AdDetailActions({ ad }: AdDetailActionsProps) {
             const response = await fetch(`/api/ads/${ad.id}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    status: "SOLD",
-                    soldPrice,
-                }),
+                body: JSON.stringify({ status: "SOLD", soldPrice }),
             });
-
-            if (!response.ok) {
-                throw new Error("Failed to mark ad as sold");
-            }
-
+            if (!response.ok) throw new Error("Failed to mark ad as sold");
             router.refresh();
         } catch (error) {
             console.error("Failed to mark ad as sold:", error);
-            alert("Nie udało się oznaczyć jako sprzedane");
         } finally {
             setIsUpdating(false);
             isProcessingRef.current = false;
@@ -94,15 +80,10 @@ export function AdDetailActions({ ad }: AdDetailActionsProps) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ status: "ARCHIVED" }),
             });
-
-            if (!response.ok) {
-                throw new Error("Failed to archive ad");
-            }
-
+            if (!response.ok) throw new Error("Failed to archive ad");
             router.refresh();
         } catch (error) {
             console.error("Failed to archive ad:", error);
-            alert("Nie udało się zarchiwizować ogłoszenia");
         } finally {
             setIsUpdating(false);
             isProcessingRef.current = false;
@@ -119,33 +100,29 @@ export function AdDetailActions({ ad }: AdDetailActionsProps) {
         isProcessingRef.current = true;
         setIsUpdating(true);
         try {
-            const response = await fetch(`/api/ads/${ad.id}`, {
-                method: "DELETE",
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to delete ad");
-            }
-
+            const response = await fetch(`/api/ads/${ad.id}`, { method: "DELETE" });
+            if (!response.ok) throw new Error("Failed to delete ad");
             router.push("/dashboard/ads");
         } catch (error) {
             console.error("Failed to delete ad:", error);
-            alert("Nie udało się usunąć ogłoszenia");
             setIsUpdating(false);
             isProcessingRef.current = false;
         }
     };
 
     return (
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-shrink-0">
             {ad.status === "DRAFT" && (
                 <Button
                     onClick={handleMarkAsPublished}
                     disabled={isUpdating}
-                    className="bg-success hover:bg-success/90 text-success-foreground"
+                    size="sm"
+                    variant="outline"
+                    className="text-success hover:text-success hover:bg-success/10"
+                    title="Oznacz jako opublikowane"
                 >
-                    <Upload className="h-4 w-4 mr-2" />
-                    Oznacz jako opublikowane
+                    <Upload className="h-4 w-4" />
+                    <span className="hidden sm:inline ml-2">Opublikuj</span>
                 </Button>
             )}
 
@@ -153,10 +130,13 @@ export function AdDetailActions({ ad }: AdDetailActionsProps) {
                 <Button
                     onClick={handleMarkAsSold}
                     disabled={isUpdating}
-                    className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                    size="sm"
+                    variant="outline"
+                    className="text-primary hover:text-primary hover:bg-primary/10"
+                    title="Oznacz jako sprzedane"
                 >
-                    <CheckCircle className="h-4 w-4 mr-2" />
-                    Oznacz jako sprzedane
+                    <CheckCircle className="h-4 w-4" />
+                    <span className="hidden sm:inline ml-2">Sprzedane</span>
                 </Button>
             )}
 
@@ -164,21 +144,25 @@ export function AdDetailActions({ ad }: AdDetailActionsProps) {
                 <Button
                     onClick={handleArchive}
                     disabled={isUpdating}
+                    size="sm"
                     variant="outline"
+                    title="Archiwizuj"
                 >
-                    <Archive className="h-4 w-4 mr-2" />
-                    Archiwizuj
+                    <Archive className="h-4 w-4" />
+                    <span className="hidden sm:inline ml-2">Archiwizuj</span>
                 </Button>
             )}
 
             <Button
                 onClick={handleDelete}
                 disabled={isUpdating}
+                size="sm"
                 variant="outline"
-                className="text-destructive hover:text-destructive/80 hover:bg-destructive/10"
+                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                title="Usuń"
             >
-                <Trash2 className="h-4 w-4 mr-2" />
-                Usuń
+                <Trash2 className="h-4 w-4" />
+                <span className="hidden sm:inline ml-2">Usuń</span>
             </Button>
         </div>
     );

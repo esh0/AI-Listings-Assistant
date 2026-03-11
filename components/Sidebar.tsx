@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
@@ -49,6 +49,17 @@ export function Sidebar({ user }: SidebarProps) {
     const pathname = usePathname();
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const [isPortalLoading, setIsPortalLoading] = useState(false);
+
+    useEffect(() => {
+        if (isMobileOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "";
+        }
+        return () => {
+            document.body.style.overflow = "";
+        };
+    }, [isMobileOpen]);
 
     const plan = user.plan ?? "FREE";
     const isPaid = plan !== "FREE";
@@ -119,10 +130,17 @@ export function Sidebar({ user }: SidebarProps) {
     const sidebarContent = (
         <div className="flex h-full flex-col">
             {/* Header */}
-            <div className="border-b border-border p-6">
+            <div className="border-b border-border px-4 py-4 flex items-center justify-between">
                 <Link href="/dashboard/new" className="text-xl font-bold text-foreground tracking-tight">
                     Marketplace <span className="font-serif italic text-primary">AI</span>
                 </Link>
+                <button
+                    onClick={() => setIsMobileOpen(false)}
+                    className="lg:hidden p-1.5 rounded-md hover:bg-muted transition-colors"
+                    aria-label="Zamknij menu"
+                >
+                    <X className="h-5 w-5" />
+                </button>
             </div>
 
             {/* Navigation */}
@@ -245,19 +263,17 @@ export function Sidebar({ user }: SidebarProps) {
 
     return (
         <>
-            {/* Mobile Menu Button */}
-            <button
-                onClick={() => setIsMobileOpen(!isMobileOpen)}
-                className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-card rounded-lg shadow-lg"
-                aria-label={isMobileOpen ? "Zamknij menu" : "Otwórz menu"}
-                aria-expanded={isMobileOpen}
-            >
-                {isMobileOpen ? (
-                    <X className="h-6 w-6" />
-                ) : (
+            {/* Mobile Menu Button — hamburger, visible only when drawer is closed */}
+            {!isMobileOpen && (
+                <button
+                    onClick={() => setIsMobileOpen(true)}
+                    className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-card rounded-lg shadow-lg"
+                    aria-label="Otwórz menu"
+                    aria-expanded={false}
+                >
                     <Menu className="h-6 w-6" />
-                )}
-            </button>
+                </button>
+            )}
 
             {/* Mobile Overlay */}
             {isMobileOpen && (
@@ -271,7 +287,7 @@ export function Sidebar({ user }: SidebarProps) {
             {/* Sidebar - Mobile (overlay) */}
             <aside
                 className={cn(
-                    "lg:hidden fixed inset-y-0 left-0 z-40 w-72 bg-card transform transition-transform duration-300",
+                    "lg:hidden fixed inset-y-0 left-0 z-40 w-72 bg-card transform transition-transform duration-300 overflow-y-auto",
                     isMobileOpen ? "translate-x-0" : "-translate-x-full"
                 )}
             >

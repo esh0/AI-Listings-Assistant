@@ -5,8 +5,9 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PLATFORM_NAMES, TONE_STYLE_NAMES } from "@/lib/types";
-import { ArrowLeft, CheckCircle, Upload } from "lucide-react";
+import { ArrowLeft, ShoppingBag, Store, Facebook, Shirt } from "lucide-react";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 import { AdDetailActions } from "@/components/AdDetailActions";
 
 // Force Node.js runtime (Prisma not compatible with Edge)
@@ -53,26 +54,52 @@ export default async function AdDetailPage(props: { params: Params }) {
         ARCHIVED: "bg-muted text-muted-foreground",
     };
 
+    const PLATFORM_ICONS = {
+        olx: ShoppingBag,
+        allegro_lokalnie: Store,
+        facebook_marketplace: Facebook,
+        vinted: Shirt,
+    } as const;
+
+    const PLATFORM_COLORS = {
+        olx: "text-orange-500",
+        allegro_lokalnie: "text-green-600",
+        facebook_marketplace: "text-blue-600",
+        vinted: "text-teal-600",
+    } as const;
+
     return (
         <div className="space-y-6">
             {/* Back Button */}
-            <Link href="/dashboard/ads">
-                <Button variant="outline" size="sm">
-                    <ArrowLeft className="h-4 w-4 mr-2" />
-                    Wróć do ogłoszeń
-                </Button>
-            </Link>
+            <div className="pl-12 lg:pl-0">
+                <Link href="/dashboard/ads">
+                    <Button variant="outline" size="sm">
+                        <ArrowLeft className="h-4 w-4 mr-2" />
+                        Wróć do ogłoszeń
+                    </Button>
+                </Link>
+            </div>
 
             {/* Header */}
-            <div className="flex items-start justify-between gap-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                 <div>
                     <div className="flex items-center gap-3 mb-2">
-                        <Badge variant="outline">{PLATFORM_NAMES[ad.platform]}</Badge>
+                        {(() => {
+                            const Icon = PLATFORM_ICONS[ad.platform as keyof typeof PLATFORM_ICONS];
+                            const colorClass = PLATFORM_COLORS[ad.platform as keyof typeof PLATFORM_COLORS];
+                            return Icon ? (
+                                <span title={PLATFORM_NAMES[ad.platform]}>
+                                    <Icon className={cn("h-5 w-5", colorClass)} />
+                                </span>
+                            ) : (
+                                <Badge variant="outline">{PLATFORM_NAMES[ad.platform]}</Badge>
+                            );
+                        })()}
                         <Badge className={STATUS_COLORS[ad.status]} variant="secondary">
                             {STATUS_LABELS[ad.status]}
                         </Badge>
                     </div>
-                    <h1 className="text-3xl font-bold text-foreground">{ad.title}</h1>
+                    <h1 className="text-2xl font-bold text-foreground sm:text-3xl">{ad.title}</h1>
                 </div>
 
                 {/* Action Buttons */}
