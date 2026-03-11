@@ -5,7 +5,6 @@ import { AdsList } from "@/components/AdsList";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-
 // Force Node.js runtime (Prisma not compatible with Edge)
 export const runtime = "nodejs";
 
@@ -101,25 +100,24 @@ export default async function AdsPage(props: { searchParams: SearchParams }) {
     const totalPages = Math.ceil(totalFilteredCount / pageSize);
 
     return (
+        <>
         <div className="space-y-10">
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between pl-14 lg:pl-0">
                 <div>
-                    <h1 className="text-4xl font-bold text-foreground tracking-tight">
+                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground tracking-tight">
                         Ogłoszenia
                     </h1>
                     <p className="text-muted-foreground mt-1">
                         Zarządzaj swoimi ogłoszeniami
                     </p>
                 </div>
-                <div className="flex gap-3">
-                    <Link href="/dashboard/new">
-                        <Button className="bg-primary hover:bg-primary/90 text-base px-6 py-3 h-auto">
-                            <Plus className="h-5 w-5 mr-2" />
-                            Nowe ogłoszenie
-                        </Button>
-                    </Link>
-                </div>
+                <Link href="/dashboard/new" className="hidden lg:flex">
+                    <Button className="bg-primary hover:bg-primary/90 text-base px-6 py-3 h-auto">
+                        <Plus className="h-5 w-5 mr-2" />
+                        Nowe ogłoszenie
+                    </Button>
+                </Link>
             </div>
 
             {/* Ads List with filters */}
@@ -137,5 +135,6 @@ export default async function AdsPage(props: { searchParams: SearchParams }) {
                 totalFilteredCount={totalFilteredCount}
             />
         </div>
+        </>
     );
 }

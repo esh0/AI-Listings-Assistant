@@ -374,7 +374,7 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
             {/* Header - only show when not showing result */}
             {!result && showHeader && (
                 <div className="space-y-4 sm:space-y-8 mb-4 sm:mb-8">
-                    <div>
+                    <div className="pl-14 lg:pl-0">
                         <h1 className="text-2xl font-bold text-foreground">
                             Nowe ogłoszenie
                         </h1>

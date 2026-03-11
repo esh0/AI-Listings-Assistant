@@ -274,12 +274,15 @@ The system uses a modular prompt architecture with:
 
 **Ad List Filtering & Search:**
 - Server-side filtering by status (DRAFT/PUBLISHED/SOLD), platform, search query
-- Client-side UI with collapsible filters panel, active filter count badge
+- Client-side UI — responsive filter bar:
+  - **Desktop (sm+)**: inline bar with Status dropdown, Platform dropdown, ad count, Sort dropdown; "Zaznacz wszystkie" aligned below ad count
+  - **Mobile (<sm)**: single "Sortuj i filtruj" button (with active filter badge) + ad count; clicking opens animated left-side drawer identical to Sidebar (slide-in, backdrop, body scroll lock); FAB "Nowe ogłoszenie" hides behind drawer when open
 - Debounced search (500ms delay) - no form submission needed
 - Sorting by createdAt, updatedAt, title (asc/desc)
 - Pagination: 20 ads per page with Prisma skip/take
 - URL-based state management via searchParams
 - Bulk selection: checkboxes on each card, select-all toggle, bulk CSV export via `/api/ads/export?ids=...`
+- No "Wyczyść filtry" button — filters cleared individually via dropdowns/drawer
 
 **Ad Card Layout (Compact):**
 ```
