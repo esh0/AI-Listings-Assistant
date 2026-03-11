@@ -4,14 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-AI Generator Ogłoszeń Sprzedażowych (Marketplace Assistant) - A Next.js application that uses OpenAI GPT-4.1-mini to automatically generate professional sales listings for Polish marketplace platforms (OLX, Allegro Lokalnie, Facebook Marketplace, Vinted). The app features user authentication, credit-based usage system with 4 subscription tiers, Stripe payments, guest access with rate limiting, ad management dashboard, and AI-powered content generation with image analysis.
+AI Generator Ogłoszeń Sprzedażowych (Marketplace Assistant) - A Next.js application that uses OpenAI GPT-4.1-mini to automatically generate professional sales listings for Polish marketplace platforms (OLX, Allegro Lokalnie, FB Marketplace, Vinted). The app features user authentication, credit-based usage system with 4 subscription tiers, Stripe payments, guest access with rate limiting, ad management dashboard, and AI-powered content generation with image analysis.
 
 **Key Features:**
 - 🤖 AI-powered ad generation with image analysis (GPT-4.1-mini)
 - 🔐 Google OAuth authentication via NextAuth
 - 💳 4-tier credit system (FREE/STARTER/RESELER/BUSINESS) with Stripe payments
 - 🎁 Guest access with UUID + IP rate limiting (3 generations)
-- 📊 Dashboard with ad management (CRUD operations)
+- 📊 Dashboard with ad management (CRUD + bulk selection with CSV export)
 - 🔍 Advanced filtering, sorting, and search
 - 📄 Pagination (20 ads per page)
 - 🎨 Dark/light mode support
@@ -159,7 +159,7 @@ The app supports 3 tone styles for generated listings:
 - **Professional** (Profesjonalny) - Formalny, rzeczowy, ekspertycki
   - Recommended for: Allegro Lokalnie
 - **Friendly** (Przyjazny) - Ciepły, pomocny, naturalny
-  - Recommended for: Facebook Marketplace, Vinted
+  - Recommended for: FB Marketplace, Vinted
 - **Casual** (Swobodny) - Luźny, potoczny, bezpośredni
   - Recommended for: OLX
 
@@ -197,7 +197,7 @@ The system uses a modular prompt architecture with:
 - `app/api/generate-ad/route.ts` - POST endpoint for ad generation (validates request, enforces per-tier image limits, consumes credit, calls OpenAI - **does not save to DB**; guest path validates guestId + IP limits)
 - `app/api/ads/route.ts` - POST endpoint for saving ads (uploads images to Supabase, saves to DB)
 - `app/api/ads/[id]/route.ts` - GET/PATCH/DELETE endpoints for ad management
-- `app/api/ads/export/route.ts` - CSV export endpoint
+- `app/api/ads/export/route.ts` - CSV export endpoint; accepts optional `?ids=` comma-separated param to export only selected ads (takes precedence over `?status=` filter)
 - `app/api/auth/[...nextauth]/route.ts` - NextAuth API routes
 - `app/api/stripe/checkout/route.ts` - Creates Stripe Checkout session for subscriptions (card + BLIK)
 - `app/api/stripe/boost/route.ts` - Creates Stripe Checkout session for one-time credit boosts
@@ -215,13 +215,13 @@ The system uses a modular prompt architecture with:
 
 **Dashboard Components:**
 - `components/Sidebar.tsx` - Navigation sidebar with user info, credits display (available/limit + boost + reset date), plan badge, pricing link, Stripe portal link for paid plans
-- `components/AdsList.tsx` - Ad list with filtering, sorting, search, pagination
-- `components/AdCard.tsx` - Compact ad card with platform icons, status badges, action buttons (Publish/Sold)
-- `components/StatsCards.tsx` - Dashboard statistics cards (uses text-3xl font-bold for numbers, staggered entrance animation)
-- `components/AdGeneratorForm.tsx` - Reusable ad creation form with header and save flow
+- `components/AdsList.tsx` - Ad list with filtering, sorting, search, pagination, and bulk selection with CSV export of selected ads
+- `components/AdCard.tsx` - Compact ad card with platform icons, status badges, action buttons (Publish/Sold); accepts `isSelected`/`onToggleSelect` props to render a selection checkbox for bulk operations
+- `components/StatsCards.tsx` - Dashboard statistics cards with horizontal icon+value layout (`flex items-center gap-4`), staggered entrance animation
+- `components/AdGeneratorForm.tsx` - Reusable ad creation form with optional header (`showHeader` prop, default `true`) and save flow
 
 **Ad Creation Components:**
-- `components/UploadDropzone.tsx` - Drag-and-drop image upload with dynamic max images per plan
+- `components/UploadDropzone.tsx` - Drag-and-drop image upload with dynamic max images per plan; shows skeleton placeholders during image compression
 - `components/ProductForm.tsx` - Form with platform, tone, condition, price, delivery
 - `components/FullscreenLoading.tsx` - Loading screen with React Portal (renders to document.body, z-9999)
 - `components/AdResult.tsx` - Results display with 65/35 grid layout, passes platform and edit state to AdResultMain
@@ -229,7 +229,7 @@ The system uses a modular prompt architecture with:
 - `components/SoftWallModal.tsx` - Two modes: "save" (prompt to sign in to save) and "limit" (guest limit exhausted, orange, no continue button)
 
 **Pages:**
-- `app/page.tsx` - Home page (redirects authenticated users to dashboard, shows compact hero + form for guests, pricing link in header)
+- `app/page.tsx` - Home page (redirects authenticated users to dashboard, shows compact hero + form for guests, pricing link in footer)
 - `app/dashboard/page.tsx` - Dashboard overview
 - `app/dashboard/new/page.tsx` - Ad creation page (client component, includes header in form)
 - `app/dashboard/ads/page.tsx` - Ad management page (server component with filtering/sorting/search/pagination)
@@ -264,7 +264,7 @@ The system uses a modular prompt architecture with:
 9. **Platform-specific limits:**
    - OLX: 70 chars title, 1500 chars description
    - Allegro Lokalnie: 75 chars title, 1500 chars description
-   - Facebook Marketplace: 60 chars title, 1000 chars description
+   - FB Marketplace: 60 chars title, 1000 chars description
    - Vinted: 100 chars title, 750 chars description
 
 **Dashboard Layout:**
@@ -279,6 +279,7 @@ The system uses a modular prompt architecture with:
 - Sorting by createdAt, updatedAt, title (asc/desc)
 - Pagination: 20 ads per page with Prisma skip/take
 - URL-based state management via searchParams
+- Bulk selection: checkboxes on each card, select-all toggle, bulk CSV export via `/api/ads/export?ids=...`
 
 **Ad Card Layout (Compact):**
 ```
@@ -534,7 +535,7 @@ The application supports 4 marketplace platforms with distinct content styles an
 
 - **OLX**: Concise, practical, factual | Recommended tone: **Casual**
 - **Allegro Lokalnie**: Professional, detailed, structured | Recommended tone: **Professional**
-- **Facebook Marketplace**: Friendly, direct, conversational | Recommended tone: **Friendly**
+- **FB Marketplace**: Friendly, direct, conversational | Recommended tone: **Friendly**
 - **Vinted**: Fashion-focused, lifestyle-oriented | Recommended tone: **Friendly**
 
 Each platform has:
