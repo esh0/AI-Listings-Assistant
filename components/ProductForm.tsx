@@ -141,7 +141,7 @@ export function ProductParameters({
                             </div>
                         </label>
 
-                        <div className="relative w-32 flex-shrink-0">
+                        <div className="relative w-28 sm:w-32 flex-shrink-0">
                             <Input
                                 id="userPrice"
                                 name="price"
@@ -198,7 +198,7 @@ export function ProductParameters({
                                 type="checkbox"
                                 checked={delivery.includes(value)}
                                 onChange={() => handleDeliveryToggle(value)}
-                                className="h-4 w-4 rounded border-input text-primary focus:ring-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                className="h-4 w-4 rounded border-input accent-primary focus:ring-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                                 aria-label={label}
                             />
                             <span className="text-sm group-hover:text-foreground">{label}</span>

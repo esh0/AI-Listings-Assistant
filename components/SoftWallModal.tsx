@@ -144,7 +144,7 @@ export function SoftWallModal({ adData, mode = "save", isVisible, onClose }: Sof
                 aria-modal="true"
                 aria-labelledby="softwall-title"
                 tabIndex={-1}
-                className="relative max-w-lg w-full p-8 outline-none"
+                className="relative max-w-lg w-full p-5 sm:p-8 outline-none"
             >
                 {/* Close button */}
                 <button
@@ -156,15 +156,15 @@ export function SoftWallModal({ adData, mode = "save", isVisible, onClose }: Sof
                 </button>
 
                 {/* Icon */}
-                <div className="flex justify-center mb-6">
+                <div className="flex justify-center mb-4 sm:mb-6">
                     <div className="p-4 rounded-full bg-primary/10">
                         <Save className="h-8 w-8 text-primary" />
                     </div>
                 </div>
 
                 {/* Content */}
-                <div className="text-center mb-8">
-                    <h2 id="softwall-title" className="text-2xl font-bold text-foreground mb-3">
+                <div className="text-center mb-5 sm:mb-8">
+                    <h2 id="softwall-title" className="text-xl sm:text-2xl font-bold text-foreground mb-2 sm:mb-3">
                         {isLimitMode
                             ? "Darmowy limit wyczerpany"
                             : "Zapisz swoje ogłoszenie"
@@ -179,7 +179,7 @@ export function SoftWallModal({ adData, mode = "save", isVisible, onClose }: Sof
                 </div>
 
                 {/* Benefits */}
-                <div className="bg-muted rounded-lg p-4 mb-6">
+                <div className="bg-muted rounded-lg p-3 sm:p-4 mb-4 sm:mb-6">
                     <ul className="space-y-2 text-sm text-foreground">
                         <li className="flex items-start gap-2">
                             <span className="text-success mt-0.5">✓</span>
@@ -223,7 +223,7 @@ export function SoftWallModal({ adData, mode = "save", isVisible, onClose }: Sof
                 </div>
 
                 {/* Privacy note */}
-                <p className="text-xs text-muted-foreground text-center mt-6">
+                <p className="text-xs text-muted-foreground text-center mt-4 sm:mt-6">
                     Logowanie przez Google. Nie wysyłamy spamu i nie udostępniamy Twoich danych.
                 </p>
             </Card>

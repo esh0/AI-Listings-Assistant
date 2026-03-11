@@ -40,7 +40,7 @@ export function PlatformSelector({ platform, onPlatformChange }: PlatformSelecto
             <legend className="text-sm font-medium leading-none">
                 Platforma sprzedażowa <span className="text-destructive">*</span>
             </legend>
-            <div className="grid grid-cols-2 gap-3" role="radiogroup" aria-label="Wybór platformy sprzedażowej">
+            <div className="grid grid-cols-2 gap-2 sm:gap-3" role="radiogroup" aria-label="Wybór platformy sprzedażowej">
                 {(Object.entries(PLATFORM_NAMES) as [Platform, string][]).map(([value, label]) => {
                     const Icon = PLATFORM_ICONS[value];
                     const isSelected = platform === value;
@@ -55,14 +55,14 @@ export function PlatformSelector({ platform, onPlatformChange }: PlatformSelecto
                             onClick={() => onPlatformChange(value)}
                             onKeyDown={(e) => handleKeyDown(e, value)}
                             className={cn(
-                                "h-24 border-2 rounded-lg flex flex-col items-center justify-center gap-2 cursor-pointer transition-all duration-200",
+                                "h-16 sm:h-24 border-2 rounded-lg flex flex-col items-center justify-center gap-2 cursor-pointer transition-all duration-200",
                                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                                 isSelected
                                     ? "border-primary bg-primary/10 shadow-sm"
                                     : "border-border bg-background hover:border-primary/50 hover:scale-[1.02] hover:shadow-sm"
                             )}
                         >
-                            <Icon className={cn("h-8 w-8", isSelected ? "text-primary" : colorClass)} aria-hidden="true" />
+                            <Icon className={cn("h-6 w-6 sm:h-8 sm:w-8", isSelected ? "text-primary" : colorClass)} aria-hidden="true" />
                             <span className="text-sm font-medium text-center">{label}</span>
                         </div>
                     );

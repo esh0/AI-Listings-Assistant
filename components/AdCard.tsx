@@ -30,6 +30,8 @@ interface AdCardProps {
     onMarkAsPublished?: (id: string) => void;
     onClick?: (id: string) => void; // For clickable cards (dashboard)
     showTooltips?: boolean; // Show tooltips on action buttons
+    isSelected?: boolean;
+    onToggleSelect?: (id: string) => void;
 }
 
 const STATUS_LABELS: Record<AdStatus, string> = {
@@ -69,6 +71,8 @@ export function AdCard({
     onMarkAsPublished,
     onClick,
     showTooltips = false,
+    isSelected = false,
+    onToggleSelect,
 }: AdCardProps) {
     const [isDeleting, setIsDeleting] = useState(false);
 
@@ -114,16 +118,30 @@ export function AdCard({
     const platformColor = PLATFORM_COLORS[ad.platform];
 
     return (
-        <Card
-            className={cn(
-                "overflow-hidden p-5",
-                isClickable && "cursor-pointer transition-all hover:shadow-md hover:scale-[1.01]"
+        <div className="flex items-start gap-3">
+            {onToggleSelect && (
+                <div className="pt-6 flex-shrink-0">
+                    <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => onToggleSelect(ad.id)}
+                        className="h-4 w-4 accent-primary cursor-pointer"
+                        aria-label={`Zaznacz ogłoszenie: ${ad.title}`}
+                        onClick={(e) => e.stopPropagation()}
+                    />
+                </div>
             )}
-            onClick={isClickable ? handleCardClick : undefined}
-        >
+            <Card
+                className={cn(
+                    "overflow-hidden p-5 flex-1",
+                    isClickable && "cursor-pointer transition-all hover:shadow-md hover:scale-[1.01]",
+                    isSelected && "ring-2 ring-primary"
+                )}
+                onClick={isClickable ? handleCardClick : undefined}
+            >
             <div className="flex flex-col sm:flex-row gap-4">
                 {/* Thumbnail */}
-                <div className="w-full sm:w-36 h-36 bg-muted flex-shrink-0">
+                <div className="w-full sm:w-36 h-48 sm:h-36 bg-muted flex-shrink-0">
                     <div className="w-full h-full overflow-hidden rounded flex items-center justify-center bg-card">
                         <img
                             src={thumbnailUrl}
@@ -138,7 +156,7 @@ export function AdCard({
                 {/* Content */}
                 <div className="flex-1 flex flex-col min-h-[144px]">
                     <div className="mb-3">
-                        <div className="flex items-start justify-between gap-4 mb-2">
+                        <div className="flex items-start justify-between gap-2 sm:gap-4 mb-2">
                             <h3 className="text-lg font-bold text-foreground line-clamp-2 flex-1 tracking-tight">
                                 {ad.title}
                             </h3>
@@ -165,13 +183,13 @@ export function AdCard({
                         </div>
                     </div>
 
-                    <div className="flex items-end gap-4 flex-1">
+                    <div className="flex flex-col sm:flex-row sm:items-end gap-2 sm:gap-4 flex-1">
                         <p className="text-sm text-muted-foreground line-clamp-3 flex-1">
                             {ad.description}
                         </p>
 
                         {/* Actions */}
-                        <div className="flex gap-2 flex-shrink-0">
+                        <div className="flex gap-2 flex-shrink-0 self-end sm:self-auto">
                             {onView && (
                                 <Button
                                     size="sm"
@@ -253,6 +271,7 @@ export function AdCard({
                     </div>
                 </div>
             </div>
-        </Card>
+            </Card>
+        </div>
     );
 }

@@ -52,7 +52,7 @@ export default async function DashboardPage() {
                         Pulpit
                     </h1>
                     <p className="text-muted-foreground mt-1">
-                        Witaj ponownie, <span className="font-serif italic text-foreground">{session.user.name || "User"}</span>
+                        Witaj ponownie, <span className="font-semibold text-foreground">{session.user.name || "User"}</span>
                     </p>
                 </div>
                 <Link href="/dashboard/new">

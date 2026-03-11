@@ -28,7 +28,7 @@ function SignInForm() {
                 {/* Header */}
                 <div className="text-center mb-8">
                     <h1 className="text-3xl font-bold text-foreground mb-2">
-                        Marketplace Assistant
+                        Marketplace <span className="font-serif italic text-primary">AI</span>
                     </h1>
                     <p className="text-muted-foreground">
                         Zaloguj się, aby zarządzać swoimi ogłoszeniami

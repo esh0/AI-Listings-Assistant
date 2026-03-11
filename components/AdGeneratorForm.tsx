@@ -46,7 +46,7 @@ const IMAGE_LIMITS: Record<string, number> = {
     BUSINESS: 12,
 };
 
-export function AdGeneratorForm({ onResultChange }: { onResultChange?: (hasResult: boolean) => void }) {
+export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResultChange?: (hasResult: boolean) => void; showHeader?: boolean }) {
     const router = useRouter();
     const { data: session, status, update: updateSession } = useSession();
 
@@ -372,8 +372,8 @@ export function AdGeneratorForm({ onResultChange }: { onResultChange?: (hasResul
             )}
 
             {/* Header - only show when not showing result */}
-            {!result && (
-                <div className="space-y-8 mb-8">
+            {!result && showHeader && (
+                <div className="space-y-4 sm:space-y-8 mb-4 sm:mb-8">
                     <div>
                         <h1 className="text-2xl font-bold text-foreground">
                             Nowe ogłoszenie
@@ -389,7 +389,7 @@ export function AdGeneratorForm({ onResultChange }: { onResultChange?: (hasResul
             {!result && (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Card 1: Photos */}
-                    <CardWrapper title="Zdjęcia produktu" icon={Camera} className="min-h-[400px]">
+                    <CardWrapper className="min-h-[400px]">
                         <div className="space-y-2 mb-6">
                             <label htmlFor="productName" className="text-sm font-medium leading-none">
                                 Nazwa produktu <span className="text-muted-foreground text-xs">(opcjonalne)</span>
@@ -473,7 +473,7 @@ export function AdGeneratorForm({ onResultChange }: { onResultChange?: (hasResul
             {/* Result Section */}
             {result && (
                 <section aria-labelledby="result-heading" className="space-y-8 animate-fade-in">
-                    <div className="flex items-start justify-between gap-4 pb-6 border-b">
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 pb-6 border-b">
                         <div>
                             <h2 id="result-heading" className="font-sans text-3xl sm:text-4xl font-bold mb-2 tracking-tight">
                                 Twoje ogłoszenie
@@ -485,7 +485,7 @@ export function AdGeneratorForm({ onResultChange }: { onResultChange?: (hasResul
                                 }
                             </p>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
                             {result.isValid === false ? (
                                 <>
                                     <Button

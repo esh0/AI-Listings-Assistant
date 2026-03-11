@@ -6,7 +6,7 @@ import { AdStatus, Platform } from "@prisma/client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { PLATFORM_NAMES } from "@/lib/types";
-import { ArrowUpDown, Filter, Search, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowUpDown, Filter, Search, X, ChevronLeft, ChevronRight, Download } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 interface Ad {
@@ -67,6 +67,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
     const [deletingId, setDeletingId] = useState<string | null>(null);
     const [showFilters, setShowFilters] = useState(false);
     const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
+    const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
     const processingRef = useRef<Set<string>>(new Set());
 
     const currentPlatform = searchParams.get("platform") || "all";
@@ -88,13 +89,14 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
             }
         });
 
+        setSelectedIds(new Set());
         router.push(`/dashboard/ads?${params.toString()}`);
     }, [searchParams, router]);
 
     // Debounce search query
     useEffect(() => {
         const timer = setTimeout(() => {
-            updateParams({ search: searchQuery || null });
+            updateParams({ search: searchQuery || null }, false);
         }, 500); // 500ms delay
 
         return () => clearTimeout(timer);
@@ -218,6 +220,31 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
         }
     };
 
+    const handleToggleSelect = useCallback((id: string) => {
+        setSelectedIds((prev) => {
+            const next = new Set(prev);
+            if (next.has(id)) {
+                next.delete(id);
+            } else {
+                next.add(id);
+            }
+            return next;
+        });
+    }, []);
+
+    const handleSelectAll = useCallback(() => {
+        setSelectedIds(new Set(ads.map((ad) => ad.id)));
+    }, [ads]);
+
+    const handleClearSelection = useCallback(() => {
+        setSelectedIds(new Set());
+    }, []);
+
+    const handleExportSelected = useCallback(() => {
+        const ids = Array.from(selectedIds).join(",");
+        window.location.href = `/api/ads/export?ids=${ids}`;
+    }, [selectedIds]);
+
     const activeFiltersCount =
         (currentFilter !== "all" ? 1 : 0) +
         (currentPlatform !== "all" ? 1 : 0) +
@@ -268,8 +295,8 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                             onClick={() => handleStatusChange(filter.value)}
                             className={
                                 currentFilter === filter.value
-                                    ? "bg-primary hover:bg-primary/90 font-bold"
-                                    : "font-medium"
+                                    ? "bg-primary hover:bg-primary/90 font-bold whitespace-nowrap"
+                                    : "font-medium whitespace-nowrap"
                             }
                         >
                             {filter.label}
@@ -300,7 +327,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                     {/* Platform Filter */}
                     <div>
                         <label className="text-sm font-medium mb-2 block">Platforma:</label>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
                             {PLATFORM_FILTERS.map((filter) => (
                                 <Button
                                     key={filter.value}
@@ -325,7 +352,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                             <ArrowUpDown className="h-4 w-4 inline mr-1" />
                             Sortowanie:
                         </label>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                             {SORT_OPTIONS.map((option) => (
                                 <Button
                                     key={option.value}
@@ -362,15 +389,44 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                 </div>
             )}
 
-            {/* Results Info */}
-            <div className="text-sm text-muted-foreground">
-                Znaleziono: <span className="font-bold text-foreground">{totalFilteredCount}</span> ogłoszeń
-                {totalPages > 1 && (
-                    <span className="ml-2">
-                        (strona {currentPage} z {totalPages})
-                    </span>
+            {/* Results Info + Select All */}
+            <div className="flex items-center justify-between text-sm text-muted-foreground">
+                <span>
+                    Znaleziono: <span className="font-bold text-foreground">{totalFilteredCount}</span> ogłoszeń
+                    {totalPages > 1 && (
+                        <span className="ml-2">
+                            (strona {currentPage} z {totalPages})
+                        </span>
+                    )}
+                </span>
+                {ads.length > 0 && (
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={selectedIds.size === ads.length ? handleClearSelection : handleSelectAll}
+                        className="text-muted-foreground hover:text-foreground"
+                    >
+                        {selectedIds.size === ads.length ? "Odznacz wszystkie" : "Zaznacz wszystkie"}
+                    </Button>
                 )}
             </div>
+
+            {/* Bulk Actions Bar */}
+            {selectedIds.size > 0 && (
+                <div className="flex items-center gap-3 p-3 bg-primary/10 border border-primary/20 rounded-lg">
+                    <span className="text-sm font-medium text-foreground">
+                        Zaznaczono: {selectedIds.size}
+                    </span>
+                    <Button size="sm" variant="outline" onClick={handleExportSelected}>
+                        <Download className="h-4 w-4 mr-2" />
+                        Eksportuj CSV
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={handleClearSelection}>
+                        <X className="h-4 w-4 mr-1" />
+                        Odznacz wszystkie
+                    </Button>
+                </div>
+            )}
 
             {/* Ads Grid */}
             {ads.length === 0 ? (
@@ -394,6 +450,8 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                                 onMarkAsSold={handleMarkAsSold}
                                 onMarkAsPublished={handleMarkAsPublished}
                                 showTooltips={true}
+                                isSelected={selectedIds.has(ad.id)}
+                                onToggleSelect={handleToggleSelect}
                             />
                         ))}
                     </div>

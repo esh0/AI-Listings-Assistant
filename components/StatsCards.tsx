@@ -56,19 +56,19 @@ export function StatsCards({ stats }: StatsCardsProps) {
 
                 return (
                     <Card key={card.title} className={`p-5 ${STAGGER_CLASSES[index]}`}>
-                        <div className="flex items-center justify-between mb-3">
-                            <div
-                                className={`p-2.5 rounded-lg ${card.bgColor}`}
-                            >
-                                <Icon className={`h-5 w-5 ${card.color}`} />
+                        <div className="flex items-center gap-4">
+                            <div className={`p-3 rounded-lg flex-shrink-0 ${card.bgColor}`}>
+                                <Icon className={`h-6 w-6 ${card.color}`} />
+                            </div>
+                            <div>
+                                <p className="text-3xl font-bold text-foreground tracking-tight">
+                                    {card.value}
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                    {card.title}
+                                </p>
                             </div>
                         </div>
-                        <p className="text-3xl font-bold text-foreground tracking-tight">
-                            {card.value}
-                        </p>
-                        <p className="text-sm text-muted-foreground mt-1">
-                            {card.title}
-                        </p>
                     </Card>
                 );
             })}

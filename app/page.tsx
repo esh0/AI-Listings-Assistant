@@ -60,9 +60,6 @@ export default function HomePage() {
                         </span>
                     </div>
                     <div className="flex items-center gap-3">
-                        <Link href="/pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                            Cennik
-                        </Link>
                         <Link href="/auth/signin?callbackUrl=/dashboard">
                             <Button variant="outline" size="sm">
                                 Zaloguj się
@@ -74,26 +71,29 @@ export default function HomePage() {
             </header>
 
             {/* Hero + Form */}
-            <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16" role="main">
+            <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-16" role="main">
                 <div className="max-w-7xl mx-auto">
                     {/* Hero Section */}
                     {!hasResult && (
-                    <section aria-labelledby="page-title" className="mb-10 animate-slide-up">
-                        <h1 id="page-title" className="text-4xl sm:text-5xl font-bold mb-2 leading-tight tracking-tight">
+                    <section aria-labelledby="page-title" className="mb-6 sm:mb-10 animate-slide-up">
+                        <h1 id="page-title" className="text-3xl sm:text-5xl font-bold mb-2 leading-tight tracking-tight">
                             Sprzedaj szybciej{" "}
                             <span className="font-serif italic text-primary">z lepszym opisem</span>
                         </h1>
-                        <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl">
+                        <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl sm:max-w-none">
                             Wrzuć zdjęcia, AI stworzy profesjonalne ogłoszenie gotowe na OLX, Allegro, Facebook i Vinted.
                         </p>
                     </section>
                     )}
 
                     {/* Form */}
-                    <AdGeneratorForm onResultChange={setHasResult} />
+                    <AdGeneratorForm onResultChange={setHasResult} showHeader={false} />
 
                     {/* Footer */}
-                    <footer className="mt-20 pt-8 border-t text-center text-sm text-muted-foreground">
+                    <footer className="mt-20 pt-8 border-t text-center text-sm text-muted-foreground space-y-2">
+                        <nav aria-label="Stopka" className="flex justify-center gap-6">
+                            <Link href="/pricing" className="hover:text-foreground transition-colors">Cennik</Link>
+                        </nav>
                         <p>Obsługuje: OLX • Allegro Lokalnie • Facebook Marketplace • Vinted</p>
                     </footer>
                 </div>

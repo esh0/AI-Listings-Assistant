@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { AdsList } from "@/components/AdsList";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Plus, Download } from "lucide-react";
+import { Plus } from "lucide-react";
 
 // Force Node.js runtime (Prisma not compatible with Edge)
 export const runtime = "nodejs";
@@ -113,14 +113,6 @@ export default async function AdsPage(props: { searchParams: SearchParams }) {
                     </p>
                 </div>
                 <div className="flex gap-3">
-                    {ads.length > 0 && (
-                        <Link href="/api/ads/export">
-                            <Button variant="outline">
-                                <Download className="h-4 w-4 mr-2" />
-                                Eksportuj CSV
-                            </Button>
-                        </Link>
-                    )}
                     <Link href="/dashboard/new">
                         <Button className="bg-primary hover:bg-primary/90 text-base px-6 py-3 h-auto">
                             <Plus className="h-5 w-5 mr-2" />

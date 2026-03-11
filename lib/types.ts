@@ -108,7 +108,7 @@ export interface GenerateAdResponseWithPreviews extends GenerateAdResponse {
 export const PLATFORM_NAMES: Record<Platform, string> = {
     olx: "OLX",
     allegro_lokalnie: "Allegro Lokalnie",
-    facebook_marketplace: "Facebook Marketplace",
+    facebook_marketplace: "FB Marketplace",
     vinted: "Vinted",
 };
 

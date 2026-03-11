@@ -160,8 +160,8 @@ export default function PricingPage() {
                             {isAuthenticated ? "Wróć do panelu" : "Strona główna"}
                         </span>
                     </Link>
-                    <Link href={isAuthenticated ? "/dashboard" : "/"} className="text-lg font-bold">
-                        Marketplace Assistant
+                    <Link href={isAuthenticated ? "/dashboard" : "/"} className="text-lg font-bold tracking-tight">
+                        Marketplace <span className="font-serif italic text-primary">AI</span>
                     </Link>
                 </div>
             </div>

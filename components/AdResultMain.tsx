@@ -286,7 +286,7 @@ export const AdResultMain = React.memo(function AdResultMain({
               maxLength={descriptionLimit}
               rows={12}
               className={cn(
-                "text-base resize-y",
+                "text-base resize-y max-h-[50vh] overflow-y-auto",
                 editedDescription.trim().length === 0 && "border-destructive focus:border-destructive focus:ring-destructive"
               )}
               aria-label="Edytuj opis ogłoszenia"

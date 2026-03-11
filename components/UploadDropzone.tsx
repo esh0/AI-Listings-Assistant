@@ -19,6 +19,7 @@ export function UploadDropzone({ onImagesChange, images, maxImages }: UploadDrop
     const [isDragging, setIsDragging] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [isCompressing, setIsCompressing] = useState(false);
+    const [pendingCount, setPendingCount] = useState(0);
 
     const handleFiles = useCallback(
         async (files: FileList | File[]) => {
@@ -26,6 +27,9 @@ export function UploadDropzone({ onImagesChange, images, maxImages }: UploadDrop
             setIsCompressing(true);
 
             const fileArray = Array.from(files);
+            // Show pending skeletons for the files being processed (capped at remaining slots)
+            const remainingSlots = imageLimit - images.length;
+            setPendingCount(Math.min(fileArray.length, remainingSlots));
             const newImages: UploadedImage[] = [];
 
             try {
@@ -81,9 +85,10 @@ export function UploadDropzone({ onImagesChange, images, maxImages }: UploadDrop
                 setError('Błąd przetwarzania zdjęć');
             } finally {
                 setIsCompressing(false);
+                setPendingCount(0);
             }
         },
-        [images, onImagesChange]
+        [images, onImagesChange, imageLimit]
     );
 
     const handleDrop = useCallback(
@@ -140,7 +145,7 @@ export function UploadDropzone({ onImagesChange, images, maxImages }: UploadDrop
     return (
         <div className="space-y-4">
             {/* Image Grid */}
-            {images.length > 0 && (
+            {(images.length > 0 || pendingCount > 0) && (
                 <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
                     {images.map((image, index) => (
                         <div
@@ -173,8 +178,18 @@ export function UploadDropzone({ onImagesChange, images, maxImages }: UploadDrop
                         </div>
                     ))}
 
+                    {/* Pending skeleton slots during compression */}
+                    {Array.from({ length: pendingCount }).map((_, i) => (
+                        <div
+                            key={`pending-${i}`}
+                            className="relative aspect-square rounded-lg border-2 border-border bg-muted overflow-hidden flex items-center justify-center animate-pulse"
+                        >
+                            <ImageIcon className="h-6 w-6 text-muted-foreground/40" aria-hidden="true" />
+                        </div>
+                    ))}
+
                     {/* Add more button */}
-                    {canAddMore && (
+                    {canAddMore && !isCompressing && (
                         <label
                             className={cn(
                                 "aspect-square rounded-md border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-all group",
@@ -201,13 +216,13 @@ export function UploadDropzone({ onImagesChange, images, maxImages }: UploadDrop
             )}
 
             {/* Empty state / Initial dropzone */}
-            {images.length === 0 && (
+            {images.length === 0 && pendingCount === 0 && (
                 <div
                     onDrop={handleDrop}
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
                     className={cn(
-                        "relative flex flex-col items-center justify-center rounded-md border-2 border-dashed p-8 transition-all cursor-pointer min-h-[200px] group",
+                        "relative flex flex-col items-center justify-center rounded-md border-2 border-dashed p-4 sm:p-8 transition-all cursor-pointer min-h-[140px] sm:min-h-[200px] group",
                         isDragging
                             ? "border-primary bg-primary/5 scale-[1.01]"
                             : "border-border hover:border-primary/50 hover:bg-muted/30",
@@ -226,12 +241,12 @@ export function UploadDropzone({ onImagesChange, images, maxImages }: UploadDrop
                     <div className="flex flex-col items-center gap-3 text-center pointer-events-none">
                         <div className="rounded-full bg-muted p-4 group-hover:bg-primary/10 transition-colors">
                             <Upload className={cn(
-                                "h-10 w-10 text-muted-foreground group-hover:text-primary transition-colors",
+                                "h-7 w-7 sm:h-10 sm:w-10 text-muted-foreground group-hover:text-primary transition-colors",
                                 isCompressing && "animate-pulse"
                             )} aria-hidden="true" />
                         </div>
                         <div className="space-y-1">
-                            <p className="text-lg font-semibold">
+                            <p className="text-base sm:text-lg font-semibold">
                                 {isCompressing ? "Przetwarzanie…" : "Przeciągnij zdjęcia tutaj"}
                             </p>
                             <p className="text-sm text-muted-foreground leading-relaxed">

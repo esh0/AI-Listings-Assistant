@@ -22,13 +22,18 @@ export async function GET(request: NextRequest) {
 
         const { searchParams } = new URL(request.url);
         const statusParam = searchParams.get("status");
+        const idsParam = searchParams.get("ids");
+        const ids = idsParam ? idsParam.split(",").filter(Boolean) : null;
 
         const where: any = {
             userId: session.user.id,
         };
 
-        // Filter by status if provided
-        if (statusParam && ["DRAFT", "PUBLISHED", "SOLD", "ARCHIVED"].includes(statusParam)) {
+        // Filter by specific IDs (from bulk selection) — takes precedence over status filter
+        if (ids && ids.length > 0) {
+            where.id = { in: ids };
+        } else if (statusParam && ["DRAFT", "PUBLISHED", "SOLD", "ARCHIVED"].includes(statusParam)) {
+            // Filter by status if provided (and no IDs filter)
             where.status = statusParam;
         }
 
