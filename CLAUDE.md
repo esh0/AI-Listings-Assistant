@@ -195,7 +195,7 @@ The system uses a modular prompt architecture with:
 
 **API Layer:**
 - `app/api/generate-ad/route.ts` - POST endpoint for ad generation (validates request, enforces per-tier image limits, consumes credit, calls OpenAI - **does not save to DB**; guest path validates guestId + IP limits)
-- `app/api/ads/route.ts` - POST endpoint for saving ads (uploads images to Supabase, saves to DB)
+- `app/api/ads/route.ts` - POST endpoint for saving ads (uploads images to Supabase, saves to DB); accepts optional `fromSoftwall: true` flag which triggers credit consumption at save time — used by `PendingAdHandler` when a guest-generated ad is saved after sign-in
 - `app/api/ads/[id]/route.ts` - GET/PATCH/DELETE endpoints for ad management
 - `app/api/ads/export/route.ts` - CSV export endpoint; accepts optional `?ids=` comma-separated param to export only selected ads (takes precedence over `?status=` filter)
 - `app/api/auth/[...nextauth]/route.ts` - NextAuth API routes
@@ -216,7 +216,7 @@ The system uses a modular prompt architecture with:
 **Dashboard Components:**
 - `components/Sidebar.tsx` - Navigation sidebar with user info, credits display (available/limit + boost + reset date), plan badge, pricing link, Stripe portal link for paid plans
 - `components/AdsList.tsx` - Ad list with filtering, sorting, search, pagination, and bulk selection with CSV export of selected ads
-- `components/AdCard.tsx` - Compact ad card with platform icons, status badges, action buttons (Publish/Sold); accepts `isSelected`/`onToggleSelect` props to render a selection checkbox for bulk operations
+- `components/AdCard.tsx` - Compact ad card with platform icons, status badges, action buttons (Publish/Sold); accepts `isSelected`/`onToggleSelect` props to render a selection checkbox for bulk operations; Edit button is hidden for SOLD ads
 - `components/StatsCards.tsx` - Dashboard statistics cards with horizontal icon+value layout (`flex items-center gap-4`), staggered entrance animation
 - `components/AdGeneratorForm.tsx` - Reusable ad creation form with optional header (`showHeader` prop, default `true`) and save flow
 
@@ -230,7 +230,7 @@ The system uses a modular prompt architecture with:
 
 **Pages:**
 - `app/page.tsx` - Home page (redirects authenticated users to dashboard, shows compact hero + form for guests, pricing link in footer)
-- `app/dashboard/page.tsx` - Dashboard overview
+- `app/dashboard/page.tsx` - Dashboard overview; includes `PendingAdHandler` component that checks IndexedDB on mount and auto-saves any ad pending from a soft-wall redirect (calls `/api/ads` with `fromSoftwall: true`)
 - `app/dashboard/new/page.tsx` - Ad creation page (client component, includes header in form)
 - `app/dashboard/ads/page.tsx` - Ad management page (server component with filtering/sorting/search/pagination)
 - `app/dashboard/ads/[id]/page.tsx` - Ad details page
@@ -245,12 +245,13 @@ The system uses a modular prompt architecture with:
 3. Session refreshed via `updateSession()` + `router.refresh()` (once, guarded by ref)
 4. User reviews results on same page
 5. User can edit title/description with platform-specific character limits
-6. Authenticated users click "Zapisz" (Check icon) to save via `/api/ads` POST
+6. Authenticated users click "Zapisz" (Check icon) to save via `/api/ads` POST → redirected to `/dashboard/ads`
 7. Unauthenticated users see soft-wall modal after 1.5s
-8. After save, user can click "Zapisz i stwórz następne" (RotateCcw icon) to reset form
+8. After generation, authenticated users can click "Zapisz i stwórz następne" (RotateCcw icon) — this **saves the ad first**, then resets the form in place (no redirect)
 9. On error: shows "Popraw" (retry with form data) and "Nowe ogłoszenie" (full reset) buttons
-10. Guest users see "Nowe ogłoszenie" instead of "Zapisz i stwórz następne"
+10. Guest users see "Nowe ogłoszenie" (plain reset, no save) instead of "Zapisz i stwórz następne"
 11. Credits consumed on generation (not on save) to prevent abuse
+12. "Zapisz i stwórz następne" is disabled when `canSave` is false (empty title/description)
 
 **Inline Editing Pattern:**
 1. User sees generated title/description with Pencil icon in card header

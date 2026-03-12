@@ -1,298 +1,303 @@
-# Testing Checklist - Authentication & Dashboard
+# Testing Checklist - Marketplace Assistant
 
 ## Prerequisites
-- [ ] `.env.local` configured with all required variables
+- [ ] `.env.local` configured with all required variables (OpenAI, Supabase, Google OAuth, Stripe)
 - [ ] Database migrated: `npx prisma db push`
-- [ ] Supabase storage bucket `ad-images` created (public access)
+- [ ] Supabase storage bucket `marketplace-ads` created (authenticated uploads via RLS)
 - [ ] Google OAuth credentials configured with correct redirect URIs
+- [ ] Stripe keys configured (use test mode keys for development)
 
 ---
 
 ## 1. Authentication Flow
 
 ### Sign In
-- [ ] Visit `/auth/signin` - page displays correctly
-- [ ] Click "Kontynuuj z Google" - redirects to Google OAuth
-- [ ] Complete Google sign-in - redirects back to app
-- [ ] Check database - User record created with correct plan (FREE by default)
-- [ ] Check session - User appears in sidebar with name, email, image
+- [ ] Visit home page (not logged in) — shows guest form with hero
+- [ ] Click "Zaloguj się" in header — redirects to Google OAuth
+- [ ] Complete Google sign-in — redirects to `/dashboard`
+- [ ] Check database — User record created with plan=FREE, creditsAvailable=5
+- [ ] Sidebar shows name, email, avatar, plan badge "FREE"
 
 ### Sign Out
-- [ ] Click "Wyloguj się" in sidebar - redirects to home page
-- [ ] Try accessing `/dashboard` - redirects to `/auth/signin`
+- [ ] Click "Wyloguj się" in sidebar — redirects to home page
+- [ ] Try accessing `/dashboard` — redirects to sign in
 
 ### Protected Routes
-- [ ] Access `/dashboard` without login - redirects to signin
-- [ ] Access `/dashboard/templates` without login - redirects to signin
-- [ ] Access `/dashboard/ads` without login - redirects to signin
+- [ ] Access `/dashboard` without login — redirects to sign in
+- [ ] Access `/dashboard/ads` without login — redirects to sign in
+- [ ] Access `/dashboard/new` without login — redirects to sign in
 
 ---
 
 ## 2. Credits System
 
-### FREE Plan Limits
-- [ ] New user starts with 0 creditsUsed, 3 remaining
-- [ ] Generate 1st ad - succeeds, creditsUsed = 1
-- [ ] Generate 2nd ad - succeeds, creditsUsed = 2
-- [ ] Generate 3rd ad - succeeds, creditsUsed = 3
-- [ ] Try 4th ad - fails with "No credits remaining" error
-- [ ] Check sidebar - credits display shows 0/3
+### FREE Plan (5 credits/month)
+- [ ] New user starts with creditsAvailable=5
+- [ ] Sidebar shows "5/5" credits
+- [ ] Generate ad — succeeds, creditsAvailable=4, sidebar updates
+- [ ] Generate 4 more ads — all succeed, creditsAvailable=0
+- [ ] Try generating when credits=0 — button is disabled, CTA "Zmień plan lub dokup kredyty" shown
+- [ ] Sidebar shows "0/5"
 
-### Credits Reset (30-day cycle)
-- [ ] Manually set `creditsReset` in database to 31+ days ago
-- [ ] Generate ad - should succeed and reset creditsUsed to 1
-- [ ] Check `creditsReset` - updated to current date
+### Boost Credits
+- [ ] Purchase boost pack via Stripe (test mode)
+- [ ] Sidebar shows boost credits as "+ N" in primary color
+- [ ] Generate ad with 0 subscription credits — uses boost credits
+- [ ] Boost credits decrement correctly
 
-### PREMIUM Plan
-- [ ] Manually set user plan to PREMIUM in database
-- [ ] Generate multiple ads - all succeed without limit
-- [ ] Check sidebar - credits display shows ∞
+### Credits Reset
+- [ ] Sidebar shows "Odnowienie X dni" countdown
+- [ ] After Stripe `invoice.paid` webhook — creditsAvailable resets to plan limit
+
+### Plan Labels & Limits
+| Plan | Credits/mo | Images |
+|------|-----------|--------|
+| FREE | 5 | 3 |
+| STARTER | 30 | 5 |
+| RESELER | 80 | 8 |
+| BUSINESS | 200 | 12 |
 
 ---
 
-## 3. Soft-Wall Flow (Unauthenticated Users)
+## 3. Guest (Unauthenticated) Flow
 
-### First-Time User
-- [ ] Visit home page (not logged in)
-- [ ] Upload images and fill form
-- [ ] Click "Generuj ogłoszenie"
-- [ ] Result displays after loading
-- [ ] **1.5 seconds later** - SoftWallModal appears
-- [ ] Modal shows benefits, "Zaloguj się i zapisz" button
+### Ad Generation
+- [ ] Visit home page — sees compact hero + AdGeneratorForm (no header)
+- [ ] Upload up to 3 images (guest limit)
+- [ ] Try uploading 4th image — rejected by UploadDropzone
+- [ ] Fill form and generate ad — result displays
+- [ ] **1.5 seconds after generation** — SoftWallModal "save" mode appears
 
-### Save Pending Ad
+### Rate Limiting
+- [ ] Generate 3 ads with same UUID (localStorage) — 3rd succeeds
+- [ ] Try 4th generation — SoftWallModal "limit" mode shown immediately (orange, no continue button)
+- [ ] Clear localStorage, same IP — IP limit allows up to 5/24h total
+
+### Soft-Wall Save Flow
 - [ ] Click "Zaloguj się i zapisz" in modal
-- [ ] Check browser IndexedDB - `marketplace-assistant:pending-ad` exists
-- [ ] Redirects to `/auth/signin?callbackUrl=/dashboard`
-- [ ] Complete Google sign-in
-- [ ] Redirects to dashboard
-- [ ] Success alert appears: "Ogłoszenie zostało zapisane w Twoim panelu!"
-- [ ] Check IndexedDB - pending ad cleared
-- [ ] Check database - Ad saved with DRAFT status
-- [ ] Recent ads list shows the saved ad
+- [ ] Check browser DevTools > Application > IndexedDB — `marketplace-assistant:pending-ad` key exists with ad data
+- [ ] Complete Google sign-in — redirects to `/dashboard`
+- [ ] `PendingAdHandler` runs on mount — POSTs to `/api/ads` with `fromSoftwall: true`
+- [ ] Page reloads automatically after save
+- [ ] Check database — Ad saved with DRAFT status
+- [ ] Dashboard recent ads list shows the saved ad
+- [ ] IndexedDB cleared
 
-### Continue Without Saving
-- [ ] Generate ad (not logged in)
-- [ ] Wait for modal to appear
-- [ ] Click "Kontynuuj bez zapisywania"
-- [ ] Modal closes, result still visible
-- [ ] No ad saved to database
+### Soft-Wall Credit Error
+- [ ] If user has 0 credits when pending ad saves — error alert shown in dashboard
+- [ ] Ad remains in IndexedDB (not cleared)
 
 ---
 
-## 4. Dashboard - Main Page
+## 4. Ad Generation & Save Flow
 
-### Stats Cards
-- [ ] Create ads with different statuses (DRAFT, PUBLISHED, SOLD)
-- [ ] Stats cards show correct counts:
-  - Total ads
-  - Drafts
-  - Published
-  - Sold
+### Generation
+- [ ] Navigate to `/dashboard/new`
+- [ ] Upload images (up to plan limit)
+- [ ] Select platform — tone auto-selects to platform default
+- [ ] Override tone manually — stays overridden
+- [ ] Select condition, price type, delivery options
+- [ ] Add optional product name and notes
+- [ ] Click "Generuj ogłoszenie" — FullscreenLoading shows
+- [ ] Generation completes — result section animates in
+- [ ] Session refreshed (credits updated in sidebar) — happens once, guarded by ref
 
-### Recent Ads List
-- [ ] Shows last 5 ads in reverse chronological order
-- [ ] Each card displays:
-  - Thumbnail image
-  - Title (truncated if long)
-  - Platform badge
-  - Status badge
-  - Price (min-max range or sold price)
-  - Created date
-- [ ] Click "View" (eye icon) - navigates to ad detail (placeholder)
-- [ ] Empty state - shows "Nie masz jeszcze żadnych ogłoszeń" with CTA
+### Result Actions
+- [ ] **"Zapisz"** (green Check) — saves ad, redirects to `/dashboard/ads`
+- [ ] **"Zapisz i stwórz następne"** (blue RotateCcw) — saves ad AND resets form in place (no redirect)
+- [ ] "Zapisz i stwórz następne" is disabled when title or description is empty
+- [ ] "Zapisz i stwórz następne" shows "Zapisywanie…" during save
+- [ ] On generation error — "Popraw" (ArrowLeft, retry keeping form data) and "Nowe ogłoszenie" (Plus, full reset) appear
 
-### Navigation
-- [ ] Click "Nowe ogłoszenie" - redirects to home page
-- [ ] Sidebar active state highlights "Pulpit"
-
----
-
-## 5. Dashboard - Templates Page
-
-### Create Template
-- [ ] Navigate to `/dashboard/templates`
-- [ ] Fill form: name, platform, tone, condition
-- [ ] Click "Utwórz szablon"
-- [ ] Success - template appears in list
-- [ ] Try duplicate name - error: "Template with this name already exists"
-- [ ] Leave name empty - error: "Nazwa szablonu jest wymagana"
-
-### Template List
-- [ ] Templates sorted by: isDefault DESC, createdAt DESC
-- [ ] Each card shows:
-  - Name
-  - Platform badge
-  - Tone badge
-  - Condition text
-  - Star icon if default
-  - Set default button (if not default)
-  - Delete button
-
-### Set Default
-- [ ] Click star button on non-default template
-- [ ] Template gets star icon
-- [ ] Previous default loses star
-- [ ] Check database - only one template has isDefault = true
-
-### Delete Template
-- [ ] Click trash button
-- [ ] Confirmation dialog appears
-- [ ] Confirm - template removed from list
-- [ ] Check database - template deleted
+### Inline Editing
+- [ ] Click Pencil icon on title — field becomes editable, auto-focused
+- [ ] Icon changes to green Check; Copy button stays active
+- [ ] Escape — exits edit mode
+- [ ] Cmd/Ctrl+Enter — exits edit mode
+- [ ] Empty title — red border + error, "Zapisz" disabled
+- [ ] Character counter turns red at >90% of platform limit
+- [ ] Platform limits enforced:
+  - OLX: title 70, description 1500
+  - Allegro Lokalnie: title 75, description 1500
+  - FB Marketplace: title 60, description 1000
+  - Vinted: title 100, description 750
 
 ---
 
-## 6. Ads Management
+## 5. Ad Management (`/dashboard/ads`)
 
-### Generate Ad (Logged In)
-- [ ] Upload images, fill form, generate ad
-- [ ] Result displays
-- [ ] Check database - Ad saved with DRAFT status
-- [ ] `images` field contains ImageAnalysis array (base64 URLs initially)
-- [ ] Background job runs - images uploaded to Supabase Storage
-- [ ] After ~5-10 seconds - check database again
-- [ ] `images` field updated with Supabase public URLs
+### Filter Bar — Desktop (≥640px)
+- [ ] Inline bar shows: Status dropdown, Platform dropdown, ad count, Sort dropdown
+- [ ] "Zaznacz wszystkie" toggle below ad count (right-aligned)
+- [ ] Dropdowns close on selection
+- [ ] URL updates with filter params
 
-### View Ad (via AdCard)
-- [ ] Click "View" button on ad card
-- [ ] (Currently navigates to placeholder - implementation pending)
+### Filter Bar — Mobile (<640px)
+- [ ] Shows "Sortuj i filtruj" button + ad count
+- [ ] Active filter badge shows count of active filters
+- [ ] Clicking button opens left-side drawer (slide-in animation, backdrop)
+- [ ] Drawer has 3 sections: Status, Platform, Sorting
+- [ ] Selecting option closes drawer
+- [ ] FAB "Nowe ogłoszenie" hides behind open drawer
 
-### Edit Parameters (via API)
-- [ ] Use PATCH `/api/ads/[id]` with updated title/description
-- [ ] Check database - changes reflected
-- [ ] Try updating soldPrice without status=SOLD - succeeds
-- [ ] Try status=SOLD without soldPrice - error: "soldPrice is required"
+### Search
+- [ ] Type in search box — results debounce 500ms, no submit needed
+- [ ] Clears results when search cleared
+- [ ] URL updates with `q=` param
 
-### Delete Ad
-- [ ] Click trash button on ad card
-- [ ] Confirmation dialog appears
-- [ ] Confirm - ad removed from list
-- [ ] Check database - ad deleted
-- [ ] Check Supabase Storage - images deleted from bucket
+### Sorting
+- [ ] Sort by: Najnowsze, Najstarsze, Ostatnio zmienione, Tytuł A-Z, Tytuł Z-A
+- [ ] URL updates with `sort=` and `order=` params
+
+### Pagination
+- [ ] 20 ads per page
+- [ ] Shows page numbers with ellipsis for large ranges
+- [ ] "Poprzednia" / "Następna" buttons
+- [ ] Changing filters resets to page 1
+
+### Bulk Selection
+- [ ] Checkbox appears on each AdCard when `onToggleSelect` active
+- [ ] Selecting card adds `ring-2 ring-primary` highlight
+- [ ] "Zaznacz wszystkie" selects all visible ads
+- [ ] Bulk actions bar appears: "Zaznaczono: N", CSV export button, deselect button
+- [ ] CSV export with selected IDs → file downloads
+
+---
+
+## 6. Ad Card Actions
+
+### Status-Based Buttons
+- [ ] DRAFT → "Opublikuj" button (green CheckCircle) visible
+- [ ] PUBLISHED → "Sprzedane" button (orange CircleDollarSign) visible
+- [ ] SOLD → neither Opublikuj nor Sprzedane; Edit button hidden
+- [ ] All states → View (Eye), Delete (Trash2) always visible
+
+### Delete
+- [ ] Click Trash2 — confirmation dialog appears
+- [ ] Confirm — ad removed from list
+- [ ] Check database — ad deleted
+- [ ] Check Supabase Storage — associated images deleted from bucket
 
 ---
 
 ## 7. CSV Export
 
-### Export All Ads
-- [ ] Navigate to dashboard
-- [ ] Use endpoint: GET `/api/ads/export`
-- [ ] CSV file downloads
-- [ ] Open in Excel/Google Sheets
-- [ ] Polish characters display correctly (UTF-8 BOM)
+### Bulk Export (selected ads)
+- [ ] Select ads in dashboard → click "Eksportuj CSV"
+- [ ] GET `/api/ads/export?ids=id1,id2,...` — returns only those ads
+
+### Filter Export
+- [ ] GET `/api/ads/export?status=SOLD` — returns only SOLD ads
+- [ ] GET `/api/ads/export?status=DRAFT` — returns only DRAFT ads
+
+### CSV Format
+- [ ] UTF-8 BOM present — Polish characters display correctly in Excel
 - [ ] Columns: ID, Platforma, Tytuł, Opis, Status, Cena Min, Cena Max, Cena Sprzedaży, Stan, Ton, Dostawa, Data utworzenia, Data aktualizacji
-- [ ] All user's ads included
-
-### Filter by Status
-- [ ] GET `/api/ads/export?status=SOLD`
-- [ ] CSV contains only SOLD ads
-- [ ] GET `/api/ads/export?status=DRAFT`
-- [ ] CSV contains only DRAFT ads
+- [ ] Fields with commas/quotes/newlines correctly escaped
+- [ ] Filename: `ogloszenia-YYYY-MM-DD.csv`
 
 ---
 
-## 8. Image Upload (Background Jobs)
+## 8. Image Upload & Storage
 
-### Successful Upload
-- [ ] Generate ad while logged in
-- [ ] Check network tab - API response returns quickly
-- [ ] Check database immediately - images contain base64 data
-- [ ] Wait 10 seconds
-- [ ] Check database again - images updated with Supabase URLs
-- [ ] Visit Supabase Storage bucket - images visible at `{userId}/{adId}/image-*.jpg`
+### Upload Flow
+- [ ] Drag-and-drop or click to select images
+- [ ] Skeleton placeholders shown during compression
+- [ ] Images resized to 800px width, 85% JPEG quality (sharp)
+- [ ] Preview thumbnails shown after upload
+- [ ] Removing image revokes object URL
 
-### Upload Failure (Edge Case)
-- [ ] Temporarily break Supabase credentials
-- [ ] Generate ad
-- [ ] API returns successfully (user not blocked)
-- [ ] Check console logs - background error logged
-- [ ] Images remain as base64 in database
+### Supabase Storage
+- [ ] After saving ad — images uploaded to `marketplace-ads` bucket
+- [ ] Stored at path: `{userId}/{adId}/image-{n}.jpg`
+- [ ] Ad record updated with Supabase public URLs (base64 discarded)
 
 ---
 
-## 9. Edge Cases & Error Handling
+## 9. Stripe Payments
 
-### No Credits
-- [ ] FREE user with 3 creditsUsed
-- [ ] Try to generate ad
-- [ ] Error: "No credits remaining. Upgrade to Premium for unlimited ads."
-- [ ] No ad created in database
+### Pricing Page
+- [ ] Visit `/pricing` unauthenticated — all CTAs redirect to sign in
+- [ ] Visit `/pricing` authenticated — "Obecny plan" badge on current tier
+- [ ] Boost packs section visible only for authenticated users
+- [ ] Clicking upgrade — redirects to Stripe Checkout (card + BLIK)
 
-### Invalid Platform (API)
-- [ ] POST `/api/templates` with invalid platform
-- [ ] Error 400: "Invalid platform value"
+### Subscription Webhooks
+- [ ] `checkout.session.completed` (subscription) — plan updated, `stripeSubscriptionId` set
+- [ ] `invoice.paid` — credits reset to plan limit, `creditsResetAt` updated
+- [ ] `customer.subscription.deleted` — plan downgraded to FREE, `stripeSubscriptionId` cleared
 
-### Unauthorized Access
-- [ ] Log out
-- [ ] Try GET `/api/ads` - Error 401: "Unauthorized"
-- [ ] Try POST `/api/templates` - Error 401: "Unauthorized"
+### Boost Webhook
+- [ ] `checkout.session.completed` (payment) — `boostCredits` incremented by pack amount
 
-### Ownership Validation
-- [ ] User A creates ad
-- [ ] User B tries to delete User A's ad via API
-- [ ] Error 404: "Ad not found" (ownership check prevents access)
+### Customer Portal
+- [ ] Paid users see "Zarządzaj subskrypcją" in sidebar
+- [ ] Click → redirects to Stripe Customer Portal
+- [ ] Can manage payment method, download invoices, cancel subscription
 
 ---
 
-## 10. UI/UX Polish
+## 10. Dashboard Overview
+
+### Stats Cards
+- [ ] Shows 4 cards: Total, Wersje robocze, Opublikowane, Sprzedane
+- [ ] Counts accurate after creating/changing ads
+- [ ] Staggered entrance animation on load
+
+### Recent Ads
+- [ ] Shows last 5 ads (most recent first)
+- [ ] Empty state shows "Nie masz jeszcze żadnych ogłoszeń" with CTA
+
+### PendingAdHandler
+- [ ] After soft-wall redirect + sign-in — pending ad auto-saved on dashboard mount
+- [ ] Success: page reloads, ad appears in list
+- [ ] Credit error (403): error alert shown for 8 seconds, IndexedDB not cleared
+
+---
+
+## 11. Sidebar
+
+### Credits Display
+- [ ] Shows `creditsAvailable/planLimit` (e.g., "4/5")
+- [ ] Boost credits shown as `+ N` in primary color (only if > 0)
+- [ ] Reset countdown: "Odnowienie X dni"
+- [ ] "Zmień plan lub dokup kredyty" link → `/pricing`
+- [ ] Paid plans: "Zarządzaj subskrypcją" button → Stripe Portal
+
+### Navigation
+- [ ] Pulpit → `/dashboard`
+- [ ] Ogłoszenia → `/dashboard/ads`
+- [ ] Szablony → `/dashboard/templates`
+- [ ] Cennik → `/pricing`
+- [ ] Active link highlighted
+
+---
+
+## 12. UI/UX
 
 ### Dark Mode
-- [ ] Toggle theme in header
-- [ ] All components render correctly in dark mode
-- [ ] Modal overlays are visible (black/70 opacity)
-- [ ] Colors have proper contrast
+- [ ] Toggle theme — all components render correctly in both modes
+- [ ] No hardcoded `dark:` classes needed (CSS variables handle it)
 
 ### Responsive Design
-- [ ] Test on mobile (< 640px)
-  - Sidebar becomes overlay with hamburger menu
-  - Stats cards stack vertically (1 column)
-  - AdCard layout stacks vertically
-- [ ] Test on tablet (640-1024px)
-  - Stats cards show 2 columns
-  - Sidebar still overlay
-- [ ] Test on desktop (≥1024px)
-  - Sidebar fixed on left
-  - Stats cards show 4 columns
-  - Full layout visible
+- [ ] Mobile (<640px): sidebar overlay, filter drawer, compact layout
+- [ ] Tablet (640–1024px): 2-column stats
+- [ ] Desktop (≥1024px): fixed sidebar, inline filter bar, 4-column stats
 
 ### Loading States
-- [ ] Generate ad - FullscreenLoading component shows
-- [ ] Progress bar animates
-- [ ] Platform-specific messages rotate
-- [ ] Can't submit form during loading
+- [ ] Generation: FullscreenLoading with platform-specific messages
+- [ ] Save: "Zapisywanie…" text + disabled buttons
+- [ ] Image upload: skeleton placeholders
 
 ---
 
-## 11. Prisma & Database
-
-### Schema Validation
-- [ ] Run `npx prisma validate` - no errors
-- [ ] Run `npx prisma format` - schema properly formatted
-
-### Migrations
-- [ ] Run `npx prisma db push` - tables created
-- [ ] Check Supabase dashboard - all tables exist:
-  - User, Account, Session, VerificationToken
-  - Ad, Template
-- [ ] Enums created: Plan, AdStatus, Platform, ToneStyle, ProductCondition
-
-### Indexes
-- [ ] Check Ad table indexes:
-  - `userId_createdAt` (DESC)
-  - `userId_status`
-- [ ] Check Template table indexes:
-  - `userId_isDefault`
-
----
-
-## 12. Security Checklist
+## 13. Security & Edge Cases
 
 - [ ] `.env.local` not committed to git
-- [ ] API routes validate user ownership (userId in WHERE clauses)
-- [ ] Protected routes redirect to signin
-- [ ] No sensitive data exposed in API responses
-- [ ] Prisma queries use parameterized inputs (no SQL injection)
+- [ ] API routes return 401 for unauthenticated requests
+- [ ] Ownership validation: User B cannot access/delete User A's ads (returns 404)
+- [ ] Stripe webhook validates signature via `STRIPE_WEBHOOK_SECRET`
+- [ ] Guest UUID spoofing doesn't bypass IP-based limit
 
 ---
 
@@ -300,20 +305,15 @@
 
 | Action | Expected Result |
 |--------|----------------|
-| Generate ad (no login) | Result shown + SoftWall modal after 1.5s |
-| Generate ad (logged in, FREE, credits available) | Result shown + saved to DB + images uploaded async |
-| Generate ad (logged in, FREE, no credits) | Error: "No credits remaining" |
-| Generate ad (logged in, PREMIUM) | Always succeeds, unlimited |
-| Sign in after pending ad | Dashboard shows success alert, ad saved |
-| Create duplicate template name | Error: "Template with this name already exists" |
-| Delete ad | Ad removed from DB + images deleted from storage |
-| Set template as default | Only one template has isDefault = true |
-| Export CSV | All ads exported with Polish characters intact |
-
----
-
-## Known Issues / Future Work
-
-- **ProductCondition enum mismatch**: Prisma uses underscores (`uzywany_jak_nowy`), app types use spaces/commas (`"używany, jak nowy"`). Currently handled with local mappings in templates page. Consider normalizing across entire app.
-- **Ad detail page**: AdCard "View" button currently redirects to placeholder. Full ad detail page not implemented.
-- **Ads list page**: Full `/dashboard/ads` page with filtering, pagination, bulk actions not implemented.
+| Generate ad (guest, credits available) | Result shown + SoftWallModal "save" after 1.5s |
+| Generate ad (guest, limit reached) | SoftWallModal "limit" mode shown immediately |
+| Click "Zaloguj się i zapisz" in modal | Ad stored in IndexedDB, redirected to OAuth |
+| Sign in with pending ad in IndexedDB | PendingAdHandler auto-saves ad on dashboard, page reloads |
+| Generate ad (authenticated, credits available) | Result shown, credits decremented |
+| Click "Zapisz" | Ad saved → redirect to /dashboard/ads |
+| Click "Zapisz i stwórz następne" | Ad saved → form reset in place (no redirect) |
+| Generate with 0 credits | Generate button disabled, "Zmień plan" CTA shown |
+| Delete ad | Ad removed from DB + images deleted from Supabase Storage |
+| Export selected ads CSV | Only selected IDs exported, UTF-8 BOM for Excel |
+| Stripe invoice.paid webhook | Credits reset to plan limit |
+| Stripe subscription.deleted webhook | Plan downgraded to FREE |
