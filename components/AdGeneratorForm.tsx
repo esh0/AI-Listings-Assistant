@@ -158,15 +158,37 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
         }
     }, [result, isLoading, status, router, updateSession]);
 
-    const handleSave = useCallback(async () => {
+    const handleReset = useCallback(() => {
+        images.forEach((img) => {
+            if (img.preview) {
+                URL.revokeObjectURL(img.preview);
+            }
+        });
+
+        setImages([]);
+        setPlatform(DEFAULT_PLATFORM);
+        setProductName("");
+        setCondition(DEFAULT_CONDITION);
+        setPrice("");
+        setDelivery(DEFAULT_DELIVERY);
+        setNotes("");
+        setSelectedTone(DEFAULT_TONE);
+        setPriceType(DEFAULT_PRICE_TYPE);
+        setResult(null);
+        setError(null);
+        setEditedTitle("");
+        setEditedDescription("");
+        hasInitializedEdits.current = false;
+    }, [images]);
+
+    const saveAd = useCallback(async (): Promise<boolean> => {
         if (!result || !result.isValid || !editedTitle || !editedDescription) {
-            return;
+            return false;
         }
 
         setIsSaving(true);
 
         try {
-            // Save ad to database via /api/ads endpoint
             const response = await fetch("/api/ads", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -199,15 +221,29 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
                 throw new Error("Failed to save ad");
             }
 
-            // Redirect to ads list
-            router.push("/dashboard/ads");
+            return true;
         } catch (error) {
             console.error("Failed to save ad:", error);
             alert("Nie udało się zapisać ogłoszenia. Spróbuj ponownie.");
+            return false;
         } finally {
             setIsSaving(false);
         }
-    }, [result, platform, selectedTone, condition, delivery, productName, notes, priceType, price, base64Images, router, editedTitle, editedDescription]);
+    }, [result, platform, selectedTone, condition, delivery, productName, notes, priceType, price, base64Images, editedTitle, editedDescription]);
+
+    const handleSave = useCallback(async () => {
+        const ok = await saveAd();
+        if (ok) {
+            router.push("/dashboard/ads");
+        }
+    }, [saveAd, router]);
+
+    const handleSaveAndNew = useCallback(async () => {
+        const ok = await saveAd();
+        if (ok) {
+            handleReset();
+        }
+    }, [saveAd, handleReset]);
 
     // Cleanup abort controller
     useEffect(() => {
@@ -316,29 +352,6 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
             abortControllerRef.current = null;
         }
     }, [images, platform, productName, condition, price, delivery, notes, selectedTone, priceType]);
-
-    const handleReset = useCallback(() => {
-        images.forEach((img) => {
-            if (img.preview) {
-                URL.revokeObjectURL(img.preview);
-            }
-        });
-
-        setImages([]);
-        setPlatform(DEFAULT_PLATFORM);
-        setProductName("");
-        setCondition(DEFAULT_CONDITION);
-        setPrice("");
-        setDelivery(DEFAULT_DELIVERY);
-        setNotes("");
-        setSelectedTone(DEFAULT_TONE);
-        setPriceType(DEFAULT_PRICE_TYPE);
-        setResult(null);
-        setError(null);
-        setEditedTitle("");
-        setEditedDescription("");
-        hasInitializedEdits.current = false;
-    }, [images]);
 
     const handleRetry = useCallback(() => {
         setResult(null);
@@ -523,13 +536,13 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
                                     )}
                                     <Button
                                         size="lg"
-                                        onClick={handleReset}
-                                        disabled={isSaving}
-                                        aria-label="Zacznij od nowa"
+                                        onClick={status === "authenticated" ? handleSaveAndNew : handleReset}
+                                        disabled={status === "authenticated" ? !canSave : isSaving}
+                                        aria-label={status === "authenticated" ? "Zapisz i stwórz następne ogłoszenie" : "Zacznij od nowa"}
                                         className="bg-primary hover:bg-primary/90 text-primary-foreground h-14 text-lg font-bold transition-colors shadow-lg hover:shadow-xl disabled:opacity-50"
                                     >
                                         <RotateCcw className="h-5 w-5 mr-2" aria-hidden="true" />
-                                        {status === "authenticated" ? "Zapisz i stwórz następne" : "Nowe ogłoszenie"}
+                                        {status === "authenticated" ? (isSaving ? "Zapisywanie…" : "Zapisz i stwórz następne") : "Nowe ogłoszenie"}
                                     </Button>
                                 </>
                             )}
