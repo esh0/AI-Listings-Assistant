@@ -79,3 +79,4 @@ lerna-debug.log*
 /lib/generated/prisma
 .env.local.backup*
 .env.test
+.superpowers/
