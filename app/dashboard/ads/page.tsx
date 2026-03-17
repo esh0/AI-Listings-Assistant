@@ -2,9 +2,6 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { AdsList } from "@/components/AdsList";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 // Force Node.js runtime (Prisma not compatible with Edge)
 export const runtime = "nodejs";
 
@@ -101,23 +98,11 @@ export default async function AdsPage(props: { searchParams: SearchParams }) {
 
     return (
         <>
-        <div className="space-y-10">
+        <div className="max-w-4xl mx-auto space-y-4">
             {/* Header */}
-            <div className="flex items-center justify-between pl-14 lg:pl-0">
-                <div>
-                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground tracking-tight">
-                        Ogłoszenia
-                    </h1>
-                    <p className="text-muted-foreground mt-1">
-                        Zarządzaj swoimi ogłoszeniami
-                    </p>
-                </div>
-                <Link href="/dashboard/new" className="hidden lg:flex">
-                    <Button className="bg-primary hover:bg-primary/90 text-base px-6 py-3 h-auto">
-                        <Plus className="h-5 w-5 mr-2" />
-                        Nowe ogłoszenie
-                    </Button>
-                </Link>
+            <div className="pl-14 lg:pl-0">
+                <h1 className="text-xl sm:text-2xl font-bold">Moje ogłoszenia</h1>
+                <p className="text-muted-foreground text-sm mt-1">Zarządzaj swoimi wygenerowanymi ogłoszeniami</p>
             </div>
 
             {/* Ads List with filters */}
