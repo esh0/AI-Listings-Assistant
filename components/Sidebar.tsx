@@ -18,7 +18,6 @@ import {
 } from "lucide-react";
 import { useState, useCallback, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface SidebarProps {
     user: {
@@ -30,6 +29,8 @@ interface SidebarProps {
         boostCredits?: number;
         creditsResetAt?: string;
     };
+    collapsed?: boolean;
+    onCollapse?: (v: boolean) => void;
 }
 
 const PLAN_LABELS: Record<string, string> = {
@@ -54,7 +55,7 @@ const mainItems = [
     { href: "/dashboard/stats", label: "Statystyki", icon: BarChart3 },
 ];
 
-export function Sidebar({ user }: SidebarProps) {
+export function Sidebar({ user, collapsed = false }: SidebarProps) {
     const pathname = usePathname();
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const [isPortalLoading, setIsPortalLoading] = useState(false);
@@ -100,17 +101,18 @@ export function Sidebar({ user }: SidebarProps) {
     const isActive = (href: string) => pathname === href;
 
     const sidebarContent = (
-        <div className="flex h-full flex-col">
+        <div className="flex h-full flex-col overflow-hidden">
             {/* Header */}
-            <div className="px-4 py-4 flex items-center justify-between">
-                <Link href="/" className="flex items-center gap-2">
-                    <ShoppingBag className="h-5 w-5 text-primary" />
-                    <span className="text-sm font-semibold tracking-tight">
-                        Marketplace <span className="font-serif italic text-primary">AI</span>
-                    </span>
+            <div className={cn("py-4 flex items-center", collapsed ? "justify-center px-2" : "justify-between px-4")}>
+                <Link href="/" className="flex items-center gap-2 min-w-0">
+                    <ShoppingBag className="h-5 w-5 text-primary shrink-0" />
+                    {!collapsed && (
+                        <span className="text-sm font-semibold tracking-tight whitespace-nowrap">
+                            Marketplace <span className="font-serif italic text-primary">AI</span>
+                        </span>
+                    )}
                 </Link>
-                <div className="flex items-center gap-1">
-                    <ThemeToggle />
+                {!collapsed && (
                     <button
                         onClick={() => setIsMobileOpen(false)}
                         className="lg:hidden p-1.5 rounded-md hover:bg-muted transition-colors"
@@ -118,14 +120,16 @@ export function Sidebar({ user }: SidebarProps) {
                     >
                         <X className="h-5 w-5" />
                     </button>
-                </div>
+                )}
             </div>
 
             {/* Navigation */}
-            <nav className="flex-1 px-3 py-2">
-                <p className="px-3 mb-2 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
-                    Menu
-                </p>
+            <nav className="flex-1 px-2 py-2">
+                {!collapsed && (
+                    <p className="px-3 mb-2 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+                        Menu
+                    </p>
+                )}
                 <div className="space-y-0.5">
                     {mainItems.map((item) => {
                         const Icon = item.icon;
@@ -135,15 +139,17 @@ export function Sidebar({ user }: SidebarProps) {
                                 key={item.href}
                                 href={item.href}
                                 onClick={() => setIsMobileOpen(false)}
+                                title={collapsed ? item.label : undefined}
                                 className={cn(
                                     "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
+                                    collapsed && "justify-center px-2",
                                     active
                                         ? "bg-accent text-primary font-medium"
                                         : "text-foreground hover:bg-accent/50"
                                 )}
                             >
                                 <Icon className="h-4 w-4 shrink-0" />
-                                <span>{item.label}</span>
+                                {!collapsed && <span>{item.label}</span>}
                             </Link>
                         );
                     })}
@@ -151,74 +157,92 @@ export function Sidebar({ user }: SidebarProps) {
             </nav>
 
             {/* Footer */}
-            <div className="px-3 py-3 space-y-2">
+            <div className={cn("py-3 space-y-2", collapsed ? "px-2" : "px-3")}>
                 {/* Credits widget */}
-                <Link
-                    href="/pricing"
-                    className="block mx-0 p-3 rounded-lg bg-primary/5 border border-primary/10 hover:bg-primary/10 transition-colors"
-                >
-                    <div className="flex items-center justify-between text-xs mb-1">
-                        <div className="flex items-center gap-2">
-                            <Coins className="h-3.5 w-3.5 text-primary" />
-                            <span className="font-medium">
-                                {credits}{boost > 0 ? ` +${boost}` : ""} / {planLimit} kredytów
+                {!collapsed ? (
+                    <Link
+                        href="/pricing"
+                        className="block p-3 rounded-lg bg-primary/5 border border-primary/10 hover:bg-primary/10 transition-colors"
+                    >
+                        <div className="flex items-center justify-between text-xs mb-1">
+                            <div className="flex items-center gap-2">
+                                <Coins className="h-3.5 w-3.5 text-primary" />
+                                <span className="font-medium">
+                                    {credits}{boost > 0 ? ` +${boost}` : ""} / {planLimit} kredytów
+                                </span>
+                            </div>
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted font-medium">
+                                {PLAN_LABELS[plan]}
                             </span>
                         </div>
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted font-medium">
-                            {PLAN_LABELS[plan]}
-                        </span>
-                    </div>
-                    <div className="w-full h-1.5 rounded-full bg-muted mt-1 overflow-hidden">
-                        <div
-                            className="h-full rounded-full bg-gradient-primary transition-all"
-                            style={{ width: `${creditPct}%` }}
-                        />
-                    </div>
-                    {getResetLabel() && (
-                        <p className="text-[10px] text-muted-foreground mt-1.5">
-                            Odnowienie: {planLimit} kredytów {getResetLabel()}
-                        </p>
-                    )}
-                    <p className="text-[10px] text-primary mt-0.5 font-medium">Dokup więcej →</p>
-                </Link>
+                        <div className="w-full h-1.5 rounded-full bg-muted mt-1 overflow-hidden">
+                            <div
+                                className="h-full rounded-full bg-gradient-primary transition-all"
+                                style={{ width: `${creditPct}%` }}
+                            />
+                        </div>
+                        {getResetLabel() && (
+                            <p className="text-[10px] text-muted-foreground mt-1.5">
+                                Odnowienie: {planLimit} kredytów {getResetLabel()}
+                            </p>
+                        )}
+                        <p className="text-[10px] text-primary mt-0.5 font-medium">Dokup więcej →</p>
+                    </Link>
+                ) : (
+                    <Link
+                        href="/pricing"
+                        title="Kredyty"
+                        className="flex justify-center py-2 rounded-lg hover:bg-accent/50 transition-colors"
+                    >
+                        <Coins className="h-4 w-4 text-primary" />
+                    </Link>
+                )}
 
                 {/* User info */}
-                <div className="px-3 py-2 rounded-lg bg-muted/50">
-                    <p className="text-xs font-medium truncate">{user.name || "User"}</p>
-                    <p className="text-[10px] text-muted-foreground truncate">{user.email}</p>
-                </div>
+                {!collapsed && (
+                    <div className="px-3 py-2 rounded-lg bg-muted/50">
+                        <p className="text-xs font-medium truncate">{user.name || "User"}</p>
+                        <p className="text-[10px] text-muted-foreground truncate">{user.email}</p>
+                    </div>
+                )}
 
                 {/* Bottom nav */}
                 <div className="space-y-0.5">
                     <Link
                         href="/dashboard/settings"
                         onClick={() => setIsMobileOpen(false)}
+                        title={collapsed ? "Ustawienia" : undefined}
                         className={cn(
                             "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
+                            collapsed && "justify-center px-2",
                             isActive("/dashboard/settings")
                                 ? "bg-accent text-primary font-medium"
                                 : "text-foreground hover:bg-accent/50"
                         )}
                     >
                         <Settings className="h-4 w-4 shrink-0" />
-                        <span>Ustawienia</span>
+                        {!collapsed && <span>Ustawienia</span>}
                     </Link>
-                    {isPaid && (
+                    {isPaid && !collapsed && (
                         <button
                             onClick={handlePortal}
                             disabled={isPortalLoading}
                             className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-foreground hover:bg-accent/50 transition-colors disabled:opacity-50"
                         >
-                            <Settings className="h-4 w-4 shrink-0 opacity-0" aria-hidden />
+                            <span className="h-4 w-4 shrink-0" />
                             <span>{isPortalLoading ? "Przekierowuję…" : "Zarządzaj subskrypcją"}</span>
                         </button>
                     )}
                     <button
                         onClick={handleSignOut}
-                        className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
+                        title={collapsed ? "Wyloguj" : undefined}
+                        className={cn(
+                            "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-foreground hover:bg-destructive/10 hover:text-destructive transition-colors",
+                            collapsed && "justify-center px-2"
+                        )}
                     >
                         <LogOut className="h-4 w-4 shrink-0" />
-                        <span>Wyloguj</span>
+                        {!collapsed && <span>Wyloguj</span>}
                     </button>
                 </div>
             </div>
@@ -258,7 +282,10 @@ export function Sidebar({ user }: SidebarProps) {
             </aside>
 
             {/* Desktop sidebar */}
-            <aside className="hidden lg:flex lg:flex-col lg:w-72 lg:fixed lg:inset-y-0 lg:bg-card lg:border-r lg:border-border">
+            <aside className={cn(
+                "hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:bg-card lg:border-r lg:border-border transition-all duration-300",
+                collapsed ? "lg:w-16" : "lg:w-72"
+            )}>
                 {sidebarContent}
             </aside>
         </>
