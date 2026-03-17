@@ -319,7 +319,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                         : <Square className="h-3.5 w-3.5" />
                     }
                     {allSelected ? "Odznacz wszystkie" : "Zaznacz wszystkie"}
-                    <span className="text-muted-foreground">({totalFilteredCount})</span>
+                    <span className="text-muted-foreground">({ads.length})</span>
                 </button>
             )}
 
