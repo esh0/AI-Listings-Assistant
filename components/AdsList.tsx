@@ -286,6 +286,21 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                         <Button size="sm" variant="outline" onClick={handleExportSelected}>
                             <Download className="h-3.5 w-3.5 mr-1" /> CSV
                         </Button>
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                            onClick={async () => {
+                                if (!confirm(`Usunąć ${selectedIds.size} ogłoszeń?`)) return;
+                                for (const id of selectedIds) {
+                                    await fetch(`/api/ads/${id}`, { method: "DELETE" });
+                                }
+                                setSelectedIds(new Set());
+                                router.refresh();
+                            }}
+                        >
+                            <Trash2 className="h-3.5 w-3.5 mr-1" /> Usuń
+                        </Button>
                         <Button size="sm" variant="ghost" onClick={() => setSelectedIds(new Set())}>
                             <X className="h-3.5 w-3.5" />
                         </Button>
