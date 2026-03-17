@@ -70,7 +70,7 @@ export default function RootLayout({
         <html lang="pl" suppressHydrationWarning className="[color-scheme:light] dark:[color-scheme:dark]">
             <head>
                 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-                <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+                <meta name="theme-color" content="#0a0d14" media="(prefers-color-scheme: dark)" />
             </head>
             <body className={`${spaceGrotesk.variable} ${instrumentSerif.variable} font-sans antialiased`}>
                 <AuthProvider>
