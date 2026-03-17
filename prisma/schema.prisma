@@ -62,10 +62,11 @@ model User {
   stripeCustomerId     String?  @unique
   stripeSubscriptionId String?  @unique
 
-  ads       Ad[]
-  templates Template[]
-  accounts  Account[]
-  sessions  Session[]
+  ads          Ad[]
+  templates    Template[]
+  accounts     Account[]
+  sessions     Session[]
+  activityLogs ActivityLog[]
 }
 
 model Ad {
@@ -104,6 +105,17 @@ model Template {
 
   @@unique([userId, name])
   @@index([userId, isDefault])
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  action    String
+  detail    String
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt(sort: Desc)])
 }
 
 model GuestUsage {

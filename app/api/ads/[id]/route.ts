@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { deleteAdImages } from "@/lib/image-upload";
+import { logActivity, adDetail } from "@/lib/activity";
 
 export const runtime = "nodejs";
 
@@ -123,6 +124,16 @@ export async function PATCH(
             data: updateData,
         });
 
+        // Log status change activity (fire-and-forget)
+        const STATUS_ACTIONS: Record<string, string> = {
+            PUBLISHED: "AD_PUBLISHED",
+            SOLD: "AD_SOLD",
+            ARCHIVED: "AD_ARCHIVED",
+        };
+        if (body.status && STATUS_ACTIONS[body.status]) {
+            logActivity(session.user.id, STATUS_ACTIONS[body.status], adDetail(updatedAd.title, updatedAd.platform)).catch(() => {});
+        }
+
         return NextResponse.json(updatedAd);
     } catch (error) {
         console.error("PATCH /api/ads/[id] error:", error);
@@ -173,6 +184,9 @@ export async function DELETE(
         deleteAdImages(session.user.id, id).catch((error) => {
             console.error("Failed to delete images from storage:", error);
         });
+
+        // Log activity before deletion (fire-and-forget)
+        logActivity(session.user.id, "AD_DELETED", adDetail(existingAd.title, existingAd.platform)).catch(() => {});
 
         // Delete ad from database
         await prisma.ad.delete({

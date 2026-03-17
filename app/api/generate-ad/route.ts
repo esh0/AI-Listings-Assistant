@@ -5,6 +5,7 @@ import { generateAd } from "@/lib/openai";
 import { auth } from "@/auth";
 import { consumeCredit, IMAGE_LIMITS } from "@/lib/credits";
 import { checkGuestLimit, consumeGuestCredit, hashIP, GUEST_MAX_IMAGES } from "@/lib/guest-tracking";
+import { logActivity, adDetail } from "@/lib/activity";
 
 export const runtime = "nodejs";
 export const maxDuration = 60; // 60 seconds timeout
@@ -121,6 +122,9 @@ export async function POST(request: NextRequest) {
 
         // Generate ad using OpenAI (authenticated path)
         const result = await generateAd(validatedData);
+
+        // Log activity (fire-and-forget, don't block response)
+        logActivity(session.user.id, "AD_GENERATED", adDetail(result.title ?? validatedData.productName, validatedData.platform)).catch(() => {});
 
         return NextResponse.json(result);
     } catch (error) {

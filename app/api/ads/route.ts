@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { AdStatus } from "@prisma/client";
 import { uploadImageFromBase64 } from "@/lib/image-upload";
 import { consumeCredit } from "@/lib/credits";
+import { logActivity, adDetail } from "@/lib/activity";
 
 export const runtime = "nodejs";
 
@@ -155,6 +156,9 @@ export async function POST(request: NextRequest) {
                 parameters: structuredClone(parameters),
             },
         });
+
+        // Log activity (fire-and-forget)
+        logActivity(session.user.id, "AD_SAVED", adDetail(ad.title, ad.platform)).catch(() => {});
 
         return NextResponse.json(ad, { status: 201 });
     } catch (error) {
