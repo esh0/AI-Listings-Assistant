@@ -35,10 +35,10 @@ interface AdCardProps {
 }
 
 const STATUS_LABELS: Record<AdStatus, string> = {
-    DRAFT: "Wersja robocza",
+    DRAFT: "Utworzone",
     PUBLISHED: "Opublikowane",
     SOLD: "Sprzedane",
-    ARCHIVED: "Zarchiwizowane",
+    ARCHIVED: "Wycofane",
 };
 
 const STATUS_COLORS: Record<AdStatus, string> = {

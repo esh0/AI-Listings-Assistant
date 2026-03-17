@@ -30,7 +30,7 @@ export function StatsCards({ stats }: StatsCardsProps) {
             icon: ShoppingCart,
         },
         {
-            label: "Robocze",
+            label: "Wycofane",
             value: stats.drafts,
             icon: Ban,
         },
