@@ -1,25 +1,7 @@
 import type { Metadata, Viewport } from "next";
-import { Space_Grotesk, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AuthProvider } from "@/components/AuthProvider";
-
-const spaceGrotesk = Space_Grotesk({
-    subsets: ["latin", "latin-ext"],
-    variable: "--font-sans",
-    display: "swap",
-    preload: true,
-    fallback: ['system-ui', 'arial'],
-});
-
-const instrumentSerif = Instrument_Serif({
-    weight: "400",
-    subsets: ["latin", "latin-ext"],
-    variable: "--font-serif",
-    display: "swap",
-    preload: true,
-    fallback: ['Georgia', 'serif'],
-});
 
 export const viewport: Viewport = {
     width: "device-width",
@@ -69,10 +51,13 @@ export default function RootLayout({
     return (
         <html lang="pl" suppressHydrationWarning className="[color-scheme:light] dark:[color-scheme:dark]">
             <head>
+                <link rel="preconnect" href="https://fonts.googleapis.com" />
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+                <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
                 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
                 <meta name="theme-color" content="#0a0d14" media="(prefers-color-scheme: dark)" />
             </head>
-            <body className={`${spaceGrotesk.variable} ${instrumentSerif.variable} font-sans antialiased`}>
+            <body className="antialiased">
                 <AuthProvider>
                     <ThemeProvider
                         attribute="class"

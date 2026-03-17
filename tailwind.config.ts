@@ -10,19 +10,8 @@ const config: Config = {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['var(--font-sans)'],
-                serif: ['var(--font-serif)'],
-            },
-            fontSize: {
-                'xs': ['0.75rem', { lineHeight: '1.5', letterSpacing: '0.025em' }],
-                'sm': ['0.875rem', { lineHeight: '1.5', letterSpacing: '0' }],
-                'base': ['1rem', { lineHeight: '1.5', letterSpacing: '0' }],
-                'lg': ['1.125rem', { lineHeight: '1.4', letterSpacing: '-0.01em' }],
-                'xl': ['1.25rem', { lineHeight: '1.4', letterSpacing: '-0.01em' }],
-                '2xl': ['1.5rem', { lineHeight: '1.3', letterSpacing: '-0.02em' }],
-                '3xl': ['clamp(1.875rem, 1.5rem + 1.5vw, 2.5rem)', { lineHeight: '1.2', letterSpacing: '-0.02em' }],
-                '4xl': ['clamp(2.25rem, 1.75rem + 2vw, 3rem)', { lineHeight: '1.1', letterSpacing: '-0.03em' }],
-                '5xl': ['clamp(3rem, 2rem + 3vw, 4rem)', { lineHeight: '1', letterSpacing: '-0.03em' }],
+                sans: ['Space Grotesk', 'system-ui', 'sans-serif'],
+                serif: ['Instrument Serif', 'Georgia', 'serif'],
             },
             colors: {
                 border: "hsl(var(--border))",

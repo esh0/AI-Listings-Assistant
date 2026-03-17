@@ -4,10 +4,6 @@
 
 @layer base {
     :root {
-        /* Typography scale with fluid sizing */
-        --font-sans: 'Space Grotesk', system-ui, -apple-system, sans-serif;
-        --font-serif: 'Instrument Serif', Georgia, serif;
-
         /* Neutral cool tones — orange primary stands out more */
         --background: 0 0% 99%;
         --foreground: 220 20% 10%;
@@ -70,8 +66,15 @@
         @apply border-border;
     }
 
+    html {
+        font-family: Space Grotesk, system-ui, sans-serif;
+    }
+
     body {
         @apply bg-background text-foreground;
+        font-family: Space Grotesk, system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
         position: relative;
     }
 
