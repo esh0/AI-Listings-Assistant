@@ -218,9 +218,12 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                     variant="outline"
                     size="icon"
                     onClick={() => setShowFilters((v) => !v)}
-                    className={cn("shrink-0", showFilters && "border-primary text-primary")}
+                    className={cn("shrink-0 relative", (showFilters || currentFilter !== "all" || currentPlatform !== "all") && "border-primary text-primary")}
                 >
                     <Filter className="h-4 w-4" />
+                    {(currentFilter !== "all" || currentPlatform !== "all") && (
+                        <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-primary" />
+                    )}
                 </Button>
             </div>
 
