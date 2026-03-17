@@ -1,5 +1,7 @@
-import { FileText, Edit, CheckCircle, DollarSign } from "lucide-react";
-import { Card } from "@/components/ui/card";
+"use client";
+
+import { motion } from "framer-motion";
+import { FileText, Eye, ShoppingCart, Ban } from "lucide-react";
 
 interface StatsCardsProps {
     stats: {
@@ -10,66 +12,50 @@ interface StatsCardsProps {
     };
 }
 
-const STAGGER_CLASSES = [
-    "animate-stagger-1",
-    "animate-stagger-2",
-    "animate-stagger-3",
-    "animate-stagger-4",
-] as const;
-
 export function StatsCards({ stats }: StatsCardsProps) {
     const cards = [
         {
-            title: "Wszystkie",
+            label: "Utworzone",
             value: stats.total,
             icon: FileText,
-            color: "text-primary",
-            bgColor: "bg-primary/10",
         },
         {
-            title: "Robocze",
-            value: stats.drafts,
-            icon: Edit,
-            color: "text-muted-foreground",
-            bgColor: "bg-muted",
-        },
-        {
-            title: "Opublikowane",
+            label: "Opublikowane",
             value: stats.published,
-            icon: CheckCircle,
-            color: "text-success",
-            bgColor: "bg-success/10",
+            icon: Eye,
         },
         {
-            title: "Sprzedane",
+            label: "Sprzedane",
             value: stats.sold,
-            icon: DollarSign,
-            color: "text-primary",
-            bgColor: "bg-primary/10",
+            icon: ShoppingCart,
+        },
+        {
+            label: "Robocze",
+            value: stats.drafts,
+            icon: Ban,
         },
     ];
 
     return (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
-            {cards.map((card, index) => {
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {cards.map((card, i) => {
                 const Icon = card.icon;
-
                 return (
-                    <Card key={card.title} className={`p-4 sm:p-5 ${STAGGER_CLASSES[index]}`}>
-                        <div className="flex items-center gap-3">
-                            <div className={`p-2 sm:p-3 rounded-lg flex-shrink-0 ${card.bgColor}`}>
-                                <Icon className={`h-5 w-5 sm:h-6 sm:w-6 ${card.color}`} />
-                            </div>
-                            <div>
-                                <p className="text-xl sm:text-3xl font-bold text-foreground tracking-tight">
-                                    {card.value}
-                                </p>
-                                <p className="text-xs sm:text-sm text-muted-foreground">
-                                    {card.title}
-                                </p>
-                            </div>
+                    <motion.div
+                        key={card.label}
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.08 }}
+                        className="rounded-xl border border-border bg-card p-3 sm:p-4 flex items-center gap-3"
+                    >
+                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                            <Icon className="h-4 w-4 text-primary" />
                         </div>
-                    </Card>
+                        <div>
+                            <p className="text-xl font-bold leading-tight">{card.value}</p>
+                            <p className="text-[11px] text-muted-foreground">{card.label}</p>
+                        </div>
+                    </motion.div>
                 );
             })}
         </div>

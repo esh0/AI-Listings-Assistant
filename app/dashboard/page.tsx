@@ -5,7 +5,6 @@ import { StatsCards } from "@/components/StatsCards";
 import { RecentAdsList } from "@/components/RecentAdsList";
 import { PendingAdHandler } from "@/components/PendingAdHandler";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 
 // Force Node.js runtime (Prisma not compatible with Edge)
@@ -40,28 +39,24 @@ export default async function DashboardPage() {
     const publishedAds = countByStatus["PUBLISHED"] ?? 0;
     const soldAds = countByStatus["SOLD"] ?? 0;
 
+    const firstName = session.user.name?.split(" ")[0] || "User";
+
     return (
         <>
-        <div className="space-y-10">
+        <div className="max-w-5xl mx-auto space-y-6">
             {/* Pending Ad Handler - saves ad from IndexedDB if exists */}
             <PendingAdHandler />
 
             {/* Header */}
-            <div className="flex items-center justify-between animate-fade-in pl-14 lg:pl-0">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pl-14 lg:pl-0">
                 <div>
-                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground tracking-tight">
-                        Pulpit
+                    <h1 className="text-xl sm:text-2xl font-bold">
+                        Witaj, {firstName}! 👋
                     </h1>
-                    <p className="text-muted-foreground mt-1">
-                        Witaj ponownie, <span className="font-semibold text-foreground">{session.user.name || "User"}</span>
+                    <p className="text-muted-foreground text-sm mt-1">
+                        Oto podsumowanie Twoich ogłoszeń
                     </p>
                 </div>
-                <Link href="/dashboard/new" className="hidden lg:flex">
-                    <Button className="bg-primary hover:bg-primary/90 text-base px-6 py-3 h-auto">
-                        <Plus className="h-5 w-5 mr-2" />
-                        Nowe ogłoszenie
-                    </Button>
-                </Link>
             </div>
 
             {/* Stats Cards */}
@@ -78,12 +73,12 @@ export default async function DashboardPage() {
             <RecentAdsList ads={recentAds} />
         </div>
 
-        {/* FAB — mobile only */}
+        {/* FAB */}
         <Link
             href="/dashboard/new"
-            className="lg:hidden fixed bottom-6 right-6 z-40 flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-5 py-3.5 rounded-full shadow-lg transition-colors"
+            className="fixed bottom-6 right-6 z-50 sm:bottom-8 sm:right-8 flex items-center gap-1.5 bg-gradient-primary text-primary-foreground font-semibold px-5 py-3 rounded-full shadow-lg hover:opacity-90 transition-opacity text-sm"
         >
-            <Plus className="h-5 w-5" />
+            <Plus className="h-4 w-4" />
             Nowe ogłoszenie
         </Link>
         </>
