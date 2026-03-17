@@ -4,17 +4,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import {
-    Home,
+    LayoutDashboard,
     FileText,
-    Bookmark,
+    Layout,
+    History,
+    BarChart3,
+    Settings,
+    ShoppingBag,
     LogOut,
-    CreditCard,
+    Coins,
     Menu,
     X,
-    Tag,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { useState, useCallback, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -45,54 +46,34 @@ const PLAN_CREDITS: Record<string, number> = {
     BUSINESS: 200,
 };
 
+const mainItems = [
+    { href: "/dashboard", label: "Przegląd", icon: LayoutDashboard },
+    { href: "/dashboard/ads", label: "Moje ogłoszenia", icon: FileText },
+    { href: "/dashboard/templates", label: "Szablony", icon: Layout },
+    { href: "/dashboard/history", label: "Historia", icon: History },
+    { href: "/dashboard/stats", label: "Statystyki", icon: BarChart3 },
+];
+
 export function Sidebar({ user }: SidebarProps) {
     const pathname = usePathname();
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const [isPortalLoading, setIsPortalLoading] = useState(false);
 
     useEffect(() => {
-        if (isMobileOpen) {
-            document.body.style.overflow = "hidden";
-        } else {
-            document.body.style.overflow = "";
-        }
-        return () => {
-            document.body.style.overflow = "";
-        };
+        document.body.style.overflow = isMobileOpen ? "hidden" : "";
+        return () => { document.body.style.overflow = ""; };
     }, [isMobileOpen]);
 
     const plan = user.plan ?? "FREE";
     const isPaid = plan !== "FREE";
-
-    const handlePortal = useCallback(async () => {
-        setIsPortalLoading(true);
-        try {
-            const res = await fetch("/api/stripe/portal", { method: "POST" });
-            if (!res.ok) {
-                throw new Error("Portal request failed");
-            }
-            const data = await res.json();
-            if (data.url) {
-                window.location.href = data.url;
-            } else {
-                throw new Error("No portal URL returned");
-            }
-        } catch (error) {
-            console.error("Portal error:", error);
-            alert("Nie udało się otworzyć panelu subskrypcji. Spróbuj ponownie.");
-        } finally {
-            setIsPortalLoading(false);
-        }
-    }, []);
     const credits = user.creditsAvailable ?? 0;
     const boost = user.boostCredits ?? 0;
     const planLimit = PLAN_CREDITS[plan] ?? 5;
+    const creditPct = Math.min(100, Math.round((credits / planLimit) * 100));
 
-    // Calculate next reset date (1 month from last reset)
     const getResetLabel = () => {
         if (!user.creditsResetAt) return null;
-        const resetDate = new Date(user.creditsResetAt);
-        const nextReset = new Date(resetDate);
+        const nextReset = new Date(user.creditsResetAt);
         nextReset.setMonth(nextReset.getMonth() + 1);
         const days = Math.max(0, Math.ceil((nextReset.getTime() - Date.now()) / (1000 * 60 * 60 * 24)));
         if (days === 0) return "dziś";
@@ -100,162 +81,145 @@ export function Sidebar({ user }: SidebarProps) {
         return `za ${days} dni`;
     };
 
-    const navLinks = [
-        {
-            href: "/dashboard",
-            label: "Pulpit",
-            icon: Home,
-        },
-        {
-            href: "/dashboard/ads",
-            label: "Ogłoszenia",
-            icon: FileText,
-        },
-        {
-            href: "/dashboard/templates",
-            label: "Szablony",
-            icon: Bookmark,
-        },
-        {
-            href: "/pricing",
-            label: "Cennik",
-            icon: Tag,
-        },
-    ];
+    const handlePortal = useCallback(async () => {
+        setIsPortalLoading(true);
+        try {
+            const res = await fetch("/api/stripe/portal", { method: "POST" });
+            if (!res.ok) throw new Error();
+            const data = await res.json();
+            if (data.url) window.location.href = data.url;
+        } catch {
+            alert("Nie udało się otworzyć panelu subskrypcji. Spróbuj ponownie.");
+        } finally {
+            setIsPortalLoading(false);
+        }
+    }, []);
 
-    const handleSignOut = async () => {
-        await signOut({ callbackUrl: "/" });
-    };
+    const handleSignOut = () => signOut({ callbackUrl: "/" });
+
+    const isActive = (href: string) => pathname === href;
 
     const sidebarContent = (
         <div className="flex h-full flex-col">
             {/* Header */}
-            <div className="border-b border-border px-4 py-4 flex items-center justify-between">
-                <Link href="/dashboard/new" className="text-xl font-bold text-foreground tracking-tight">
-                    Marketplace <span className="font-serif italic text-primary">AI</span>
+            <div className="px-4 py-4 flex items-center justify-between">
+                <Link href="/" className="flex items-center gap-2">
+                    <ShoppingBag className="h-5 w-5 text-primary" />
+                    <span className="text-sm font-semibold tracking-tight">
+                        Marketplace <span className="font-serif italic text-primary">AI</span>
+                    </span>
                 </Link>
-                <button
-                    onClick={() => setIsMobileOpen(false)}
-                    className="lg:hidden p-1.5 rounded-md hover:bg-muted transition-colors"
-                    aria-label="Zamknij menu"
-                >
-                    <X className="h-5 w-5" />
-                </button>
+                <div className="flex items-center gap-1">
+                    <ThemeToggle />
+                    <button
+                        onClick={() => setIsMobileOpen(false)}
+                        className="lg:hidden p-1.5 rounded-md hover:bg-muted transition-colors"
+                        aria-label="Zamknij menu"
+                    >
+                        <X className="h-5 w-5" />
+                    </button>
+                </div>
             </div>
 
             {/* Navigation */}
-            <nav className="flex-1 p-4 space-y-2">
-                {navLinks.map((link) => {
-                    const Icon = link.icon;
-                    const isActive = pathname === link.href;
-
-                    return (
-                        <Link
-                            key={link.href}
-                            href={link.href}
-                            onClick={() => setIsMobileOpen(false)}
-                            className={cn(
-                                "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors font-medium",
-                                isActive
-                                    ? "bg-primary/10 text-primary font-bold"
-                                    : "text-foreground hover:bg-muted"
-                            )}
-                        >
-                            <Icon className="h-5 w-5" />
-                            <span className="font-medium">{link.label}</span>
-                        </Link>
-                    );
-                })}
+            <nav className="flex-1 px-3 py-2">
+                <p className="px-3 mb-2 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+                    Menu
+                </p>
+                <div className="space-y-0.5">
+                    {mainItems.map((item) => {
+                        const Icon = item.icon;
+                        const active = isActive(item.href);
+                        return (
+                            <Link
+                                key={item.href}
+                                href={item.href}
+                                onClick={() => setIsMobileOpen(false)}
+                                className={cn(
+                                    "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
+                                    active
+                                        ? "bg-accent text-primary font-medium"
+                                        : "text-foreground hover:bg-accent/50"
+                                )}
+                            >
+                                <Icon className="h-4 w-4 shrink-0" />
+                                <span>{item.label}</span>
+                            </Link>
+                        );
+                    })}
+                </div>
             </nav>
 
-            {/* User Info & Credits */}
-            <div className="border-t border-border p-4 space-y-4">
-                {/* Credits Display */}
-                <div className="px-4 py-3 bg-muted rounded-lg space-y-2">
-                    <div className="flex items-center justify-between">
+            {/* Footer */}
+            <div className="px-3 py-3 space-y-2">
+                {/* Credits widget */}
+                <Link
+                    href="/pricing"
+                    className="block mx-0 p-3 rounded-lg bg-primary/5 border border-primary/10 hover:bg-primary/10 transition-colors"
+                >
+                    <div className="flex items-center justify-between text-xs mb-1">
                         <div className="flex items-center gap-2">
-                            <CreditCard className="h-5 w-5 text-muted-foreground" />
-                            <span className="text-sm font-medium text-foreground">
-                                Kredyty
+                            <Coins className="h-3.5 w-3.5 text-primary" />
+                            <span className="font-medium">
+                                {credits}{boost > 0 ? ` +${boost}` : ""} / {planLimit} kredytów
                             </span>
                         </div>
-                        <span className="text-xl font-bold text-foreground">
-                            {credits}
-                            <span className="text-xs font-normal text-muted-foreground">/{planLimit}</span>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted font-medium">
+                            {PLAN_LABELS[plan]}
                         </span>
                     </div>
-                    {boost > 0 && (
-                        <div className="flex items-center justify-between text-xs text-muted-foreground">
-                            <span>Dostawkowe</span>
-                            <span className="font-medium text-primary">+{boost}</span>
-                        </div>
-                    )}
+                    <div className="w-full h-1.5 rounded-full bg-muted mt-1 overflow-hidden">
+                        <div
+                            className="h-full rounded-full bg-gradient-primary transition-all"
+                            style={{ width: `${creditPct}%` }}
+                        />
+                    </div>
                     {getResetLabel() && (
-                        <p className="text-xs text-muted-foreground">
-                            Odnowienie {getResetLabel()} ({planLimit} kredytów)
+                        <p className="text-[10px] text-muted-foreground mt-1.5">
+                            Odnowienie: {planLimit} kredytów {getResetLabel()}
                         </p>
                     )}
+                    <p className="text-[10px] text-primary mt-0.5 font-medium">Dokup więcej →</p>
+                </Link>
+
+                {/* User info */}
+                <div className="px-3 py-2 rounded-lg bg-muted/50">
+                    <p className="text-xs font-medium truncate">{user.name || "User"}</p>
+                    <p className="text-[10px] text-muted-foreground truncate">{user.email}</p>
+                </div>
+
+                {/* Bottom nav */}
+                <div className="space-y-0.5">
                     <Link
-                        href="/pricing"
-                        className="block text-xs text-center text-primary font-medium hover:underline pt-1"
+                        href="/dashboard/settings"
+                        onClick={() => setIsMobileOpen(false)}
+                        className={cn(
+                            "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
+                            isActive("/dashboard/settings")
+                                ? "bg-accent text-primary font-medium"
+                                : "text-foreground hover:bg-accent/50"
+                        )}
                     >
-                        {isPaid ? "Zmień plan lub dokup kredyty" : "Zmień plan lub dokup kredyty"}
+                        <Settings className="h-4 w-4 shrink-0" />
+                        <span>Ustawienia</span>
                     </Link>
                     {isPaid && (
                         <button
                             onClick={handlePortal}
                             disabled={isPortalLoading}
-                            className="block w-full text-xs text-center text-muted-foreground hover:text-foreground hover:underline pt-1 transition-colors disabled:opacity-50"
+                            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-foreground hover:bg-accent/50 transition-colors disabled:opacity-50"
                         >
-                            {isPortalLoading ? "Przekierowuję…" : "Zarządzaj subskrypcją"}
+                            <Settings className="h-4 w-4 shrink-0 opacity-0" aria-hidden />
+                            <span>{isPortalLoading ? "Przekierowuję…" : "Zarządzaj subskrypcją"}</span>
                         </button>
                     )}
-                </div>
-
-                {/* User Info */}
-                <div className="px-4 py-3 bg-muted rounded-lg">
-                    <div className="flex items-center gap-3 mb-2">
-                        {user.image ? (
-                            <img
-                                src={user.image}
-                                alt={user.name || "User"}
-                                className="h-10 w-10 rounded-full"
-                                width={40}
-                                height={40}
-                            />
-                        ) : (
-                            <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold">
-                                {user.name?.charAt(0).toUpperCase() || "U"}
-                            </div>
-                        )}
-                        <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-foreground truncate">
-                                {user.name || "User"}
-                            </p>
-                            <p className="text-xs text-muted-foreground truncate">
-                                {user.email}
-                            </p>
-                        </div>
-                    </div>
-                    <Badge
-                        variant="outline"
-                        className="w-full justify-center text-xs"
-                    >
-                        {PLAN_LABELS[plan] || plan}
-                    </Badge>
-                </div>
-
-                {/* Theme Toggle & Sign Out */}
-                <div className="flex gap-2">
-                    <Button
-                        variant="outline"
+                    <button
                         onClick={handleSignOut}
-                        className="flex-1 flex items-center gap-2"
+                        className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
                     >
-                        <LogOut className="h-4 w-4" />
-                        Wyloguj się
-                    </Button>
-                    <ThemeToggle />
+                        <LogOut className="h-4 w-4 shrink-0" />
+                        <span>Wyloguj</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -263,19 +227,18 @@ export function Sidebar({ user }: SidebarProps) {
 
     return (
         <>
-            {/* Mobile Menu Button — hamburger, visible only when drawer is closed */}
+            {/* Mobile hamburger */}
             {!isMobileOpen && (
                 <button
                     onClick={() => setIsMobileOpen(true)}
-                    className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-card rounded-lg shadow-lg"
+                    className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-card rounded-lg shadow-lg border border-border"
                     aria-label="Otwórz menu"
-                    aria-expanded={false}
                 >
-                    <Menu className="h-6 w-6" />
+                    <Menu className="h-5 w-5" />
                 </button>
             )}
 
-            {/* Mobile Overlay */}
+            {/* Mobile overlay */}
             {isMobileOpen && (
                 <div
                     onClick={() => setIsMobileOpen(false)}
@@ -284,17 +247,17 @@ export function Sidebar({ user }: SidebarProps) {
                 />
             )}
 
-            {/* Sidebar - Mobile (overlay) */}
+            {/* Mobile sidebar */}
             <aside
                 className={cn(
-                    "lg:hidden fixed inset-y-0 left-0 z-40 w-72 bg-card transform transition-transform duration-300 overflow-y-auto",
+                    "lg:hidden fixed inset-y-0 left-0 z-40 w-72 bg-card transform transition-transform duration-300 overflow-y-auto border-r border-border",
                     isMobileOpen ? "translate-x-0" : "-translate-x-full"
                 )}
             >
                 {sidebarContent}
             </aside>
 
-            {/* Sidebar - Desktop (fixed) */}
+            {/* Desktop sidebar */}
             <aside className="hidden lg:flex lg:flex-col lg:w-72 lg:fixed lg:inset-y-0 lg:bg-card lg:border-r lg:border-border">
                 {sidebarContent}
             </aside>
