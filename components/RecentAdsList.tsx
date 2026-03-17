@@ -93,17 +93,17 @@ export function RecentAdsList({ ads }: RecentAdsListProps) {
                                 onClick={() => router.push(`/dashboard/ads/${ad.id}`)}
                                 className="flex items-center gap-3 rounded-xl border border-border bg-card p-3 sm:p-4 hover:border-primary/30 transition-colors cursor-pointer group"
                             >
-                                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-lg bg-muted flex items-center justify-center shrink-0 overflow-hidden">
+                                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-muted flex items-center justify-center shrink-0 overflow-hidden">
                                     {firstImage ? (
                                         <img
                                             src={firstImage}
                                             alt={ad.title}
                                             className="w-full h-full object-cover"
-                                            width={48}
-                                            height={48}
+                                            width={64}
+                                            height={64}
                                         />
                                     ) : (
-                                        <Icon className={`h-5 w-5 ${platform.color}`} />
+                                        <Icon className={`h-6 w-6 ${platform.color}`} />
                                     )}
                                 </div>
                                 <div className="flex-1 min-w-0">
