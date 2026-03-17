@@ -421,7 +421,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                                                         onClick={() => { handleMarkAsSold(ad.id); setOpenMenuId(null); }}
                                                         className="flex items-center w-full px-3 py-1.5 text-sm hover:bg-muted gap-2"
                                                     >
-                                                        <ShoppingCart className="h-3.5 w-3.5" /> Oznacz jako sprzedane
+                                                        <ShoppingCart className="h-3.5 w-3.5" /> Sprzedane
                                                     </button>
                                                     <button
                                                         onClick={() => { setOpenMenuId(null); }}
