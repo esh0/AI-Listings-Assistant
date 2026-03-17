@@ -6,9 +6,9 @@ import { FileText, Eye, ShoppingCart, Ban } from "lucide-react";
 interface StatsCardsProps {
     stats: {
         total: number;
-        drafts: number;
         published: number;
         sold: number;
+        archived: number;
     };
 }
 
@@ -31,7 +31,7 @@ export function StatsCards({ stats }: StatsCardsProps) {
         },
         {
             label: "Wycofane",
-            value: stats.drafts,
+            value: stats.archived,
             icon: Ban,
         },
     ];

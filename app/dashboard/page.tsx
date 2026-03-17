@@ -35,9 +35,9 @@ export default async function DashboardPage() {
         statusCounts.map((s) => [s.status, s._count.status])
     );
     const totalAds = statusCounts.reduce((sum, s) => sum + s._count.status, 0);
-    const draftAds = countByStatus["DRAFT"] ?? 0;
     const publishedAds = countByStatus["PUBLISHED"] ?? 0;
     const soldAds = countByStatus["SOLD"] ?? 0;
+    const archivedAds = countByStatus["ARCHIVED"] ?? 0;
 
     const firstName = session.user.name?.split(" ")[0] || "User";
 
@@ -63,9 +63,9 @@ export default async function DashboardPage() {
             <StatsCards
                 stats={{
                     total: totalAds,
-                    drafts: draftAds,
                     published: publishedAds,
                     sold: soldAds,
+                    archived: archivedAds,
                 }}
             />
 
