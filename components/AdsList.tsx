@@ -36,6 +36,7 @@ interface AdsListProps {
         drafts: number;
         published: number;
         sold: number;
+        archived: number;
     };
     currentFilter: string;
     currentPage: number;
@@ -48,7 +49,7 @@ const STATUS_FILTERS = [
     { value: "draft", label: "Robocze", countKey: "drafts" as const },
     { value: "published", label: "Opublikowane", countKey: "published" as const },
     { value: "sold", label: "Sprzedane", countKey: "sold" as const },
-    { value: "archived", label: "Wycofane", countKey: "drafts" as const },
+    { value: "archived", label: "Wycofane", countKey: "archived" as const },
 ];
 
 const PLATFORM_FILTERS = [

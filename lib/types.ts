@@ -112,6 +112,14 @@ export const PLATFORM_NAMES: Record<Platform, string> = {
     vinted: "Vinted",
 };
 
+// Platform icon/color metadata — intentional hardcoded brand colors
+export const PLATFORM_META: Record<Platform, { color: string; label: string }> = {
+    olx: { color: "text-orange-500", label: "OLX" },
+    allegro_lokalnie: { color: "text-green-600", label: "Allegro Lokalnie" },
+    facebook_marketplace: { color: "text-blue-600", label: "FB Marketplace" },
+    vinted: { color: "text-teal-600", label: "Vinted" },
+};
+
 // Condition display names
 export const CONDITION_NAMES: Record<ProductCondition, string> = {
     nowy: "Nowy",

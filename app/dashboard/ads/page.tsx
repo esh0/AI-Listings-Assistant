@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { AdsList } from "@/components/AdsList";
+import { FileText } from "lucide-react";
 // Force Node.js runtime (Prisma not compatible with Edge)
 export const runtime = "nodejs";
 
@@ -93,6 +94,7 @@ export default async function AdsPage(props: { searchParams: SearchParams }) {
     const draftCount = countByStatus["DRAFT"] ?? 0;
     const publishedCount = countByStatus["PUBLISHED"] ?? 0;
     const soldCount = countByStatus["SOLD"] ?? 0;
+    const archivedCount = countByStatus["ARCHIVED"] ?? 0;
 
     const totalPages = Math.ceil(totalFilteredCount / pageSize);
 
@@ -100,9 +102,12 @@ export default async function AdsPage(props: { searchParams: SearchParams }) {
         <>
         <div className="max-w-4xl mx-auto space-y-4">
             {/* Header */}
-            <div className="pl-14 lg:pl-0">
-                <h1 className="text-xl sm:text-2xl font-bold">Moje ogłoszenia</h1>
-                <p className="text-muted-foreground text-sm mt-1">Zarządzaj swoimi wygenerowanymi ogłoszeniami</p>
+            <div className="pl-14 lg:pl-0 flex items-start gap-3">
+                <FileText className="h-6 w-6 text-primary mt-1 shrink-0" />
+                <div>
+                    <h1 className="text-xl sm:text-2xl font-bold">Moje ogłoszenia</h1>
+                    <p className="text-muted-foreground text-sm mt-0.5">Zarządzaj swoimi wygenerowanymi ogłoszeniami</p>
+                </div>
             </div>
 
             {/* Ads List with filters */}
@@ -113,6 +118,7 @@ export default async function AdsPage(props: { searchParams: SearchParams }) {
                     drafts: draftCount,
                     published: publishedCount,
                     sold: soldCount,
+                    archived: archivedCount,
                 }}
                 currentFilter={statusFilter || "all"}
                 currentPage={page}

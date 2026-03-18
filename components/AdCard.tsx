@@ -3,7 +3,7 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { PLATFORM_NAMES } from "@/lib/types";
+import { PLATFORM_NAMES, PLATFORM_META } from "@/lib/types";
 import { Eye, Edit, Trash2, CheckCircle, ShoppingBag, Store, Facebook, Shirt, CircleDollarSign } from "lucide-react";
 import { useState } from "react";
 import { AdStatus, Platform } from "@prisma/client";
@@ -35,7 +35,7 @@ interface AdCardProps {
 }
 
 const STATUS_LABELS: Record<AdStatus, string> = {
-    DRAFT: "Utworzone",
+    DRAFT: "Robocze",
     PUBLISHED: "Opublikowane",
     SOLD: "Sprzedane",
     ARCHIVED: "Wycofane",
@@ -44,23 +44,16 @@ const STATUS_LABELS: Record<AdStatus, string> = {
 const STATUS_COLORS: Record<AdStatus, string> = {
     DRAFT: "bg-muted text-muted-foreground",
     PUBLISHED: "bg-success/10 text-success",
-    SOLD: "bg-primary/10 text-primary",
+    SOLD: "bg-success/10 text-success",
     ARCHIVED: "bg-muted text-muted-foreground",
 };
 
-const PLATFORM_ICONS = {
+const PLATFORM_ICONS: Record<Platform, React.ElementType> = {
     olx: ShoppingBag,
     allegro_lokalnie: Store,
     facebook_marketplace: Facebook,
     vinted: Shirt,
-} as const;
-
-const PLATFORM_COLORS = {
-    olx: "text-orange-500",
-    allegro_lokalnie: "text-green-600",
-    facebook_marketplace: "text-blue-600",
-    vinted: "text-teal-600",
-} as const;
+};
 
 export function AdCard({
     ad,
@@ -85,7 +78,7 @@ export function AdCard({
     const priceDisplay = ad.soldPrice
         ? `${ad.soldPrice} zł`
         : ad.priceMin && ad.priceMax
-        ? `${ad.priceMin} - ${ad.priceMax} zł`
+        ? `${ad.priceMin}–${ad.priceMax} zł`
         : ad.priceMin
         ? `${ad.priceMin} zł`
         : "Cena do ustalenia";
@@ -115,7 +108,7 @@ export function AdCard({
 
     // Platform icon
     const PlatformIcon = PLATFORM_ICONS[ad.platform];
-    const platformColor = PLATFORM_COLORS[ad.platform];
+    const platformColor = PLATFORM_META[ad.platform]?.color ?? "";
 
     return (
         <div className="flex items-start gap-3">
@@ -149,10 +142,11 @@ export function AdCard({
                     <div className="w-full h-full overflow-hidden rounded flex items-center justify-center bg-card">
                         <img
                             src={thumbnailUrl}
-                            alt={ad.title}
+                            alt=""
                             className="w-full h-full object-cover"
                             width={144}
                             height={144}
+                            loading="lazy"
                         />
                     </div>
                 </div>

@@ -13,12 +13,13 @@ import {
     Facebook,
     Shirt,
 } from "lucide-react";
+import { PLATFORM_META } from "@/lib/types";
 
-const PLATFORM_ICONS: Record<string, { Icon: React.ElementType; color: string; label: string }> = {
-    olx: { Icon: ShoppingBag, color: "text-orange-500", label: "OLX" },
-    allegro_lokalnie: { Icon: Store, color: "text-green-600", label: "Allegro Lokalnie" },
-    facebook_marketplace: { Icon: Facebook, color: "text-blue-600", label: "FB Marketplace" },
-    vinted: { Icon: Shirt, color: "text-teal-600", label: "Vinted" },
+const PLATFORM_ICONS: Record<string, React.ElementType> = {
+    olx: ShoppingBag,
+    allegro_lokalnie: Store,
+    facebook_marketplace: Facebook,
+    vinted: Shirt,
 };
 
 interface StatsData {
@@ -223,17 +224,17 @@ export default function StatsPage() {
                     ) : (
                         <div className="space-y-4">
                             {data.platformStats.map((p, i) => {
-                                const plat = PLATFORM_ICONS[p.platform];
-                                if (!plat) return null;
-                                const Icon = plat.Icon;
+                                const Icon = PLATFORM_ICONS[p.platform];
+                                const meta = PLATFORM_META[p.platform as keyof typeof PLATFORM_META];
+                                if (!Icon || !meta) return null;
                                 const widthPct = (p.created / totalCreated) * 100;
 
                                 return (
                                     <div key={p.platform}>
                                         <div className="flex items-center justify-between mb-1.5">
                                             <div className="flex items-center gap-2">
-                                                <Icon className={`h-4 w-4 ${plat.color}`} aria-hidden="true" />
-                                                <span className="text-sm font-medium">{plat.label}</span>
+                                                <Icon className={`h-4 w-4 ${meta.color}`} aria-hidden="true" />
+                                                <span className="text-sm font-medium">{meta.label}</span>
                                             </div>
                                             <span className="text-xs text-muted-foreground">
                                                 {p.created} utw.
@@ -241,7 +242,7 @@ export default function StatsPage() {
                                                 {p.sold > 0 && ` / ${p.sold} sprz.`}
                                             </span>
                                         </div>
-                                        <div className="h-2 w-full bg-muted rounded-full overflow-hidden" role="progressbar" aria-valuenow={Math.round(widthPct)} aria-valuemin={0} aria-valuemax={100} aria-label={`${plat.label}: ${Math.round(widthPct)}%`}>
+                                        <div className="h-2 w-full bg-muted rounded-full overflow-hidden" role="progressbar" aria-valuenow={Math.round(widthPct)} aria-valuemin={0} aria-valuemax={100} aria-label={`${meta.label}: ${Math.round(widthPct)}%`}>
                                             <motion.div
                                                 className="h-full rounded-full"
                                                 style={{
