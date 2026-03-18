@@ -309,7 +309,6 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                         <Button
                             size="sm"
                             variant="outline"
-                            className="text-muted-foreground hover:text-foreground"
                             onClick={async () => {
                                 if (!confirm(`Wycofać ${selectedIds.size} ogłoszeń?`)) return;
                                 for (const id of selectedIds) {
