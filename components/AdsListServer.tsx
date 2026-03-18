@@ -43,7 +43,25 @@ export async function AdsListServer({ searchParams }: AdsListServerProps) {
     }
 
     const [ads, totalFilteredCount, statusCounts] = await Promise.all([
-        prisma.ad.findMany({ where, orderBy, skip: (page - 1) * pageSize, take: pageSize }),
+        prisma.ad.findMany({
+            where,
+            orderBy,
+            skip: (page - 1) * pageSize,
+            take: pageSize,
+            select: {
+                id: true,
+                platform: true,
+                title: true,
+                description: true,
+                status: true,
+                priceMin: true,
+                priceMax: true,
+                soldPrice: true,
+                images: true,
+                createdAt: true,
+                updatedAt: true,
+            },
+        }),
         prisma.ad.count({ where }),
         prisma.ad.groupBy({
             by: ["status"],

@@ -33,6 +33,19 @@ export async function GET() {
     const templates = await prisma.template.findMany({
         where: { userId: session.user.id },
         orderBy: { createdAt: "desc" },
+        select: {
+            id: true,
+            name: true,
+            platform: true,
+            tone: true,
+            condition: true,
+            delivery: true,
+            bodyTemplate: true,
+            priceType: true,
+            notes: true,
+            isDefault: true,
+            createdAt: true,
+        },
     });
     return NextResponse.json(templates);
 }

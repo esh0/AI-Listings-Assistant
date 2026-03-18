@@ -24,14 +24,9 @@ interface RecentAdsListProps {
         id: string;
         platform: Platform;
         title: string;
-        description: string;
         status: AdStatus;
-        priceMin?: number | null;
-        priceMax?: number | null;
-        soldPrice?: number | null;
         images: any;
         createdAt: Date;
-        updatedAt: Date;
     }>;
 }
 

@@ -40,6 +40,19 @@ export async function GET(request: NextRequest) {
         const ads = await prisma.ad.findMany({
             where,
             orderBy: { createdAt: "desc" },
+            select: {
+                id: true,
+                platform: true,
+                title: true,
+                description: true,
+                status: true,
+                priceMin: true,
+                priceMax: true,
+                soldPrice: true,
+                parameters: true,
+                createdAt: true,
+                updatedAt: true,
+            },
         });
 
         // Generate CSV content

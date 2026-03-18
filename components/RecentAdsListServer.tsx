@@ -10,6 +10,14 @@ export async function RecentAdsListServer() {
         where: { userId: session.user.id },
         orderBy: { createdAt: "desc" },
         take: 5,
+        select: {
+            id: true,
+            platform: true,
+            title: true,
+            status: true,
+            images: true,
+            createdAt: true,
+        },
     });
 
     return <RecentAdsList ads={recentAds} />;
