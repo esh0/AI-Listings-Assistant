@@ -534,7 +534,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
             {/* FAB */}
             <Link
                 href="/dashboard/new"
-                className="fixed bottom-6 right-6 z-50 sm:bottom-8 sm:right-8 flex items-center gap-1.5 bg-gradient-primary text-primary-foreground font-semibold px-5 py-3 rounded-full shadow-lg hover:opacity-90 transition-opacity text-sm"
+                className="fixed bottom-[72px] right-6 z-50 sm:right-8 flex items-center gap-1.5 bg-gradient-primary text-primary-foreground font-semibold px-5 py-3 rounded-full shadow-lg hover:opacity-90 transition-opacity text-sm"
             >
                 <Plus className="h-4 w-4" />
                 Nowe ogłoszenie
