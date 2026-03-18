@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { CheckCircle, Upload, Archive, Trash2 } from "lucide-react";
+import { Pencil, ShoppingCart, Ban, Upload, Trash2, Save } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useRef } from "react";
 import { AdStatus } from "@prisma/client";
@@ -11,17 +11,19 @@ interface AdDetailActionsProps {
         id: string;
         status: AdStatus;
     };
+    title?: string;
+    description?: string;
+    hasEdits?: boolean;
+    editing?: boolean;
+    onEditToggle?: () => void;
 }
 
-export function AdDetailActions({ ad }: AdDetailActionsProps) {
+export function AdDetailActions({ ad, title, description, hasEdits, editing, onEditToggle }: AdDetailActionsProps) {
     const router = useRouter();
     const [isUpdating, setIsUpdating] = useState(false);
     const isProcessingRef = useRef(false);
 
-    const handleMarkAsPublished = async () => {
-        const confirmed = confirm("Czy na pewno chcesz oznaczyć to ogłoszenie jako opublikowane?");
-        if (!confirmed) return;
-
+    const patch = async (body: object) => {
         if (isProcessingRef.current) return;
         isProcessingRef.current = true;
         setIsUpdating(true);
@@ -29,73 +31,43 @@ export function AdDetailActions({ ad }: AdDetailActionsProps) {
             const response = await fetch(`/api/ads/${ad.id}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ status: "PUBLISHED" }),
+                body: JSON.stringify(body),
             });
             if (!response.ok) throw new Error("Failed to update ad");
             router.refresh();
         } catch (error) {
-            console.error("Failed to mark as published:", error);
+            console.error("Failed to update ad:", error);
         } finally {
             setIsUpdating(false);
             isProcessingRef.current = false;
         }
     };
 
-    const handleMarkAsSold = async () => {
+    const handleSaveEdits = () => {
+        if (!title?.trim() || !description?.trim()) return;
+        patch({ title: title.trim(), description: description.trim() });
+    };
+
+    const handleMarkAsPublished = () => {
+        if (!confirm("Czy na pewno chcesz oznaczyć to ogłoszenie jako opublikowane?")) return;
+        patch({ status: "PUBLISHED" });
+    };
+
+    const handleMarkAsSold = () => {
         const price = prompt("Podaj cenę sprzedaży (zł):");
         if (!price) return;
-
         const soldPrice = parseFloat(price);
         if (isNaN(soldPrice) || soldPrice <= 0) return;
-
-        if (isProcessingRef.current) return;
-        isProcessingRef.current = true;
-        setIsUpdating(true);
-        try {
-            const response = await fetch(`/api/ads/${ad.id}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ status: "SOLD", soldPrice }),
-            });
-            if (!response.ok) throw new Error("Failed to mark ad as sold");
-            router.refresh();
-        } catch (error) {
-            console.error("Failed to mark ad as sold:", error);
-        } finally {
-            setIsUpdating(false);
-            isProcessingRef.current = false;
-        }
+        patch({ status: "SOLD", soldPrice });
     };
 
-    const handleArchive = async () => {
-        const confirmed = confirm("Czy na pewno chcesz zarchiwizować to ogłoszenie?");
-        if (!confirmed) return;
-
-        if (isProcessingRef.current) return;
-        isProcessingRef.current = true;
-        setIsUpdating(true);
-        try {
-            const response = await fetch(`/api/ads/${ad.id}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ status: "ARCHIVED" }),
-            });
-            if (!response.ok) throw new Error("Failed to archive ad");
-            router.refresh();
-        } catch (error) {
-            console.error("Failed to archive ad:", error);
-        } finally {
-            setIsUpdating(false);
-            isProcessingRef.current = false;
-        }
+    const handleArchive = () => {
+        if (!confirm("Czy na pewno chcesz zarchiwizować to ogłoszenie?")) return;
+        patch({ status: "ARCHIVED" });
     };
 
     const handleDelete = async () => {
-        const confirmed = confirm(
-            "Czy na pewno chcesz usunąć to ogłoszenie? Ta operacja jest nieodwracalna."
-        );
-        if (!confirmed) return;
-
+        if (!confirm("Czy na pewno chcesz usunąć to ogłoszenie? Ta operacja jest nieodwracalna.")) return;
         if (isProcessingRef.current) return;
         isProcessingRef.current = true;
         setIsUpdating(true);
@@ -111,59 +83,82 @@ export function AdDetailActions({ ad }: AdDetailActionsProps) {
     };
 
     return (
-        <div className="flex gap-2 flex-shrink-0">
+        <>
+            {/* Save edits — only when there are unsaved changes */}
+            {hasEdits && (
+                <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={handleSaveEdits}
+                    disabled={isUpdating || !title?.trim() || !description?.trim()}
+                >
+                    <Save className="h-4 w-4 mr-1" />
+                    Zapisz
+                </Button>
+            )}
+
+            {/* Edytuj — tylko dla DRAFT */}
+            {ad.status === "DRAFT" && onEditToggle && (
+                <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={onEditToggle}
+                    disabled={isUpdating}
+                >
+                    <Pencil className="h-4 w-4 mr-1" />
+                    {editing ? "Zakończ" : "Edytuj"}
+                </Button>
+            )}
+
+            {/* Opublikuj — tylko dla DRAFT */}
             {ad.status === "DRAFT" && (
                 <Button
                     onClick={handleMarkAsPublished}
                     disabled={isUpdating}
                     size="sm"
                     variant="outline"
-                    className="text-success hover:text-success hover:bg-success/10"
-                    title="Oznacz jako opublikowane"
                 >
-                    <Upload className="h-4 w-4" />
-                    <span className="hidden sm:inline ml-2">Opublikuj</span>
+                    <Upload className="h-4 w-4 mr-1" />
+                    <span className="hidden sm:inline">Opublikuj</span>
                 </Button>
             )}
 
+            {/* Sprzedane — tylko dla PUBLISHED */}
             {ad.status === "PUBLISHED" && (
                 <Button
                     onClick={handleMarkAsSold}
                     disabled={isUpdating}
                     size="sm"
                     variant="outline"
-                    className="text-primary hover:text-primary hover:bg-primary/10"
-                    title="Oznacz jako sprzedane"
                 >
-                    <CheckCircle className="h-4 w-4" />
-                    <span className="hidden sm:inline ml-2">Sprzedane</span>
+                    <ShoppingCart className="h-4 w-4 mr-1" />
+                    <span className="hidden sm:inline">Sprzedane</span>
                 </Button>
             )}
 
+            {/* Wycofaj — dla DRAFT i PUBLISHED */}
             {(ad.status === "DRAFT" || ad.status === "PUBLISHED") && (
                 <Button
                     onClick={handleArchive}
                     disabled={isUpdating}
                     size="sm"
                     variant="outline"
-                    title="Archiwizuj"
                 >
-                    <Archive className="h-4 w-4" />
-                    <span className="hidden sm:inline ml-2">Archiwizuj</span>
+                    <Ban className="h-4 w-4 mr-1" />
+                    <span className="hidden sm:inline">Wycofaj</span>
                 </Button>
             )}
 
+            {/* Usuń — zawsze */}
             <Button
                 onClick={handleDelete}
                 disabled={isUpdating}
                 size="sm"
-                variant="outline"
-                className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                title="Usuń"
+                variant="ghost"
+                className="text-muted-foreground hover:text-destructive"
             >
                 <Trash2 className="h-4 w-4" />
-                <span className="hidden sm:inline ml-2">Usuń</span>
             </Button>
-        </div>
+        </>
     );
 }
