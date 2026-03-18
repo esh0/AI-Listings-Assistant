@@ -7,6 +7,7 @@ import { Check, ArrowLeft, Zap, Crown, Rocket, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Footer } from "@/components/Footer";
 
 const PLANS = [
     {
@@ -335,6 +336,7 @@ export default function PricingPage() {
                     </div>
                 </div>
             </div>
+            <Footer />
         </div>
     );
 }

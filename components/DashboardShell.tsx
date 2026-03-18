@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Sidebar } from "@/components/Sidebar";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { Footer } from "@/components/Footer";
 import { PanelLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -44,6 +45,7 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
                 <div className="p-6 lg:p-8">
                     {children}
                 </div>
+                <Footer />
             </main>
         </div>
     );

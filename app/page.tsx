@@ -7,6 +7,7 @@ import { ShoppingBag, Sparkles, ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { LandingForm } from "@/components/LandingForm";
+import { Footer } from "@/components/Footer";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
@@ -248,28 +249,7 @@ export default function HomePage() {
             </main>
 
             {/* Footer */}
-            <footer className="border-t border-border py-8 px-4">
-                <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-                    {/* Left: Logo */}
-                    <div className="flex items-center gap-2">
-                        <ShoppingBag className="h-4 w-4 text-primary" aria-hidden="true" />
-                        <span className="font-semibold">
-                            Marketplace <span className="font-serif italic text-primary">AI</span>
-                        </span>
-                    </div>
-                    {/* Center: Links */}
-                    <nav aria-label="Stopka" className="flex items-center gap-6">
-                        <span>OLX</span>
-                        <span>Allegro</span>
-                        <span>Vinted</span>
-                        <Link href="/pricing" className="hover:text-foreground transition-colors">
-                            Cennik
-                        </Link>
-                    </nav>
-                    {/* Right: Copyright */}
-                    <p>&copy; 2026 Marketplace AI</p>
-                </div>
-            </footer>
+            <Footer />
         </div>
     );
 }
