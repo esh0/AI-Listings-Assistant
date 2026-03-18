@@ -4,7 +4,7 @@ import React, { useState, useCallback, useMemo, useEffect, useRef } from "react"
 import dynamic from "next/dynamic";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { RotateCcw, Camera, CheckCircle, Check, ArrowLeft, Plus } from "lucide-react";
+import { RotateCcw, Check, ArrowLeft, Plus, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
@@ -12,6 +12,7 @@ import { CardWrapper } from "@/components/ui/card-wrapper";
 import { UploadDropzone } from "@/components/UploadDropzone";
 import { ProductForm, ProductParameters, NotesAndCTA } from "@/components/ProductForm";
 import { SoftWallModal } from "@/components/SoftWallModal";
+import { NoCreditsModal } from "@/components/NoCreditsModal";
 import { fileToBase64, getImageMimeType } from "@/lib/utils";
 import { getGuestId } from "@/lib/guest-id";
 import type {
@@ -28,7 +29,10 @@ import type {
 const FullscreenLoading = dynamic(() => import("@/components/FullscreenLoading").then(mod => ({ default: mod.FullscreenLoading })), {
     ssr: false,
 });
-const AdResult = dynamic(() => import("@/components/AdResult").then(mod => ({ default: mod.AdResult })), {
+const ListingContent = dynamic(() => import("@/components/listing/ListingContent").then(mod => ({ default: mod.ListingContent })), {
+    ssr: false,
+});
+const ListingSidebar = dynamic(() => import("@/components/listing/ListingSidebar").then(mod => ({ default: mod.ListingSidebar })), {
     ssr: false,
 });
 
@@ -72,6 +76,8 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
     const [result, setResult] = useState<GenerateAdResponse | null>(null);
     const [isOffline, setIsOffline] = useState(false);
     const [showSoftWall, setShowSoftWall] = useState(false);
+    const [showNoCredits, setShowNoCredits] = useState(false);
+    const [isEditingResult, setIsEditingResult] = useState(false);
 
     // Store original base64 images for softwall to upload to Supabase
     const [base64Images, setBase64Images] = useState<Array<{ base64: string; filename: string; mimeType: string }>>([]);
@@ -178,6 +184,7 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
         setError(null);
         setEditedTitle("");
         setEditedDescription("");
+        setIsEditingResult(false);
         hasInitializedEdits.current = false;
     }, [images]);
 
@@ -319,7 +326,7 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
                     setShowSoftWall(true);
                     return;
                 } else if (response.status === 403) {
-                    setResult({ isValid: false, error: data.error || "Brak dostępnych kredytów. Zmień plan lub dokup kredyty." });
+                    setShowNoCredits(true);
                     return;
                 } else if (response.status === 401) {
                     throw new Error("Wymagane logowanie. Zaloguj się, aby kontynuować.");
@@ -363,6 +370,7 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
         setError(null);
         setEditedTitle("");
         setEditedDescription("");
+        setIsEditingResult(false);
     }, []);
 
     if (isLoading) {
@@ -485,86 +493,117 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
 
             {/* Result Section */}
             {result && (
-                <section aria-labelledby="result-heading" className="space-y-8 animate-fade-in">
-                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 pb-6 border-b">
+                <section aria-labelledby="result-heading" className="space-y-6 animate-fade-in">
+                    {/* Top bar */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                         <div>
-                            <h2 id="result-heading" className="font-sans text-3xl sm:text-4xl font-bold mb-2 tracking-tight">
+                            <h2 id="result-heading" className="font-sans text-xl sm:text-2xl font-bold">
                                 Twoje ogłoszenie
                             </h2>
-                            <p className="text-muted-foreground leading-relaxed">
+                            <p className="text-sm text-muted-foreground mt-0.5">
                                 {status === "authenticated"
                                     ? "Sprawdź treść i zapisz w swoim panelu"
                                     : "Gotowe do skopiowania i wklejenia"
                                 }
                             </p>
                         </div>
-                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+                        <div className="flex flex-wrap items-center gap-2">
                             {result.isValid === false ? (
                                 <>
-                                    <Button
-                                        size="lg"
-                                        onClick={handleRetry}
-                                        aria-label="Popraw ogłoszenie"
-                                        className="bg-secondary hover:bg-secondary/80 text-secondary-foreground h-14 text-lg font-bold transition-colors shadow-lg hover:shadow-xl"
-                                    >
-                                        <ArrowLeft className="h-5 w-5 mr-2" aria-hidden="true" />
+                                    <Button size="sm" variant="outline" onClick={handleRetry}>
+                                        <ArrowLeft className="h-4 w-4 mr-1" />
                                         Popraw
                                     </Button>
-                                    <Button
-                                        size="lg"
-                                        onClick={handleReset}
-                                        aria-label="Stwórz nowe ogłoszenie"
-                                        className="bg-primary hover:bg-primary/90 text-primary-foreground h-14 text-lg font-bold transition-colors shadow-lg hover:shadow-xl"
-                                    >
-                                        <Plus className="h-5 w-5 mr-2" aria-hidden="true" />
-                                        Nowe ogłoszenie
+                                    <Button size="sm" variant="ghost" onClick={handleReset}>
+                                        <Plus className="h-4 w-4 mr-1" />
+                                        Nowe
                                     </Button>
                                 </>
                             ) : (
                                 <>
                                     {status === "authenticated" && (
                                         <Button
-                                            size="lg"
+                                            size="sm"
+                                            variant="ghost"
+                                            onClick={() => setIsEditingResult((e) => !e)}
+                                        >
+                                            <Pencil className="h-4 w-4 mr-1" />
+                                            {isEditingResult ? "Zakończ" : "Edytuj"}
+                                        </Button>
+                                    )}
+                                    {status === "authenticated" && (
+                                        <Button
+                                            size="sm"
+                                            variant="outline"
                                             onClick={handleSave}
                                             disabled={!canSave}
-                                            aria-label="Zapisz ogłoszenie"
-                                            className="bg-success hover:bg-success/90 text-success-foreground h-14 text-lg font-bold transition-colors shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
-                                            <Check className="h-5 w-5 mr-2" aria-hidden="true" />
+                                            <Check className="h-4 w-4 mr-1" />
                                             {isSaving ? "Zapisywanie…" : "Zapisz"}
                                         </Button>
                                     )}
-                                    <Button
-                                        size="lg"
-                                        onClick={status === "authenticated" ? handleSaveAndNew : handleReset}
-                                        disabled={status === "authenticated" ? !canSave : isSaving}
-                                        aria-label={status === "authenticated" ? "Zapisz i stwórz następne ogłoszenie" : "Zacznij od nowa"}
-                                        className="bg-primary hover:bg-primary/90 text-primary-foreground h-14 text-lg font-bold transition-colors shadow-lg hover:shadow-xl disabled:opacity-50"
-                                    >
-                                        <RotateCcw className="h-5 w-5 mr-2" aria-hidden="true" />
-                                        {status === "authenticated" ? (isSaving ? "Zapisywanie…" : "Zapisz i stwórz następne") : "Nowe ogłoszenie"}
-                                    </Button>
+                                    {status === "authenticated" && (
+                                        <Button
+                                            size="sm"
+                                            variant="ghost"
+                                            onClick={handleSaveAndNew}
+                                            disabled={!canSave}
+                                        >
+                                            <RotateCcw className="h-4 w-4 mr-1" />
+                                            {isSaving ? "Zapisywanie…" : "Zapisz i nowe"}
+                                        </Button>
+                                    )}
+                                    {status !== "authenticated" && (
+                                        <Button size="sm" variant="ghost" onClick={handleReset}>
+                                            <RotateCcw className="h-4 w-4 mr-1" />
+                                            Nowe
+                                        </Button>
+                                    )}
                                 </>
                             )}
                         </div>
                     </div>
 
-                    <AdResult
-                        result={result}
-                        imagePreviews={imagePreviewsList}
-                        platform={platform}
-                        productName={productName}
-                        condition={condition}
-                        priceType={priceType}
-                        userPrice={price}
-                        delivery={delivery.join(", ")}
-                        selectedTone={selectedTone}
-                        onEdit={handleEdit}
-                        editedTitle={editedTitle}
-                        editedDescription={editedDescription}
-                        onTitleChange={setEditedTitle}
-                        onDescriptionChange={setEditedDescription}
-                    />
+                    {/* Content grid */}
+                    <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-6">
+                        <ListingContent
+                            id=""
+                            platform={platform}
+                            status="DRAFT"
+                            createdAt={new Date()}
+                            title={editedTitle}
+                            description={editedDescription}
+                            editing={isEditingResult}
+                            firstImage={imagePreviewsList[0]}
+                            onTitleChange={setEditedTitle}
+                            onDescriptionChange={setEditedDescription}
+                            isGuest={status !== "authenticated"}
+                        />
+                        <ListingSidebar
+                            platform={platform}
+                            status="DRAFT"
+                            priceMin={result.price?.min ?? null}
+                            priceMax={result.price?.max ?? null}
+                            soldPrice={null}
+                            createdAt={new Date()}
+                            updatedAt={new Date()}
+                            parameters={{
+                                condition,
+                                tone: selectedTone,
+                                delivery,
+                                productName,
+                                notes,
+                                priceType,
+                                userPrice: price ? parseFloat(price) : undefined,
+                            }}
+                            images={(result.images ?? []).map((img, idx) => ({
+                                url: imagePreviewsList[idx] ?? "",
+                                quality: img.quality,
+                                suggestions: img.suggestions,
+                            }))}
+                            isGuest={status !== "authenticated"}
+                        />
+                    </div>
                 </section>
             )}
 
@@ -598,6 +637,12 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
                     onClose={() => setShowSoftWall(false)}
                 />
             )}
+
+            {/* No credits modal */}
+            <NoCreditsModal
+                isVisible={showNoCredits}
+                onClose={() => setShowNoCredits(false)}
+            />
         </>
     );
 }
