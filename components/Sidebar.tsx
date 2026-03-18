@@ -15,6 +15,7 @@ import {
     Coins,
     Menu,
     X,
+    CreditCard,
 } from "lucide-react";
 import { useState, useCallback, useEffect } from "react";
 import { cn } from "@/lib/utils";
@@ -53,6 +54,7 @@ const mainItems = [
     { href: "/dashboard/templates", label: "Szablony", icon: Layout },
     { href: "/dashboard/history", label: "Historia", icon: History },
     { href: "/dashboard/stats", label: "Statystyki", icon: BarChart3 },
+    { href: "/dashboard/pricing", label: "Cennik", icon: CreditCard },
 ];
 
 export function Sidebar({ user, collapsed = false }: SidebarProps) {
@@ -161,7 +163,7 @@ export function Sidebar({ user, collapsed = false }: SidebarProps) {
                 {/* Credits widget */}
                 {!collapsed ? (
                     <Link
-                        href="/pricing"
+                        href="/dashboard/pricing"
                         className="block p-3 rounded-lg bg-primary/5 border border-primary/10 hover:bg-primary/10 transition-colors"
                     >
                         <div className="flex items-center justify-between text-xs mb-1">
@@ -190,7 +192,7 @@ export function Sidebar({ user, collapsed = false }: SidebarProps) {
                     </Link>
                 ) : (
                     <Link
-                        href="/pricing"
+                        href="/dashboard/pricing"
                         title="Kredyty"
                         className="flex justify-center py-2 rounded-lg hover:bg-accent/50 transition-colors"
                     >
