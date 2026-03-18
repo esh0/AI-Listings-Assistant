@@ -32,6 +32,12 @@ export async function HistoryList() {
         where: { userId: session.user.id },
         orderBy: { createdAt: "desc" },
         take: 50,
+        select: {
+            id: true,
+            action: true,
+            detail: true,
+            createdAt: true,
+        },
     });
 
     if (logs.length === 0) {
