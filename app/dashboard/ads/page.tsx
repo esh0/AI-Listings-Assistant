@@ -23,10 +23,8 @@ export default async function AdsPage(props: { searchParams: SearchParams }) {
         <>
         <div className="space-y-4">
             {/* Header */}
-            <div className="pl-14 lg:pl-0">
                 <h1 className="text-xl sm:text-2xl font-bold">Moje ogłoszenia</h1>
                 <p className="text-muted-foreground text-sm mt-0.5">Zarządzaj swoimi wygenerowanymi ogłoszeniami</p>
-            </div>
 
             {/* Ads List with filters */}
             <Suspense fallback={<AdsListSkeleton />}>

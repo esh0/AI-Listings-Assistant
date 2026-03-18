@@ -16,12 +16,10 @@ export default async function TemplatesPage() {
     if (session.user.plan !== "RESELER") {
         return (
             <div className="space-y-6">
-                <div className="pl-14 lg:pl-0">
                     <h1 className="text-xl sm:text-2xl font-bold">Szablony</h1>
                     <p className="text-muted-foreground text-sm mt-0.5">
                         Zapisz często używane ustawienia jako szablony
                     </p>
-                </div>
                 <TemplatesSoftwall />
             </div>
         );
@@ -42,12 +40,10 @@ export default async function TemplatesPage() {
 
     return (
         <div className="space-y-6">
-            <div className="pl-14 lg:pl-0">
                 <h1 className="text-xl sm:text-2xl font-bold">Szablony</h1>
                 <p className="text-muted-foreground text-sm mt-0.5">
                     Zapisz często używane ustawienia jako szablony
                 </p>
-            </div>
             <TemplatesList initialTemplates={mappedTemplates} />
         </div>
     );

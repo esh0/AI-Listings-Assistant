@@ -119,12 +119,10 @@ export default function DashboardPricingPage() {
     return (
         <div className="space-y-12">
             {/* Header */}
-            <div className="pl-14 lg:pl-0">
                 <h1 className="text-xl sm:text-2xl font-bold">Cennik</h1>
                 <p className="text-muted-foreground text-sm mt-0.5">
                     Generuj profesjonalne ogłoszenia szybciej. Wybierz plan dopasowany do Twoich potrzeb.
                 </p>
-            </div>
 
             {/* Plans Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto w-full">

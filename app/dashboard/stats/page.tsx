@@ -77,12 +77,10 @@ export default function StatsPage() {
     return (
         <div className="space-y-6">
             {/* Header */}
-            <div className="pl-14 lg:pl-0">
                 <h1 className="text-xl sm:text-2xl font-bold">Statystyki</h1>
                 <p className="text-muted-foreground text-sm mt-0.5">
                     Twoja aktywność w liczbach
                 </p>
-            </div>
 
             {/* Summary Cards */}
             {loading ? (

@@ -28,14 +28,12 @@ export default async function DashboardPage() {
             <PendingAdHandler />
 
             {/* Header */}
-            <div className="pl-14 lg:pl-0">
                 <h1 className="text-xl sm:text-2xl font-bold">
                     Witaj, {firstName}! 👋
                 </h1>
                 <p className="text-muted-foreground text-sm mt-0.5">
                     Oto podsumowanie Twoich ogłoszeń
                 </p>
-            </div>
 
             {/* Stats Cards */}
             <Suspense fallback={<StatsCardsSkeleton />}>

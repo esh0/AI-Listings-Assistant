@@ -16,12 +16,10 @@ export default async function HistoryPage() {
     return (
         <div className="space-y-6">
             {/* Header */}
-            <div className="pl-14 lg:pl-0">
                 <h1 className="text-xl sm:text-2xl font-bold">Historia</h1>
                 <p className="text-muted-foreground text-sm mt-0.5">
                     Ostatnie 50 zdarzeń w Twoim koncie
                 </p>
-            </div>
 
             <Suspense fallback={<HistorySkeleton />}>
                 <HistoryList />
