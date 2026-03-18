@@ -1,8 +1,7 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { prisma } from "@/lib/prisma";
-import { StatsCards } from "@/components/StatsCards";
-import { RecentAdsList } from "@/components/RecentAdsList";
+import { StatsCardsServer } from "@/components/StatsCardsServer";
+import { RecentAdsListServer } from "@/components/RecentAdsListServer";
 import { StatsCardsSkeleton } from "@/components/StatsCardsSkeleton";
 import { RecentAdsListSkeleton } from "@/components/RecentAdsListSkeleton";
 import { PendingAdHandler } from "@/components/PendingAdHandler";
@@ -19,28 +18,6 @@ export default async function DashboardPage() {
     if (!session?.user?.id) {
         redirect("/auth/signin");
     }
-
-    // 2 queries instead of 5 — reduces connection pool pressure
-    const [statusCounts, recentAds] = await Promise.all([
-        prisma.ad.groupBy({
-            by: ["status"],
-            where: { userId: session.user.id },
-            _count: { status: true },
-        }),
-        prisma.ad.findMany({
-            where: { userId: session.user.id },
-            orderBy: { createdAt: "desc" },
-            take: 5,
-        }),
-    ]);
-
-    const countByStatus = Object.fromEntries(
-        statusCounts.map((s) => [s.status, s._count.status])
-    );
-    const totalAds = statusCounts.reduce((sum, s) => sum + s._count.status, 0);
-    const publishedAds = countByStatus["PUBLISHED"] ?? 0;
-    const soldAds = countByStatus["SOLD"] ?? 0;
-    const archivedAds = countByStatus["ARCHIVED"] ?? 0;
 
     const firstName = session.user.name?.split(" ")[0] || "User";
 
@@ -64,19 +41,12 @@ export default async function DashboardPage() {
 
             {/* Stats Cards */}
             <Suspense fallback={<StatsCardsSkeleton />}>
-                <StatsCards
-                    stats={{
-                        total: totalAds,
-                        published: publishedAds,
-                        sold: soldAds,
-                        archived: archivedAds,
-                    }}
-                />
+                <StatsCardsServer />
             </Suspense>
 
             {/* Recent Ads */}
             <Suspense fallback={<RecentAdsListSkeleton />}>
-                <RecentAdsList ads={recentAds} />
+                <RecentAdsListServer />
             </Suspense>
         </div>
 
