@@ -12,7 +12,7 @@ interface DashboardShellProps {
         name?: string | null;
         email?: string | null;
         image?: string | null;
-        plan?: "FREE" | "STARTER" | "RESELER" | "BUSINESS";
+        plan?: "FREE" | "STARTER" | "RESELER";
         creditsAvailable?: number;
         boostCredits?: number;
         creditsResetAt?: string;

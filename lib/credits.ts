@@ -9,14 +9,12 @@ export const CREDIT_LIMITS: Record<string, number> = {
     FREE: 5,
     STARTER: 30,
     RESELER: 80,
-    BUSINESS: 200,
 };
 
 export const IMAGE_LIMITS: Record<string, number> = {
     FREE: 3,
     STARTER: 5,
     RESELER: 8,
-    BUSINESS: 12,
 };
 
 /**

@@ -34,7 +34,7 @@ export default async function DashboardLayout({
                 name: session.user.name,
                 email: session.user.email,
                 image: session.user.image,
-                plan: user?.plan || session.user.plan,
+                plan: (user?.plan || session.user.plan) as "FREE" | "STARTER" | "RESELER" | undefined,
                 creditsAvailable: user?.creditsAvailable ?? session.user.creditsAvailable,
                 boostCredits: user?.boostCredits ?? session.user.boostCredits,
                 creditsResetAt: user?.creditsResetAt?.toISOString() ?? session.user.creditsResetAt,

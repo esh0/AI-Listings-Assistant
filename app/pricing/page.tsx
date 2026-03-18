@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { Check, ArrowLeft, Zap, Crown, Rocket, Star } from "lucide-react";
+import { Check, ArrowLeft, Zap, Crown, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -22,6 +22,7 @@ const PLANS = [
             "Wszystkie platformy",
             "3 style tonu",
         ],
+        retention: "Historia ogłoszeń: 7 dni",
         cta: "Obecny plan",
         highlighted: false,
     },
@@ -38,6 +39,7 @@ const PLANS = [
             "3 style tonu",
             "Eksport CSV",
         ],
+        retention: "Historia ogłoszeń: 180 dni",
         cta: "Wybierz Starter",
         highlighted: false,
     },
@@ -55,27 +57,10 @@ const PLANS = [
             "Eksport CSV",
             "Priorytetowa generacja",
         ],
+        retention: "Historia ogłoszeń: 365 dni",
         cta: "Wybierz Reseler",
         highlighted: true,
         badge: "Najpopularniejszy",
-    },
-    {
-        key: "BUSINESS",
-        name: "Business",
-        price: "99,99",
-        period: "/ miesiąc",
-        icon: Rocket,
-        features: [
-            "200 generacji / miesiąc",
-            "Maks. 12 zdjęć",
-            "Wszystkie platformy",
-            "3 style tonu",
-            "Eksport CSV",
-            "Priorytetowa generacja",
-            "Priorytetowe wsparcie",
-        ],
-        cta: "Wybierz Business",
-        highlighted: false,
     },
 ] as const;
 
@@ -177,7 +162,7 @@ export default function PricingPage() {
                 </div>
 
                 {/* Plans Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto w-full">
                     {PLANS.map((plan) => {
                         const Icon = plan.icon;
                         const isCurrent = isAuthenticated && currentPlan === plan.key;
@@ -222,6 +207,10 @@ export default function PricingPage() {
                                                 <span>{feature}</span>
                                             </li>
                                         ))}
+                                        <li className="flex items-start gap-2 text-sm">
+                                            <Check className="h-4 w-4 text-success mt-0.5 flex-shrink-0" />
+                                            <span>{plan.retention}</span>
+                                        </li>
                                     </ul>
                                 </div>
 
@@ -315,6 +304,10 @@ export default function PricingPage() {
                             {
                                 q: "Jak mogę anulować subskrypcję?",
                                 a: "Możesz anulować subskrypcję w każdym momencie przez portal płatności. Po anulowaniu Twój plan zmieni się na Free na koniec okresu rozliczeniowego.",
+                            },
+                            {
+                                q: "Jak długo przechowywane są moje ogłoszenia?",
+                                a: "Zależy od planu: Free — 7 dni, Starter — 180 dni, Reseler — 365 dni. Po upływie okresu ogłoszenia są automatycznie i trwale usuwane. Eksportuj ważne dane przed wygaśnięciem lub przejdź na wyższy plan.",
                             },
                             {
                                 q: "Jakie metody płatności akceptujecie?",

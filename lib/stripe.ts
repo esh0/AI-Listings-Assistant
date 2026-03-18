@@ -21,11 +21,6 @@ export const STRIPE_PLANS = {
         name: "Reseler",
         price: 4999,
     },
-    BUSINESS: {
-        priceId: process.env.STRIPE_PRICE_BUSINESS_MONTHLY!,
-        name: "Business",
-        price: 9999,
-    },
 } as const;
 
 // Boost credit packs

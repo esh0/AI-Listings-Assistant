@@ -24,7 +24,7 @@ interface SidebarProps {
         name?: string | null;
         email?: string | null;
         image?: string | null;
-        plan?: "FREE" | "STARTER" | "RESELER" | "BUSINESS";
+        plan?: "FREE" | "STARTER" | "RESELER";
         creditsAvailable?: number;
         boostCredits?: number;
         creditsResetAt?: string;
@@ -37,14 +37,12 @@ const PLAN_LABELS: Record<string, string> = {
     FREE: "Free",
     STARTER: "Starter",
     RESELER: "Reseler",
-    BUSINESS: "Business",
 };
 
 const PLAN_CREDITS: Record<string, number> = {
     FREE: 5,
     STARTER: 30,
     RESELER: 80,
-    BUSINESS: 200,
 };
 
 const mainItems = [
