@@ -27,7 +27,7 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
         <div className="min-h-screen bg-background">
             <Sidebar user={user} collapsed={collapsed} onCollapse={setCollapsed} />
             <main className={cn(
-                "transition-all duration-300",
+                "flex flex-col min-h-screen transition-all duration-300",
                 collapsed ? "lg:pl-16" : "lg:pl-72"
             )}>
                 {/* Top bar */}
@@ -42,7 +42,7 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
                     <div className="lg:hidden" />
                     <ThemeToggle />
                 </div>
-                <div className="p-6 lg:p-8">
+                <div className="flex-1 p-6 lg:p-8">
                     {children}
                 </div>
                 <Footer />

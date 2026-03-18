@@ -9,7 +9,7 @@ export function Footer() {
     const pricingHref = status === "authenticated" ? "/dashboard/pricing" : "/pricing";
 
     return (
-        <footer className="border-t border-border py-8 px-4">
+        <footer className="border-t border-border py-4 px-4">
             <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
                     <ShoppingBag className="h-4 w-4 text-primary" aria-hidden="true" />
