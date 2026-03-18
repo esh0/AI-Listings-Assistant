@@ -60,6 +60,7 @@ export interface GenerateAdRequest {
     delivery: string;
     notes: string;
     images: ImageForRequest[];
+    bodyTemplate?: string;
 }
 
 // API Response - Image analysis with preview for display

@@ -66,6 +66,7 @@ export const generateAdRequestSchema = z
             .min(1, "Przynajmniej jedno zdjęcie jest wymagane")
             .max(8, "Maksymalnie 8 zdjęć"),
         guestId: z.string().min(1).max(100).optional(),
+        bodyTemplate: z.string().max(3000).optional(),
     })
     .refine(
         (data) => {

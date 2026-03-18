@@ -186,11 +186,11 @@ export function ProductParameters({
     }, [isFreeChecked, onPriceChange, onPriceTypeChange]);
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-4">
             {/* Condition pills */}
-            <fieldset className="space-y-3">
+            <fieldset className="space-y-2">
                 <legend className="text-sm font-medium leading-none">
-                    Stan produktu <span className="text-destructive">*</span>
+                    Stan produktu
                 </legend>
                 <div className="flex gap-2 flex-wrap" role="radiogroup" aria-label="Wybór stanu produktu">
                     {CONDITIONS.map((conditionValue) => {
@@ -203,11 +203,11 @@ export function ProductParameters({
                                 aria-checked={isSelected}
                                 onClick={() => onConditionChange(conditionValue)}
                                 className={cn(
-                                    "px-4 py-1.5 rounded-full border text-sm cursor-pointer transition-all duration-200",
+                                    "px-4 py-1.5 rounded-full border text-sm transition-all duration-200",
                                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                                     isSelected
-                                        ? "border-primary bg-primary/10 text-primary"
-                                        : "border-border text-muted-foreground hover:border-primary/50"
+                                        ? "border-primary bg-primary/10 text-primary cursor-default"
+                                        : "border-border text-muted-foreground hover:border-primary/50 cursor-pointer"
                                 )}
                             >
                                 {CONDITION_SHORT[conditionValue]}
@@ -218,7 +218,7 @@ export function ProductParameters({
             </fieldset>
 
             {/* Price field */}
-            <div className="space-y-3">
+            <div className="space-y-2">
                 <label htmlFor="price" className="text-sm font-medium leading-none block">
                     Cena <span className="text-muted-foreground text-xs">(opcjonalne — AI zasugeruje cenę, jeśli nie podasz)</span>
                 </label>
@@ -259,15 +259,16 @@ export function ProductParameters({
             {/* Delivery */}
             <fieldset className="space-y-2">
                 <legend className="text-sm font-medium leading-none">
-                    Sposób dostawy <span className="text-destructive">*</span>
+                    Sposób dostawy
                 </legend>
-                <div className="flex flex-wrap gap-4" role="group" aria-label="Wybór sposobu dostawy">
+                <div className="flex flex-wrap gap-3" role="group" aria-label="Wybór sposobu dostawy">
                     {(Object.entries(DELIVERY_NAMES) as [DeliveryOption, string][]).map(([value, label]) => (
-                        <label key={value} className="flex items-center gap-2 cursor-pointer group">
+                        <label key={value} className={cn("flex items-center gap-2 group", delivery.length === 1 && delivery.includes(value) ? "cursor-default" : "cursor-pointer")}>
                             <input
                                 type="checkbox"
                                 checked={delivery.includes(value)}
                                 onChange={() => handleDeliveryToggle(value)}
+                                disabled={delivery.length === 1 && delivery.includes(value)}
                                 className="h-4 w-4 rounded border-input accent-primary focus:ring-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                                 aria-label={label}
                             />
@@ -275,11 +276,6 @@ export function ProductParameters({
                         </label>
                     ))}
                 </div>
-                {delivery.length === 0 && (
-                    <p className="text-xs text-destructive" role="alert" aria-live="polite">
-                        Wybierz przynajmniej jedną opcję
-                    </p>
-                )}
             </fieldset>
         </div>
     );
@@ -304,9 +300,9 @@ export function NotesAndCTA({
     const isDisabled = !canSubmit || isOffline || !hasCredits;
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col h-full">
             {/* Notes textarea */}
-            <div className="space-y-2">
+            <div className="space-y-2 flex-1 flex flex-col">
                 <label htmlFor="notes" className="text-sm font-medium leading-none">
                     Dodatkowe informacje <span className="text-muted-foreground text-xs">(opcjonalne)</span>
                 </label>
@@ -315,10 +311,10 @@ export function NotesAndCTA({
                     value={notes}
                     onChange={(e) => onNotesChange(e.target.value)}
                     placeholder="np. uszkodzenia, braki, wymiary, historia produktu…"
-                    rows={8}
+                    rows={3}
                     maxLength={1000}
                     aria-describedby="notes-hint"
-                    className="min-h-[200px] resize-none"
+                    className="flex-1 min-h-0 resize-none"
                 />
                 <p id="notes-hint" className="text-xs text-muted-foreground">
                     {notes.length}/1000 znaków

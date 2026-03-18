@@ -72,7 +72,6 @@ const IMAGE_LIMITS: Record<string, number> = {
     FREE: 3,
     STARTER: 5,
     RESELER: 8,
-    BUSINESS: 12,
 };
 
 // Condition data

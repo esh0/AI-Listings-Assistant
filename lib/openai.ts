@@ -313,6 +313,11 @@ export async function generateAd(
     // Build tone context
     const toneContext = `Wygeneruj ogłoszenie w stylu: ${request.tone.toUpperCase()}`;
 
+    // Build template section if bodyTemplate is provided
+    const templateSection = request.bodyTemplate
+        ? `\n\n## SZABLON OPISU (priorytet wysoki)\nUżytkownik zdefiniował następujący szkielet opisu ogłoszenia:\n"""\n${request.bodyTemplate}\n"""\n\nInstrukcja:\n- Użyj tego szkieletu jako struktury opisu — zachowaj cały tekst dosłownie poza placeholderami\n- Zastąp każdy placeholder odpowiednią wartością:\n  - {{nazwa}} → nazwa/typ produktu rozpoznana ze zdjęć lub z pola productName\n  - {{stan}} → stan: "${request.condition}"\n  - {{cena}} → cena (z sekcji CENA poniżej)\n  - {{opis_techniczny}} → specyfikacje/cechy rozpoznane ze zdjęcia; jeśli brak — usuń placeholder elegancko\n  - {{sposób_wysyłki}} → "${request.delivery}"\n- Jeśli placeholder nie może być wypełniony sensownie — usuń go lub zastąp naturalnym zdaniem\n- NIE dodawaj dodatkowych akapitów poza szkieletem`
+        : "";
+
     const userPrompt = `## Dane wejściowe:
 - Platforma sprzedażowa: ${request.platform}
 - Nazwa produktu: ${request.productName || "rozpoznaj ze zdjęć"}
@@ -327,7 +332,7 @@ export async function generateAd(
 ${platformRules}
 
 ## TON OGŁOSZENIA:
-${toneContext}
+${toneContext}${templateSection}
 
 Wygeneruj ogłoszenie sprzedażowe w formacie JSON zgodnie z powyższymi zasadami platformy. Przeanalizuj wszystkie ${request.images.length} zdjęć i dodaj ocenę każdego z nich.`;
 

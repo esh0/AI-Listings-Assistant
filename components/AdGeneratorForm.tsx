@@ -24,6 +24,7 @@ import type {
     ToneStyle,
     PriceType,
 } from "@/lib/types";
+import type { Template } from "@/components/TemplatesList";
 
 // Dynamic imports
 const FullscreenLoading = dynamic(() => import("@/components/FullscreenLoading").then(mod => ({ default: mod.FullscreenLoading })), {
@@ -33,6 +34,9 @@ const ListingContent = dynamic(() => import("@/components/listing/ListingContent
     ssr: false,
 });
 const ListingSidebar = dynamic(() => import("@/components/listing/ListingSidebar").then(mod => ({ default: mod.ListingSidebar })), {
+    ssr: false,
+});
+const TemplateFormModal = dynamic(() => import("@/components/TemplateFormModal").then(mod => ({ default: mod.TemplateFormModal })), {
     ssr: false,
 });
 
@@ -47,7 +51,6 @@ const IMAGE_LIMITS: Record<string, number> = {
     FREE: 3,
     STARTER: 5,
     RESELER: 8,
-    BUSINESS: 12,
 };
 
 export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResultChange?: (hasResult: boolean) => void; showHeader?: boolean }) {
@@ -64,6 +67,12 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
     const [notes, setNotes] = useState("");
     const [selectedTone, setSelectedTone] = useState<ToneStyle>(DEFAULT_TONE);
     const [priceType, setPriceType] = useState<PriceType>(DEFAULT_PRICE_TYPE);
+
+    // Template state
+    const [templates, setTemplates] = useState<Template[]>([]);
+    const [selectedTemplateId, setSelectedTemplateId] = useState<string>("");
+    const [selectedBodyTemplate, setSelectedBodyTemplate] = useState<string>("");
+    const [editingTemplate, setEditingTemplate] = useState<Template | null>(null);
 
     // Editable content state
     const [editedTitle, setEditedTitle] = useState<string>("");
@@ -117,6 +126,16 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
         };
     }, []);
 
+    // Fetch templates for RESELER plan users
+    useEffect(() => {
+        if (status === "authenticated" && session?.user?.plan === "RESELER") {
+            fetch("/api/templates")
+                .then((res) => res.ok ? res.json() : [])
+                .then((data: Template[]) => setTemplates(data))
+                .catch(() => {});
+        }
+    }, [status, session?.user?.plan]);
+
     // Notify parent when result appears/disappears
     useEffect(() => {
         onResultChange?.(!!result);
@@ -164,6 +183,21 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
         }
     }, [result, isLoading, status, router, updateSession]);
 
+    const handleTemplateSelect = useCallback((templateId: string) => {
+        setSelectedTemplateId(templateId);
+        if (!templateId) {
+            setSelectedBodyTemplate("");
+            return;
+        }
+        const tpl = templates.find((t) => t.id === templateId);
+        if (!tpl) return;
+        setPlatform(tpl.platform);
+        setSelectedTone(tpl.tone);
+        setDelivery(tpl.delivery);
+        if (tpl.notes) setNotes(tpl.notes);
+        setSelectedBodyTemplate(tpl.bodyTemplate ?? "");
+    }, [templates]);
+
     const handleReset = useCallback(() => {
         images.forEach((img) => {
             if (img.preview) {
@@ -186,6 +220,8 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
         setEditedDescription("");
         setIsEditingResult(false);
         hasInitializedEdits.current = false;
+        setSelectedTemplateId("");
+        setSelectedBodyTemplate("");
     }, [images]);
 
     const saveAd = useCallback(async (): Promise<boolean> => {
@@ -314,6 +350,7 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
                     notes,
                     images: imagesForRequest,
                     tone: selectedTone,
+                    ...(selectedBodyTemplate && { bodyTemplate: selectedBodyTemplate }),
                     ...(!session?.user?.id && { guestId: getGuestId() }),
                 }),
                 signal: abortControllerRef.current.signal,
@@ -358,7 +395,7 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
             setIsLoading(false);
             abortControllerRef.current = null;
         }
-    }, [images, platform, productName, condition, price, delivery, notes, selectedTone, priceType]);
+    }, [images, platform, productName, condition, price, delivery, notes, selectedTone, priceType, selectedBodyTemplate]);
 
     const handleRetry = useCallback(() => {
         setResult(null);
@@ -408,7 +445,8 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
 
             {/* Form Section */}
             {!result && (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Card 1: Photos */}
                     <CardWrapper className="min-h-[400px]">
                         <div className="space-y-2 mb-6">
@@ -437,6 +475,38 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
 
                     {/* Card 2: Platform + Tone */}
                     <CardWrapper className="min-h-[400px]">
+                        {status === "authenticated" && session?.user?.plan === "RESELER" && templates.length > 0 && (
+                            <div className="space-y-2 mb-6">
+                                <label htmlFor="template-select" className="text-sm font-medium leading-none">
+                                    Szablon
+                                </label>
+                                <div className="flex items-center gap-2">
+                                    <select
+                                        id="template-select"
+                                        value={selectedTemplateId}
+                                        onChange={(e) => handleTemplateSelect(e.target.value)}
+                                        className="h-10 flex-1 border border-input rounded-lg px-3 bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
+                                    >
+                                        <option value="">Brak (domyślny)</option>
+                                        {templates.map((t) => (
+                                            <option key={t.id} value={t.id}>{t.name}</option>
+                                        ))}
+                                    </select>
+                                    {selectedTemplateId && (
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-10 w-10 p-0 shrink-0"
+                                            onClick={() => setEditingTemplate(templates.find((t) => t.id === selectedTemplateId) ?? null)}
+                                            aria-label="Edytuj szablon"
+                                        >
+                                            <Pencil className="h-4 w-4" />
+                                        </Button>
+                                    )}
+                                </div>
+                            </div>
+                        )}
                         <ProductForm
                             platform={platform}
                             selectedTone={selectedTone}
@@ -460,7 +530,7 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
                     </CardWrapper>
 
                     {/* Card 4: Notes + CTA */}
-                    <CardWrapper>
+                    <CardWrapper className="flex flex-col">
                         <NotesAndCTA
                             notes={notes}
                             canSubmit={canSubmit}
@@ -471,6 +541,7 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
                         />
                     </CardWrapper>
                 </div>
+                </>
             )}
 
             {/* Error Alert */}
@@ -643,6 +714,25 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
                 isVisible={showNoCredits}
                 onClose={() => setShowNoCredits(false)}
             />
+
+            {/* Template edit modal */}
+            {editingTemplate && (
+                <TemplateFormModal
+                    template={editingTemplate}
+                    onClose={async (saved) => {
+                        setEditingTemplate(null);
+                        if (saved) {
+                            const res = await fetch("/api/templates");
+                            if (res.ok) {
+                                const data: Template[] = await res.json();
+                                setTemplates(data);
+                                const updated = data.find((t) => t.id === editingTemplate.id);
+                                if (updated) handleTemplateSelect(updated.id);
+                            }
+                        }
+                    }}
+                />
+            )}
         </>
     );
 }

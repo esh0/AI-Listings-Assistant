@@ -97,8 +97,11 @@ model Template {
   platform  Platform
   tone      ToneStyle
   condition ProductCondition
-  delivery  Json // Array<"odbiór osobisty" | "wysyłka">
-  isDefault Boolean          @default(false)
+  delivery     Json             // Array<"odbiór osobisty" | "wysyłka">
+  bodyTemplate String? // Opcjonalny szkielet opisu z placeholderami
+  priceType    String? // "ai_suggest" | "user_provided" | "free"
+  notes        String? // Domyślne notatki (opcjonalne)
+  isDefault    Boolean          @default(false)
   createdAt DateTime         @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -133,7 +136,6 @@ enum Plan {
   FREE
   STARTER
   RESELER
-  BUSINESS
 }
 
 enum AdStatus {
