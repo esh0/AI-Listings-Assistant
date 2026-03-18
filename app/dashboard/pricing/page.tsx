@@ -227,7 +227,7 @@ export default function DashboardPricingPage() {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
                     {BOOSTS.map((boost) => (
                         <Card key={boost.key} className="p-6 text-center space-y-4">
                             <div>
@@ -251,9 +251,9 @@ export default function DashboardPricingPage() {
             </div>
 
             {/* FAQ */}
-            <div className="space-y-6 max-w-3xl">
+            <div className="space-y-6">
                 <h2 className="text-2xl font-bold">Często zadawane pytania</h2>
-                <div className="space-y-4">
+                <div className="space-y-4 max-w-3xl mx-auto">
                     {[
                         {
                             q: "Jak działają kredyty?",
