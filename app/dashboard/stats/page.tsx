@@ -67,27 +67,21 @@ export default function StatsPage() {
 
     if (error) {
         return (
-            <div className="p-4 sm:p-6 max-w-5xl mx-auto">
-                <div className="flex flex-col items-center justify-center py-20 text-center">
-                    <BarChart3 className="h-12 w-12 text-muted-foreground/30 mb-4" />
-                    <p className="text-sm font-medium text-muted-foreground">Nie udało się załadować statystyk</p>
-                    <p className="text-xs text-muted-foreground/60 mt-1">Sprawdź połączenie i odśwież stronę</p>
-                </div>
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+                <p className="text-sm font-medium text-muted-foreground">Nie udało się załadować statystyk</p>
+                <p className="text-xs text-muted-foreground/60 mt-1">Sprawdź połączenie i odśwież stronę</p>
             </div>
         );
     }
 
     return (
-        <div className="p-4 sm:p-6 max-w-5xl mx-auto space-y-6">
+        <div className="space-y-6">
             {/* Header */}
-            <div className="pl-14 lg:pl-0 flex items-start gap-3">
-                <BarChart3 className="h-6 w-6 text-primary mt-1 shrink-0" />
-                <div>
-                    <h1 className="text-2xl font-bold tracking-tight">Statystyki</h1>
-                    <p className="text-muted-foreground text-sm mt-0.5">
-                        Twoja aktywność w liczbach
-                    </p>
-                </div>
+            <div className="pl-14 lg:pl-0">
+                <h1 className="text-xl sm:text-2xl font-bold">Statystyki</h1>
+                <p className="text-muted-foreground text-sm mt-0.5">
+                    Twoja aktywność w liczbach
+                </p>
             </div>
 
             {/* Summary Cards */}

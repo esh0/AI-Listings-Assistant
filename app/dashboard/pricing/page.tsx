@@ -132,11 +132,11 @@ export default function DashboardPricingPage() {
     };
 
     return (
-        <div className="max-w-5xl mx-auto space-y-12">
-            {/* Hero */}
-            <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tight">Cennik</h1>
-                <p className="text-muted-foreground">
+        <div className="space-y-12">
+            {/* Header */}
+            <div className="pl-14 lg:pl-0">
+                <h1 className="text-xl sm:text-2xl font-bold">Cennik</h1>
+                <p className="text-muted-foreground text-sm mt-0.5">
                     Generuj profesjonalne ogłoszenia szybciej. Wybierz plan dopasowany do Twoich potrzeb.
                 </p>
             </div>

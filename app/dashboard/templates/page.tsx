@@ -3,11 +3,11 @@ import { Info } from "lucide-react";
 
 export default function TemplatesPage() {
     return (
-        <div className="space-y-8">
+        <div className="space-y-6">
             {/* Header */}
-            <div>
-                <h1 className="text-3xl font-bold text-foreground">Szablony</h1>
-                <p className="text-muted-foreground mt-1">
+            <div className="pl-14 lg:pl-0">
+                <h1 className="text-xl sm:text-2xl font-bold">Szablony</h1>
+                <p className="text-muted-foreground text-sm mt-0.5">
                     Zapisz często używane ustawienia jako szablony
                 </p>
             </div>

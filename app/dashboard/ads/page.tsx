@@ -2,7 +2,6 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { AdsListServer } from "@/components/AdsListServer";
 import { AdsListSkeleton } from "@/components/AdsListSkeleton";
-import { FileText } from "lucide-react";
 import { Suspense } from "react";
 
 // Force Node.js runtime (Prisma not compatible with Edge)
@@ -22,14 +21,11 @@ export default async function AdsPage(props: { searchParams: SearchParams }) {
 
     return (
         <>
-        <div className="max-w-4xl mx-auto space-y-4">
+        <div className="space-y-4">
             {/* Header */}
-            <div className="pl-14 lg:pl-0 flex items-start gap-3">
-                <FileText className="h-6 w-6 text-primary mt-1 shrink-0" />
-                <div>
-                    <h1 className="text-xl sm:text-2xl font-bold">Moje ogłoszenia</h1>
-                    <p className="text-muted-foreground text-sm mt-0.5">Zarządzaj swoimi wygenerowanymi ogłoszeniami</p>
-                </div>
+            <div className="pl-14 lg:pl-0">
+                <h1 className="text-xl sm:text-2xl font-bold">Moje ogłoszenia</h1>
+                <p className="text-muted-foreground text-sm mt-0.5">Zarządzaj swoimi wygenerowanymi ogłoszeniami</p>
             </div>
 
             {/* Ads List with filters */}

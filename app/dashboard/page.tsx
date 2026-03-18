@@ -23,20 +23,18 @@ export default async function DashboardPage() {
 
     return (
         <>
-        <div className="max-w-5xl mx-auto space-y-6">
+        <div className="space-y-6">
             {/* Pending Ad Handler - saves ad from IndexedDB if exists */}
             <PendingAdHandler />
 
             {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pl-14 lg:pl-0">
-                <div>
-                    <h1 className="text-xl sm:text-2xl font-bold">
-                        Witaj, {firstName}! 👋
-                    </h1>
-                    <p className="text-muted-foreground text-sm mt-1">
-                        Oto podsumowanie Twoich ogłoszeń
-                    </p>
-                </div>
+            <div className="pl-14 lg:pl-0">
+                <h1 className="text-xl sm:text-2xl font-bold">
+                    Witaj, {firstName}! 👋
+                </h1>
+                <p className="text-muted-foreground text-sm mt-0.5">
+                    Oto podsumowanie Twoich ogłoszeń
+                </p>
             </div>
 
             {/* Stats Cards */}

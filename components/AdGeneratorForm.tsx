@@ -388,10 +388,10 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
             {!result && showHeader && (
                 <div className="space-y-4 sm:space-y-8 mb-4 sm:mb-8">
                     <div className="pl-14 lg:pl-0">
-                        <h1 className="text-2xl font-bold text-foreground">
+                        <h1 className="text-xl sm:text-2xl font-bold">
                             Nowe ogłoszenie
                         </h1>
-                        <p className="text-muted-foreground mt-1">
+                        <p className="text-muted-foreground text-sm mt-0.5">
                             Wgraj zdjęcia i wygeneruj profesjonalne ogłoszenie
                         </p>
                     </div>
