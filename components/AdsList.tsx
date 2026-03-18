@@ -168,6 +168,22 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
         }
     };
 
+    const handleMarkAsArchived = async (id: string) => {
+        if (!confirm("Wycofać ogłoszenie?")) return;
+        if (processingRef.current.has(id)) return;
+        processingRef.current.add(id);
+        try {
+            await fetch(`/api/ads/${id}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ status: "ARCHIVED" }),
+            });
+            router.refresh();
+        } finally {
+            processingRef.current.delete(id);
+        }
+    };
+
     const handleMarkAsSold = async (id: string) => {
         const price = prompt("Podaj cenę sprzedaży (zł):");
         if (!price) return;
@@ -289,6 +305,25 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                         <span className="text-sm font-medium flex-1">Zaznaczono: {selectedIds.size}</span>
                         <Button size="sm" variant="outline" onClick={handleExportSelected}>
                             <Download className="h-3.5 w-3.5 mr-1" /> CSV
+                        </Button>
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            className="text-muted-foreground hover:text-foreground"
+                            onClick={async () => {
+                                if (!confirm(`Wycofać ${selectedIds.size} ogłoszeń?`)) return;
+                                for (const id of selectedIds) {
+                                    await fetch(`/api/ads/${id}`, {
+                                        method: "PATCH",
+                                        headers: { "Content-Type": "application/json" },
+                                        body: JSON.stringify({ status: "ARCHIVED" }),
+                                    });
+                                }
+                                setSelectedIds(new Set());
+                                router.refresh();
+                            }}
+                        >
+                            <Ban className="h-3.5 w-3.5 mr-1" /> Wycofaj
                         </Button>
                         <Button
                             size="sm"
@@ -442,7 +477,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                                                         <ShoppingCart className="h-3.5 w-3.5" /> Sprzedane
                                                     </button>
                                                     <button
-                                                        onClick={() => { setOpenMenuId(null); }}
+                                                        onClick={() => { handleMarkAsArchived(ad.id); setOpenMenuId(null); }}
                                                         className="flex items-center w-full px-3 py-1.5 text-sm hover:bg-muted gap-2"
                                                     >
                                                         <Ban className="h-3.5 w-3.5" /> Wycofaj
