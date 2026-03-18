@@ -9,7 +9,6 @@ import {
     Layout,
     History,
     BarChart3,
-    Settings,
     ShoppingBag,
     LogOut,
     Coins,
@@ -210,21 +209,6 @@ export function Sidebar({ user, collapsed = false }: SidebarProps) {
 
                 {/* Bottom nav */}
                 <div className="space-y-0.5">
-                    <Link
-                        href="/dashboard/settings"
-                        onClick={() => setIsMobileOpen(false)}
-                        title={collapsed ? "Ustawienia" : undefined}
-                        className={cn(
-                            "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
-                            collapsed && "justify-center px-2",
-                            isActive("/dashboard/settings")
-                                ? "bg-accent text-primary font-medium"
-                                : "text-foreground hover:bg-accent/50"
-                        )}
-                    >
-                        <Settings className="h-4 w-4 shrink-0" />
-                        {!collapsed && <span>Ustawienia</span>}
-                    </Link>
                     {isPaid && !collapsed && (
                         <button
                             onClick={handlePortal}
