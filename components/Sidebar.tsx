@@ -256,7 +256,9 @@ export function Sidebar({ user, collapsed = false }: SidebarProps) {
                 <button
                     onClick={() => setIsMobileOpen(true)}
                     className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-card rounded-lg shadow-lg border border-border"
-                    aria-label="Otwórz menu"
+                    aria-label="Otwórz menu nawigacji"
+                    aria-expanded={isMobileOpen}
+                    aria-controls="mobile-sidebar"
                 >
                     <Menu className="h-5 w-5" />
                 </button>
@@ -273,10 +275,12 @@ export function Sidebar({ user, collapsed = false }: SidebarProps) {
 
             {/* Mobile sidebar */}
             <aside
+                id="mobile-sidebar"
                 className={cn(
                     "lg:hidden fixed inset-y-0 left-0 z-40 w-72 bg-card transform transition-transform duration-300 overflow-y-auto border-r border-border",
                     isMobileOpen ? "translate-x-0" : "-translate-x-full"
                 )}
+                aria-label="Menu nawigacji"
             >
                 {sidebarContent}
             </aside>

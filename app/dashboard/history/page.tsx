@@ -43,14 +43,14 @@ export default async function HistoryPage() {
     return (
         <div className="p-6 max-w-2xl mx-auto">
             {/* Header */}
-            <div className="mb-8">
-                <div className="flex items-center gap-3 mb-1">
-                    <History className="h-6 w-6 text-primary" />
+            <div className="mb-8 flex items-start gap-3">
+                <History className="h-6 w-6 text-primary mt-1 shrink-0" />
+                <div>
                     <h1 className="text-2xl font-bold tracking-tight">Historia</h1>
+                    <p className="text-muted-foreground text-sm mt-0.5">
+                        Ostatnie 50 zdarzeń w Twoim koncie
+                    </p>
                 </div>
-                <p className="text-muted-foreground text-sm ml-9">
-                    Ostatnie 50 zdarzeń w Twoim koncie
-                </p>
             </div>
 
             {logs.length === 0 ? (

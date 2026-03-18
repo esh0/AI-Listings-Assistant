@@ -213,7 +213,7 @@
         animation: blink 1s step-end infinite;
     }
     .animate-float {
-        animation: float 2s ease-in-out infinite;
+        animation: float 3s ease-in-out infinite;
     }
 }
 

@@ -335,7 +335,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                 </div>
             ) : (
                 <div className="space-y-2" ref={menuRef}>
-                    {ads.map((ad, i) => {
+                    {ads.map((ad) => {
                         const isSelected = selectedIds.has(ad.id);
                         const images = Array.isArray(ad.images) ? ad.images : [];
                         const firstImage = images[0]?.url;
@@ -352,11 +352,8 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                         const date = new Date(ad.createdAt).toLocaleDateString("pl-PL");
 
                         return (
-                            <motion.div
+                            <div
                                 key={ad.id}
-                                initial={{ opacity: 0, y: 8 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: i * 0.04 }}
                                 className={cn(
                                     "rounded-xl border bg-card p-3 sm:p-4 flex items-center gap-3 hover:border-primary/30 transition-colors",
                                     isSelected ? "border-primary/40 bg-primary/5" : "border-border"
@@ -374,23 +371,25 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                                 </button>
 
                                 {/* Thumbnail */}
-                                <div
-                                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-muted shrink-0 overflow-hidden cursor-pointer"
-                                    onClick={() => router.push(`/dashboard/ads/${ad.id}`)}
+                                <Link
+                                    href={`/dashboard/ads/${ad.id}`}
+                                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-muted shrink-0 overflow-hidden"
+                                    tabIndex={-1}
+                                    aria-hidden="true"
                                 >
                                     {firstImage ? (
-                                        <img src={firstImage} alt={ad.title} className="w-full h-full object-cover" width={48} height={48} />
+                                        <img src={firstImage} alt="" className="w-full h-full object-cover" width={48} height={48} loading="lazy" />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs">
                                             —
                                         </div>
                                     )}
-                                </div>
+                                </Link>
 
                                 {/* Content */}
-                                <div
-                                    className="flex-1 min-w-0 cursor-pointer"
-                                    onClick={() => router.push(`/dashboard/ads/${ad.id}`)}
+                                <Link
+                                    href={`/dashboard/ads/${ad.id}`}
+                                    className="flex-1 min-w-0"
                                 >
                                     <p className="font-medium text-sm truncate">{ad.title}</p>
                                     <div className="flex flex-wrap items-center gap-1.5 mt-1">
@@ -405,7 +404,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                                         )}
                                         <span className="text-[10px] text-muted-foreground hidden sm:inline">{date}</span>
                                     </div>
-                                </div>
+                                </Link>
 
                                 {/* Actions menu */}
                                 <div className="relative shrink-0">
@@ -459,7 +458,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                                         </div>
                                     )}
                                 </div>
-                            </motion.div>
+                            </div>
                         );
                     })}
                 </div>

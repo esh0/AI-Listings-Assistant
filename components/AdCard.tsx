@@ -138,6 +138,10 @@ export function AdCard({
                     isSelected && "ring-2 ring-primary"
                 )}
                 onClick={isClickable ? handleCardClick : undefined}
+                role={isClickable ? "button" : undefined}
+                tabIndex={isClickable ? 0 : undefined}
+                onKeyDown={isClickable ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleCardClick(); } } : undefined}
+                aria-label={isClickable ? `Otwórz ogłoszenie: ${ad.title}` : undefined}
             >
             <div className="flex flex-col sm:flex-row gap-4">
                 {/* Thumbnail */}
