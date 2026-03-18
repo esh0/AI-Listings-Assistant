@@ -10,8 +10,9 @@ import {
     PLATFORM_NAMES,
     TONE_STYLE_NAMES,
     DELIVERY_NAMES,
+    CONDITION_NAMES,
 } from "@/lib/types";
-import type { Platform, ToneStyle, DeliveryOption } from "@/lib/types";
+import type { Platform, ToneStyle, DeliveryOption, ProductCondition } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import type { Template } from "@/components/TemplatesList";
 
@@ -32,6 +33,7 @@ export function TemplateFormModal({ template, onClose }: Props) {
     const [name, setName] = useState(template?.name ?? "");
     const [platform, setPlatform] = useState<Platform>(template?.platform ?? "olx");
     const [tone, setTone] = useState<ToneStyle>(template?.tone ?? "friendly");
+    const [condition, setCondition] = useState<ProductCondition>(template?.condition ?? "używany, w dobrym stanie");
     const [delivery, setDelivery] = useState<DeliveryOption[]>(
         template?.delivery ?? ["odbiór osobisty", "wysyłka"]
     );
@@ -90,6 +92,7 @@ export function TemplateFormModal({ template, onClose }: Props) {
                     name: name.trim(),
                     platform,
                     tone,
+                    condition,
                     delivery,
                     bodyTemplate: bodyTemplate || undefined,
                     notes: notes || undefined,
@@ -209,6 +212,31 @@ export function TemplateFormModal({ template, onClose }: Props) {
                                     )}
                                 >
                                     {TONE_STYLE_NAMES[t]}
+                                </button>
+                            ))}
+                        </div>
+                    </fieldset>
+
+                    {/* Condition pills */}
+                    <fieldset className="space-y-3">
+                        <legend className="text-sm font-medium">Stan produktu</legend>
+                        <div className="flex gap-2 flex-wrap">
+                            {(Object.entries(CONDITION_NAMES) as [ProductCondition, string][]).map(([c, label]) => (
+                                <button
+                                    key={c}
+                                    type="button"
+                                    role="radio"
+                                    aria-checked={condition === c}
+                                    onClick={() => setCondition(c)}
+                                    className={cn(
+                                        "px-4 py-1.5 rounded-full border text-sm cursor-pointer transition-all",
+                                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                                        condition === c
+                                            ? "border-primary bg-primary/10 text-primary"
+                                            : "border-border text-muted-foreground hover:border-primary/50"
+                                    )}
+                                >
+                                    {label}
                                 </button>
                             ))}
                         </div>
