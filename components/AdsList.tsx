@@ -300,9 +300,13 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                         initial={{ opacity: 0, y: -4 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -4 }}
-                        className="flex items-center gap-2 p-3 rounded-xl border border-primary/20 bg-primary/5"
+                        className="flex flex-wrap items-center gap-2 p-3 rounded-xl border border-primary/20 bg-primary/5"
                     >
                         <span className="text-sm font-medium flex-1">Zaznaczono: {selectedIds.size}</span>
+                        <Button size="sm" variant="ghost" className="ml-auto" onClick={() => setSelectedIds(new Set())}>
+                            <X className="h-3.5 w-3.5" />
+                        </Button>
+                        <div className="w-full flex flex-wrap gap-2">
                         <Button size="sm" variant="outline" onClick={handleExportSelected}>
                             <Download className="h-3.5 w-3.5 mr-1" /> CSV
                         </Button>
@@ -339,9 +343,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                         >
                             <Trash2 className="h-3.5 w-3.5 mr-1" /> Usuń
                         </Button>
-                        <Button size="sm" variant="ghost" onClick={() => setSelectedIds(new Set())}>
-                            <X className="h-3.5 w-3.5" />
-                        </Button>
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -532,7 +534,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
             {/* FAB */}
             <Link
                 href="/dashboard/new"
-                className="fixed bottom-20 right-6 z-50 sm:bottom-20 sm:right-8 flex items-center gap-1.5 bg-gradient-primary text-primary-foreground font-semibold px-5 py-3 rounded-full shadow-lg hover:opacity-90 transition-opacity text-sm"
+                className="fixed bottom-6 right-6 z-50 sm:bottom-8 sm:right-8 flex items-center gap-1.5 bg-gradient-primary text-primary-foreground font-semibold px-5 py-3 rounded-full shadow-lg hover:opacity-90 transition-opacity text-sm"
             >
                 <Plus className="h-4 w-4" />
                 Nowe ogłoszenie
