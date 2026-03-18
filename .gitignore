@@ -72,6 +72,9 @@ lerna-debug.log*
 # Claude Code
 .claude/
 
+# Git worktrees
+.worktrees/
+
 # Temporary files
 *.tmp
 *.temp
