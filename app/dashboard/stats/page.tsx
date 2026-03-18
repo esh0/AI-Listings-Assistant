@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import {
     FileText,
     Eye,
@@ -97,21 +96,24 @@ export default function StatsPage() {
                     {Array.from({ length: 4 }).map((_, i) => (
                         <div
                             key={i}
-                            className="rounded-xl border border-border bg-muted p-3 sm:p-4 h-[68px] animate-pulse"
+                            className="rounded-xl border border-border bg-card p-3 sm:p-4 flex items-center gap-4"
                             aria-hidden="true"
-                        />
+                        >
+                            <div className="w-8 h-8 rounded-lg animate-shimmer shrink-0" />
+                            <div>
+                                <div className="h-5 w-16 rounded animate-shimmer mb-1.5" />
+                                <div className="h-3 w-24 rounded animate-shimmer" />
+                            </div>
+                        </div>
                     ))}
                 </div>
             ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    {summaryCards.map((card, i) => {
+                    {summaryCards.map((card) => {
                         const Icon = card.Icon;
                         return (
-                            <motion.div
+                            <div
                                 key={card.label}
-                                initial={{ opacity: 0, y: 15 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: i * 0.08 }}
                                 className="rounded-xl border border-border bg-card p-3 sm:p-4 flex items-center gap-3"
                             >
                                 <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
@@ -121,7 +123,7 @@ export default function StatsPage() {
                                     <p className="text-xl font-bold leading-tight">{card.value}</p>
                                     <p className="text-[11px] text-muted-foreground">{card.label}</p>
                                 </div>
-                            </motion.div>
+                            </div>
                         );
                     })}
                 </div>
@@ -130,12 +132,7 @@ export default function StatsPage() {
             {/* Charts Row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Weekly Activity Chart */}
-                <motion.div
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.35 }}
-                    className="rounded-xl border border-border bg-card p-4 sm:p-5"
-                >
+                <div className="rounded-xl border border-border bg-card p-4 sm:p-5">
                     <h2 className="text-sm font-semibold mb-4">Aktywność (ostatnie 7 dni)</h2>
 
                     {loading ? (
@@ -143,7 +140,7 @@ export default function StatsPage() {
                             {Array.from({ length: 7 }).map((_, i) => (
                                 <div
                                     key={i}
-                                    className="flex-1 rounded-t-sm bg-muted animate-pulse"
+                                    className="flex-1 rounded-t-sm animate-shimmer"
                                     style={{ height: `${40 + i * 8}%` }}
                                 />
                             ))}
@@ -157,16 +154,12 @@ export default function StatsPage() {
                                         className="flex-1 flex flex-col items-center justify-end gap-1"
                                         title={`${day.label}: ${day.count} ogłoszeń`}
                                     >
-                                        <motion.div
+                                        <div
                                             className="w-full rounded-t-sm overflow-hidden"
                                             style={{
                                                 height: `${(day.count / maxCount) * 100}%`,
                                                 minHeight: day.count > 0 ? "4px" : "0",
-                                                transformOrigin: "bottom",
                                             }}
-                                            initial={{ scaleY: 0 }}
-                                            animate={{ scaleY: 1 }}
-                                            transition={{ delay: 0.4 + i * 0.05 }}
                                         >
                                             <div
                                                 className="w-full h-full"
@@ -176,7 +169,7 @@ export default function StatsPage() {
                                                     opacity: 0.75,
                                                 }}
                                             />
-                                        </motion.div>
+                                        </div>
                                     </div>
                                 ))}
                             </div>
@@ -193,23 +186,18 @@ export default function StatsPage() {
                             </div>
                         </>
                     )}
-                </motion.div>
+                </div>
 
                 {/* Platform Breakdown */}
-                <motion.div
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.45 }}
-                    className="rounded-xl border border-border bg-card p-4 sm:p-5"
-                >
+                <div className="rounded-xl border border-border bg-card p-4 sm:p-5">
                     <h2 className="text-sm font-semibold mb-4">Podział według platform</h2>
 
                     {loading ? (
                         <div className="space-y-4" aria-hidden="true">
                             {Array.from({ length: 3 }).map((_, i) => (
                                 <div key={i} className="space-y-1.5">
-                                    <div className="h-4 w-24 bg-muted animate-pulse rounded" />
-                                    <div className="h-2 w-full bg-muted animate-pulse rounded-full" />
+                                    <div className="h-4 w-24 animate-shimmer rounded" />
+                                    <div className="h-2 w-full animate-shimmer rounded-full" />
                                 </div>
                             ))}
                         </div>
@@ -223,7 +211,7 @@ export default function StatsPage() {
                         </div>
                     ) : (
                         <div className="space-y-4">
-                            {data.platformStats.map((p, i) => {
+                            {data.platformStats.map((p) => {
                                 const Icon = PLATFORM_ICONS[p.platform];
                                 const meta = PLATFORM_META[p.platform as keyof typeof PLATFORM_META];
                                 if (!Icon || !meta) return null;
@@ -243,16 +231,13 @@ export default function StatsPage() {
                                             </span>
                                         </div>
                                         <div className="h-2 w-full bg-muted rounded-full overflow-hidden" role="progressbar" aria-valuenow={Math.round(widthPct)} aria-valuemin={0} aria-valuemax={100} aria-label={`${meta.label}: ${Math.round(widthPct)}%`}>
-                                            <motion.div
+                                            <div
                                                 className="h-full rounded-full"
                                                 style={{
+                                                    width: `${widthPct}%`,
                                                     background:
                                                         "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)))",
-                                                    transformOrigin: "left",
                                                 }}
-                                                initial={{ scaleX: 0, width: `${widthPct}%` }}
-                                                animate={{ scaleX: 1 }}
-                                                transition={{ delay: 0.5 + i * 0.08, duration: 0.6 }}
                                             />
                                         </div>
                                     </div>
@@ -260,7 +245,7 @@ export default function StatsPage() {
                             })}
                         </div>
                     )}
-                </motion.div>
+                </div>
             </div>
         </div>
     );

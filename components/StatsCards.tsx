@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { FileText, Eye, ShoppingCart, Ban } from "lucide-react";
 
 interface StatsCardsProps {
@@ -38,14 +37,11 @@ export function StatsCards({ stats }: StatsCardsProps) {
 
     return (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {cards.map((card, i) => {
+            {cards.map((card) => {
                 const Icon = card.icon;
                 return (
-                    <motion.div
+                    <div
                         key={card.label}
-                        initial={{ opacity: 0, y: 15 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: i * 0.08 }}
                         className="rounded-xl border border-border bg-card p-3 sm:p-4 flex items-center gap-3"
                     >
                         <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
@@ -55,7 +51,7 @@ export function StatsCards({ stats }: StatsCardsProps) {
                             <p className="text-xl font-bold leading-tight">{card.value}</p>
                             <p className="text-[11px] text-muted-foreground">{card.label}</p>
                         </div>
-                    </motion.div>
+                    </div>
                 );
             })}
         </div>

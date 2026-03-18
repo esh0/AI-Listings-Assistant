@@ -2,7 +2,9 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { AdsList } from "@/components/AdsList";
+import { AdsListSkeleton } from "@/components/AdsListSkeleton";
 import { FileText } from "lucide-react";
+import { Suspense } from "react";
 // Force Node.js runtime (Prisma not compatible with Edge)
 export const runtime = "nodejs";
 
@@ -111,20 +113,22 @@ export default async function AdsPage(props: { searchParams: SearchParams }) {
             </div>
 
             {/* Ads List with filters */}
-            <AdsList
-                ads={ads}
-                counts={{
-                    all: totalCount,
-                    drafts: draftCount,
-                    published: publishedCount,
-                    sold: soldCount,
-                    archived: archivedCount,
-                }}
-                currentFilter={statusFilter || "all"}
-                currentPage={page}
-                totalPages={totalPages}
-                totalFilteredCount={totalFilteredCount}
-            />
+            <Suspense fallback={<AdsListSkeleton />}>
+                <AdsList
+                    ads={ads}
+                    counts={{
+                        all: totalCount,
+                        drafts: draftCount,
+                        published: publishedCount,
+                        sold: soldCount,
+                        archived: archivedCount,
+                    }}
+                    currentFilter={statusFilter || "all"}
+                    currentPage={page}
+                    totalPages={totalPages}
+                    totalFilteredCount={totalFilteredCount}
+                />
+            </Suspense>
         </div>
         </>
     );

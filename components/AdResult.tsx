@@ -43,7 +43,7 @@ export function AdResult({ result, imagePreviews, platform, productName, conditi
 
     return (
         <div
-            className="grid grid-cols-1 lg:grid-cols-[65fr_35fr] gap-6 animate-slide-up"
+            className="grid grid-cols-1 lg:grid-cols-[65fr_35fr] gap-6"
             role="region"
             aria-label="Wygenerowane ogłoszenie"
         >

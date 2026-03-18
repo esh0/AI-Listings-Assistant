@@ -3,9 +3,12 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { StatsCards } from "@/components/StatsCards";
 import { RecentAdsList } from "@/components/RecentAdsList";
+import { StatsCardsSkeleton } from "@/components/StatsCardsSkeleton";
+import { RecentAdsListSkeleton } from "@/components/RecentAdsListSkeleton";
 import { PendingAdHandler } from "@/components/PendingAdHandler";
 import Link from "next/link";
 import { Plus } from "lucide-react";
+import { Suspense } from "react";
 
 // Force Node.js runtime (Prisma not compatible with Edge)
 export const runtime = "nodejs";
@@ -60,17 +63,21 @@ export default async function DashboardPage() {
             </div>
 
             {/* Stats Cards */}
-            <StatsCards
-                stats={{
-                    total: totalAds,
-                    published: publishedAds,
-                    sold: soldAds,
-                    archived: archivedAds,
-                }}
-            />
+            <Suspense fallback={<StatsCardsSkeleton />}>
+                <StatsCards
+                    stats={{
+                        total: totalAds,
+                        published: publishedAds,
+                        sold: soldAds,
+                        archived: archivedAds,
+                    }}
+                />
+            </Suspense>
 
             {/* Recent Ads */}
-            <RecentAdsList ads={recentAds} />
+            <Suspense fallback={<RecentAdsListSkeleton />}>
+                <RecentAdsList ads={recentAds} />
+            </Suspense>
         </div>
 
         {/* FAB */}

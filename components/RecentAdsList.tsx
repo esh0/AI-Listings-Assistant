@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Plus, ArrowRight, Clock, ShoppingBag, Store, Facebook, Shirt } from "lucide-react";
 import Link from "next/link";
@@ -45,11 +44,7 @@ const PLATFORM_ICONS: Record<Platform, React.ElementType> = {
 
 export function RecentAdsList({ ads }: RecentAdsListProps) {
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-        >
+        <div>
             <div className="flex items-center justify-between mb-3">
                 <h2 className="text-base sm:text-lg font-semibold">Ostatnie ogłoszenia</h2>
                 {ads.length > 0 && (
@@ -123,6 +118,6 @@ export function RecentAdsList({ ads }: RecentAdsListProps) {
                     })}
                 </div>
             )}
-        </motion.div>
+        </div>
     );
 }
