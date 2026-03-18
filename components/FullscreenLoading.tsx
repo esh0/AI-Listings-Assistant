@@ -141,7 +141,10 @@ export function FullscreenLoading({
                     <h2 className="text-2xl font-bold tracking-tight">
                         AI pracuje...
                     </h2>
-                    <p className="text-muted-foreground text-base leading-relaxed transition-opacity duration-300">
+                    <p
+                        key={getLoadingMessage(progress, isIndeterminate, platform, indeterminateTime)}
+                        className="text-muted-foreground text-base leading-relaxed animate-fade-in"
+                    >
                         {getLoadingMessage(progress, isIndeterminate, platform, indeterminateTime)}
                     </p>
                 </div>

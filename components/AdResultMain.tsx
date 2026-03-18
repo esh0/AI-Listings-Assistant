@@ -49,6 +49,12 @@ export const AdResultMain = React.memo(function AdResultMain({
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isEditingDescription, setIsEditingDescription] = useState(false);
 
+  // Shake state for char counters at limit
+  const [shakeTitleCounter, setShakeTitleCounter] = useState(false);
+  const [shakeDescCounter, setShakeDescCounter] = useState(false);
+  const prevTitleLen = useRef(editedTitle.length);
+  const prevDescLen = useRef(editedDescription.length);
+
   // Refs for auto-focus
   const titleInputRef = useRef<HTMLInputElement>(null);
   const descInputRef = useRef<HTMLTextAreaElement>(null);
@@ -62,6 +68,26 @@ export const AdResultMain = React.memo(function AdResultMain({
       clearTimeout(copyDescTimerRef.current);
     };
   }, []);
+
+  // Shake title counter when limit hit
+  useEffect(() => {
+    if (editedTitle.length === titleLimit && prevTitleLen.current < titleLimit) {
+      setShakeTitleCounter(true);
+      const t = setTimeout(() => setShakeTitleCounter(false), 300);
+      return () => clearTimeout(t);
+    }
+    prevTitleLen.current = editedTitle.length;
+  }, [editedTitle.length, titleLimit]);
+
+  // Shake desc counter when limit hit
+  useEffect(() => {
+    if (editedDescription.length === descriptionLimit && prevDescLen.current < descriptionLimit) {
+      setShakeDescCounter(true);
+      const t = setTimeout(() => setShakeDescCounter(false), 300);
+      return () => clearTimeout(t);
+    }
+    prevDescLen.current = editedDescription.length;
+  }, [editedDescription.length, descriptionLimit]);
 
   // Title edit handlers
   const handleEditTitle = useCallback(() => {
@@ -172,7 +198,7 @@ export const AdResultMain = React.memo(function AdResultMain({
               className={cn(
                 "gap-2 bg-muted px-3 py-1.5 rounded-md transition-colors duration-200",
                 "hover:bg-primary/10 hover:text-primary",
-                copiedTitle && "bg-success/10 text-success"
+                copiedTitle && "bg-success/10 text-success animate-copy-flash"
               )}
             >
               {copiedTitle ? (
@@ -191,7 +217,7 @@ export const AdResultMain = React.memo(function AdResultMain({
         }
       >
         {isEditingTitle ? (
-          <div>
+          <div className="animate-edit-enter">
             <Input
               ref={titleInputRef}
               type="text"
@@ -213,13 +239,14 @@ export const AdResultMain = React.memo(function AdResultMain({
             )}
             <p id="title-counter" className={cn(
               "text-xs mt-1",
+              shakeTitleCounter && "animate-counter-shake",
               editedTitle.length > titleWarningThreshold ? "text-destructive" : "text-muted-foreground"
             )}>
               {editedTitle.length} / {titleLimit} znaków
             </p>
           </div>
         ) : (
-          <p className="text-base leading-relaxed">{editedTitle}</p>
+          <p className="text-base leading-relaxed animate-edit-enter">{editedTitle}</p>
         )}
       </CardWrapper>
 
@@ -257,7 +284,7 @@ export const AdResultMain = React.memo(function AdResultMain({
               className={cn(
                 "gap-2 bg-muted px-3 py-1.5 rounded-md transition-colors duration-200",
                 "hover:bg-primary/10 hover:text-primary",
-                copiedDescription && "bg-success/10 text-success"
+                copiedDescription && "bg-success/10 text-success animate-copy-flash"
               )}
             >
               {copiedDescription ? (
@@ -276,7 +303,7 @@ export const AdResultMain = React.memo(function AdResultMain({
         }
       >
         {isEditingDescription ? (
-          <div>
+          <div className="animate-edit-enter">
             <Textarea
               ref={descInputRef}
               value={editedDescription}
@@ -298,13 +325,14 @@ export const AdResultMain = React.memo(function AdResultMain({
             )}
             <p id="desc-counter" className={cn(
               "text-xs mt-1",
+              shakeDescCounter && "animate-counter-shake",
               editedDescription.length > descWarningThreshold ? "text-destructive" : "text-muted-foreground"
             )}>
               {editedDescription.length} / {descriptionLimit} znaków
             </p>
           </div>
         ) : (
-          <p className="text-base leading-relaxed whitespace-pre-wrap">
+          <p className="text-base leading-relaxed whitespace-pre-wrap animate-edit-enter">
             {editedDescription}
           </p>
         )}

@@ -150,7 +150,7 @@ export function UploadDropzone({ onImagesChange, images, maxImages }: UploadDrop
                     {images.map((image, index) => (
                         <div
                             key={`${image.filename}-${index}`}
-                            className="relative group aspect-square rounded-lg border-2 border-border bg-muted overflow-hidden hover:border-primary transition-colors"
+                            className="relative group aspect-square rounded-lg border-2 border-border bg-muted overflow-hidden hover:border-primary transition-colors animate-tile-enter"
                         >
                             <img
                                 src={image.preview}
@@ -239,18 +239,30 @@ export function UploadDropzone({ onImagesChange, images, maxImages }: UploadDrop
                         tabIndex={0}
                     />
                     <div className="flex flex-col items-center gap-3 text-center pointer-events-none">
-                        <div className="rounded-full bg-muted p-4 group-hover:bg-primary/10 transition-colors">
+                        <div className={cn(
+                            "rounded-full bg-muted p-4 transition-colors",
+                            isDragging ? "bg-primary/10" : "group-hover:bg-primary/10"
+                        )}>
                             <Upload className={cn(
-                                "h-7 w-7 sm:h-10 sm:w-10 text-muted-foreground group-hover:text-primary transition-colors",
+                                "h-7 w-7 sm:h-10 sm:w-10 text-muted-foreground transition-colors",
+                                isDragging ? "text-primary animate-float" : "group-hover:text-primary",
                                 isCompressing && "animate-pulse"
                             )} aria-hidden="true" />
                         </div>
                         <div className="space-y-1">
-                            <p className="text-base sm:text-lg font-semibold">
-                                {isCompressing ? "Przetwarzanie…" : "Przeciągnij zdjęcia tutaj"}
+                            <p className="text-base sm:text-lg font-semibold transition-colors duration-150">
+                                {isCompressing
+                                    ? "Przetwarzanie…"
+                                    : isDragging
+                                    ? "Upuść zdjęcia"
+                                    : "Przeciągnij zdjęcia tutaj"}
                             </p>
                             <p className="text-sm text-muted-foreground leading-relaxed">
-                                {isCompressing ? "Optymalizacja obrazów…" : "lub kliknij, aby wybrać pliki"}
+                                {isCompressing
+                                    ? "Optymalizacja obrazów…"
+                                    : isDragging
+                                    ? "Puść, aby dodać"
+                                    : "lub kliknij, aby wybrać pliki"}
                             </p>
                         </div>
                         <div className="flex items-center gap-2 text-xs text-muted-foreground">
