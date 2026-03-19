@@ -27,6 +27,14 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
     }
 
+    // Idempotency check — Stripe retries webhooks on failure, deduplicate by event ID
+    try {
+        await prisma.processedWebhookEvent.create({ data: { id: event.id } });
+    } catch {
+        // Unique constraint violation = event already processed
+        return NextResponse.json({ received: true, deduplicated: true });
+    }
+
     switch (event.type) {
         // Subscription created or boost purchased
         case "checkout.session.completed": {

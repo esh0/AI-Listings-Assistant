@@ -136,6 +136,13 @@ model GuestUsage {
   @@index([ipHash])
 }
 
+model ProcessedWebhookEvent {
+  id        String   @id // Stripe event ID (e.g. evt_xxx)
+  createdAt DateTime @default(now())
+
+  @@index([createdAt]) // For future cleanup of old events
+}
+
 enum Plan {
   FREE
   STARTER

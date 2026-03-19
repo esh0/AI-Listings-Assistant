@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prisma";
-import { cache } from "react";
 import type { Plan } from "@prisma/client";
 
 /**
@@ -18,10 +17,9 @@ export const IMAGE_LIMITS: Record<string, number> = {
 };
 
 /**
- * Internal function to get user data
- * Cached per-request to avoid duplicate database queries
+ * Internal function to get user data (fresh read, no cache)
  */
-const getUserData = cache(async (userId: string) => {
+async function getUserData(userId: string) {
     const user = await prisma.user.findUnique({
         where: { id: userId },
         select: {
@@ -36,7 +34,7 @@ const getUserData = cache(async (userId: string) => {
     }
 
     return user;
-});
+}
 
 /**
  * Check if user has available credits (subscription + boost)
@@ -57,30 +55,32 @@ export async function getAvailableCredits(userId: string): Promise<number> {
 /**
  * Consume one credit for ad generation.
  * Uses subscription credits first, then boost credits.
+ * Atomic: uses conditional UPDATE to prevent TOCTOU race conditions.
  */
 export async function consumeCredit(userId: string): Promise<void> {
-    const user = await getUserData(userId);
+    // Atomic decrement of subscription credits (only if > 0)
+    const subResult = await prisma.user.updateMany({
+        where: { id: userId, creditsAvailable: { gt: 0 } },
+        data: { creditsAvailable: { decrement: 1 } },
+    });
 
-    // First try subscription credits
-    if (user.creditsAvailable > 0) {
-        await prisma.user.update({
-            where: { id: userId },
-            data: { creditsAvailable: { decrement: 1 } },
-        });
-        return;
-    }
+    if (subResult.count > 0) return; // Success
 
-    // Then try boost credits
-    if (user.boostCredits > 0) {
-        await prisma.user.update({
-            where: { id: userId },
-            data: { boostCredits: { decrement: 1 } },
-        });
-        return;
-    }
+    // Atomic decrement of boost credits (only if > 0)
+    const boostResult = await prisma.user.updateMany({
+        where: { id: userId, boostCredits: { gt: 0 } },
+        data: { boostCredits: { decrement: 1 } },
+    });
 
-    // No credits available
-    if (user.plan === "FREE") {
+    if (boostResult.count > 0) return; // Success
+
+    // No credits available — fetch plan for user-friendly error message
+    const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { plan: true },
+    });
+
+    if (user?.plan === "FREE") {
         throw new Error(
             "Wykorzystałeś wszystkie darmowe kredyty (5/miesiąc). Przejdź na plan Starter dla 30 generacji miesięcznie."
         );

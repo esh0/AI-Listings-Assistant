@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { deleteAdImages } from "@/lib/image-upload";
 import { logActivity, adDetail } from "@/lib/activity";
+import { updateAdSchema } from "@/lib/schemas";
 
 export const runtime = "nodejs";
 
@@ -89,6 +90,15 @@ export async function PATCH(
             );
         }
 
+        // Validate request body
+        const parsed = updateAdSchema.safeParse(body);
+        if (!parsed.success) {
+            return NextResponse.json(
+                { error: "Nieprawidłowe dane", details: parsed.error.flatten() },
+                { status: 400 }
+            );
+        }
+
         const {
             title,
             description,
@@ -97,18 +107,10 @@ export async function PATCH(
             priceMin,
             priceMax,
             parameters,
-        } = body;
-
-        // Validate status transitions
-        if (status === "SOLD" && soldPrice === undefined) {
-            return NextResponse.json(
-                { error: "soldPrice is required when status is SOLD" },
-                { status: 400 }
-            );
-        }
+        } = parsed.data;
 
         // Prepare update data
-        const updateData: any = {};
+        const updateData: Record<string, unknown> = {};
         if (title !== undefined) updateData.title = title;
         if (description !== undefined) updateData.description = description;
         if (status !== undefined) updateData.status = status;

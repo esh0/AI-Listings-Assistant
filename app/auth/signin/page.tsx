@@ -8,9 +8,18 @@ import { ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
+function getSafeCallbackUrl(raw: string | null): string {
+    if (!raw) return "/dashboard";
+    // Only allow relative paths — block protocol-relative (//evil.com) and absolute URLs
+    if (raw.startsWith("/") && !raw.startsWith("//")) {
+        return raw;
+    }
+    return "/dashboard";
+}
+
 function SignInForm() {
     const searchParams = useSearchParams();
-    const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
+    const callbackUrl = getSafeCallbackUrl(searchParams.get("callbackUrl"));
 
     const handleGoogleSignIn = async () => {
         await signIn("google", { callbackUrl });

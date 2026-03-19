@@ -5,6 +5,7 @@ import { AdStatus } from "@prisma/client";
 import { uploadImageFromBase64 } from "@/lib/image-upload";
 import { consumeCredit } from "@/lib/credits";
 import { logActivity, adDetail } from "@/lib/activity";
+import { createAdSchema } from "@/lib/schemas";
 
 export const runtime = "nodejs";
 
@@ -85,6 +86,13 @@ export async function POST(request: NextRequest) {
         }
 
         const body = await request.json();
+        const parsed = createAdSchema.safeParse(body);
+        if (!parsed.success) {
+            return NextResponse.json(
+                { error: "Nieprawidłowe dane", details: parsed.error.flatten() },
+                { status: 400 }
+            );
+        }
         const {
             platform,
             title,
@@ -95,15 +103,7 @@ export async function POST(request: NextRequest) {
             images = [],
             parameters = {},
             fromSoftwall = false,
-        } = body;
-
-        // Basic validation
-        if (!platform || !title || !description) {
-            return NextResponse.json(
-                { error: "Missing required fields: platform, title, description" },
-                { status: 400 }
-            );
-        }
+        } = parsed.data;
 
         // Consume credit if this ad comes from softwall (existing user logged in)
         // This prevents abuse: user logs out → generates ad → logs back in → bypasses credit check
@@ -153,7 +153,8 @@ export async function POST(request: NextRequest) {
                 priceMin,
                 priceMax,
                 images: structuredClone(uploadedImages),
-                parameters: structuredClone(parameters),
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                parameters: structuredClone(parameters) as any,
             },
         });
 

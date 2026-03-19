@@ -77,16 +77,16 @@ export async function GET(request: NextRequest) {
 
             return [
                 ad.id,
-                PLATFORM_NAMES[ad.platform as keyof typeof PLATFORM_NAMES] || ad.platform,
+                escapeCSV(PLATFORM_NAMES[ad.platform as keyof typeof PLATFORM_NAMES] || ad.platform),
                 escapeCSV(ad.title),
                 escapeCSV(ad.description),
-                ad.status,
+                escapeCSV(ad.status),
                 ad.priceMin?.toString() || "",
                 ad.priceMax?.toString() || "",
                 ad.soldPrice?.toString() || "",
-                parameters?.condition ? CONDITION_NAMES[parameters.condition as keyof typeof CONDITION_NAMES] || parameters.condition : "",
-                parameters?.tone || "",
-                Array.isArray(parameters?.delivery) ? parameters.delivery.join(", ") : "",
+                escapeCSV(parameters?.condition ? CONDITION_NAMES[parameters.condition as keyof typeof CONDITION_NAMES] || parameters.condition : ""),
+                escapeCSV(parameters?.tone || ""),
+                escapeCSV(Array.isArray(parameters?.delivery) ? parameters.delivery.join(", ") : ""),
                 ad.createdAt.toISOString(),
                 ad.updatedAt.toISOString(),
             ];
@@ -120,16 +120,22 @@ export async function GET(request: NextRequest) {
 }
 
 /**
- * Escape CSV field - wrap in quotes if contains comma, quote, or newline
+ * Escape CSV field — wrap in quotes if needed, prevent formula injection.
+ * Formula injection: prefix =+-@\t\r with single quote to prevent execution in Excel/Google Sheets.
  */
 function escapeCSV(value: string): string {
     if (!value) return "";
 
-    // Check if escaping is needed
-    if (value.includes(",") || value.includes('"') || value.includes("\n")) {
-        // Escape quotes by doubling them
-        return `"${value.replace(/"/g, '""')}"`;
+    let sanitized = value;
+    // Prevent CSV formula injection — prefix formula-triggering characters
+    if (/^[=+\-@\t\r]/.test(sanitized)) {
+        sanitized = "'" + sanitized;
     }
 
-    return value;
+    // Wrap in quotes if contains comma, quote, newline, or was modified by injection guard
+    if (sanitized.includes(",") || sanitized.includes('"') || sanitized.includes("\n") || sanitized !== value) {
+        return `"${sanitized.replace(/"/g, '""')}"`;
+    }
+
+    return sanitized;
 }

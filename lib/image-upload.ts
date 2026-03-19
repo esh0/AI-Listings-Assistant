@@ -25,6 +25,12 @@ export async function uploadImageFromBase64(
   // Convert base64 to buffer
   const buffer = Buffer.from(base64Data, "base64");
 
+  // Server-side size validation (client-side can be bypassed)
+  const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
+  if (buffer.length > MAX_IMAGE_SIZE) {
+    throw new Error("Plik jest zbyt duży. Maksymalny rozmiar to 10MB.");
+  }
+
   // Resize image to thumbnail using sharp
   const resizedBuffer = await sharp(buffer)
     .resize(maxWidth, null, {

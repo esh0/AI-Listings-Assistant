@@ -149,3 +149,43 @@ export function validateImageFile(file: File): {
 
     return { valid: true };
 }
+
+// ===== API schemas for ad management =====
+
+const platformEnum = z.enum(["olx", "allegro_lokalnie", "facebook_marketplace", "vinted"]);
+const adStatusEnum = z.enum(["DRAFT", "PUBLISHED", "SOLD", "ARCHIVED"]);
+
+// Schema for saving an ad (POST /api/ads)
+export const createAdSchema = z.object({
+    platform: platformEnum,
+    title: z.string().min(1, "Tytuł jest wymagany").max(200, "Tytuł jest zbyt długi"),
+    description: z.string().min(1, "Opis jest wymagany").max(5000, "Opis jest zbyt długi"),
+    status: adStatusEnum.default("DRAFT"),
+    priceMin: z.number().nonnegative("Cena minimalna nie może być ujemna").nullable().optional(),
+    priceMax: z.number().nonnegative("Cena maksymalna nie może być ujemna").nullable().optional(),
+    images: z.array(z.object({
+        url: z.string(),
+        quality: z.string().optional(),
+        suggestions: z.string().optional(),
+    })).default([]),
+    parameters: z.record(z.unknown()).default({}),
+    fromSoftwall: z.boolean().default(false),
+});
+
+export type CreateAdSchema = z.infer<typeof createAdSchema>;
+
+// Schema for updating an ad (PATCH /api/ads/[id])
+export const updateAdSchema = z.object({
+    title: z.string().min(1, "Tytuł jest wymagany").max(200, "Tytuł jest zbyt długi").optional(),
+    description: z.string().min(1, "Opis jest wymagany").max(5000, "Opis jest zbyt długi").optional(),
+    status: adStatusEnum.optional(),
+    soldPrice: z.number().nonnegative("Cena sprzedaży nie może być ujemna").nullable().optional(),
+    priceMin: z.number().nonnegative("Cena minimalna nie może być ujemna").nullable().optional(),
+    priceMax: z.number().nonnegative("Cena maksymalna nie może być ujemna").nullable().optional(),
+    parameters: z.record(z.unknown()).optional(),
+}).refine(
+    (data) => !(data.status === "SOLD" && data.soldPrice === undefined),
+    { message: "soldPrice is required when status is SOLD", path: ["soldPrice"] }
+);
+
+export type UpdateAdSchema = z.infer<typeof updateAdSchema>;

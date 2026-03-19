@@ -19,6 +19,7 @@ const { handlers, auth: uncachedAuth, signIn, signOut } = NextAuth({
   },
   session: {
     strategy: "jwt", // Use JWT for edge compatibility (middleware)
+    maxAge: 7 * 24 * 60 * 60, // 7 days — balance between security and UX
   },
   callbacks: {
     async jwt({ token, user, trigger }) {
