@@ -54,19 +54,8 @@ export function PendingAdHandler() {
                         data.plan !== prevPlan;
 
                     if (changed) {
-                        console.log("[PendingAdHandler] DB changed! Calling updateSession({})...");
-                        // updateSession returns undefined if SessionProvider is still loading.
-                        // Retry until it returns a session object.
-                        let result;
-                        let retries = 0;
-                        while (result === undefined && retries < 10) {
-                            result = await updateSession({});
-                            if (result === undefined) {
-                                await new Promise(r => setTimeout(r, 500));
-                            }
-                            retries++;
-                        }
-                        console.log("[PendingAdHandler] updateSession result:", result);
+                        console.log("[PendingAdHandler] DB changed, reloading page to sync session...");
+                        window.location.href = "/dashboard";
                         return;
                     }
                 }
