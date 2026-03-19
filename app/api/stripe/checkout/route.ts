@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
         checkoutSession = await stripe.checkout.sessions.create({
             customer: customerId,
             mode: "subscription",
-            payment_method_types: ["card", "blik"],
+            payment_method_types: ["card"],
             line_items: [
                 {
                     price: planConfig.priceId,
