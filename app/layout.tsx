@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AuthProvider } from "@/components/AuthProvider";
+import { auth } from "@/auth";
 
 export const viewport: Viewport = {
     width: "device-width",
@@ -43,11 +44,12 @@ export const metadata: Metadata = {
     },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const session = await auth();
     return (
         <html lang="pl" suppressHydrationWarning className="[color-scheme:light] dark:[color-scheme:dark]">
             <head>
@@ -58,7 +60,7 @@ export default function RootLayout({
                 <meta name="theme-color" content="#0a0d14" media="(prefers-color-scheme: dark)" />
             </head>
             <body className="antialiased">
-                <AuthProvider>
+                <AuthProvider session={session}>
                     <ThemeProvider
                         attribute="class"
                         defaultTheme="system"

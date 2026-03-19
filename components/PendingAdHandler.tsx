@@ -54,7 +54,21 @@ export function PendingAdHandler() {
                         data.plan !== prevPlan;
 
                     if (changed) {
-                        console.log("[PendingAdHandler] DB changed, reloading page to sync session...");
+                        console.log("[PendingAdHandler] DB changed, forcing JWT update then reload...");
+                        // Bypass SessionProvider.update() (blocked by loading=true) by
+                        // calling the NextAuth session endpoint directly with CSRF token.
+                        // This triggers jwt({ trigger: "update" }) and writes a new JWT cookie.
+                        try {
+                            const csrfRes = await fetch("/api/auth/csrf");
+                            const { csrfToken } = await csrfRes.json();
+                            await fetch("/api/auth/session", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ csrfToken }),
+                            });
+                        } catch (e) {
+                            console.error("[PendingAdHandler] Failed to update JWT:", e);
+                        }
                         window.location.href = "/dashboard";
                         return;
                     }
