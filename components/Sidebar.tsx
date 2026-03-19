@@ -20,6 +20,7 @@ import {
 import { useState, useCallback, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface SidebarProps {
     user: {
@@ -93,7 +94,7 @@ export function Sidebar({ user, collapsed = false }: SidebarProps) {
             const data = await res.json();
             if (data.url) window.location.href = data.url;
         } catch {
-            alert("Nie udało się otworzyć panelu subskrypcji. Spróbuj ponownie.");
+            toast.error("Nie udało się otworzyć panelu subskrypcji. Spróbuj ponownie.");
         } finally {
             setIsPortalLoading(false);
         }

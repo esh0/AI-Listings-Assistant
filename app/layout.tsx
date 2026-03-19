@@ -5,6 +5,7 @@ import { AuthProvider } from "@/components/AuthProvider";
 import { CookieBanner } from "@/components/CookieBanner";
 import { auth } from "@/auth";
 import { Analytics } from "@vercel/analytics/react";
+import { Toaster } from "sonner";
 
 export const viewport: Viewport = {
     width: "device-width",
@@ -86,6 +87,7 @@ export default async function RootLayout({
                         {children}
                         <Analytics />
                     </ThemeProvider>
+                    <Toaster richColors position="top-right" />
                     <CookieBanner />
                 </AuthProvider>
             </body>

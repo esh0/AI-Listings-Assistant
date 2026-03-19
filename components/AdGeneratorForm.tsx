@@ -15,6 +15,7 @@ import { SoftWallModal } from "@/components/SoftWallModal";
 import { NoCreditsModal } from "@/components/NoCreditsModal";
 import { fileToBase64, getImageMimeType } from "@/lib/utils";
 import { getGuestId } from "@/lib/guest-id";
+import { toast } from "sonner";
 import type {
     UploadedImage,
     Platform,
@@ -267,7 +268,7 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
             return true;
         } catch (error) {
             console.error("Failed to save ad:", error);
-            alert("Nie udało się zapisać ogłoszenia. Spróbuj ponownie.");
+            toast.error("Nie udało się zapisać ogłoszenia. Spróbuj ponownie.");
             return false;
         } finally {
             setIsSaving(false);

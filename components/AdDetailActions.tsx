@@ -5,6 +5,9 @@ import { Pencil, ShoppingCart, Ban, Upload, Trash2, Save } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useRef } from "react";
 import { AdStatus } from "@prisma/client";
+import { toast } from "sonner";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
+import { SoldPriceDialog } from "@/components/SoldPriceDialog";
 
 interface AdDetailActionsProps {
     ad: {
@@ -18,9 +21,13 @@ interface AdDetailActionsProps {
     onEditToggle?: () => void;
 }
 
+type DialogType = "publish" | "archive" | "delete" | null;
+
 export function AdDetailActions({ ad, title, description, hasEdits, editing, onEditToggle }: AdDetailActionsProps) {
     const router = useRouter();
     const [isUpdating, setIsUpdating] = useState(false);
+    const [dialog, setDialog] = useState<DialogType>(null);
+    const [soldDialogOpen, setSoldDialogOpen] = useState(false);
     const isProcessingRef = useRef(false);
 
     const patch = async (body: object) => {
@@ -37,6 +44,7 @@ export function AdDetailActions({ ad, title, description, hasEdits, editing, onE
             router.refresh();
         } catch (error) {
             console.error("Failed to update ad:", error);
+            toast.error("Nie udało się zaktualizować ogłoszenia");
         } finally {
             setIsUpdating(false);
             isProcessingRef.current = false;
@@ -49,41 +57,82 @@ export function AdDetailActions({ ad, title, description, hasEdits, editing, onE
     };
 
     const handleMarkAsPublished = () => {
-        if (!confirm("Czy na pewno chcesz oznaczyć to ogłoszenie jako opublikowane?")) return;
-        patch({ status: "PUBLISHED" });
+        setDialog("publish");
     };
 
     const handleMarkAsSold = () => {
-        const price = prompt("Podaj cenę sprzedaży (zł):");
-        if (!price) return;
-        const soldPrice = parseFloat(price);
-        if (isNaN(soldPrice) || soldPrice <= 0) return;
-        patch({ status: "SOLD", soldPrice });
+        setSoldDialogOpen(true);
     };
 
     const handleArchive = () => {
-        if (!confirm("Czy na pewno chcesz zarchiwizować to ogłoszenie?")) return;
-        patch({ status: "ARCHIVED" });
+        setDialog("archive");
     };
 
-    const handleDelete = async () => {
-        if (!confirm("Czy na pewno chcesz usunąć to ogłoszenie? Ta operacja jest nieodwracalna.")) return;
-        if (isProcessingRef.current) return;
-        isProcessingRef.current = true;
-        setIsUpdating(true);
-        try {
-            const response = await fetch(`/api/ads/${ad.id}`, { method: "DELETE" });
-            if (!response.ok) throw new Error("Failed to delete ad");
-            router.push("/dashboard/ads");
-        } catch (error) {
-            console.error("Failed to delete ad:", error);
-            setIsUpdating(false);
-            isProcessingRef.current = false;
+    const handleDelete = () => {
+        setDialog("delete");
+    };
+
+    const handleDialogConfirm = async () => {
+        const type = dialog;
+        setDialog(null);
+        if (type === "publish") {
+            await patch({ status: "PUBLISHED" });
+            toast.success("Ogłoszenie oznaczone jako opublikowane");
+        } else if (type === "archive") {
+            await patch({ status: "ARCHIVED" });
+            toast.success("Ogłoszenie zostało wycofane");
+        } else if (type === "delete") {
+            if (isProcessingRef.current) return;
+            isProcessingRef.current = true;
+            setIsUpdating(true);
+            try {
+                const response = await fetch(`/api/ads/${ad.id}`, { method: "DELETE" });
+                if (!response.ok) throw new Error();
+                toast.success("Ogłoszenie zostało usunięte");
+                router.push("/dashboard/ads");
+            } catch {
+                toast.error("Nie udało się usunąć ogłoszenia");
+                setIsUpdating(false);
+                isProcessingRef.current = false;
+            }
         }
+    };
+
+    const handleSoldConfirm = async (price: number) => {
+        setSoldDialogOpen(false);
+        await patch({ status: "SOLD", soldPrice: price });
+        toast.success(`Ogłoszenie sprzedane za ${price} zł`);
     };
 
     return (
         <>
+            <ConfirmDialog
+                open={!!dialog}
+                title={
+                    dialog === "delete" ? "Usuń ogłoszenie" :
+                    dialog === "archive" ? "Wycofaj ogłoszenie" :
+                    "Opublikuj ogłoszenie"
+                }
+                description={
+                    dialog === "delete" ? "Czy na pewno chcesz usunąć to ogłoszenie? Ta operacja jest nieodwracalna." :
+                    dialog === "archive" ? "Czy na pewno chcesz wycofać to ogłoszenie?" :
+                    "Oznaczyć ogłoszenie jako opublikowane?"
+                }
+                confirmLabel={
+                    dialog === "delete" ? "Usuń" :
+                    dialog === "archive" ? "Wycofaj" :
+                    "Opublikuj"
+                }
+                variant={dialog === "delete" ? "destructive" : "default"}
+                onConfirm={handleDialogConfirm}
+                onCancel={() => setDialog(null)}
+            />
+            <SoldPriceDialog
+                open={soldDialogOpen}
+                onConfirm={handleSoldConfirm}
+                onCancel={() => setSoldDialogOpen(false)}
+            />
+
             {/* Save edits — only when there are unsaved changes */}
             {hasEdits && (
                 <Button

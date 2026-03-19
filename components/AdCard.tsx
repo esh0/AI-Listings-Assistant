@@ -8,6 +8,7 @@ import { Eye, Edit, Trash2, CheckCircle, ShoppingBag, Store, Facebook, Shirt, Ci
 import { useState } from "react";
 import { AdStatus, Platform } from "@prisma/client";
 import { cn } from "@/lib/utils";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
 
 interface AdCardProps {
     ad: {
@@ -68,6 +69,7 @@ export function AdCard({
     onToggleSelect,
 }: AdCardProps) {
     const [isDeleting, setIsDeleting] = useState(false);
+    const [confirmOpen, setConfirmOpen] = useState(false);
 
     // Get first image thumbnail
     const images = Array.isArray(ad.images) ? ad.images : [];
@@ -85,15 +87,15 @@ export function AdCard({
 
     const handleDelete = async () => {
         if (!onDelete) return;
+        setConfirmOpen(true);
+    };
 
-        const confirmed = confirm(
-            "Czy na pewno chcesz usunąć to ogłoszenie? Ta operacja jest nieodwracalna."
-        );
-
-        if (confirmed) {
-            setIsDeleting(true);
-            await onDelete(ad.id);
-        }
+    const handleConfirmDelete = async () => {
+        if (!onDelete) return;
+        setConfirmOpen(false);
+        setIsDeleting(true);
+        await onDelete(ad.id);
+        setIsDeleting(false);
     };
 
     const handleCardClick = () => {
@@ -111,6 +113,7 @@ export function AdCard({
     const platformColor = PLATFORM_META[ad.platform]?.color ?? "";
 
     return (
+        <>
         <div className="flex items-start gap-3">
             {onToggleSelect && (
                 <div className="pt-6 flex-shrink-0">
@@ -271,5 +274,15 @@ export function AdCard({
             </div>
             </Card>
         </div>
+        <ConfirmDialog
+            open={confirmOpen}
+            title="Usuń ogłoszenie"
+            description="Czy na pewno chcesz usunąć to ogłoszenie? Ta operacja jest nieodwracalna."
+            confirmLabel="Usuń"
+            variant="destructive"
+            onConfirm={handleConfirmDelete}
+            onCancel={() => setConfirmOpen(false)}
+        />
+        </>
     );
 }

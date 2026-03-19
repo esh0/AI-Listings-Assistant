@@ -7,6 +7,8 @@ import { TemplateFormModal } from "@/components/TemplateFormModal";
 import { cn } from "@/lib/utils";
 import type { Platform, ToneStyle, ProductCondition, DeliveryOption, PriceType } from "@/lib/types";
 import { PLATFORM_NAMES, TONE_STYLE_NAMES, CONDITION_NAMES, DELIVERY_NAMES } from "@/lib/types";
+import { toast } from "sonner";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
 
 // Platform icons with brand colors (intentional hardcoded per project rules)
 const PLATFORM_ICONS = {
@@ -39,6 +41,7 @@ export function TemplatesList({ initialTemplates }: { initialTemplates: Template
     const [isDeleting, setIsDeleting] = useState<string | null>(null);
     const [openMenuId, setOpenMenuId] = useState<string | null>(null);
     const [page, setPage] = useState(1);
+    const [deleteConfirm, setDeleteConfirm] = useState<Template | null>(null);
 
     const totalPages = Math.max(1, Math.ceil(templates.length / PAGE_SIZE));
     const paginated = templates.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -55,21 +58,28 @@ export function TemplatesList({ initialTemplates }: { initialTemplates: Template
         }
     }, []);
 
-    const handleDelete = useCallback(async (template: Template) => {
-        if (!window.confirm(`Czy na pewno chcesz usunąć szablon "${template.name}"?`)) return;
-        setIsDeleting(template.id);
+    const handleDelete = useCallback((template: Template) => {
         setOpenMenuId(null);
+        setDeleteConfirm(template);
+    }, []);
+
+    const handleDeleteConfirm = useCallback(async () => {
+        if (!deleteConfirm) return;
+        const template = deleteConfirm;
+        setDeleteConfirm(null);
+        setIsDeleting(template.id);
         try {
             const res = await fetch(`/api/templates/${template.id}`, { method: "DELETE" });
             if (!res.ok && res.status !== 204) {
-                alert("Nie udało się usunąć szablonu. Spróbuj ponownie.");
+                toast.error("Nie udało się usunąć szablonu. Spróbuj ponownie.");
                 return;
             }
+            toast.success(`Szablon "${template.name}" został usunięty`);
             await refreshTemplates();
         } finally {
             setIsDeleting(null);
         }
-    }, [refreshTemplates]);
+    }, [deleteConfirm, refreshTemplates]);
 
     const handleEdit = useCallback((template: Template) => {
         setEditingTemplate(template);
@@ -90,6 +100,16 @@ export function TemplatesList({ initialTemplates }: { initialTemplates: Template
 
     return (
         <>
+            <ConfirmDialog
+                open={!!deleteConfirm}
+                title="Usuń szablon"
+                description={`Czy na pewno chcesz usunąć szablon "${deleteConfirm?.name}"? Ta operacja jest nieodwracalna.`}
+                confirmLabel="Usuń"
+                variant="destructive"
+                onConfirm={handleDeleteConfirm}
+                onCancel={() => setDeleteConfirm(null)}
+            />
+
             {/* Count */}
             <p className="text-sm text-muted-foreground">
                 {templates.length}{" "}

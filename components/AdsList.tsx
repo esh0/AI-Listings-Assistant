@@ -14,6 +14,9 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { toast } from "sonner";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
+import { SoldPriceDialog } from "@/components/SoldPriceDialog";
 
 interface Ad {
     id: string;
@@ -74,6 +77,14 @@ const STATUS_LABELS: Record<string, string> = {
     ARCHIVED:  "Wycofane",
 };
 
+type DialogState =
+    | { type: "delete"; id: string }
+    | { type: "publish"; id: string }
+    | { type: "archive"; id: string }
+    | { type: "bulk-archive"; ids: string[] }
+    | { type: "bulk-delete"; ids: string[] }
+    | null;
+
 export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, totalFilteredCount }: AdsListProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -81,6 +92,8 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
     const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
     const [showFilters, setShowFilters] = useState(false);
     const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+    const [dialog, setDialog] = useState<DialogState>(null);
+    const [soldDialog, setSoldDialog] = useState<string | null>(null);
     const menuRef = useRef<HTMLDivElement>(null);
     const processingRef = useRef<Set<string>>(new Set());
 
@@ -104,7 +117,6 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
         return () => clearTimeout(timer);
     }, [searchQuery, updateParams]);
 
-    // Close dropdown menu on outside click
     useEffect(() => {
         const handler = (e: MouseEvent) => {
             if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
@@ -140,68 +152,149 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
         window.location.href = `/api/ads/export?ids=${ids}`;
     }, [selectedIds]);
 
-    const handleDelete = async (id: string) => {
-        if (!confirm("Czy na pewno chcesz usunąć to ogłoszenie?")) return;
+    const patchAd = async (id: string, body: object) => {
         if (processingRef.current.has(id)) return;
         processingRef.current.add(id);
         try {
-            await fetch(`/api/ads/${id}`, { method: "DELETE" });
-            router.refresh();
+            const res = await fetch(`/api/ads/${id}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body),
+            });
+            if (!res.ok) throw new Error();
         } finally {
             processingRef.current.delete(id);
         }
     };
 
-    const handleMarkAsPublished = async (id: string) => {
-        if (!confirm("Oznaczyć jako opublikowane?")) return;
-        if (processingRef.current.has(id)) return;
-        processingRef.current.add(id);
-        try {
-            await fetch(`/api/ads/${id}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ status: "PUBLISHED" }),
-            });
-            router.refresh();
-        } finally {
-            processingRef.current.delete(id);
+    const handleDelete = (id: string) => {
+        setOpenMenuId(null);
+        setDialog({ type: "delete", id });
+    };
+
+    const handleMarkAsPublished = (id: string) => {
+        setOpenMenuId(null);
+        setDialog({ type: "publish", id });
+    };
+
+    const handleMarkAsArchived = (id: string) => {
+        setOpenMenuId(null);
+        setDialog({ type: "archive", id });
+    };
+
+    const handleMarkAsSold = (id: string) => {
+        setOpenMenuId(null);
+        setSoldDialog(id);
+    };
+
+    const handleDialogConfirm = async () => {
+        if (!dialog) return;
+        const d = dialog;
+        setDialog(null);
+
+        if (d.type === "delete") {
+            if (processingRef.current.has(d.id)) return;
+            processingRef.current.add(d.id);
+            try {
+                const res = await fetch(`/api/ads/${d.id}`, { method: "DELETE" });
+                if (!res.ok) throw new Error();
+                toast.success("Ogłoszenie zostało usunięte");
+                router.refresh();
+            } catch {
+                toast.error("Nie udało się usunąć ogłoszenia");
+            } finally {
+                processingRef.current.delete(d.id);
+            }
+        } else if (d.type === "publish") {
+            try {
+                await patchAd(d.id, { status: "PUBLISHED" });
+                toast.success("Ogłoszenie oznaczone jako opublikowane");
+                router.refresh();
+            } catch {
+                toast.error("Nie udało się zaktualizować ogłoszenia");
+            }
+        } else if (d.type === "archive") {
+            try {
+                await patchAd(d.id, { status: "ARCHIVED" });
+                toast.success("Ogłoszenie zostało wycofane");
+                router.refresh();
+            } catch {
+                toast.error("Nie udało się wycofać ogłoszenia");
+            }
+        } else if (d.type === "bulk-archive") {
+            try {
+                await Promise.all(d.ids.map((id) => fetch(`/api/ads/${id}`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ status: "ARCHIVED" }),
+                })));
+                toast.success(`Wycofano ${d.ids.length} ogłoszeń`);
+                setSelectedIds(new Set());
+                router.refresh();
+            } catch {
+                toast.error("Nie udało się wycofać ogłoszeń");
+            }
+        } else if (d.type === "bulk-delete") {
+            try {
+                await Promise.all(d.ids.map((id) => fetch(`/api/ads/${id}`, { method: "DELETE" })));
+                toast.success(`Usunięto ${d.ids.length} ogłoszeń`);
+                setSelectedIds(new Set());
+                router.refresh();
+            } catch {
+                toast.error("Nie udało się usunąć ogłoszeń");
+            }
         }
     };
 
-    const handleMarkAsArchived = async (id: string) => {
-        if (!confirm("Wycofać ogłoszenie?")) return;
-        if (processingRef.current.has(id)) return;
-        processingRef.current.add(id);
+    const handleSoldConfirm = async (price: number) => {
+        const id = soldDialog;
+        setSoldDialog(null);
+        if (!id) return;
         try {
-            await fetch(`/api/ads/${id}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ status: "ARCHIVED" }),
-            });
+            await patchAd(id, { status: "SOLD", soldPrice: price });
+            toast.success(`Ogłoszenie sprzedane za ${price} zł`);
             router.refresh();
-        } finally {
-            processingRef.current.delete(id);
+        } catch {
+            toast.error("Nie udało się zaktualizować ogłoszenia");
         }
     };
 
-    const handleMarkAsSold = async (id: string) => {
-        const price = prompt("Podaj cenę sprzedaży (zł):");
-        if (!price) return;
-        const soldPrice = parseFloat(price);
-        if (isNaN(soldPrice) || soldPrice <= 0) { alert("Nieprawidłowa cena"); return; }
-        if (processingRef.current.has(id)) return;
-        processingRef.current.add(id);
-        try {
-            await fetch(`/api/ads/${id}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ status: "SOLD", soldPrice }),
-            });
-            router.refresh();
-        } finally {
-            processingRef.current.delete(id);
-        }
+    const getDialogProps = () => {
+        if (!dialog) return null;
+        if (dialog.type === "delete") return {
+            title: "Usuń ogłoszenie",
+            description: "Czy na pewno chcesz usunąć to ogłoszenie? Ta operacja jest nieodwracalna.",
+            confirmLabel: "Usuń",
+            variant: "destructive" as const,
+        };
+        if (dialog.type === "publish") return {
+            title: "Opublikuj ogłoszenie",
+            description: "Oznaczyć ogłoszenie jako opublikowane?",
+            confirmLabel: "Opublikuj",
+            variant: "default" as const,
+        };
+        if (dialog.type === "archive") return {
+            title: "Wycofaj ogłoszenie",
+            description: "Czy na pewno chcesz wycofać to ogłoszenie?",
+            confirmLabel: "Wycofaj",
+            variant: "default" as const,
+        };
+        if (dialog.type === "bulk-archive") return {
+            title: `Wycofaj ${dialog.ids.length} ogłoszeń`,
+            description: `Czy na pewno chcesz wycofać zaznaczone ogłoszenia (${dialog.ids.length})?`,
+            confirmLabel: "Wycofaj",
+            variant: "default" as const,
+        };
+        if (dialog.type === "bulk-delete") return {
+            title: `Usuń ${dialog.ids.length} ogłoszeń`,
+            description: `Czy na pewno chcesz usunąć zaznaczone ogłoszenia (${dialog.ids.length})? Ta operacja jest nieodwracalna.`,
+            confirmLabel: "Usuń wszystkie",
+            variant: "destructive" as const,
+        };
+        return null;
     };
+
+    const dialogProps = getDialogProps();
 
     const paginationPages = useMemo(() => {
         return Array.from({ length: totalPages }, (_, i) => i + 1)
@@ -210,6 +303,24 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
 
     return (
         <div className="space-y-3">
+            {/* Dialogs */}
+            {dialogProps && (
+                <ConfirmDialog
+                    open={!!dialog}
+                    title={dialogProps.title}
+                    description={dialogProps.description}
+                    confirmLabel={dialogProps.confirmLabel}
+                    variant={dialogProps.variant}
+                    onConfirm={handleDialogConfirm}
+                    onCancel={() => setDialog(null)}
+                />
+            )}
+            <SoldPriceDialog
+                open={!!soldDialog}
+                onConfirm={handleSoldConfirm}
+                onCancel={() => setSoldDialog(null)}
+            />
+
             {/* Search + filter toggle */}
             <div className="flex gap-2">
                 <div className="relative flex-1">
@@ -244,7 +355,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                 </Button>
             </div>
 
-            {/* Filters — pill buttons */}
+            {/* Filters */}
             <AnimatePresence>
                 {showFilters && (
                     <motion.div
@@ -253,7 +364,6 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                         exit={{ opacity: 0, height: 0 }}
                         className="overflow-hidden space-y-2"
                     >
-                        {/* Status */}
                         <div className="flex flex-wrap items-center gap-1.5">
                             <span className="text-xs text-muted-foreground mr-1">Status:</span>
                             {STATUS_FILTERS.map((f) => (
@@ -271,7 +381,6 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                                 </button>
                             ))}
                         </div>
-                        {/* Platforma */}
                         <div className="flex flex-wrap items-center gap-1.5">
                             <span className="text-xs text-muted-foreground mr-1">Platforma:</span>
                             {PLATFORM_FILTERS.map((f) => (
@@ -307,42 +416,24 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                             <X className="h-3.5 w-3.5" />
                         </Button>
                         <div className="w-full flex flex-wrap gap-2">
-                        <Button size="sm" variant="outline" onClick={handleExportSelected}>
-                            <Download className="h-3.5 w-3.5 mr-1" /> CSV
-                        </Button>
-                        <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={async () => {
-                                if (!confirm(`Wycofać ${selectedIds.size} ogłoszeń?`)) return;
-                                for (const id of selectedIds) {
-                                    await fetch(`/api/ads/${id}`, {
-                                        method: "PATCH",
-                                        headers: { "Content-Type": "application/json" },
-                                        body: JSON.stringify({ status: "ARCHIVED" }),
-                                    });
-                                }
-                                setSelectedIds(new Set());
-                                router.refresh();
-                            }}
-                        >
-                            <Ban className="h-3.5 w-3.5 mr-1" /> Wycofaj
-                        </Button>
-                        <Button
-                            size="sm"
-                            variant="outline"
-                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                            onClick={async () => {
-                                if (!confirm(`Usunąć ${selectedIds.size} ogłoszeń?`)) return;
-                                for (const id of selectedIds) {
-                                    await fetch(`/api/ads/${id}`, { method: "DELETE" });
-                                }
-                                setSelectedIds(new Set());
-                                router.refresh();
-                            }}
-                        >
-                            <Trash2 className="h-3.5 w-3.5 mr-1" /> Usuń
-                        </Button>
+                            <Button size="sm" variant="outline" onClick={handleExportSelected}>
+                                <Download className="h-3.5 w-3.5 mr-1" /> CSV
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => setDialog({ type: "bulk-archive", ids: Array.from(selectedIds) })}
+                            >
+                                <Ban className="h-3.5 w-3.5 mr-1" /> Wycofaj
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                onClick={() => setDialog({ type: "bulk-delete", ids: Array.from(selectedIds) })}
+                            >
+                                <Trash2 className="h-3.5 w-3.5 mr-1" /> Usuń
+                            </Button>
                         </div>
                     </motion.div>
                 )}
@@ -463,7 +554,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                                             </button>
                                             {ad.status === "DRAFT" && (
                                                 <button
-                                                    onClick={() => { handleMarkAsPublished(ad.id); setOpenMenuId(null); }}
+                                                    onClick={() => handleMarkAsPublished(ad.id)}
                                                     className="flex items-center w-full px-3 py-1.5 text-sm hover:bg-muted gap-2"
                                                 >
                                                     <Check className="h-3.5 w-3.5" /> Opublikuj
@@ -472,13 +563,13 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                                             {ad.status === "PUBLISHED" && (
                                                 <>
                                                     <button
-                                                        onClick={() => { handleMarkAsSold(ad.id); setOpenMenuId(null); }}
+                                                        onClick={() => handleMarkAsSold(ad.id)}
                                                         className="flex items-center w-full px-3 py-1.5 text-sm hover:bg-muted gap-2"
                                                     >
                                                         <ShoppingCart className="h-3.5 w-3.5" /> Sprzedane
                                                     </button>
                                                     <button
-                                                        onClick={() => { handleMarkAsArchived(ad.id); setOpenMenuId(null); }}
+                                                        onClick={() => handleMarkAsArchived(ad.id)}
                                                         className="flex items-center w-full px-3 py-1.5 text-sm hover:bg-muted gap-2"
                                                     >
                                                         <Ban className="h-3.5 w-3.5" /> Wycofaj
@@ -487,7 +578,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                                             )}
                                             <div className="border-t border-border my-1" />
                                             <button
-                                                onClick={() => { handleDelete(ad.id); setOpenMenuId(null); }}
+                                                onClick={() => handleDelete(ad.id)}
                                                 className="flex items-center w-full px-3 py-1.5 text-sm hover:bg-muted gap-2 text-destructive"
                                             >
                                                 <Trash2 className="h-3.5 w-3.5" /> Usuń

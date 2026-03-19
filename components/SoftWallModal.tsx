@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Save, LogIn, X } from "lucide-react";
 import { savePendingAd, type PendingAd } from "@/lib/storage";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface SoftWallModalProps {
     adData?: {
@@ -126,7 +127,7 @@ export function SoftWallModal({ adData, mode = "save", isVisible, onClose }: Sof
             router.push("/auth/signin?callbackUrl=/dashboard");
         } catch (error) {
             console.error("[SoftWallModal] Failed to save pending ad:", error);
-            alert("Nie udało się zapisać ogłoszenia. Spróbuj ponownie.");
+            toast.error("Nie udało się zapisać ogłoszenia. Spróbuj ponownie.");
         } finally {
             setIsSaving(false);
         }
