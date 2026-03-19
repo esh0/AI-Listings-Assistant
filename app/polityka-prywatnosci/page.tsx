@@ -9,11 +9,11 @@ export default function PolitykaPrywatnosci() {
     return (
         <LegalLayout
             title="Polityka Prywatności"
-            subtitle="Obowiązuje od: [DATA_PUBLIKACJI]"
+            subtitle="Obowiązuje od: 19 marca 2026 r."
         >
             <h2>1. Administrator danych osobowych</h2>
-            <p>Administratorem Twoich danych osobowych jest [IMIĘ I NAZWISKO], prowadzący jednoosobową działalność gospodarczą pod firmą [NAZWA FIRMY], z siedzibą w [ADRES], NIP: [NIP], REGON: [REGON] (dalej: „Administrator").</p>
-            <p>Kontakt z Administratorem: [EMAIL_KONTAKTOWY]</p>
+            <p>Administratorem Twoich danych osobowych jest Anna Szałach, zamieszkała pod adresem ul. Radosna 36, 82-200 Grobelno (dalej: „Administrator").</p>
+            <p>Kontakt z Administratorem: kontakt@marketplace-ai.pl</p>
 
             <hr />
 
@@ -94,7 +94,7 @@ export default function PolitykaPrywatnosci() {
                     <tr><td><strong>Google</strong> (OAuth)</td><td>Uwierzytelnianie</td><td>USA</td><td>Standardowe klauzule umowne (SCCs)</td></tr>
                     <tr><td><strong>OpenAI</strong></td><td>Generowanie treści AI</td><td>USA</td><td>SCCs, Data Processing Agreement</td></tr>
                     <tr><td><strong>Supabase</strong></td><td>Baza danych, storage</td><td>EU/USA</td><td>SCCs, szyfrowanie</td></tr>
-                    <tr><td><strong>Stripe</strong></td><td>Płatności</td><td>EU</td><td>Certyfikat PCI DSS Level 1</td></tr>
+                    <tr><td><strong>Stripe</strong> (za pośrednictwem F.H.U. Krzysztof Szałach, NIP: 579-209-58-51)</td><td>Płatności</td><td>EU</td><td>Certyfikat PCI DSS Level 1</td></tr>
                     <tr><td><strong>Vercel</strong></td><td>Hosting aplikacji</td><td>EU/USA</td><td>SCCs, Edge Functions</td></tr>
                 </tbody>
             </table>
@@ -248,8 +248,8 @@ export default function PolitykaPrywatnosci() {
 
             <h2>12. Kontakt</h2>
             <p>W sprawach związanych z ochroną danych osobowych prosimy o kontakt:</p>
-            <p><strong>Email:</strong> [EMAIL_KONTAKTOWY]</p>
-            <p><strong>Adres:</strong> [IMIĘ I NAZWISKO], [ADRES]</p>
+            <p><strong>Email:</strong> kontakt@marketplace-ai.pl</p>
+            <p><strong>Adres:</strong> Anna Szałach, ul. Radosna 36, 82-200 Grobelno</p>
         </LegalLayout>
     );
 }

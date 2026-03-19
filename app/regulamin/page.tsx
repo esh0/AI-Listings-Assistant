@@ -9,27 +9,27 @@ export default function ReguaminPage() {
     return (
         <LegalLayout
             title="Regulamin Aplikacji Marketplace AI"
-            subtitle="Obowiązuje od: [DATA_PUBLIKACJI]"
+            subtitle="Obowiązuje od: 19 marca 2026 r."
         >
             <h2>§ 1. Postanowienia ogólne</h2>
             <p>1. Niniejszy regulamin (dalej: „Regulamin") określa zasady i warunki korzystania z aplikacji „Marketplace AI" (dalej: „Aplikacja") oraz usług świadczonych przez Usługodawcę.</p>
             <p>2. Aplikacja służy do automatycznego generowania treści ogłoszeń sprzedażowych na platformy marketplace (OLX, Allegro Lokalnie, Facebook Marketplace, Vinted) z wykorzystaniem sztucznej inteligencji na podstawie zdjęć i parametrów podanych przez Użytkownika. Aplikacja jest przeznaczona zarówno dla przedsiębiorców, jak i konsumentów.</p>
             <p>3. Regulamin jest regulaminem, o którym mowa w art. 8 ustawy z dnia 18 lipca 2002 r. o świadczeniu usług drogą elektroniczną (dalej: „Ustawa o świadczeniu usług drogą elektroniczną").</p>
-            <p>4. Usługodawcą jest [IMIĘ I NAZWISKO], prowadzący jednoosobową działalność gospodarczą pod firmą [NAZWA FIRMY] (adres stałego miejsca wykonywania działalności gospodarczej: [ADRES]), wpisany do Centralnej Ewidencji Informacji o Działalności Gospodarczej, posiadający NIP: [NIP], REGON: [REGON] (dalej: „Usługodawca").</p>
+            <p>4. Usługodawcą jest Anna Szałach, zamieszkała w Grobelno (adres: ul. Radosna 36, 82-200 Grobelno) (dalej: „Usługodawca").</p>
             <p>5. Kontakt z Usługodawcą jest możliwy za pomocą:</p>
             <ul>
-                <li>poczty elektronicznej: [EMAIL_KONTAKTOWY],</li>
-                <li>poczty tradycyjnej: [ADRES].</li>
+                <li>poczty elektronicznej: kontakt@marketplace-ai.pl,</li>
+                <li>poczty tradycyjnej: ul. Radosna 36, 82-200 Grobelno.</li>
             </ul>
-            <p>6. Zgodnie z przepisami Rozporządzenia Parlamentu Europejskiego i Rady (UE) 2022/2065 (akt o usługach cyfrowych, DSA), Usługodawca wyznaczył punkt kontaktowy do komunikacji z organami państw członkowskich UE oraz Usługobiorcami w sprawach objętych regulacją DSA. Punkt kontaktowy jest dostępny pod adresem: [EMAIL_KONTAKTOWY].</p>
-            <p>7. Przed rozpoczęciem korzystania z Aplikacji Usługobiorca zobowiązany jest zapoznać się z Regulaminem oraz Polityką prywatności dostępną pod adresem: [LINK DO POLITYKI PRYWATNOŚCI].</p>
+            <p>6. Zgodnie z przepisami Rozporządzenia Parlamentu Europejskiego i Rady (UE) 2022/2065 (akt o usługach cyfrowych, DSA), Usługodawca wyznaczył punkt kontaktowy do komunikacji z organami państw członkowskich UE oraz Usługobiorcami w sprawach objętych regulacją DSA. Punkt kontaktowy jest dostępny pod adresem: kontakt@marketplace-ai.pl.</p>
+            <p>7. Przed rozpoczęciem korzystania z Aplikacji Usługobiorca zobowiązany jest zapoznać się z Regulaminem oraz Polityką prywatności dostępną pod adresem: <a href="/polityka-prywatnosci">marketplace-ai.pl/polityka-prywatnosci</a>.</p>
 
             <hr />
 
             <h2>§ 2. Definicje</h2>
             <p>Użyte w Regulaminie wyrazy pisane wielką literą mają następujące znaczenie:</p>
             <ul>
-                <li><strong>Aplikacja</strong> — aplikacja internetowa „Marketplace AI" dostępna pod adresem [ADRES_STRONY], umożliwiająca generowanie ogłoszeń sprzedażowych z wykorzystaniem sztucznej inteligencji.</li>
+                <li><strong>Aplikacja</strong> — aplikacja internetowa „Marketplace AI" dostępna pod adresem marketplace-ai.pl, umożliwiająca generowanie ogłoszeń sprzedażowych z wykorzystaniem sztucznej inteligencji.</li>
                 <li><strong>Cennik</strong> — dokument lub informacja dostępna w Aplikacji określająca aktualne ceny Usługi, dostępne Plany, Okresy Subskrypcji i inne warunki tam wskazane.</li>
                 <li><strong>Dostawka</strong> — jednorazowy zakup dodatkowych Kredytów, niezwiązany z Subskrypcją; Kredyty z Dostawki nie wygasają.</li>
                 <li><strong>Gość</strong> — Usługobiorca korzystający z Aplikacji bez założonego Konta, w ramach darmowego limitu generacji.</li>
@@ -98,7 +98,7 @@ export default function ReguaminPage() {
 
             <h2>§ 5. Opłaty i rozliczenia</h2>
             <p>1. Ceny Usług podane w Cenniku są wyrażone w złotych polskich (PLN) i są cenami brutto (zawierają podatek VAT w obowiązującej stawce).</p>
-            <p>2. Płatności za Usługę są realizowane za pośrednictwem operatora płatności Stripe, Inc. Dla planów płatnych dostępna jest płatność kartą (Visa, Mastercard); dla jednorazowych Dostawek Kredytów dostępna jest dodatkowo płatność BLIK.</p>
+            <p>2. Płatności za Usługę są realizowane za pośrednictwem operatora płatności Stripe, Inc. Funkcję podmiotu obsługującego płatności w imieniu Usługodawcy pełni F.H.U. Krzysztof Szałach, ul. Radosna 36, 82-200 Grobelno, NIP: 579-209-58-51, REGON: 361923647. Dla planów płatnych dostępna jest płatność kartą (Visa, Mastercard); dla jednorazowych Dostawek Kredytów dostępna jest dodatkowo płatność BLIK.</p>
             <p>3. Opłata Subskrypcyjna jest uiszczana automatycznie, cyklicznie z góry co miesiąc, w dniu odpowiadającym dacie zawarcia Umowy. Za dzień płatności uznaje się dzień zaksięgowania kwoty na rachunku Usługodawcy.</p>
             <p>4. Po zaksięgowaniu wpłaty Usługodawca przesyła na adres poczty elektronicznej Usługobiorcy informację o udzieleniu dostępu do wybranego Planu. Faktury VAT są wystawiane automatycznie przez operatora płatności Stripe i dostępne w Panelu klienta Stripe.</p>
             <p>5. Brak zapłaty Opłaty Subskrypcyjnej spowoduje wstrzymanie dostępu do płatnych funkcjonalności Aplikacji do momentu zaksięgowania należności.</p>
@@ -108,7 +108,7 @@ export default function ReguaminPage() {
             <hr />
 
             <h2>§ 6. Cennik</h2>
-            <p>1. Aktualny Cennik jest dostępny w Aplikacji pod adresem: [LINK DO CENNIKA].</p>
+            <p>1. Aktualny Cennik jest dostępny w Aplikacji pod adresem: marketplace-ai.pl/pricing.</p>
             <p>2. Cennik przewiduje bezpłatny Plan Free obejmujący 5 Kredytów miesięcznie.</p>
             <p>3. Usługodawca może dokonać zmiany Cennika w każdym czasie. Zmiana Cennika nie wpływa na wysokość opłat określonych w Umowach zawartych przed zmianą Cennika — nowe ceny obowiązują od kolejnego Okresu Subskrypcji po poinformowaniu Usługobiorcy.</p>
 
@@ -250,7 +250,7 @@ export default function ReguaminPage() {
             <hr />
 
             <h2>§ 18. Postanowienia końcowe</h2>
-            <p>1. Aktualna wersja Regulaminu obowiązuje od dnia [DATA_PUBLIKACJI].</p>
+            <p>1. Aktualna wersja Regulaminu obowiązuje od dnia 19 marca 2026 r.</p>
             <p>2. Regulamin podlega prawu polskiemu. Wszelkie spory będą rozwiązywane w drodze polubownych negocjacji, a w przypadku braku porozumienia — przed sądem powszechnym właściwym dla siedziby Usługodawcy, z zastrzeżeniem praw Konsumentów do wyboru sądu.</p>
             <p>3. W sprawach nieuregulowanych w Regulaminie zastosowanie znajdą przepisy powszechnie obowiązującego prawa polskiego, w szczególności Kodeksu cywilnego, Ustawy o prawach konsumenta i RODO.</p>
         </LegalLayout>
