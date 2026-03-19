@@ -1,7 +1,7 @@
 # Polityka Prywatności Serwisu Marketplace Assistant
 
 > **UWAGA:** Niniejszy dokument jest draftem wymagającym weryfikacji przez prawnika przed publikacją.
-> Data sporządzenia draftu: 2026-03-06
+> Data sporządzenia draftu: 2026-03-19
 
 ---
 
@@ -25,7 +25,8 @@ Podczas logowania przez Google OAuth pobieramy:
 Dodatkowo przechowujemy:
 - **Plan taryfowy i liczbę kredytów** — obsługa subskrypcji
 - **Wygenerowane ogłoszenia** — tytuły, opisy, zdjęcia produktów, parametry generacji
-- **Preferencje użytkownika** — wybrane tony per platforma, preferowany sposób dostawy
+- **Szablony ogłoszeń** — predefiniowane szablony przechowywane na koncie użytkownika (dostępne w planie RESELER), zawierające: nazwę, platformę, ton, stan produktu, preferencje dostawy, treść szablonu, notatki
+- **Historia aktywności** — rejestr działań użytkownika (generowanie, zapisywanie, publikowanie, sprzedaż, archiwizacja, usuwanie ogłoszeń) przechowywany w modelu ActivityLog
 
 ### 2.2. Goście (niezarejestrowani)
 
@@ -57,6 +58,7 @@ Zdjęcia przesłane przez Użytkownika:
 | Rozpatrywanie reklamacji | Email, dane konta | Art. 6 ust. 1 lit. b — wykonanie umowy |
 | Wystawianie faktur | Dane do faktury (jeśli podane) | Art. 6 ust. 1 lit. c — obowiązek prawny |
 | Marketing bezpośredni (email) | Email | Art. 6 ust. 1 lit. a — zgoda (opcjonalna) |
+| Prowadzenie historii aktywności | Typ akcji, ID ogłoszenia, data | Art. 6 ust. 1 lit. b — wykonanie umowy |
 
 ---
 
@@ -84,6 +86,8 @@ Twoje dane mogą być przekazywane następującym podmiotom (procesorom danych):
 |---|---|
 | Dane konta (imię, email) | Do momentu usunięcia konta |
 | Ogłoszenia i zdjęcia | Do momentu usunięcia przez Użytkownika lub usunięcia konta |
+| Szablony ogłoszeń | Do momentu usunięcia przez Użytkownika lub usunięcia konta |
+| Historia aktywności | Ostatnie 50 zdarzeń per użytkownik |
 | Dane do faktur | 5 lat (obowiązek podatkowy) |
 | Logi rate-limitingu (hash IP) | 30 dni |
 | UUID gości | Do czyszczenia localStorage przez Użytkownika |
@@ -141,12 +145,12 @@ www.uodo.gov.pl
 | `next-auth.callback-url` | URL powrotny po logowaniu | Sesja |
 | `theme` | Preferencja ciemny/jasny motyw | Trwały |
 
-### 7.2. Local Storage
+### 7.2. Local Storage / IndexedDB
 
-| Klucz | Cel | Czas |
-|---|---|---|
-| `guest_uuid` | Identyfikacja gościa (rate-limiting) | Do ręcznego usunięcia |
-| `pending_ad` | Tymczasowe ogłoszenie (soft-wall) | Do zalogowania lub ręcznego usunięcia |
+| Klucz | Technologia | Cel | Czas |
+|---|---|---|---|
+| `guest_uuid` | Local Storage | Identyfikacja gościa (rate-limiting) | Do ręcznego usunięcia |
+| `pending_ad` | IndexedDB | Tymczasowe ogłoszenie (soft-wall) | Do zalogowania lub ręcznego usunięcia |
 
 ### 7.3. Cookies analityczne i marketingowe
 
@@ -208,4 +212,4 @@ W sprawach związanych z ochroną danych osobowych prosimy o kontakt:
 
 ---
 
-*Draft sporządzony 2026-03-06. Wymaga weryfikacji przez prawnika przed publikacją.*
+*Draft sporządzony 2026-03-19. Wymaga weryfikacji przez prawnika przed publikacją.*

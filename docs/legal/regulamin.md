@@ -1,7 +1,7 @@
 # Regulamin Serwisu Marketplace Assistant
 
 > **UWAGA:** Niniejszy dokument jest draftem wymagającym weryfikacji przez prawnika przed publikacją.
-> Data sporządzenia draftu: 2026-03-06
+> Data sporządzenia draftu: 2026-03-19
 
 ---
 
@@ -36,7 +36,7 @@
 
 ### 3.1. Goście (niezarejestrowani)
 
-3.1.1. Gość może korzystać z Usługi bez zakładania Konta, w ramach darmowego limitu: 3 generacje, maksymalnie 1 zdjęcie na generację.
+3.1.1. Gość może korzystać z Usługi bez zakładania Konta, w ramach darmowego limitu: 3 generacje, maksymalnie 3 zdjęcia na generację.
 
 3.1.2. Wygenerowane treści są wyświetlane Gościowi, ale nie są zapisywane w Serwisie. Aby zapisać ogłoszenie, wymagana jest rejestracja.
 
@@ -65,7 +65,7 @@
 | Plan | Cena brutto/mies. | Generacje/mies. | Max zdjęć/gen. | Szablony |
 |---|---|---|---|---|
 | Free | 0 zł | 5 | 3 | — |
-| Starter | 19,99 zł | 30 | 5 | 3 |
+| Starter | 19,99 zł | 30 | 5 | — |
 | Reseler | 49,99 zł | 80 | 8 | 10 |
 
 *Ceny brutto (zawierają VAT 23%, o ile Usługodawca jest czynnym podatnikiem VAT).*
@@ -117,6 +117,12 @@
 5.4. Usługodawca dołoży starań, aby generowane treści były wysokiej jakości i zgodne z zasadami poszczególnych platform, ale końcowa odpowiedzialność za treść publikowanego ogłoszenia spoczywa na Użytkowniku.
 
 5.5. Użytkownik zachowuje pełne prawa do wygenerowanych treści i może je dowolnie wykorzystywać, modyfikować i publikować.
+
+5.6. Każde zapisane ogłoszenie posiada jeden z czterech statusów: **Szkic** (DRAFT) — domyślny status po zapisaniu; **Opublikowane** (PUBLISHED) — ogłoszenie oznaczone jako wystawione na platformie; **Sprzedane** (SOLD) — ogłoszenie oznaczone jako zakończone sprzedażą; **Zarchiwizowane** (ARCHIVED) — ogłoszenie przeniesione do archiwum. Zmiana statusu następuje ręcznie przez Użytkownika w ramach zarządzania ogłoszeniami.
+
+5.7. Serwis rejestruje historię aktywności Użytkownika w zakresie cyklu życia ogłoszenia (generowanie, zapisywanie, publikacja, sprzedaż, archiwizacja, usunięcie). Historia aktywności jest dostępna wyłącznie dla danego Użytkownika i służy celom informacyjnym.
+
+5.8. Użytkownicy Planu Reseler mają dostęp do funkcji Szablonów — zapisanych zestawów parametrów generowania ogłoszeń (platforma, ton, stan produktu, opcje dostawy i inne). Szablony umożliwiają szybkie ponowne wykorzystanie preferowanych ustawień przy tworzeniu nowych ogłoszeń. Funkcja Szablonów nie jest dostępna w Planach Free i Starter.
 
 ---
 
@@ -194,4 +200,4 @@
 
 ---
 
-*Draft sporządzony 2026-03-06. Wymaga weryfikacji przez prawnika przed publikacją.*
+*Draft sporządzony 2026-03-19. Wymaga weryfikacji przez prawnika przed publikacją.*

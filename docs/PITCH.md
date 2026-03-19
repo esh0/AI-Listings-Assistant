@@ -1,9 +1,9 @@
-# AI Generator Ogłoszeń Sprzedażowych
+# Marketplace AI
 ## Inteligentny asystent do tworzenia profesjonalnych ogłoszeń marketplace
 
 ---
 
-## 🎯 Problem
+## Problem
 
 Sprzedaż rzeczy online na platformach takich jak OLX, Allegro Lokalnie, Facebook Marketplace czy Vinted wymaga:
 - **Czasu** - pisanie opisów, optymalizacja tytułów, analiza zdjęć
@@ -12,126 +12,175 @@ Sprzedaż rzeczy online na platformach takich jak OLX, Allegro Lokalnie, Faceboo
 
 **Efekt:** Większość ogłoszeń jest nieprofesjonalna, źle wyceniona i nieefektywna, co prowadzi do dłuższego czasu sprzedaży i niższych cen końcowych.
 
+**Skala problemu:** W Polsce ponad 14 mln osób aktywnie sprzedaje na platformach marketplace. Większość z nich tworzy ogłoszenia ad hoc, bez wiedzy o zasadach poszczególnych platform.
+
 ---
 
-## 💡 Rozwiązanie
+## Rozwiązanie
 
-**AI Generator Ogłoszeń** to aplikacja webowa, która w 30 sekund tworzy profesjonalne, gotowe do publikacji ogłoszenia na podstawie zdjęć produktu.
+**Marketplace AI** to działająca aplikacja webowa, która w 30 sekund tworzy profesjonalne, gotowe do publikacji ogłoszenia na podstawie zdjęć produktu.
 
 ### Jak to działa?
 
-1. **Wrzuć zdjęcia** - do 8 zdjęć produktu (drag & drop)
-2. **Wybierz platformę** - OLX, Allegro, Facebook lub Vinted
-3. **Ustaw parametry** - stan, dostawa, opcjonalna cena
+1. **Wrzuć zdjęcia** - do 3-8 zdjęć produktu (drag & drop, w zależności od planu)
+2. **Wybierz platformę** - OLX, Allegro Lokalnie, Facebook Marketplace lub Vinted
+3. **Ustaw parametry** - ton, stan, dostawa, opcjonalna cena
 4. **Kliknij "Generuj"** - AI analizuje zdjęcia i tworzy ogłoszenie
+5. **Edytuj i zapisz** - inline editing z limitami znakow per platforma, zapis do dashboardu
 
-**Rezultat:** Profesjonalny tytuł, szczegółowy opis, sugerowana cena, ocena jakości zdjęć - wszystko dostosowane do wybranej platformy i gotowe do skopiowania.
+**Rezultat:** Profesjonalny tytuł, szczegółowy opis, sugerowana cena, ocena jakości zdjęć — wszystko dostosowane do wybranej platformy, gotowe do skopiowania lub zarządzania z poziomu dashboardu.
+
+**Status: Produkt jest zbudowany, wdrożony i działa na produkcji.**
 
 ---
 
-## 🚀 Kluczowe Funkcje
+## Zbudowane Funkcje (stan obecny)
 
-### 1. **Analiza Wizualna AI**
+### 1. Analiza Wizualna AI
 - Rozpoznawanie produktów ze zdjęć (GPT-4.1-mini Vision)
-- Ocena stanu przedmiotu
+- Ocena stanu przedmiotu na podstawie zdjęć
 - Analiza jakości zdjęć z sugestiami poprawy
+- System hierarchii informacji: dane użytkownika > fakty ze zdjęć > wnioski AI
 
-### 2. **Generowanie Treści**
-- **Tytuły** - krótkie, konkretne, SEO-friendly
-- **Opisy** - szczegółowe, przekonujące, platformowo-specyficzne
-- **Sugerowane ceny** - oparte na stanie, marce i wartości rynkowej
+### 2. Generowanie Treści z Tone Control
+- **Tytuły** — krótkie, konkretne, platformowo-specyficzne limity znaków
+- **Opisy** — szczegółowe, przekonujące, z dynamicznym tonem
+- **Sugerowane ceny** — oparte na stanie, marce i wartości rynkowej z uzasadnieniem
+- **3 style tonalne:** Profesjonalny, Przyjazny, Swobodny — każdy z dedykowanym słownictwem
+- **Smart defaults** — platforma automatycznie dobiera rekomendowany ton
 
-### 3. **Multi-Platform**
-Dedykowane reguły dla każdej platformy:
-- **OLX** - konkretnie, praktycznie, bez zbędnych słów
-- **Allegro Lokalnie** - profesjonalnie, szczegółowo, z ekspertyzą
-- **Facebook Marketplace** - przyjaźnie, bezpośrednio, lokalnie
-- **Vinted** - modowo, lifestylowo, z charakterem
+### 3. Multi-Platform z Dedykowanymi Regułami
+Każda platforma ma własne reguły w postaci plików Markdown, ładowanych server-side:
+- **OLX** — konkretnie, praktycznie, limit 70 znaków tytuł / 1500 opis
+- **Allegro Lokalnie** — profesjonalnie, szczegółowo, 75 / 1500
+- **Facebook Marketplace** — przyjaźnie, bezpośrednio, 60 / 1000
+- **Vinted** — modowo, lifestylowo, 100 / 750
 
-### 4. **Wariacje Tonalne**
-Trzy style komunikacji:
-- **Profesjonalny** - formalny, rzeczowy, dla drogich przedmiotów
-- **Przyjazny** - ciepły, pomocny, uniwersalny (domyślny)
-- **Swobodny** - luźny, potoczny, dla młodszej grupy
+### 4. Inteligentne Ceny
+- **AI Suggest** — algorytm proponuje realistyczny przedział cenowy (min-max) z 2-3 zdaniowym uzasadnieniem
+- **Własna cena** — użytkownik podaje kwotę, AI wspomina w opisie z frazami negocjacyjnymi
+- **Za darmo** — specjalne formatowanie, zielona odznaka, platformowo-specyficzne frazy
 
-### 5. **Inteligentne Ceny**
-- **AI Suggest** - algorytm proponuje realistyczny przedział cenowy z uzasadnieniem
-- **Własna cena** - możliwość ustawienia swojej ceny
-- **Za darmo** - specjalne formatowanie dla rzeczy do oddania
+### 5. System Dokładności AI
+- **Hierarchia informacji** — dane użytkownika > fakty ze zdjęć > wnioskowanie AI
+- **System języka niepewności** — 3 poziomy pewności z polskimi frazami ("wygląda na", "może być", "trudno określić")
+- **Lista zabronionych fraz** — AI nie może twierdzić "fabrycznie nowy", "gwarancja producenta" itp. bez dowodów
+- **Chain-of-thought** — AI wewnętrznie oddziela fakty od założeń przed generowaniem
 
-### 6. **UX Premium**
-- Ciemny/jasny motyw
-- Responsywny design (desktop + mobile)
-- Lightbox do podglądu zdjęć
-- Kopiowanie treści jednym klikiem
-- Dynamiczny ekran ładowania z postępem
+### 6. Pełny Dashboard
+- **Zarządzanie ogłoszeniami** — CRUD, statusy (Draft/Published/Sold/Archived), filtrowanie, sortowanie, wyszukiwanie
+- **Paginacja** — 20 ogłoszeń na stronę z server-side Prisma skip/take
+- **Bulk operations** — zaznaczanie wielu ogłoszeń, eksport CSV, grupowa archiwizacja
+- **Szablony** — system szablonów dla planu RESELER (do 10 presetów)
+- **Historia aktywności** — log operacji użytkownika (ostatnie 50 zdarzeń)
+- **Statystyki** — Server Components z Suspense streaming (tygodniowy wykres, rozbicie na platformy)
+- **Inline editing** — edycja tytułu i opisu z walidacją limitów znaków i podglądem na żywo
+
+### 7. Guest Access z Rate Limiting
+Trzy warstwy ograniczeń dla niezalogowanych:
+- UUID w localStorage (max 3 generacje)
+- IP hash via SHA-256 (max 5 generacji / 24h)
+- SoftWall modal po wyczerpaniu limitu
+- Po zalogowaniu — pending ad automatycznie zapisywany do dashboardu (IndexedDB)
+
+### 8. Autentykacja i Płatności
+- **Google OAuth** via NextAuth v5 (strategia JWT)
+- **Stripe** — subskrypcje (karta + BLIK) + jednorazowe boosty
+- **Customer Portal** — zarządzanie subskrypcją, metody płatności, faktury
+- **Webhook handler** — automatyczne upgrade/downgrade/renewal
+
+### 9. UX
+- Ciemny/jasny motyw (next-themes, CSS variables)
+- W pełni responsywny design (desktop + mobile z drawer nawigacją)
+- Kopiowanie treści jednym kliknięciem
+- Dynamiczny ekran ładowania z React Portal
+- Design token system — wszystkie kolory przez zmienne CSS
+- Animacje wejścia na kartach statystyk (staggered entrance)
 
 ---
 
-## 📊 Model Biznesowy
+## Model Biznesowy
 
 ### Segmenty Klientów
 
-**B2C - Sprzedający indywidualni:**
+**B2C — Sprzedający indywidualni:**
 - Osoby sprzedające używane rzeczy (elektronika, meble, ubrania)
 - Młodzi rodzice (sprzęt dziecięcy, ubranka)
 - Miłośnicy mody (second-hand, vintage)
-- Hobbbyści i kolekcjonerzy
+- Hobbyści i kolekcjonerzy
 
-**B2B - Komercyjni sprzedający:**
+**B2B — Komercyjni sprzedający:**
 - Małe sklepy online (cross-posting na wiele platform)
 - Komisanty i skupy (regularnie dodają nowe produkty)
 - Second-handy i lombardy (volume selling)
 
-### Strategie Monetyzacji
+### Cennik (wdrożony i działający)
 
-#### Faza 1: Freemium (Launch)
-- **Free tier:** 5 ogłoszeń/miesiąc, podstawowe funkcje
-- **Premium (39 zł/mies):** nielimitowane ogłoszenia, wszystkie platformy, priorytetowe wsparcie
+#### Plany Subskrypcyjne
 
-#### Faza 2: Rozszerzenia
-- **Pay-per-use:** 3.99 zł za pojedyncze ogłoszenie (bez subskrypcji)
-- **Credits system:** pakiety 10/50/100 ogłoszeń z rabatem
-- **Marketplace integrations:** automatyczna publikacja na platformy (19.99 zł/mies)
+| | FREE | STARTER | RESELER |
+|---|---|---|---|
+| **Cena** | 0 zł/mies. | 19,99 zł/mies. | 49,99 zł/mies. |
+| **Generacje/mies.** | 5 | 30 | 80 |
+| **Max zdjęć** | 3 | 5 | 8 |
+| **Dashboard** | ✓ | ✓ | ✓ |
+| **Szablony** | — | — | ✓ |
+| **Stripe Portal** | — | ✓ | ✓ |
 
-#### Faza 3: Ekosystem
-- **Affiliate z platformami:** prowizja od sprzedaży (partnership z OLX, Allegro)
-- **Premium templates:** gotowe szablony dla kategorii produktów (7.99 zł/kategoria)
-- **Analytics dashboard:** statystyki sprzedaży, A/B testing opisów (59 zł/mies)
+- Kredyty subskrypcyjne resetują się co miesiąc
+- Subskrypcje obsługiwane przez Stripe (karta + BLIK)
+
+#### Boost Credits (jednorazowe doładowania)
+
+| Pakiet | Cena | Cena/kredyt |
+|---|---|---|
+| 10 kredytów | 9,99 zł | ~1,00 zł |
+| 30 kredytów | 24,99 zł | ~0,83 zł |
+| 60 kredytów | 39,99 zł | ~0,67 zł |
+
+- Boost credits nie wygasają miesięcznie
+- Zużycie: najpierw kredyty subskrypcyjne, potem boost
+- Dostępne tylko dla zalogowanych użytkowników
+
+### Mechanika Kredytów
+- Kredyt zużyty w momencie generowania (nie zapisu) — zapobiega nadużyciom
+- Przy 0 kredytów: przycisk generowania zablokowany, CTA "Zmień plan lub dokup kredyty"
+- Gość: SoftWall modal po wyczerpaniu darmowego limitu
 
 ---
 
-## 🎨 Przewaga Konkurencyjna
+## Przewaga Konkurencyjna
 
 ### Technologia
-- **GPT-4.1-mini Vision** - najnowszy model AI z analizą obrazu
-- **Modular prompt architecture** - elastyczne i skalowalne prompty
-- **Accuracy features** - system niepewności języka, hierarchia informacji
-- **Performance optimized** - Next.js 15, dynamic imports, sub-second response
+- **GPT-4.1-mini Vision** — najnowszy model z analizą obrazu i tekstem
+- **Modular prompt architecture** — reguły platform w Markdown, tone injection, chain-of-thought
+- **Accuracy system** — hierarchia informacji, język niepewności, lista zabronionych fraz
+- **Server Components + Suspense** — streaming danych, natychmiastowy TTFB
+- **Dynamic imports** — code splitting, redukcja initial bundle o 30-50KB
 
 ### Design
-- **Polish UX** - aplikacja w 100% w języku polskim
-- **Platform-native content** - reguły specyficzne dla każdej platformy
-- **Visual hierarchy** - skupienie na głównym zadaniu (kopiowanie treści)
-- **Accessibility** - keyboard navigation, screen reader support
+- **Polish-first UX** — cała aplikacja w 100% po polsku
+- **Platform-native content** — 4 platformy × 3 tony = 12 unikalnych podejść
+- **Design token system** — ciemny/jasny motyw bez `dark:` prefixów, CSS variables
+- **Mobile-first** — drawer nawigacja, FAB, responsywne filtry
 
-### Dane
-- **Platform rules** - ręcznie kurowane zasady dla każdej platformy (aktualizowane)
-- **Tone variations** - 3 style × 4 platformy = 12 unikalnych podejść
-- **Price intelligence** - algorytm wyceny oparty na kontekście (marka, stan, kategoria)
+### Moat
+- **Kurowane reguły platform** — ręcznie tworzone i aktualizowane zasady dla każdej platformy
+- **System dokładności AI** — unikalne podejście do ograniczania halucynacji w generowanych treściach
+- **Pełny cykl życia ogłoszenia** — od generowania przez edycję po zarządzanie i eksport
 
 ---
 
-## 📈 Go-to-Market
+## Go-to-Market
 
-### Faza 1: MVP Launch (Miesiące 1-3)
-**Cel:** 1,000 użytkowników, walidacja product-market fit
+### Faza 1: Walidacja (Miesiące 1-3)
+**Cel:** 1 000 użytkowników, walidacja product-market fit
 
 **Kanały:**
 - Grupy FB dla sprzedających (OLX/Vinted/Allegro communities)
-- Reddit Poland (r/Polska, r/ShoppingPL)
-- TikTok/Instagram - viral content (before/after ogłoszeń)
-- SEO - blog posty "jak sprzedać X na Y"
+- Reddit Poland (r/Polska)
+- TikTok/Instagram — viral content (before/after ogłoszeń)
+- SEO — blog posty "jak sprzedać X na Y"
 
 **Metryki:**
 - CAC < 20 zł
@@ -139,231 +188,273 @@ Trzy style komunikacji:
 - Retention D7 > 20%
 
 ### Faza 2: Growth (Miesiące 4-9)
-**Cel:** 10,000 użytkowników, pierwsze płatne konwersje
+**Cel:** 10 000 użytkowników, stabilne MRR
 
 **Kanały:**
-- Google Ads - keywords "generator ogłoszeń", "jak sprzedać na olx"
-- Facebook Ads - targetowanie sprzedających
-- Influencer marketing - nano-influencers (1K-10K followers)
-- Referral program - 20 zł kredytu za polecenie
+- Google Ads — keywords "generator ogłoszeń", "jak sprzedać na olx"
+- Facebook Ads — targetowanie sprzedających
+- Influencer marketing — nano-influencers (1K-10K followers)
+- Referral program — darmowe kredyty za polecenie
 
 **Metryki:**
 - CAC < 40 zł
 - Free-to-paid conversion > 5%
-- MRR > 20,000 zł
+- MRR > 20 000 zł
 
 ### Faza 3: Scale (Miesiące 10-18)
-**Cel:** 100,000 użytkowników, profitable unit economics
+**Cel:** 50 000+ użytkowników, profitable unit economics
 
 **Kanały:**
-- Partnerships z platformami (OLX, Allegro - integrations)
-- B2B outreach - sklepy, komisanty, agencje
-- Content marketing - YouTube tutorials, case studies
-- PR - tech media, startup competitions
+- Partnerships z platformami (OLX, Allegro — integracje)
+- B2B outreach — sklepy, komisanty, agencje
+- Content marketing — YouTube tutorials, case studies
+- PR — tech media, startup competitions
 
 **Metryki:**
 - CAC < 60 zł
-- LTV > 400 zł
+- LTV > 300 zł
 - LTV:CAC > 3:1
 - Churn < 5%/month
 
 ---
 
-## 💰 Prognozy Finansowe (18 miesięcy)
+## Prognozy Finansowe (18 miesięcy)
 
 ### Założenia
-- Cena subskrypcji Premium: 39 zł/user/month
-- Free-to-paid conversion: 8%
-- Miesięczny churn: 5%
-- Średni koszt AI per ad: 0.024 zł ($0.006)
-- Średnio 2 ads per paid user per month
+
+**Przychody per user (monthly):**
+- FREE: 0 zł (ale kupują boosty: średni przychód ~2 zł/mies. od 10% free users)
+- STARTER: 19,99 zł + średni boost 5 zł = ~25 zł
+- RESELER: 49,99 zł + średni boost 10 zł = ~60 zł
+
+**Konwersja:**
+- Free → STARTER: 6%
+- Free → RESELER: 2%
+- Boost purchase rate (wśród free): 10%
+- Boost purchase rate (wśród paid): 30%
+- Miesięczny churn (paid): 5%
+
+**Koszty per generacja:**
+- OpenAI API: 0,02-0,12 zł (zależne od ilości zdjęć, średnio ~0,05 zł)
+- Stripe: ~1,5% + 0,50 zł per transakcja
 
 ### Scenariusz Bazowy
 
-| Miesiąc | Users | Paid Users | MRR (zł) | Koszty AI (zł) | CAC Investment (zł) | Burn Rate (zł) |
-|---------|-------|------------|----------|----------------|---------------------|----------------|
-| 3 | 1,000 | 50 | 1,950 | 48 | 20,000 | 30,000 |
-| 6 | 3,500 | 240 | 9,360 | 230 | 48,000 | 65,000 |
-| 9 | 10,000 | 700 | 27,300 | 672 | 100,000 | 128,000 |
-| 12 | 25,000 | 1,800 | 70,200 | 1,728 | 160,000 | 180,000 |
-| 18 | 100,000 | 8,000 | 312,000 | 7,680 | 320,000 | 220,000 |
+| Miesiąc | Users | STARTER | RESELER | Boosty (szt.) | MRR (zł) | Koszty AI (zł) | Koszty Stripe (zł) |
+|---------|-------|---------|---------|---------------|----------|----------------|---------------------|
+| 3 | 1 000 | 40 | 15 | 60 | 1 950 | 150 | 90 |
+| 6 | 3 500 | 150 | 50 | 250 | 6 950 | 620 | 380 |
+| 9 | 10 000 | 450 | 150 | 800 | 19 800 | 1 800 | 1 050 |
+| 12 | 20 000 | 900 | 300 | 1 800 | 40 500 | 3 800 | 2 200 |
+| 18 | 50 000 | 2 200 | 750 | 5 000 | 102 500 | 9 500 | 5 600 |
 
-**Break-even:** Miesiąc 13-14
-**Total Burn (18M):** ~1,150,000 zł
-**ARR at M18:** 3,744,000 zł (~$935K)
-**Gross Margin:** 99%+
+**MRR breakdown (M18):**
+- STARTER: 2 200 × 19,99 = 43 978 zł
+- RESELER: 750 × 49,99 = 37 493 zł
+- Boosty: ~21 000 zł (średnio 5 000 zakupów/mies. × średnia 4,20 zł)
+- Łącznie: ~102 500 zł MRR
+
+### Gross Margin
+
+**Przychód na przykładzie STARTER (19,99 zł/mies.):**
+- Stripe fee: 19,99 × 1,5% + 0,50 = 0,80 zł (4,0%)
+- Koszt AI (30 generacji × 0,05 zł): 1,50 zł (7,5%)
+- **Gross margin: 88,5%**
+
+**Przychód na przykładzie RESELER (49,99 zł/mies.):**
+- Stripe fee: 49,99 × 1,5% + 0,50 = 1,25 zł (2,5%)
+- Koszt AI (80 generacji × 0,05 zł): 4,00 zł (8,0%)
+- **Gross margin: 89,5%**
+
+**Przychód na przykładzie Boost 30 (24,99 zł):**
+- Stripe fee: 24,99 × 1,5% + 0,50 = 0,87 zł (3,5%)
+- Koszt AI (30 generacji × 0,05 zł): 1,50 zł (6,0%)
+- **Gross margin: 90,5%**
+
+**Ważne:** Gross margin to nie net margin — nie uwzględnia hostingu, marketingu, zespołu. Ale koszty zmienne (AI + payments) są niskie, co daje silną dźwignię operacyjną.
+
+### Koszty Stałe (monthly)
+- **Vercel Pro:** ~80 zł
+- **Supabase Pro:** ~100 zł (DB + Storage)
+- **Narzędzia (analytics, monitoring):** ~200 zł
+- **Łączne fixed costs:** ~380 zł/mies.
+
+**Break-even (pokrycie fixed costs):** ~Miesiąc 2-3 (już przy 20 płatnych użytkownikach)
+**Break-even (z kosztami marketingu):** Miesiąc 12-14
 
 ---
 
-## 🛠️ Technologia & Architektura
+## Technologia i Architektura
 
-### Tech Stack
-- **Frontend:** Next.js 15, React, TypeScript, Tailwind CSS
-- **AI:** OpenAI GPT-4.1-mini (vision + text)
-- **Infrastructure:** Vercel Pro (hosting + CDN + edge functions)
-- **Payments:** PayU + Stripe (BLIK, karty, przelewy)
-- **Analytics:** PostHog (product analytics)
-- **Monthly fixed cost:** 80 zł (Vercel Pro)
+### Tech Stack (wdrożony)
+- **Frontend:** Next.js 15 (App Router), React, TypeScript 5.7, Tailwind CSS 3.4
+- **AI:** OpenAI GPT-4.1-mini (vision + text, JSON mode)
+- **Database:** PostgreSQL via Supabase (PgBouncer connection pooling)
+- **ORM:** Prisma 5.22
+- **Auth:** NextAuth v5 (Google OAuth, strategia JWT)
+- **Storage:** Supabase Storage (sharp resizing: 800px, 85% JPEG)
+- **Payments:** Stripe (subskrypcje + jednorazowe boosty, BLIK + karty)
+- **Hosting:** Vercel
+- **Validation:** Zod schemas
 
-### Koszty Płatności (Polski Rynek)
+### Koszty Płatności (Stripe w Polsce)
 
-**PayU (główny gateway dla polskich płatności):**
-- **Prowizja:** 1.9% + 0.25 zł per transakcja
-- **BLIK:** wspierany natywnie (najpopularniejsza metoda w PL)
-- **Przelewy24:** integracja standardowa
-- **Karty:** Visa, Mastercard (1.9% + 0.25 zł)
-- **Brak minimum** transakcji
-- **Wypłaty:** automatyczne na konto firmowe, T+2
-
-**Stripe (backup + karty międzynarodowe):**
-- **Prowizja:** 1.4% + 1 zł per transakcja (European cards)
-- **Minimum:** brak
-- **Zastosowanie:** płatności kartami spoza Polski, integracje API
+**Stripe (jedyny payment gateway):**
+- **Prowizja:** ~1,5% + 0,50 zł per transakcja (European cards)
+- **BLIK:** obsługiwany przez Stripe
+- **Karty:** Visa, Mastercard
+- **Wypłaty:** automatyczne
+- **Customer Portal:** zarządzanie subskrypcją, faktury
 
 **Przykładowe koszty transakcyjne:**
-- Subskrypcja Premium (39 zł): 0.99 zł prowizji (2.5%)
-- Pay-per-use (3.99 zł): 0.33 zł prowizji (8.3% - wysokie dla małych kwot)
-- Credits 10 pack (35 zł): 0.92 zł prowizji (2.6%)
+- STARTER (19,99 zł): 0,80 zł prowizji (4,0%)
+- RESELER (49,99 zł): 1,25 zł prowizji (2,5%)
+- Boost 10 (9,99 zł): 0,65 zł prowizji (6,5%)
+- Boost 30 (24,99 zł): 0,87 zł prowizji (3,5%)
+- Boost 60 (39,99 zł): 1,10 zł prowizji (2,8%)
 
-**Strategia:**
-- PayU jako główny gateway (niższe koszty, BLIK)
-- Stripe dla płatności międzynarodowych i API integrations
-- Potencjalna negocjacja rabatu przy >10K zł MRR (1.5% możliwe)
-
-### Koszty Operacyjne (monthly at scale)
-- **OpenAI API:** 0.024 zł/ad × 64K ads = 1,536 zł
-- **Infrastructure:** Vercel Pro 80 zł/month
-- **Payments:** ~2% × 312K zł MRR = 6,240 zł (PayU fees at scale)
-- **Tools:** 400 zł (analytics, monitoring)
-- **Total:** ~8,256 zł/month at 312K zł MRR
-
-**Net Margin at Scale:** 97.4% (po kosztach płatności)
+**Wniosek:** Subskrypcje i większe pakiety mają akceptowalne koszty transakcyjne (2,5-4%). Małe boosty (9,99 zł) mają wyższą prowizję procentową (6,5%), ale nadal są opłacalne dzięki niskim kosztom AI.
 
 ### Skalowalność
-- **Current capacity:** 10,000 requests/day
-- **Bottleneck:** OpenAI API rate limits (mitigable via tier upgrade)
-- **Horizontal scaling:** Stateless architecture, easy to scale with Vercel
-- **Cost scaling:** Linear with usage (pay-as-you-grow)
+- **Architektura:** Stateless, serverless (Vercel Edge + Serverless Functions)
+- **Database:** Supabase PgBouncer z connection pooling (session mode, limit 5)
+- **Bottleneck:** OpenAI API rate limits (mitowalny przez tier upgrade)
+- **Cost scaling:** Liniowe z użyciem (pay-as-you-grow)
+- **Optymalizacje:** groupBy zamiast wielu count(), $transaction dla batch queries, dynamic imports
 
 ---
 
-## 👥 Zespół (Potrzebny)
+## Zespół (Potrzebny)
 
 ### Core Team
-**CEO/Product** (needed)
-- Product vision & strategy
-- Fundraising & investor relations
-- Go-to-market execution
-
-**CTO** (current: you)
-- Tech architecture & development
+**CTO** (obecny)
+- Architektura techniczna i development
 - AI prompt engineering
-- Performance & security
+- Performance i security
+- Cały produkt zbudowany solo
 
-**Head of Growth** (needed)
-- User acquisition & retention
-- Marketing campaigns
+**CEO/Product** (potrzebny)
+- Wizja produktu i strategia
+- Fundraising i relacje z inwestorami
+- Egzekucja go-to-market
+
+**Head of Growth** (potrzebny)
+- Pozyskiwanie i retencja użytkowników
+- Kampanie marketingowe
 - Community building
 
-### Advisors (needed)
-- **Marketplace expert** - ex-OLX/Allegro executive
-- **AI/ML advisor** - prompt optimization, model selection
-- **Legal advisor** - GDPR, terms of service, IP
+### Advisors (potrzebni)
+- **Marketplace expert** — ex-OLX/Allegro
+- **AI/ML advisor** — optymalizacja promptów, wybór modeli
+- **Legal advisor** — GDPR, regulamin, IP
 
 ---
 
-## 🎯 Funding Ask
+## Funding Ask
 
-### Pre-Seed Round: 1,000,000 zł (~$250K)
+### Pre-Seed Round: 800 000 zł (~$200K)
 
 **Use of Funds:**
-- **Team (60% - 600K zł):** Hire CEO/Product + Head of Growth + 1 engineer
-- **Marketing (30% - 300K zł):** User acquisition, content, partnerships
-- **Operations (10% - 100K zł):** Tools, legal, runway buffer
+- **Team (55% — 440K zł):** Hire CEO/Product + Head of Growth
+- **Marketing (35% — 280K zł):** User acquisition, content, paid ads, partnerships
+- **Operations (10% — 80K zł):** Narzędzia, legal, runway buffer
 
-**Milestones (12 months):**
-- ✅ 10,000+ registered users
-- ✅ 40,000+ zł MRR
-- ✅ 5% free-to-paid conversion
-- ✅ Product-market fit validated
-- ✅ Ready for Seed round (4-8M zł)
+**Milestones (12 miesięcy):**
+- 10 000+ zarejestrowanych użytkowników
+- 30 000+ zł MRR
+- 5% konwersja free-to-paid
+- Product-market fit zwalidowany
+- Gotowi na rundę Seed (3-6M zł)
+
+**Dlaczego mniej niż typowy pre-seed:**
+- Produkt już jest zbudowany i działający (brak kosztu MVP)
+- Koszty techniczne bliskie zeru (serverless, pay-as-you-go)
+- Środki idą głównie na zespół i marketing, nie development
 
 **Terms:**
-- **Valuation:** 6M zł post-money (~$1.5M)
-- **Equity:** 16.7%
+- **Valuation:** 4M zł post-money (~$1M)
+- **Equity:** 20%
 - **Instrument:** SAFE lub udziały
-- **Investor involvement:** Quarterly updates, strategic advice
+- **Investor involvement:** Kwartalne update'y, strategiczne doradztwo
 
 ---
 
-## 🚨 Ryzyka & Mitigation
+## Ryzyka i Mitigation
 
 ### 1. Konkurencja
 **Ryzyko:** Duzi gracze (OLX, Allegro) mogą dodać podobną funkcję
 **Mitigation:**
-- First-mover advantage, brand recognition
+- First-mover advantage z działającym produktem
 - Multi-platform (oni mają lock-in na swoją platformę)
-- Superior UX, ciągłe innowacje
+- Superior UX z głębokimi regułami platformowymi
+- Szybkość iteracji jako mały zespół
 
 ### 2. Regulacje AI
 **Ryzyko:** EU AI Act może wprowadzić ograniczenia
 **Mitigation:**
-- Monitoring regulacji, compliance-first approach
-- Transparentność AI (pokazujemy co AI robi)
-- Human-in-the-loop (użytkownik zatwierdza treść)
+- Human-in-the-loop: użytkownik zawsze zatwierdza i edytuje treść
+- Transparentność: system języka niepewności pokazuje co AI wie, a czego nie
+- Compliance-first approach, monitoring regulacji
 
 ### 3. Koszty AI
 **Ryzyko:** Ceny OpenAI mogą wzrosnąć
 **Mitigation:**
-- Obecne koszty AI stanowią <1% przychodu
-- Model agnostic architecture (elastyczność w wyborze dostawcy)
-- Caching i optymalizacje zapytań
-- Skalowanie kosztów liniowe z wzrostem użycia
+- Obecne koszty AI stanowią ~8% przychodu (niska wrażliwość)
+- Model-agnostic architecture (łatwe przejście na innego dostawcę)
+- Trend rynkowy: ceny modeli AI spadają, nie rosną
+- Caching i optymalizacje zapytań mogą zredukować koszty o 20-30%
 
 ### 4. Adoption
 **Ryzyko:** Sprzedający mogą nie chcieć płacić za narzędzie
 **Mitigation:**
-- Freemium model (try before buy)
-- ROI calculator (pokaż wartość: szybsza sprzedaż, wyższe ceny)
-- Social proof (case studies, testimonials)
+- Guest access (3 darmowe generacje bez rejestracji) — niska bariera wejścia
+- Freemium z 5 generacjami/mies. — długofalowe try-before-buy
+- Boost packs — elastyczność bez zobowiązań subskrypcyjnych
+- ROI jest oczywiste: 30s vs 15 min na napisanie ogłoszenia
+
+### 5. Stripe / Płatności
+**Ryzyko:** Uzależnienie od jednego payment gatewaya
+**Mitigation:**
+- Stripe jest stabilny i rozwijający się w Polsce
+- Architektura pozwala na dodanie kolejnego gatewaya (PayU, Przelewy24) w razie potrzeby
+- BLIK obsługiwany przez Stripe natywnie
 
 ---
 
-## 🌟 Vision (3-5 lat)
+## Vision (3-5 lat)
 
 ### Rok 1-2: Dominacja Polski
 - #1 narzędzie do ogłoszeń marketplace w Polsce
-- 100K+ active users
-- Partnerships z głównymi platformami (OLX, Allegro, FB)
+- 50K+ active users
+- Partnerships z głównymi platformami (OLX, Allegro)
+- Auto-posting — integracje z API platform (1-click publish)
 
 ### Rok 3: Ekspansja CEE
 - Wejście na rynki: Czechy, Słowacja, Węgry, Rumunia
 - Lokalizacja UI i reguł platform
-- 1M+ users, 40M+ zł ARR
+- 200K+ users, 20M+ zł ARR
 
 ### Rok 4-5: Beyond Listings
-- **AI Shopping Assistant** - pomoc w zakupach (nie tylko sprzedaży)
-- **Price Prediction** - machine learning na danych historycznych
-- **Auto-posting** - integracje z platformami (1-click publish)
-- **Analytics Platform** - competitive intelligence, market trends
+- **Price Prediction** — ML na danych historycznych, rekomendacje cenowe
+- **Analytics** — competitive intelligence, trendy rynkowe
+- **B2B Platform** — API dla sklepów, komisantów, agencji
+- **AI Shopping Assistant** — pomoc w zakupach, porównywanie ofert
 
-**Ultimate Goal:** Stać się infrastrukturą dla C2C commerce w CEE - każdy sprzedający używa naszych narzędzi, każda platforma integruje się z nami.
+**Ultimate Goal:** Stać się infrastrukturą dla C2C commerce w CEE — każdy sprzedający używa naszych narzędzi, każda platforma integruje się z nami.
 
 ---
 
-## 📞 Kontakt
+## Kontakt
 
 **Email:** [your-email@example.com]
 **Demo:** [app-url]
-**Deck:** [pitch-deck-url]
 **GitHub:** [github.com/your-repo]
 
-**Ready to talk?** Zapraszamy na 30-minutowe demo, gdzie pokażemy:
-- ✅ Live product walkthrough
-- ✅ User testimonials & case studies
-- ✅ Detailed financial model
-- ✅ Technical deep dive
-- ✅ Go-to-market roadmap
+**Ready to talk?** Zapraszamy na 30-minutowe demo:
+- Live product walkthrough (działający produkt, nie mockup)
+- Detailed financial model
+- Technical deep dive
+- Go-to-market roadmap
 
 ---
 
