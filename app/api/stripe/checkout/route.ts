@@ -40,23 +40,29 @@ export async function POST(request: NextRequest) {
     }
 
     // Create checkout session
-    const checkoutSession = await stripe.checkout.sessions.create({
-        customer: customerId,
-        mode: "subscription",
-        payment_method_types: ["card", "blik"],
-        line_items: [
-            {
-                price: planConfig.priceId,
-                quantity: 1,
+    let checkoutSession;
+    try {
+        checkoutSession = await stripe.checkout.sessions.create({
+            customer: customerId,
+            mode: "subscription",
+            payment_method_types: ["card", "blik"],
+            line_items: [
+                {
+                    price: planConfig.priceId,
+                    quantity: 1,
+                },
+            ],
+            success_url: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/dashboard?upgrade=success`,
+            cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/pricing?upgrade=cancelled`,
+            metadata: {
+                userId: session.user.id,
+                plan,
             },
-        ],
-        success_url: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/dashboard?upgrade=success`,
-        cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/pricing?upgrade=cancelled`,
-        metadata: {
-            userId: session.user.id,
-            plan,
-        },
-    });
+        });
+    } catch (err) {
+        console.error("[checkout] Stripe error:", err);
+        return NextResponse.json({ error: String(err) }, { status: 500 });
+    }
 
     return NextResponse.json({ url: checkoutSession.url });
 }
