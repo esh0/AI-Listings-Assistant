@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
     reactStrictMode: true,
@@ -23,10 +24,30 @@ const nextConfig: NextConfig = {
                         key: "Strict-Transport-Security",
                         value: "max-age=31536000; includeSubDomains",
                     },
+                    {
+                        key: "Content-Security-Policy",
+                        value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://js.stripe.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' https://api.openai.com https://api.stripe.com https://*.supabase.co https://*.sentry.io https://vitals.vercel-insights.com https://o*.ingest.sentry.io; frame-src https://js.stripe.com https://hooks.stripe.com; worker-src blob:;",
+                    },
                 ],
             },
         ];
     },
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig, {
+    // org and project are only needed for source map uploads.
+    // If not set, Sentry still captures errors — stack traces just won't be de-minified.
+    // Find these slugs in your Sentry dashboard URL:
+    // sentry.io/organizations/<org>/projects/<project>/
+    ...(process.env.SENTRY_ORG && process.env.SENTRY_PROJECT
+        ? {
+              org: process.env.SENTRY_ORG,
+              project: process.env.SENTRY_PROJECT,
+              widenClientFileUpload: true,
+              sourcemaps: { deleteSourcemapsAfterUpload: true },
+          }
+        : {}),
+    silent: !process.env.CI,
+    disableLogger: true,
+    automaticVercelMonitors: true,
+});

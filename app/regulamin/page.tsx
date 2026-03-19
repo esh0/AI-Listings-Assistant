@@ -202,6 +202,7 @@ export default function ReguaminPage() {
             </ul>
             <p>5. Usługodawca zobowiązuje się przeprowadzać prace serwisowe w sposób możliwie najmniej uciążliwy dla Usługobiorców oraz, w miarę możliwości, z wyprzedzeniem informować ich o planowanych pracach.</p>
             <p>6. Łączna odpowiedzialność Usługodawcy wobec Usługobiorcy będącego Przedsiębiorcą (niebędącego Konsumentem ani Przedsiębiorcą na prawach Konsumenta) jest ograniczona do kwoty opłat uiszczonych przez Usługobiorcę w okresie ostatnich 3 miesięcy.</p>
+            <p>7. Usługodawca informuje, że Aplikacja korzysta z systemów monitorowania błędów (Sentry) wyłącznie w celu poprawy jakości i stabilności Usługi. Systemy te nie są wykorzystywane do profilowania Usługobiorców ani w celach marketingowych.</p>
 
             <hr />
 

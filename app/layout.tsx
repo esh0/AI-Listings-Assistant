@@ -2,7 +2,9 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AuthProvider } from "@/components/AuthProvider";
+import { CookieBanner } from "@/components/CookieBanner";
 import { auth } from "@/auth";
+import { Analytics } from "@vercel/analytics/react";
 
 export const viewport: Viewport = {
     width: "device-width",
@@ -11,6 +13,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+    metadataBase: new URL("https://marketplace-ai.pl"),
     title: "AI Generator Ogłoszeń Sprzedażowych | OLX, Allegro, Vinted",
     description:
         "Automatycznie generuj profesjonalne ogłoszenia sprzedażowe na OLX, Allegro Lokalnie, Facebook Marketplace i Vinted. Wykorzystaj AI do analizy zdjęć i tworzenia opisów.",
@@ -31,12 +34,25 @@ export const metadata: Metadata = {
             "Automatycznie generuj profesjonalne ogłoszenia sprzedażowe z pomocą AI",
         type: "website",
         locale: "pl_PL",
+        images: [
+            {
+                url: "/og-image.svg",
+                width: 1200,
+                height: 630,
+                alt: "Marketplace AI — Generator ogłoszeń",
+            },
+        ],
     },
     twitter: {
         card: "summary_large_image",
         title: "AI Generator Ogłoszeń Sprzedażowych",
         description:
             "Automatycznie generuj profesjonalne ogłoszenia sprzedażowe z pomocą AI",
+        images: ["/og-image.svg"],
+    },
+    icons: {
+        icon: "/favicon.svg",
+        shortcut: "/favicon.svg",
     },
     robots: {
         index: true,
@@ -68,7 +84,9 @@ export default async function RootLayout({
                         disableTransitionOnChange
                     >
                         {children}
+                        <Analytics />
                     </ThemeProvider>
+                    <CookieBanner />
                 </AuthProvider>
             </body>
         </html>

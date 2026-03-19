@@ -51,11 +51,31 @@ export async function POST(request: NextRequest) {
                         data: { stripeSubscriptionId: session.subscription as string },
                     });
                     await changePlan(userId, plan);
+                    const user = await prisma.user.findUnique({ where: { id: userId }, select: { email: true, name: true } });
+                    if (user?.email) {
+                        const { sendEmail } = await import("@/lib/email");
+                        const { subscriptionConfirmedEmailHtml } = await import("@/emails/subscription-confirmed");
+                        await sendEmail(
+                            user.email,
+                            `Plan ${plan} aktywowany — Marketplace AI`,
+                            subscriptionConfirmedEmailHtml(user.name ?? "Użytkowniku", plan)
+                        );
+                    }
                 }
             } else if (session.mode === "payment") {
                 const credits = parseInt(session.metadata?.credits || "0", 10);
                 if (credits > 0) {
                     await addBoostCredits(userId, credits);
+                    const user = await prisma.user.findUnique({ where: { id: userId }, select: { email: true, name: true } });
+                    if (user?.email) {
+                        const { sendEmail } = await import("@/lib/email");
+                        const { boostConfirmedEmailHtml } = await import("@/emails/boost-confirmed");
+                        await sendEmail(
+                            user.email,
+                            `+${credits} kredytów dodanych — Marketplace AI`,
+                            boostConfirmedEmailHtml(user.name ?? "Użytkowniku", credits)
+                        );
+                    }
                 }
             }
             break;
@@ -93,6 +113,7 @@ export async function POST(request: NextRequest) {
 
             const user = await prisma.user.findFirst({
                 where: { stripeSubscriptionId: subscription.id },
+                select: { id: true, plan: true, email: true, name: true },
             });
 
             if (user) {
@@ -101,6 +122,15 @@ export async function POST(request: NextRequest) {
                     where: { id: user.id },
                     data: { stripeSubscriptionId: null },
                 });
+                if (user.email) {
+                    const { sendEmail } = await import("@/lib/email");
+                    const { subscriptionCancelledEmailHtml } = await import("@/emails/subscription-cancelled");
+                    await sendEmail(
+                        user.email,
+                        "Subskrypcja anulowana — Marketplace AI",
+                        subscriptionCancelledEmailHtml(user.name ?? "Użytkowniku")
+                    );
+                }
             }
             break;
         }

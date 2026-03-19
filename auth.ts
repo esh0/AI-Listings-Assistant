@@ -22,6 +22,33 @@ const { handlers, auth: uncachedAuth, signIn, signOut } = NextAuth({
     maxAge: 7 * 24 * 60 * 60, // 7 days — balance between security and UX
   },
   callbacks: {
+    async signIn({ user }) {
+      // Send welcome email to new users (created within last 60 seconds)
+      if (user.email && user.id) {
+        try {
+          const dbUser = await prisma.user.findUnique({
+            where: { id: user.id },
+            select: { createdAt: true, name: true },
+          });
+          if (dbUser) {
+            const ageMs = Date.now() - new Date(dbUser.createdAt).getTime();
+            if (ageMs < 60_000) {
+              const { sendEmail } = await import("@/lib/email");
+              const { welcomeEmailHtml } = await import("@/emails/welcome");
+              const name = dbUser.name ?? user.email.split("@")[0];
+              await sendEmail(
+                user.email,
+                "Witaj w Marketplace AI! 🎉",
+                welcomeEmailHtml(name)
+              );
+            }
+          }
+        } catch (err) {
+          console.error("[auth] Failed to send welcome email:", err);
+        }
+      }
+      return true;
+    },
     async jwt({ token, user, trigger }) {
       // Add user data to JWT token on sign in
       if (user) {

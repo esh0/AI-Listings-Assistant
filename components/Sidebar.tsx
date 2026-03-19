@@ -15,6 +15,7 @@ import {
     Menu,
     X,
     CreditCard,
+    Settings,
 } from "lucide-react";
 import { useState, useCallback, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -53,6 +54,7 @@ const mainItems = [
     { href: "/dashboard/history", label: "Historia", icon: History },
     { href: "/dashboard/stats", label: "Statystyki", icon: BarChart3 },
     { href: "/dashboard/pricing", label: "Cennik", icon: CreditCard },
+    { href: "/dashboard/settings", label: "Ustawienia", icon: Settings },
 ];
 
 export function Sidebar({ user, collapsed = false }: SidebarProps) {

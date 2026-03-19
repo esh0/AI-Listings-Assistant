@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Allow: /pricing
+Allow: /regulamin
+Allow: /polityka-prywatnosci
+
+Disallow: /dashboard/
+Disallow: /api/
+Disallow: /auth/
+
+Sitemap: https://marketplace-ai.pl/sitemap.xml

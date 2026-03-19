@@ -96,6 +96,8 @@ export default function PolitykaPrywatnosci() {
                     <tr><td><strong>Supabase</strong></td><td>Baza danych, storage</td><td>EU/USA</td><td>SCCs, szyfrowanie</td></tr>
                     <tr><td><strong>Stripe</strong> (za pośrednictwem F.H.U. Krzysztof Szałach, NIP: 579-209-58-51)</td><td>Płatności</td><td>EU</td><td>Certyfikat PCI DSS Level 1</td></tr>
                     <tr><td><strong>Vercel</strong></td><td>Hosting aplikacji</td><td>EU/USA</td><td>SCCs, Edge Functions</td></tr>
+                    <tr><td><strong>Sentry</strong> (Functional Software, Inc.)</td><td>Monitoring błędów aplikacji</td><td>USA</td><td>SCCs</td></tr>
+                    <tr><td><strong>Vercel Analytics</strong></td><td>Anonimowe statystyki odwiedzin (brak danych osobowych)</td><td>EU/USA</td><td>Dane anonimowe, brak wymogu zgody</td></tr>
                 </tbody>
             </table>
             <p><strong>Nie sprzedajemy</strong> Twoich danych osobowych osobom trzecim.</p>
@@ -200,13 +202,14 @@ export default function PolitykaPrywatnosci() {
             </table>
 
             <h3>7.3. Cookies analityczne i marketingowe</h3>
-            <p>Serwis <strong>nie korzysta</strong> z:</p>
+            <p>Serwis korzysta z <strong>Vercel Web Analytics</strong> — narzędzia analitycznego, które:</p>
             <ul>
-                <li>Google Analytics</li>
-                <li>Facebook Pixel</li>
-                <li>Żadnych zewnętrznych narzędzi śledzących</li>
+                <li>Nie używa plików cookie ani localStorage</li>
+                <li>Nie gromadzi danych osobowych ani adresów IP</li>
+                <li>Mierzy wyłącznie anonimowe metryki (liczba odwiedzin, strony, kraj — na poziomie zagregowanym)</li>
+                <li>Nie wymaga zgody użytkownika (nie jest narzędziem śledzącym w rozumieniu dyrektywy ePrivacy)</li>
             </ul>
-            <p>W przyszłości, jeśli zdecydujemy się na analitykę, poinformujemy Użytkowników i uzyskamy zgodę (cookie banner).</p>
+            <p>Serwis <strong>nie korzysta</strong> z Google Analytics, Facebook Pixel ani żadnych innych zewnętrznych narzędzi śledzących.</p>
 
             <hr />
 
