@@ -27,7 +27,7 @@
 - **Kredyt** — jednostka uprawniająca do jednorazowego skorzystania z Usługi generowania ogłoszenia.
 - **Subskrypcja** — cykliczna (miesięczna) opłata za dostęp do wybranego planu taryfowego.
 - **Dostawka** — jednorazowy zakup dodatkowych Kredytów, niezwiązany z Subskrypcją.
-- **Plan** — jeden z dostępnych poziomów taryfowych: Free, Starter, Reseler, Business.
+- **Plan** — jeden z dostępnych poziomów taryfowych: Free, Starter, Reseler.
 - **Szablon** — wzór opisu ogłoszenia z dynamicznymi polami, zapisany w Koncie Użytkownika.
 
 ---
@@ -64,10 +64,9 @@
 
 | Plan | Cena brutto/mies. | Generacje/mies. | Max zdjęć/gen. | Szablony |
 |---|---|---|---|---|
-| Free | 0 zł | 5 | 2 | — |
+| Free | 0 zł | 5 | 3 | — |
 | Starter | 19,99 zł | 30 | 5 | 3 |
 | Reseler | 49,99 zł | 80 | 8 | 10 |
-| Business | 99,99 zł | 200 | 12 | Bez limitu |
 
 *Ceny brutto (zawierają VAT 23%, o ile Usługodawca jest czynnym podatnikiem VAT).*
 

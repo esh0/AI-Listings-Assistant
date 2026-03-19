@@ -55,7 +55,6 @@
 | FREE | 5 | 3 |
 | STARTER | 30 | 5 |
 | RESELER | 80 | 8 |
-| BUSINESS | 200 | 12 |
 
 ---
 

@@ -94,7 +94,6 @@ STRIPE_SECRET_KEY=sk_test_...
 STRIPE_WEBHOOK_SECRET=whsec_...
 STRIPE_PRICE_STARTER_MONTHLY=price_...
 STRIPE_PRICE_RESELER_MONTHLY=price_...
-STRIPE_PRICE_BUSINESS_MONTHLY=price_...
 STRIPE_PRICE_BOOST_10=price_...
 STRIPE_PRICE_BOOST_30=price_...
 STRIPE_PRICE_BOOST_60=price_...
@@ -110,7 +109,7 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 - Supabase keys - Available in Supabase project settings
 - `STRIPE_SECRET_KEY` - Stripe secret key (test or live)
 - `STRIPE_WEBHOOK_SECRET` - Stripe webhook signing secret
-- `STRIPE_PRICE_*` - Price IDs from Stripe Dashboard for each plan and boost pack
+- `STRIPE_PRICE_*` - Price IDs from Stripe Dashboard for each plan (STARTER, RESELER) and boost pack
 - `NEXT_PUBLIC_SITE_URL` - Full URL for Stripe redirect URLs
 
 ## Architecture
@@ -127,18 +126,17 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 1. User signs in with Google OAuth → redirected to dashboard
 2. Dashboard shows: recent ads, statistics, quick actions
 3. Click "Nowe ogłoszenie" → `/dashboard/new` page with ad creation form
-4. **Image Upload** - Up to plan limit images (FREE: 3, STARTER: 5, RESELER: 8, BUSINESS: 12)
+4. **Image Upload** - Up to plan limit images (FREE: 3, STARTER: 5, RESELER: 8)
 5. **Form Input** - Platform, tone, condition, price, delivery, notes
 6. **AI Processing** - OpenAI generates ad with image analysis, credit consumed
 7. **Review Results** - User sees generated title, description, price suggestions
 8. **Save to Database** - Click "Zapisz" button to save ad with DRAFT status, images uploaded to Supabase Storage
 9. **Manage Ads** - `/dashboard/ads` page with filtering, sorting, search, pagination
 
-**Credits System (4 Tiers):**
+**Credits System (3 Tiers):**
 - **FREE**: 5 credits/month, 3 images max
 - **STARTER** (19.99 zł/mo): 30 credits/month, 5 images max
 - **RESELER** (49.99 zł/mo): 80 credits/month, 8 images max
-- **BUSINESS** (99.99 zł/mo): 200 credits/month, 12 images max
 - **Boost credits**: One-time purchases (10/30/60 credits), don't expire monthly
 - Credits consumed on generation (before saving) - prevents abuse
 - Subscription credits used first, then boost credits
@@ -241,7 +239,7 @@ The system uses a modular prompt architecture with:
 - `app/dashboard/ads/[id]/page.tsx` - Ad details page
 - `app/dashboard/stats/page.tsx` - Stats page (server component); auth guard at top, title/subtitle visible immediately, `<Suspense fallback={<StatsSkeleton />}><StatsServer /></Suspense>` for streaming data
 - `app/dashboard/layout.tsx` - Dashboard layout with sidebar (passes boostCredits, creditsResetAt)
-- `app/pricing/page.tsx` - Public pricing page with 4 tiers, boost packs, FAQ (unauthenticated: all CTAs → sign in, no boost section; authenticated: Stripe checkout)
+- `app/pricing/page.tsx` - Public pricing page with 3 tiers (FREE/STARTER/RESELER), boost packs, FAQ (unauthenticated: all CTAs → sign in, no boost section; authenticated: Stripe checkout)
 
 ### Important Patterns
 
@@ -343,7 +341,7 @@ The system uses a modular prompt architecture with:
 
 **Stripe Payments:**
 - `lib/stripe.ts` - Stripe client singleton with plan/boost price ID mappings
-- Subscriptions: STARTER/RESELER/BUSINESS via Stripe Checkout (card + BLIK)
+- Subscriptions: STARTER/RESELER via Stripe Checkout (card + BLIK)
 - Boost credits: One-time purchases (10/30/60 credits) via Stripe Checkout
 - Webhook handler processes: `checkout.session.completed` (upgrade/boost), `invoice.paid` (monthly renewal), `customer.subscription.deleted` (downgrade to FREE)
 - Customer Portal: Paid users can manage subscription, payment methods, invoices

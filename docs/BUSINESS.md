@@ -139,8 +139,6 @@ Free (0 zł, 5 gen/mies.)
 Starter (19,99 zł)
     ↓ 15-20% upgrade
 Reseler (49,99 zł)
-    ↓ 5-10% upgrade
-Business (99,99 zł)
 ```
 
 ---
@@ -149,16 +147,16 @@ Business (99,99 zł)
 
 ### Tiery subskrypcji
 
-| | **Free** | **Starter** | **Reseler** | **Business** |
-|---|---|---|---|---|
-| **Cena** | 0 zł/mies. | 19,99 zł/mies. | 49,99 zł/mies. | 99,99 zł/mies. |
-| **Generacje/mies.** | 5 | 30 | 80 | 200 |
-| **Max zdjęć/gen.** | 2 | 5 | 8 | 12 |
-| **Szablony opisów** | — | 3 | 10 | Bez limitu |
-| **Eksport CSV** | — | ✓ | ✓ | ✓ |
-| **Priorytet generacji** | — | — | ✓ | ✓ |
-| **Wsparcie** | — | Email | Email | Priorytetowe |
-| **Zapamiętywanie preferencji** | — | ✓ | ✓ | ✓ |
+| | **Free** | **Starter** | **Reseler** |
+|---|---|---|---|
+| **Cena** | 0 zł/mies. | 19,99 zł/mies. | 49,99 zł/mies. |
+| **Generacje/mies.** | 5 | 30 | 80 |
+| **Max zdjęć/gen.** | 3 | 5 | 8 |
+| **Szablony opisów** | — | 3 | 10 |
+| **Eksport CSV** | — | ✓ | ✓ |
+| **Priorytet generacji** | — | — | ✓ |
+| **Wsparcie** | — | Email | Email |
+| **Zapamiętywanie preferencji** | — | ✓ | ✓ |
 
 ### Dostawki kredytów (jednorazowe)
 
@@ -196,12 +194,6 @@ Użytkownik może w dowolnym momencie dokupić pakiet kredytów. Dostawki **nie 
 - Priorytet generacji = szybsza obsługa w godzinach szczytu
 - Szablony (10) to kluczowy feature oszczędzający czas reselerom
 
-**Business (99,99 zł, 200 gen, 12 zdjęć):**
-- Dla firm: ~6-7 ogłoszeń dziennie
-- 12 zdjęć = pełna galeria produktowa
-- Nieograniczone szablony dla powtarzalnych kategorii produktów
-- Priorytetowe wsparcie
-
 ---
 
 ## 5. Kalkulacja finansowa
@@ -233,49 +225,46 @@ Użytkownik może w dowolnym momencie dokupić pakiet kredytów. Dostawki **nie 
 | Free | 2 000 | 0 zł |
 | Starter (19,99 zł) | 60 | 1 199 zł |
 | Reseler (49,99 zł) | 40 | 2 000 zł |
-| Business (99,99 zł) | 10 | 1 000 zł |
 | Dostawki | ~15 zakupów | 375 zł |
-| **Razem przychód** | | **4 574 zł** |
+| **Razem przychód** | | **3 574 zł** |
 | Koszty stałe | | -195 zł |
 | OpenAI API (~2 500 gen.) | | -150 zł |
-| Stripe prowizje (~1.5%) | | -70 zł |
-| **Netto** | | **~4 160 zł** |
+| Stripe prowizje (~1.5%) | | -55 zł |
+| **Netto** | | **~3 174 zł** |
 
-*Wymaga ~110 płacących użytkowników i ~2 000 zarejestrowanych (konwersja ~5.5%).*
+*Wymaga ~100 płacących użytkowników i ~2 000 zarejestrowanych (konwersja ~5%).*
 
-#### Scenariusz docelowy: 5 500 zł netto/mies.
+#### Scenariusz docelowy: 5 000 zł netto/mies.
 
 | Tier | Użytkownicy | Przychód |
 |---|---|---|
 | Free | 3 500 | 0 zł |
 | Starter (19,99 zł) | 80 | 1 599 zł |
-| Reseler (49,99 zł) | 50 | 2 500 zł |
-| Business (99,99 zł) | 15 | 1 500 zł |
+| Reseler (49,99 zł) | 60 | 2 999 zł |
 | Dostawki | ~25 zakupów | 625 zł |
-| **Razem przychód** | | **6 224 zł** |
+| **Razem przychód** | | **5 223 zł** |
 | Koszty stałe | | -195 zł |
 | OpenAI API (~4 000 gen.) | | -240 zł |
-| Stripe prowizje (~1.5%) | | -95 zł |
-| **Netto** | | **~5 694 zł** |
+| Stripe prowizje (~1.5%) | | -80 zł |
+| **Netto** | | **~4 708 zł** |
 
-*Wymaga ~145 płacących użytkowników i ~3 500 zarejestrowanych (konwersja ~4.1%).*
+*Wymaga ~140 płacących użytkowników i ~3 500 zarejestrowanych (konwersja ~4%).*
 
 #### Scenariusz optymistyczny: 8 000 zł netto/mies.
 
 | Tier | Użytkownicy | Przychód |
 |---|---|---|
 | Free | 6 000 | 0 zł |
-| Starter (19,99 zł) | 120 | 2 399 zł |
-| Reseler (49,99 zł) | 80 | 3 999 zł |
-| Business (99,99 zł) | 25 | 2 500 zł |
-| Dostawki | ~40 zakupów | 1 000 zł |
-| **Razem przychód** | | **9 898 zł** |
+| Starter (19,99 zł) | 150 | 2 999 zł |
+| Reseler (49,99 zł) | 100 | 4 999 zł |
+| Dostawki | ~50 zakupów | 1 250 zł |
+| **Razem przychód** | | **9 248 zł** |
 | Koszty stałe | | -195 zł |
 | OpenAI API (~8 000 gen.) | | -480 zł |
-| Stripe prowizje (~1.5%) | | -150 zł |
-| **Netto** | | **~9 073 zł** |
+| Stripe prowizje (~1.5%) | | -140 zł |
+| **Netto** | | **~8 433 zł** |
 
-*Wymaga ~225 płacących użytkowników i ~6 000 zarejestrowanych.*
+*Wymaga ~250 płacących użytkowników i ~6 000 zarejestrowanych.*
 
 ### Break-even
 
@@ -333,7 +322,6 @@ Przy modelu **GPT-4.1 mini**:
 | Free | 1-2 | ~0,03 zł | 5 | ~0,15 zł |
 | Starter | 2-4 | ~0,06 zł | 30 | ~1,80 zł |
 | Reseler | 4-6 | ~0,10 zł | 80 | ~8,00 zł |
-| Business | 6-10 | ~0,16 zł | 200 | ~32,00 zł |
 
 **Marże per tier:**
 
@@ -342,9 +330,8 @@ Przy modelu **GPT-4.1 mini**:
 | Free | 0 zł | 0,15 zł | -0,15 zł (akwizycja) |
 | Starter | 19,99 zł | 1,80 zł | 18,19 zł (91%) |
 | Reseler | 49,99 zł | 8,00 zł | 41,99 zł (84%) |
-| Business | 99,99 zł | 32,00 zł | 67,99 zł (68%) |
 
-*Marże są bardzo zdrowe na każdym tierze. Nawet przy pełnym wykorzystaniu limitów, najniższa marża to 68% (Business).*
+*Marże są bardzo zdrowe na każdym tierze.*
 
 ---
 
@@ -484,7 +471,7 @@ Niezarejestrowani użytkownicy mogą generować ogłoszenia (soft-wall). Potrzeb
 - PREMIUM: 9999 kredytów (symulacja unlimited)
 
 **Docelowy stan** (po wdrożeniu płatności):
-- Tiery subskrypcji: Free (5) / Starter (30) / Reseler (80) / Business (200)
+- Tiery subskrypcji: Free (5) / Starter (30) / Reseler (80)
 - Dostawki: jednorazowe pakiety 10/30/60 kredytów
 - Logika zużycia: najpierw subskrypcja → potem dostawkowe
 - Reset subskrypcji: co miesiąc (okres rozliczeniowy)
@@ -507,7 +494,7 @@ Niezarejestrowani użytkownicy mogą generować ogłoszenia (soft-wall). Potrzeb
 - Dostępne placeholdery: `[nazwa]`, `[cena]`, `[stan]`, `[marka]`, `[kolor]`, `[rozmiar]`, `[materiał]` itp.
 - AI przy generacji: wypełnia pola na podstawie zdjęć i danych z formularza
 - Zarządzanie: CRUD w dashboardzie (`/dashboard/templates`)
-- Limity per tier: Starter 3, Reseler 10, Business bez limitu, Free brak
+- Limity per tier: Starter 3, Reseler 10, Free brak
 
 **Przykład szablonu:**
 ```
@@ -599,7 +586,7 @@ Cena: [cena] zł — do negocjacji.
 - Logo aplikacji (góra)
 - Nawigacja: Dashboard, Ogłoszenia, Szablony
 - Karta użytkownika: avatar, imię, email
-- Badge planu (FREE / STARTER / RESELER / BUSINESS)
+- Badge planu (FREE / STARTER / RESELER)
 - Licznik kredytów (liczba lub ∞)
 - Przycisk "Wyloguj się" (dół)
 - Mobile: hamburger menu → overlay sidebar
@@ -688,7 +675,7 @@ Cena: [cena] zł — do negocjacji.
 
 **Elementy:**
 - Nagłówek "Cennik"
-- 4 kolumny z tierami (Free / Starter / Reseler / Business)
+- 4 kolumny z tierami (Free / Starter / Reseler)
 - Wyróżniony tier "Reseler" (popularny)
 - Tabela porównania feature'ów
 - Sekcja dostawek kredytów
