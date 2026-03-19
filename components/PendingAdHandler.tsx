@@ -22,13 +22,14 @@ export function PendingAdHandler() {
         const upgrade = searchParams.get("upgrade");
         if (boost === "success" || upgrade === "success") {
             sessionRefreshed.current = true;
-            // Wait for Stripe webhook to process before refreshing session
-            setTimeout(() => {
-                updateSession().then(() => {
-                    router.replace("/dashboard");
-                    router.refresh();
-                });
-            }, 3000);
+            // Stripe webhook usually processes in 1-3 seconds.
+            // Call updateSession at 1.5s, 3s, 6s to catch it regardless of timing.
+            // Sidebar reads from useSession() and will auto-update on each refresh.
+            [1500, 3000, 6000].forEach(delay => {
+                setTimeout(() => updateSession(), delay);
+            });
+            // Clean up URL after first attempt
+            setTimeout(() => router.replace("/dashboard"), 1500);
         }
     }, [searchParams, updateSession, router]);
 

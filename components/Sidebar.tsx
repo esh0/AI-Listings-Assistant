@@ -17,6 +17,7 @@ import {
     CreditCard,
 } from "lucide-react";
 import { useState, useCallback, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
 
 interface SidebarProps {
@@ -58,16 +59,17 @@ export function Sidebar({ user, collapsed = false }: SidebarProps) {
     const pathname = usePathname();
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const [isPortalLoading, setIsPortalLoading] = useState(false);
+    const { data: session } = useSession();
 
     useEffect(() => {
         document.body.style.overflow = isMobileOpen ? "hidden" : "";
         return () => { document.body.style.overflow = ""; };
     }, [isMobileOpen]);
 
-    const plan = user.plan ?? "FREE";
+    const plan = (session?.user?.plan ?? user.plan ?? "FREE") as "FREE" | "STARTER" | "RESELER";
     const isPaid = plan !== "FREE";
-    const credits = user.creditsAvailable ?? 0;
-    const boost = user.boostCredits ?? 0;
+    const credits = session?.user?.creditsAvailable ?? user.creditsAvailable ?? 0;
+    const boost = session?.user?.boostCredits ?? user.boostCredits ?? 0;
     const planLimit = PLAN_CREDITS[plan] ?? 5;
     const creditPct = Math.min(100, Math.round((credits / planLimit) * 100));
 
