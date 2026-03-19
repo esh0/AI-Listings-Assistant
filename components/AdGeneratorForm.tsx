@@ -176,7 +176,7 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
         if (result && result.isValid && !isLoading && status === "authenticated" && !hasRefreshedSession.current) {
             hasRefreshedSession.current = true;
             router.refresh();
-            updateSession();
+            updateSession({});
         }
         if (!result) {
             hasRefreshedSession.current = false;
