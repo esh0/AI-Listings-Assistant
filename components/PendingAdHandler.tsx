@@ -22,10 +22,13 @@ export function PendingAdHandler() {
         const upgrade = searchParams.get("upgrade");
         if (boost === "success" || upgrade === "success") {
             sessionRefreshed.current = true;
-            updateSession().then(() => {
-                router.replace("/dashboard");
-                router.refresh();
-            });
+            // Wait for Stripe webhook to process before refreshing session
+            setTimeout(() => {
+                updateSession().then(() => {
+                    router.replace("/dashboard");
+                    router.refresh();
+                });
+            }, 3000);
         }
     }, [searchParams, updateSession, router]);
 
