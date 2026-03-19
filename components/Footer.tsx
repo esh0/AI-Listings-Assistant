@@ -24,6 +24,12 @@ export function Footer() {
                     <Link href={pricingHref} className="hover:text-foreground transition-colors">
                         Cennik
                     </Link>
+                    <Link href="/regulamin" className="hover:text-foreground transition-colors">
+                        Regulamin
+                    </Link>
+                    <Link href="/polityka-prywatnosci" className="hover:text-foreground transition-colors">
+                        Polityka prywatności
+                    </Link>
                 </nav>
                 <p>&copy; 2026 Marketplace AI</p>
             </div>
