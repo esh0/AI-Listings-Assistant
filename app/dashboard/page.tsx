@@ -24,8 +24,10 @@ export default async function DashboardPage() {
     return (
         <>
         <div className="space-y-6">
-            {/* Pending Ad Handler - saves ad from IndexedDB if exists */}
-            <PendingAdHandler />
+            {/* Pending Ad Handler - saves ad from IndexedDB, refreshes session after Stripe redirect */}
+            <Suspense fallback={null}>
+                <PendingAdHandler />
+            </Suspense>
 
             {/* Header */}
                 <h1 className="text-xl sm:text-2xl font-bold">

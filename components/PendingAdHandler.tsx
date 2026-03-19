@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { getPendingAd, clearPendingAd } from "@/lib/storage";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -9,8 +9,25 @@ import { CheckCircle, XCircle } from "lucide-react";
 
 export function PendingAdHandler() {
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const { update: updateSession } = useSession();
+    const sessionRefreshed = useRef(false);
     const [message, setMessage] = useState<string | null>(null);
     const [isError, setIsError] = useState(false);
+
+    // Refresh session after Stripe boost/subscription purchase
+    useEffect(() => {
+        if (sessionRefreshed.current) return;
+        const boost = searchParams.get("boost");
+        const upgrade = searchParams.get("upgrade");
+        if (boost === "success" || upgrade === "success") {
+            sessionRefreshed.current = true;
+            updateSession().then(() => {
+                router.replace("/dashboard");
+                router.refresh();
+            });
+        }
+    }, [searchParams, updateSession, router]);
 
     useEffect(() => {
         handlePendingAd();
