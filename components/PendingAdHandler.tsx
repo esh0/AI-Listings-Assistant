@@ -27,13 +27,6 @@ export function PendingAdHandler() {
         sessionRefreshed.current = true;
         router.replace("/dashboard");
 
-        console.log("[PendingAdHandler] Stripe redirect detected. Session at start:", {
-            boostCredits: session?.user?.boostCredits,
-            creditsAvailable: session?.user?.creditsAvailable,
-            plan: session?.user?.plan,
-            sessionStatus: session ? "loaded" : "null",
-        });
-
         const prevBoost = session?.user?.boostCredits ?? 0;
         const prevCredits = session?.user?.creditsAvailable ?? 0;
         const prevPlan = session?.user?.plan ?? "FREE";
@@ -47,14 +40,12 @@ export function PendingAdHandler() {
                 const res = await fetch("/api/user/credits");
                 if (res.ok) {
                     const data = await res.json();
-                    console.log(`[PendingAdHandler] Poll #${attempts} DB:`, data, "prev:", { prevBoost, prevCredits, prevPlan });
-                    const changed =
+                const changed =
                         data.boostCredits !== prevBoost ||
                         data.creditsAvailable !== prevCredits ||
                         data.plan !== prevPlan;
 
                     if (changed) {
-                        console.log("[PendingAdHandler] DB changed, forcing JWT update then reload...");
                         // Bypass SessionProvider.update() (blocked by loading=true) by
                         // calling the NextAuth session endpoint directly with CSRF token.
                         // This triggers jwt({ trigger: "update" }) and writes a new JWT cookie.

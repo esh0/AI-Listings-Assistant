@@ -9,14 +9,8 @@ export default function PolitykaPrywatnosci() {
     return (
         <LegalLayout
             title="Polityka Prywatności"
-            subtitle="Obowiązuje od: [DATA_PUBLIKACJI] · Wersja draftu: 2026-03-19"
+            subtitle="Obowiązuje od: [DATA_PUBLIKACJI]"
         >
-            <blockquote>
-                <strong>UWAGA:</strong> Niniejszy dokument jest draftem wymagającym weryfikacji przez prawnika przed publikacją.
-            </blockquote>
-
-            <hr />
-
             <h2>1. Administrator danych osobowych</h2>
             <p>Administratorem Twoich danych osobowych jest [IMIĘ I NAZWISKO], prowadzący jednoosobową działalność gospodarczą pod firmą [NAZWA FIRMY], z siedzibą w [ADRES], NIP: [NIP], REGON: [REGON] (dalej: „Administrator").</p>
             <p>Kontakt z Administratorem: [EMAIL_KONTAKTOWY]</p>
@@ -35,6 +29,7 @@ export default function PolitykaPrywatnosci() {
             <p>Dodatkowo przechowujemy:</p>
             <ul>
                 <li><strong>Plan taryfowy i liczbę kredytów</strong> — obsługa subskrypcji</li>
+                <li><strong>Identyfikator klienta Stripe</strong> — powiązanie konta z płatnościami</li>
                 <li><strong>Wygenerowane ogłoszenia</strong> — tytuły, opisy, zdjęcia produktów, parametry generacji</li>
                 <li><strong>Szablony ogłoszeń</strong> — predefiniowane szablony przechowywane na koncie użytkownika (dostępne w planie RESELER)</li>
                 <li><strong>Historia aktywności</strong> — rejestr działań użytkownika (generowanie, zapisywanie, publikowanie, sprzedaż, archiwizacja, usuwanie ogłoszeń)</li>
@@ -44,7 +39,7 @@ export default function PolitykaPrywatnosci() {
             <p>Dla niezarejestrowanych użytkowników przechowujemy:</p>
             <ul>
                 <li><strong>Anonimowy identyfikator (UUID)</strong> — generowany losowo, przechowywany w przeglądarce (localStorage). Nie jest to dana osobowa — nie pozwala na identyfikację osoby.</li>
-                <li><strong>Zahaszowany adres IP</strong> — jednokierunkowy hash, służący do rate-limitingu. Nie przechowujemy surowych adresów IP.</li>
+                <li><strong>Zahaszowany adres IP (SHA-256)</strong> — jednokierunkowy hash algorytmem SHA-256, służący do rate-limitingu. Nie przechowujemy surowych adresów IP.</li>
             </ul>
 
             <h3>2.3. Dane płatnicze</h3>
@@ -53,7 +48,7 @@ export default function PolitykaPrywatnosci() {
             <h3>2.4. Zdjęcia produktów</h3>
             <p>Zdjęcia przesłane przez Użytkownika:</p>
             <ul>
-                <li>Są przesyłane do OpenAI API w celu analizy przez AI (chwilowo, nie są przechowywane przez OpenAI)</li>
+                <li>Są przesyłane do OpenAI API w celu analizy przez AI (chwilowo, nie są przechowywane przez OpenAI do trenowania modeli)</li>
                 <li>Po zapisaniu ogłoszenia: thumbnails (zmniejszone kopie) przechowywane w Supabase Storage</li>
                 <li>Użytkownik może je usunąć w dowolnym momencie (usunięcie ogłoszenia kasuje też zdjęcia)</li>
             </ul>
@@ -72,19 +67,20 @@ export default function PolitykaPrywatnosci() {
                 <tbody>
                     <tr><td>Świadczenie usługi (generowanie ogłoszeń)</td><td>Imię, email, zdjęcia produktów</td><td>Art. 6 ust. 1 lit. b — wykonanie umowy</td></tr>
                     <tr><td>Obsługa konta użytkownika</td><td>Imię, email, avatar</td><td>Art. 6 ust. 1 lit. b — wykonanie umowy</td></tr>
-                    <tr><td>Obsługa płatności i subskrypcji</td><td>Email (przekazywany do Stripe)</td><td>Art. 6 ust. 1 lit. b — wykonanie umowy</td></tr>
-                    <tr><td>Rate-limiting gości</td><td>UUID, hash IP</td><td>Art. 6 ust. 1 lit. f — prawnie uzasadniony interes</td></tr>
+                    <tr><td>Obsługa płatności i subskrypcji</td><td>Email, identyfikator klienta Stripe</td><td>Art. 6 ust. 1 lit. b — wykonanie umowy</td></tr>
+                    <tr><td>Rate-limiting gości</td><td>UUID, hash IP</td><td>Art. 6 ust. 1 lit. f — uzasadniony interes: ochrona przed nadużyciami</td></tr>
                     <tr><td>Rozpatrywanie reklamacji</td><td>Email, dane konta</td><td>Art. 6 ust. 1 lit. b — wykonanie umowy</td></tr>
                     <tr><td>Wystawianie faktur</td><td>Dane do faktury (jeśli podane)</td><td>Art. 6 ust. 1 lit. c — obowiązek prawny</td></tr>
                     <tr><td>Marketing bezpośredni (email)</td><td>Email</td><td>Art. 6 ust. 1 lit. a — zgoda (opcjonalna)</td></tr>
-                    <tr><td>Prowadzenie historii aktywności</td><td>Typ akcji, ID ogłoszenia, data</td><td>Art. 6 ust. 1 lit. b — wykonanie umowy</td></tr>
+                    <tr><td>Prowadzenie historii aktywności</td><td>Typ akcji, ID ogłoszenia, data</td><td>Art. 6 ust. 1 lit. f — uzasadniony interes: zapewnienie ciągłości usługi i audytowalności</td></tr>
                 </tbody>
             </table>
+            <p>Administrator informuje, że <strong>nie stosuje profilowania</strong> w rozumieniu art. 22 RODO, to jest zautomatyzowanego podejmowania decyzji wywołujących skutki prawne lub w podobny sposób istotnie wpływających na osobę fizyczną.</p>
 
             <hr />
 
             <h2>4. Komu udostępniamy dane?</h2>
-            <p>Twoje dane mogą być przekazywane następującym podmiotom (procesorom danych):</p>
+            <p>Twoje dane mogą być przekazywane następującym podmiotom przetwarzającym, z którymi Administrator zawarł umowy powierzenia przetwarzania danych osobowych:</p>
             <table>
                 <thead>
                     <tr>
@@ -123,6 +119,7 @@ export default function PolitykaPrywatnosci() {
                     <tr><td>Dane do faktur</td><td>5 lat (obowiązek podatkowy)</td></tr>
                     <tr><td>Logi rate-limitingu (hash IP)</td><td>30 dni</td></tr>
                     <tr><td>UUID gości</td><td>Do czyszczenia localStorage przez Użytkownika</td></tr>
+                    <tr><td>Tymczasowe ogłoszenie gościa (<code>pending_ad</code>)</td><td>IndexedDB w przeglądarce — do zalogowania lub ręcznego usunięcia</td></tr>
                 </tbody>
             </table>
             <p>Po usunięciu konta: dane osobowe usuwane w ciągu 30 dni. Dane wymagane prawnie (faktury) przechowywane przez wymagany okres.</p>
@@ -157,7 +154,7 @@ export default function PolitykaPrywatnosci() {
             </ul>
 
             <h3>6.6. Prawo do sprzeciwu (art. 21 RODO)</h3>
-            <p>Masz prawo sprzeciwić się przetwarzaniu danych opartemu na prawnie uzasadnionym interesie (art. 6.1.f).</p>
+            <p>Masz prawo sprzeciwić się przetwarzaniu danych opartemu na prawnie uzasadnionym interesie (art. 6 ust. 1 lit. f RODO), w tym przetwarzaniu na potrzeby rate-limitingu i historii aktywności.</p>
 
             <h3>6.7. Prawo do wycofania zgody</h3>
             <p>Jeśli przetwarzanie oparte jest na zgodzie (np. marketing), możesz ją wycofać w dowolnym momencie. Wycofanie zgody nie wpływa na zgodność z prawem przetwarzania przed wycofaniem.</p>
@@ -180,10 +177,9 @@ export default function PolitykaPrywatnosci() {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td><code>next-auth.session-token</code></td><td>Sesja logowania (JWT)</td><td>Do wylogowania</td></tr>
-                    <tr><td><code>next-auth.csrf-token</code></td><td>Ochrona CSRF</td><td>Sesja</td></tr>
-                    <tr><td><code>next-auth.callback-url</code></td><td>URL powrotny po logowaniu</td><td>Sesja</td></tr>
-                    <tr><td><code>theme</code></td><td>Preferencja ciemny/jasny motyw</td><td>Trwały</td></tr>
+                    <tr><td><code>__Secure-authjs.session-token</code></td><td>Sesja logowania (JWT, 7 dni)</td><td>7 dni</td></tr>
+                    <tr><td><code>__Host-authjs.csrf-token</code></td><td>Ochrona CSRF</td><td>Sesja</td></tr>
+                    <tr><td><code>__Secure-authjs.callback-url</code></td><td>URL powrotny po logowaniu</td><td>Sesja</td></tr>
                 </tbody>
             </table>
 
@@ -220,9 +216,9 @@ export default function PolitykaPrywatnosci() {
                 <li><strong>Szyfrowanie w transmisji:</strong> HTTPS (TLS 1.3) dla całej komunikacji</li>
                 <li><strong>Szyfrowanie w spoczynku:</strong> Baza danych Supabase z szyfrowaniem na poziomie dysku</li>
                 <li><strong>Uwierzytelnianie:</strong> Google OAuth 2.0 (nie przechowujemy haseł)</li>
-                <li><strong>Tokeny JWT:</strong> Bezstanowa sesja, podpisana kluczem AUTH_SECRET</li>
+                <li><strong>Tokeny JWT:</strong> Bezstanowa sesja, podpisana kluczem AUTH_SECRET, ważna 7 dni</li>
                 <li><strong>Row Level Security (RLS):</strong> Supabase Storage — użytkownik ma dostęp tylko do swoich plików</li>
-                <li><strong>Hashowanie IP:</strong> Przechowujemy jedynie jednokierunkowy hash, nie surowy adres IP</li>
+                <li><strong>Hashowanie IP:</strong> Przechowujemy jedynie jednokierunkowy hash SHA-256, nie surowy adres IP</li>
                 <li><strong>Minimalizacja danych:</strong> Zbieramy tylko niezbędne minimum</li>
             </ul>
 
