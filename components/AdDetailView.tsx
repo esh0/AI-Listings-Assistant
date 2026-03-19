@@ -43,7 +43,7 @@ export function AdDetailView({ ad }: AdDetailViewProps) {
     return (
         <div className="max-w-5xl mx-auto space-y-4">
             {/* Top bar: back + actions */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pl-12 lg:pl-0">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <Link href="/dashboard/ads">
                     <Button variant="ghost" size="sm">
                         <ArrowLeft className="h-4 w-4 mr-1" />

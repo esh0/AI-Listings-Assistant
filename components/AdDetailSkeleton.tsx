@@ -2,7 +2,7 @@ export function AdDetailSkeleton() {
     return (
         <div className="space-y-4" aria-busy="true" aria-label="Ładowanie ogłoszenia">
             {/* Top bar */}
-            <div className="flex items-center justify-between pl-12 lg:pl-0" aria-hidden="true">
+            <div className="flex items-center justify-between" aria-hidden="true">
                 <div className="h-8 w-36 rounded-lg animate-shimmer" />
                 <div className="flex gap-2">
                     <div className="h-8 w-20 rounded-lg animate-shimmer" />
