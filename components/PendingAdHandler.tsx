@@ -10,30 +10,59 @@ import { CheckCircle, XCircle } from "lucide-react";
 export function PendingAdHandler() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { update: updateSession } = useSession();
+    const { data: session, update: updateSession } = useSession();
     const sessionRefreshed = useRef(false);
     const [message, setMessage] = useState<string | null>(null);
     const [isError, setIsError] = useState(false);
 
-    // Refresh session after Stripe boost/subscription purchase
+    // Refresh session after Stripe boost/subscription purchase.
+    // Strategy: poll /api/user/credits until DB values differ from current session,
+    // then call updateSession({}) to sync JWT. This handles variable webhook delays.
     useEffect(() => {
         if (sessionRefreshed.current) return;
         const boost = searchParams.get("boost");
         const upgrade = searchParams.get("upgrade");
-        if (boost === "success" || upgrade === "success") {
-            sessionRefreshed.current = true;
-            // Stripe webhook usually processes in 1-3 seconds.
-            // Call updateSession at 1.5s, 3s, 6s to catch it regardless of timing.
-            // Sidebar reads from useSession() and will auto-update on each refresh.
-            // updateSession({}) sends POST (triggers jwt trigger:"update" → DB read)
-            // updateSession() without args sends GET (reads JWT cookie only, no DB)
-            [1500, 3000, 6000].forEach(delay => {
-                setTimeout(() => updateSession({}), delay);
-            });
-            // Clean up URL after first attempt
-            setTimeout(() => router.replace("/dashboard"), 1500);
-        }
-    }, [searchParams, updateSession, router]);
+        if (boost !== "success" && upgrade !== "success") return;
+
+        sessionRefreshed.current = true;
+        router.replace("/dashboard");
+
+        const prevBoost = session?.user?.boostCredits ?? 0;
+        const prevCredits = session?.user?.creditsAvailable ?? 0;
+        const prevPlan = session?.user?.plan ?? "FREE";
+
+        let attempts = 0;
+        const MAX_ATTEMPTS = 10; // 10 * 2s = 20s max wait
+
+        const poll = async () => {
+            attempts++;
+            try {
+                const res = await fetch("/api/user/credits");
+                if (res.ok) {
+                    const data = await res.json();
+                    const changed =
+                        data.boostCredits !== prevBoost ||
+                        data.creditsAvailable !== prevCredits ||
+                        data.plan !== prevPlan;
+
+                    if (changed) {
+                        // DB updated — sync JWT session
+                        await updateSession({});
+                        return;
+                    }
+                }
+            } catch {
+                // network error, try again
+            }
+
+            if (attempts < MAX_ATTEMPTS) {
+                setTimeout(poll, 2000);
+            }
+        };
+
+        // First attempt after 1s (webhook usually arrives in 1-3s)
+        setTimeout(poll, 1000);
+    }, [searchParams]); // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         handlePendingAd();
@@ -95,7 +124,7 @@ export function PendingAdHandler() {
                 throw new Error("Failed to save ad");
             }
 
-            const savedAd = await response.json();
+            await response.json();
 
             // Clear from IndexedDB after successful save
             await clearPendingAd();
