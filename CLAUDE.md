@@ -228,12 +228,18 @@ The system uses a modular prompt architecture with:
 - `components/AdResultMain.tsx` - Displays title/description with inline editing (platform-specific character limits, Check icon confirmation)
 - `components/SoftWallModal.tsx` - Two modes: "save" (prompt to sign in to save) and "limit" (guest limit exhausted, orange, no continue button)
 
+**Stats Components:**
+- `components/StatsServer.tsx` - Async server component; queries DB directly (groupBy status, groupBy platform+status, findMany recent ads) and passes data to StatsContent
+- `components/StatsContent.tsx` - `"use client"` component; renders summary cards, weekly bar chart, and platform breakdown from `StatsData` props (no fetch/useEffect)
+- `components/StatsSkeleton.tsx` - Shimmer skeleton for stats page Suspense fallback (4 summary cards, 7-bar chart, 3 platform rows)
+
 **Pages:**
 - `app/page.tsx` - Home page (redirects authenticated users to dashboard, shows compact hero + form for guests, pricing link in footer)
 - `app/dashboard/page.tsx` - Dashboard overview; includes `PendingAdHandler` component that checks IndexedDB on mount and auto-saves any ad pending from a soft-wall redirect (calls `/api/ads` with `fromSoftwall: true`)
 - `app/dashboard/new/page.tsx` - Ad creation page (client component, includes header in form)
 - `app/dashboard/ads/page.tsx` - Ad management page (server component with filtering/sorting/search/pagination)
 - `app/dashboard/ads/[id]/page.tsx` - Ad details page
+- `app/dashboard/stats/page.tsx` - Stats page (server component); auth guard at top, title/subtitle visible immediately, `<Suspense fallback={<StatsSkeleton />}><StatsServer /></Suspense>` for streaming data
 - `app/dashboard/layout.tsx` - Dashboard layout with sidebar (passes boostCredits, creditsResetAt)
 - `app/pricing/page.tsx` - Public pricing page with 4 tiers, boost packs, FAQ (unauthenticated: all CTAs → sign in, no boost section; authenticated: Stripe checkout)
 
@@ -620,7 +626,7 @@ vercel --prod
 **Database Migrations:**
 - Using `prisma db push` (not `prisma migrate`) due to broken migration history
 - Always run `npx prisma db push` after schema changes
-- `prisma db push` uses `DIRECT_URL` (port 5432), runtime queries use `DATABASE_URL` (port 6543 via PgBouncer)
+- **IMPORTANT:** Port 5432 (direct connection) is blocked on the development network. Use the pooler URL for **both** variables: `DIRECT_URL=<pooler> DATABASE_URL=<pooler> npx prisma db push`
 
 **Database Connection Pooling:**
 - Supabase PgBouncer runs in Session mode with a small pool limit
