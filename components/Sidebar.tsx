@@ -73,6 +73,8 @@ export function Sidebar({ user, collapsed = false }: SidebarProps) {
     const planLimit = PLAN_CREDITS[plan] ?? 5;
     const creditPct = Math.min(100, Math.round((credits / planLimit) * 100));
 
+    console.log("[Sidebar] render — session:", session?.user?.creditsAvailable, session?.user?.boostCredits, "props:", user.creditsAvailable, user.boostCredits, "displaying:", credits, boost);
+
     const getResetLabel = () => {
         if (!user.creditsResetAt) return null;
         const nextReset = new Date(user.creditsResetAt);
