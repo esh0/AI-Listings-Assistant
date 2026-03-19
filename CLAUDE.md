@@ -4,14 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-AI Generator Ogłoszeń Sprzedażowych (Marketplace Assistant) - A Next.js application that uses OpenAI GPT-4.1-mini to automatically generate professional sales listings for Polish marketplace platforms (OLX, Allegro Lokalnie, FB Marketplace, Vinted). The app features user authentication, credit-based usage system with 4 subscription tiers, Stripe payments, guest access with rate limiting, ad management dashboard, and AI-powered content generation with image analysis.
+AI Generator Ogłoszeń Sprzedażowych (Marketplace Assistant) - A Next.js application that uses OpenAI GPT-4.1-mini to automatically generate professional sales listings for Polish marketplace platforms (OLX, Allegro Lokalnie, FB Marketplace, Vinted). The app features user authentication, credit-based usage system with 3 subscription tiers, Stripe payments, guest access with rate limiting, ad management dashboard, activity history, templates, and AI-powered content generation with image analysis.
 
 **Key Features:**
 - 🤖 AI-powered ad generation with image analysis (GPT-4.1-mini)
 - 🔐 Google OAuth authentication via NextAuth
-- 💳 4-tier credit system (FREE/STARTER/RESELER/BUSINESS) with Stripe payments
+- 💳 3-tier credit system (FREE/STARTER/RESELER) with Stripe payments
 - 🎁 Guest access with UUID + IP rate limiting (3 generations)
-- 📊 Dashboard with ad management (CRUD + bulk selection with CSV export)
+- 📊 Dashboard with ad management (CRUD + bulk selection/archival with CSV export)
+- 📋 Templates system (RESELER plan) for reusable ad presets
+- 📜 Activity history log (all plans)
 - 🔍 Advanced filtering, sorting, and search
 - 📄 Pagination (20 ads per page)
 - 🎨 Dark/light mode support
@@ -182,41 +184,56 @@ The system uses a modular prompt architecture with:
 ### Key Files and Responsibilities
 
 **Authentication & Database:**
-- `auth.ts` - NextAuth v5 configuration with Google OAuth provider, JWT strategy
-- `prisma/schema.prisma` - Database schema (User, Account, Session, Ad, GuestUsage models)
+- `auth.ts` - NextAuth v5 configuration with Google OAuth provider, JWT strategy, `maxAge: 7 days`
+- `prisma/schema.prisma` - Database schema (User, Account, Session, Ad, GuestUsage, Template, ActivityLog, ProcessedWebhookEvent models)
 - `lib/prisma.ts` - Prisma client singleton with PgBouncer support (appends `pgbouncer=true&connection_limit=5`)
-- `lib/credits.ts` - Credit management (hasCredits, consumeCredit, resetCredits, changePlan, addBoostCredits)
-- `lib/image-upload.ts` - Supabase Storage integration with sharp image resizing
+- `lib/credits.ts` - Credit management (hasCredits, consumeCredit, resetCredits, changePlan, addBoostCredits); `consumeCredit` uses atomic `updateMany WHERE gt:0` to prevent TOCTOU race conditions
+- `lib/image-upload.ts` - Supabase Storage integration with sharp image resizing; server-side 10MB size validation before processing
 - `lib/guest-tracking.ts` - Guest rate limiting (UUID + IP hash, checkGuestLimit, consumeGuestCredit)
 - `lib/guest-id.ts` - Client-side guest UUID generation via localStorage
+- `lib/supabase.ts` - Supabase client for Storage; uses `SUPABASE_SERVICE_ROLE_KEY` (server-side, bypasses RLS) with fallback to `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `lib/stripe.ts` - Stripe client, plan/boost price mappings
 
 **API Layer:**
-- `app/api/generate-ad/route.ts` - POST endpoint for ad generation (validates request, enforces per-tier image limits, consumes credit, calls OpenAI - **does not save to DB**; guest path validates guestId + IP limits)
-- `app/api/ads/route.ts` - POST endpoint for saving ads (uploads images to Supabase, saves to DB); accepts optional `fromSoftwall: true` flag which triggers credit consumption at save time — used by `PendingAdHandler` when a guest-generated ad is saved after sign-in
-- `app/api/ads/[id]/route.ts` - GET/PATCH/DELETE endpoints for ad management
-- `app/api/ads/export/route.ts` - CSV export endpoint; accepts optional `?ids=` comma-separated param to export only selected ads (takes precedence over `?status=` filter)
+- `app/api/generate-ad/route.ts` - POST endpoint for ad generation (validates request, enforces per-tier image limits, consumes credit, calls OpenAI - **does not save to DB**; guest path validates guestId + IP limits; logs `AD_GENERATED` activity)
+- `app/api/ads/route.ts` - POST endpoint for saving ads (Zod `createAdSchema` validation, uploads images to Supabase, saves to DB, logs `AD_SAVED` activity); accepts optional `fromSoftwall: true` flag which triggers credit consumption at save time — used by `PendingAdHandler` when a guest-generated ad is saved after sign-in
+- `app/api/ads/[id]/route.ts` - GET/PATCH/DELETE endpoints for ad management (Zod `updateAdSchema` validation on PATCH; logs `AD_PUBLISHED`/`AD_SOLD`/`AD_ARCHIVED`/`AD_DELETED` activities)
+- `app/api/ads/export/route.ts` - CSV export endpoint; accepts optional `?ids=` comma-separated param; `escapeCSV()` prevents formula injection (prefixes `=+-@` with `'`)
 - `app/api/auth/[...nextauth]/route.ts` - NextAuth API routes
 - `app/api/stripe/checkout/route.ts` - Creates Stripe Checkout session for subscriptions (card + BLIK)
 - `app/api/stripe/boost/route.ts` - Creates Stripe Checkout session for one-time credit boosts
-- `app/api/stripe/webhook/route.ts` - Stripe webhook handler (checkout.session.completed, invoice.paid, customer.subscription.deleted)
+- `app/api/stripe/webhook/route.ts` - Stripe webhook handler (checkout.session.completed, invoice.paid, customer.subscription.deleted); idempotent — deduplicates via `ProcessedWebhookEvent` table
 - `app/api/stripe/portal/route.ts` - Stripe Customer Portal session for subscription management
+- `app/api/templates/route.ts` - GET/POST endpoints for template management (RESELER plan only)
+- `app/api/templates/[id]/route.ts` - DELETE endpoint for individual templates
 
 **Core Logic:**
 - `lib/openai.ts` - OpenAI client, modular prompt engineering, platform rules loading, tone injection
 - `lib/types.ts` - TypeScript interfaces for all data structures
-- `lib/schemas.ts` - Zod validation schemas for forms and API
+- `lib/schemas.ts` - Zod validation schemas for forms and API; includes `createAdSchema` (POST /api/ads) and `updateAdSchema` (PATCH /api/ads/[id])
 - `lib/utils.ts` - Utility functions (cn, file conversions)
+- `lib/activity.ts` - Activity logging (logActivity) for ad lifecycle events
 
 **Platform Rules:**
 - `lib/rules/*.md` - Platform-specific listing guidelines with tone variations
 
 **Dashboard Components:**
 - `components/Sidebar.tsx` - Navigation sidebar with user info, credits display (available/limit + boost + reset date), plan badge, pricing link, Stripe portal link for paid plans
-- `components/AdsList.tsx` - Ad list with filtering, sorting, search, pagination, and bulk selection with CSV export of selected ads
-- `components/AdCard.tsx` - Compact ad card with platform icons, status badges, action buttons (Publish/Sold); accepts `isSelected`/`onToggleSelect` props to render a selection checkbox for bulk operations; Edit button is hidden for SOLD ads
+- `components/AdsList.tsx` - Ad list with filtering, sorting, search, pagination, bulk selection with CSV export, and bulk archival of selected ads
+- `components/AdCard.tsx` - Compact ad card with platform icons, status badges, action buttons (Publish/Sold/Archive); accepts `isSelected`/`onToggleSelect` props to render a selection checkbox for bulk operations; Edit button is hidden for SOLD ads
 - `components/StatsCards.tsx` - Dashboard statistics cards with horizontal icon+value layout (`flex items-center gap-4`), staggered entrance animation
 - `components/AdGeneratorForm.tsx` - Reusable ad creation form with optional header (`showHeader` prop, default `true`) and save flow
+
+**Template Components:**
+- `components/TemplatesListServer.tsx` - Async server component; queries DB for user's templates, passes to TemplatesList
+- `components/TemplatesList.tsx` - `"use client"` component; renders template cards with CRUD operations
+- `components/TemplateFormModal.tsx` - Modal form for creating/editing templates (name, platform, tone, condition, delivery, body template, notes)
+- `components/TemplatesListSkeleton.tsx` - Shimmer skeleton for templates page Suspense fallback
+- `components/TemplatesSoftwall.tsx` - Paywall component shown to non-RESELER users accessing templates page
+
+**History Components:**
+- `components/HistoryList.tsx` - Server component; queries ActivityLog for last 50 events, renders timeline with action icons and timestamps
+- `components/HistorySkeleton.tsx` - Shimmer skeleton for history page Suspense fallback
 
 **Ad Creation Components:**
 - `components/UploadDropzone.tsx` - Drag-and-drop image upload with dynamic max images per plan; shows skeleton placeholders during image compression
@@ -237,7 +254,10 @@ The system uses a modular prompt architecture with:
 - `app/dashboard/new/page.tsx` - Ad creation page (client component, includes header in form)
 - `app/dashboard/ads/page.tsx` - Ad management page (server component with filtering/sorting/search/pagination)
 - `app/dashboard/ads/[id]/page.tsx` - Ad details page
+- `app/dashboard/templates/page.tsx` - Templates page (RESELER-only); auth guard + plan check, `<Suspense fallback={<TemplatesListSkeleton />}><TemplatesListServer /></Suspense>`, non-RESELER users see TemplatesSoftwall
+- `app/dashboard/history/page.tsx` - Activity history page; auth guard, `<Suspense fallback={<HistorySkeleton />}><HistoryList /></Suspense>`
 - `app/dashboard/stats/page.tsx` - Stats page (server component); auth guard at top, title/subtitle visible immediately, `<Suspense fallback={<StatsSkeleton />}><StatsServer /></Suspense>` for streaming data
+- `app/dashboard/pricing/page.tsx` - Dashboard pricing page; mirror of public pricing page, accessible to all authenticated users
 - `app/dashboard/layout.tsx` - Dashboard layout with sidebar (passes boostCredits, creditsResetAt)
 - `app/pricing/page.tsx` - Public pricing page with 3 tiers (FREE/STARTER/RESELER), boost packs, FAQ (unauthenticated: all CTAs → sign in, no boost section; authenticated: Stripe checkout)
 
@@ -275,10 +295,10 @@ The system uses a modular prompt architecture with:
 **Dashboard Layout:**
 - Fixed sidebar on desktop (lg:w-72), mobile overlay with hamburger menu
 - Main content area with lg:pl-72 padding to account for sidebar
-- Sidebar shows: navigation (Pulpit, Ogłoszenia, Szablony, Cennik), credits display (available/limit + boost + reset date + pricing link + portal link for paid plans), user info with plan badge
+- Sidebar shows: navigation (Przegląd, Moje ogłoszenia, Szablony, Historia, Statystyki, Cennik), credits display (available/limit + boost + reset date + pricing link + portal link for paid plans), user info with plan badge
 
 **Ad List Filtering & Search:**
-- Server-side filtering by status (DRAFT/PUBLISHED/SOLD), platform, search query
+- Server-side filtering by status (DRAFT/PUBLISHED/SOLD/ARCHIVED), platform, search query
 - Client-side UI — responsive filter bar:
   - **Desktop (sm+)**: inline bar with Status dropdown, Platform dropdown, ad count, Sort dropdown; "Zaznacz wszystkie" aligned below ad count
   - **Mobile (<sm)**: single "Sortuj i filtruj" button (with active filter badge) + ad count; clicking opens animated left-side drawer identical to Sidebar (slide-in, backdrop, body scroll lock); FAB "Nowe ogłoszenie" hides behind drawer when open
@@ -305,8 +325,9 @@ The system uses a modular prompt architecture with:
 - Date moved to title row (top-right)
 - **Action Buttons**:
   - DRAFT → "Opublikuj" (green CheckCircle)
-  - PUBLISHED → "Sprzedane" (orange CircleDollarSign)
-  - All states → View (Eye), Edit, Delete (Trash2)
+  - PUBLISHED → "Sprzedane" (orange CircleDollarSign), "Wycofaj" (Archive)
+  - SOLD → "Wycofaj" (Archive)
+  - All states → View (Eye), Edit (hidden for SOLD), Delete (Trash2)
 
 **Image Storage:**
 - Images uploaded to Supabase Storage (`marketplace-ads` bucket)
@@ -346,7 +367,7 @@ The system uses a modular prompt architecture with:
 - Webhook handler processes: `checkout.session.completed` (upgrade/boost), `invoice.paid` (monthly renewal), `customer.subscription.deleted` (downgrade to FREE)
 - Customer Portal: Paid users can manage subscription, payment methods, invoices
 - User model stores `stripeCustomerId` and `stripeSubscriptionId`
-- Pricing page (`/pricing`): 4 tier cards, boost packs (authenticated only), FAQ
+- Pricing page (`/pricing`): 3 tier cards, boost packs (authenticated only), FAQ
 - Unauthenticated visitors: all CTAs redirect to sign in
 
 ## Code Style
@@ -620,6 +641,13 @@ vercel --prod
 2. URL: `https://your-domain.com/api/stripe/webhook`
 3. Events to listen for: `checkout.session.completed`, `invoice.paid`, `customer.subscription.deleted`
 4. Copy signing secret to `STRIPE_WEBHOOK_SECRET`
+
+**Security Notes:**
+- `SUPABASE_SERVICE_ROLE_KEY` must be set in production env vars (Vercel) — the anon key fallback is only for local dev
+- JWT tokens expire after 7 days (`maxAge` in `auth.ts`) — users must re-login after expiry
+- `consumeCredit()` is atomic (uses `updateMany WHERE gt:0`) — safe under concurrent requests
+- `ProcessedWebhookEvent` table deduplicates Stripe webhook retries — never double-credits
+- All user-controlled fields in CSV export are formula-injection-safe (`escapeCSV` prefixes `=+-@` with `'`)
 
 **Database Migrations:**
 - Using `prisma db push` (not `prisma migrate`) due to broken migration history
