@@ -123,7 +123,7 @@ export function ListingSidebar({
                             </span>
                         </div>
                     )}
-                    {!isGuest && publishedPrice && !soldPrice && (
+                    {!isGuest && publishedPrice && !soldPrice && (status === "PUBLISHED" || status === "SOLD" || status === "ARCHIVED") && (
                         <div className="flex justify-between">
                             <span className="text-muted-foreground">Opublikowane za</span>
                             <span className="font-medium">{publishedPrice} zł</span>

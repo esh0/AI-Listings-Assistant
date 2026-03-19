@@ -225,8 +225,13 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
         setSelectedBodyTemplate("");
     }, [images]);
 
-    const saveAd = useCallback(async (): Promise<boolean> => {
-        if (!result || !result.isValid || !editedTitle || !editedDescription) {
+    const saveAd = useCallback(async (
+        titleOverride?: string,
+        descriptionOverride?: string,
+    ): Promise<string | false> => {
+        const finalTitle = titleOverride ?? editedTitle;
+        const finalDescription = descriptionOverride ?? editedDescription;
+        if (!result || !result.isValid || !finalTitle || !finalDescription) {
             return false;
         }
 
@@ -238,8 +243,8 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     platform,
-                    title: editedTitle,
-                    description: editedDescription,
+                    title: finalTitle,
+                    description: finalDescription,
                     status: "DRAFT",
                     priceMin: result.price?.min,
                     priceMax: result.price?.max,
@@ -265,7 +270,8 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
                 throw new Error("Failed to save ad");
             }
 
-            return true;
+            const saved = await response.json();
+            return saved.id as string;
         } catch (error) {
             console.error("Failed to save ad:", error);
             toast.error("Nie udało się zapisać ogłoszenia. Spróbuj ponownie.");
@@ -276,15 +282,15 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
     }, [result, platform, selectedTone, condition, delivery, productName, notes, priceType, price, base64Images, editedTitle, editedDescription]);
 
     const handleSave = useCallback(async () => {
-        const ok = await saveAd();
-        if (ok) {
-            router.push("/dashboard/ads");
+        const id = await saveAd();
+        if (id) {
+            router.push(`/dashboard/ads/${id}`);
         }
     }, [saveAd, router]);
 
     const handleSaveAndNew = useCallback(async () => {
-        const ok = await saveAd();
-        if (ok) {
+        const id = await saveAd();
+        if (id) {
             handleReset();
         }
     }, [saveAd, handleReset]);
@@ -376,6 +382,54 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
 
             // Show result for all users (authenticated and unauthenticated)
             setResult(data);
+
+            // Auto-save and redirect for authenticated users
+            if (session?.user?.id && data.isValid) {
+                const title = data.title || "";
+                const description = data.description || "";
+                setEditedTitle(title);
+                setEditedDescription(description);
+                hasInitializedEdits.current = true;
+                setIsSaving(true);
+                try {
+                    const saveResponse = await fetch("/api/ads", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            platform,
+                            title,
+                            description,
+                            status: "DRAFT",
+                            priceMin: data.price?.min,
+                            priceMax: data.price?.max,
+                            images: imagesForRequest.map((img, index) => ({
+                                url: `data:${img.mimeType};base64,${img.base64}`,
+                                quality: data.images?.[index]?.quality || "",
+                                suggestions: data.images?.[index]?.suggestions || "",
+                            })),
+                            parameters: {
+                                platform,
+                                tone: selectedTone,
+                                condition,
+                                delivery,
+                                productName,
+                                notes,
+                                priceType,
+                                userPrice: priceType === "user_provided" ? parseFloat(price) : undefined,
+                            },
+                        }),
+                    });
+                    if (saveResponse.ok) {
+                        const saved = await saveResponse.json();
+                        router.push(`/dashboard/ads/${saved.id}`);
+                        return;
+                    }
+                } catch {
+                    // fall through to show result with manual save
+                } finally {
+                    setIsSaving(false);
+                }
+            }
         } catch (err) {
             if (err instanceof Error && err.name === "AbortError") {
                 return;
@@ -396,7 +450,7 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
             setIsLoading(false);
             abortControllerRef.current = null;
         }
-    }, [images, platform, productName, condition, price, delivery, notes, selectedTone, priceType, selectedBodyTemplate]);
+    }, [images, platform, productName, condition, price, delivery, notes, selectedTone, priceType, selectedBodyTemplate, session?.user?.id, router]);
 
     const handleRetry = useCallback(() => {
         setResult(null);
@@ -572,7 +626,7 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
                             </h2>
                             <p className="text-sm text-muted-foreground mt-0.5">
                                 {status === "authenticated"
-                                    ? "Sprawdź treść i zapisz w swoim panelu"
+                                    ? "Zapisywanie nie powiodło się — zapisz ręcznie"
                                     : "Gotowe do skopiowania i wklejenia"
                                 }
                             </p>

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AdDetailActions } from "@/components/AdDetailActions";
 import { ListingContent } from "@/components/listing/ListingContent";
@@ -89,6 +89,15 @@ export function AdDetailView({ ad }: AdDetailViewProps) {
                     images={ad.images}
                 />
             </div>
+
+            {/* FAB */}
+            <Link
+                href="/dashboard/new"
+                className="fixed bottom-[72px] right-6 z-50 sm:right-8 flex items-center gap-1.5 bg-gradient-primary text-primary-foreground font-semibold px-5 py-3 rounded-full shadow-lg hover:opacity-90 transition-opacity text-sm"
+            >
+                <Plus className="h-4 w-4" />
+                Nowe ogłoszenie
+            </Link>
         </div>
     );
 }
