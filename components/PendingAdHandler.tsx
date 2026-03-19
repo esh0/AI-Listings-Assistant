@@ -55,8 +55,18 @@ export function PendingAdHandler() {
 
                     if (changed) {
                         console.log("[PendingAdHandler] DB changed! Calling updateSession({})...");
-                        const newSession = await updateSession({});
-                        console.log("[PendingAdHandler] updateSession result:", newSession);
+                        // updateSession returns undefined if SessionProvider is still loading.
+                        // Retry until it returns a session object.
+                        let result;
+                        let retries = 0;
+                        while (result === undefined && retries < 10) {
+                            result = await updateSession({});
+                            if (result === undefined) {
+                                await new Promise(r => setTimeout(r, 500));
+                            }
+                            retries++;
+                        }
+                        console.log("[PendingAdHandler] updateSession result:", result);
                         return;
                     }
                 }
