@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Send a one-time Polish-language email via Resend when an authenticated user's subscription credits drop to exactly 1, prompting them to buy a boost or upgrade their plan.
+**Goal:** (1) Switch all outgoing emails from `kontakt@` sender to `noreply@` with `Reply-To: kontakt@` so users can reply but the sender is clearly non-interactive. (2) Send a one-time Polish-language email via Resend when an authenticated user's subscription credits drop to exactly 1, prompting them to buy a boost or upgrade their plan.
 
-**Architecture:** `consumeCredit()` in `lib/credits.ts` already has the atomic decrement logic. After a successful subscription credit decrement, we fire a `maybeNotifyLowCredits()` helper (fire-and-forget). That helper reads the new `creditsAvailable`, checks it equals 1, and uses a conditional `updateMany WHERE lastLowCreditEmailAt IS NULL OR < 25daysAgo` to atomically claim the send slot before actually sending — this prevents double-sends under concurrent requests. Email HTML is built as a string in the existing `lib/email.ts` which already has the Resend client and `RESEND_FROM_EMAIL` env var convention.
+**Architecture:** `lib/email.ts` is the single Resend client — updating `sendEmail()` there propagates the sender change to all 4 existing emails (welcome, subscription confirmed, boost confirmed, subscription cancelled) automatically. Two new env vars are added: `RESEND_NOREPLY_EMAIL` (sender) and `RESEND_CONTACT_EMAIL` (Reply-To). The low-credits trigger fires inside `consumeCredit()` in `lib/credits.ts` as fire-and-forget, guarded by a `lastLowCreditEmailAt` field with atomic `updateMany` dedup.
 
 **Tech Stack:** Resend SDK (already installed v6.9.3), Prisma 5.22.0, TypeScript, Next.js 15 App Router (Node.js runtime)
 
@@ -14,11 +14,81 @@
 
 | File | Action | Responsibility |
 |---|---|---|
+| `lib/email.ts` | Modify | Add `RESEND_NOREPLY_EMAIL` sender + `Reply-To: RESEND_CONTACT_EMAIL`; add `sendLowCreditsEmail` |
+| `emails/welcome.ts` | Modify | Update hardcoded `kontakt@` in body text to use `RESEND_CONTACT_EMAIL` |
 | `prisma/schema.prisma` | Modify | Add `lastLowCreditEmailAt DateTime?` to `User` model |
-| `lib/email.ts` | Modify (add exports) | Add `buildLowCreditsHtml` + `sendLowCreditsEmail` alongside existing `sendEmail` |
 | `lib/credits.ts` | Modify | Add `maybeNotifyLowCredits` helper, call it fire-and-forget in `consumeCredit` |
 
-No new routes. No UI changes. Three files total.
+No new routes. No UI changes. Four files total.
+
+---
+
+## Task 0: Switch sender to `noreply@` with `Reply-To: kontakt@`
+
+**Files:**
+- Modify: `lib/email.ts`
+- Modify: `emails/welcome.ts`
+
+All 4 existing emails (welcome, subscription confirmed, boost confirmed, subscription cancelled) call `sendEmail()` from `lib/email.ts`. Changing the sender there propagates automatically — no need to touch `auth.ts` or `stripe/webhook/route.ts`.
+
+- [ ] **Step 1: Update `lib/email.ts` — change sender and add Reply-To**
+
+Replace the top of `lib/email.ts` (lines 1–24, the entire existing file content) with:
+
+```typescript
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+const NOREPLY_EMAIL = process.env.RESEND_NOREPLY_EMAIL ?? "noreply@marketplace-ai.pl";
+const CONTACT_EMAIL = process.env.RESEND_CONTACT_EMAIL ?? "kontakt@marketplace-ai.pl";
+
+export async function sendEmail(to: string, subject: string, html: string): Promise<void> {
+    if (!process.env.RESEND_API_KEY) {
+        console.warn("[email] RESEND_API_KEY not set, skipping email to:", to);
+        return;
+    }
+
+    try {
+        await resend.emails.send({
+            from: `Marketplace AI <${NOREPLY_EMAIL}>`,
+            reply_to: CONTACT_EMAIL,
+            to,
+            subject,
+            html,
+        });
+    } catch (err) {
+        console.error("[email] Failed to send email to", to, err);
+        // Don't throw — email failures should not break the main flow
+    }
+}
+```
+
+- [ ] **Step 2: Update hardcoded `kontakt@` in `emails/welcome.ts`**
+
+In `emails/welcome.ts` line 24, replace the hardcoded email address:
+
+```diff
+- <p style="margin:0;color:#6b7280;font-size:14px;line-height:1.6;">Jeśli masz pytania, odpiszemy na: <a href="mailto:kontakt@marketplace-ai.pl" style="color:#6366f1;">kontakt@marketplace-ai.pl</a></p>
++ <p style="margin:0;color:#6b7280;font-size:14px;line-height:1.6;">Jeśli masz pytania, napisz do nas: <a href="mailto:kontakt@marketplace-ai.pl" style="color:#6366f1;">kontakt@marketplace-ai.pl</a></p>
+```
+
+> The URL stays hardcoded (`kontakt@marketplace-ai.pl`) — this is a user-visible link in email body, not the sender address. The text changes from "odpiszemy na" to "napisz do nas" since they can now reply directly to the email thanks to `Reply-To`.
+
+- [ ] **Step 3: Verify TypeScript compiles**
+
+```bash
+npx tsc --noEmit
+```
+
+Expected: no errors.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add lib/email.ts emails/welcome.ts
+git commit -m "feat: switch email sender to noreply@ with Reply-To kontakt@"
+```
 
 ---
 
@@ -290,16 +360,18 @@ git commit -m "feat: send low-credits email when subscription credits drop to 1"
 **Files:**
 - Modify: `.env.local` (not committed — add manually)
 
-The project already uses `RESEND_API_KEY` and `RESEND_FROM_EMAIL` — only `RESEND_API_KEY` needs to be set if it isn't already. `RESEND_FROM_EMAIL` already has a fallback to `kontakt@marketplace-ai.pl`.
+The project already uses `RESEND_API_KEY` — only `RESEND_API_KEY` needs to be set if it isn't already. The old `RESEND_FROM_EMAIL` is replaced by two new vars: `RESEND_NOREPLY_EMAIL` and `RESEND_CONTACT_EMAIL`.
 
-- [ ] **Step 1: Ensure `RESEND_API_KEY` is set in `.env.local`**
+- [ ] **Step 1: Update `.env.local`**
 
 ```bash
-# Add to .env.local if not already present:
+# Replace RESEND_FROM_EMAIL with:
 RESEND_API_KEY=re_your_key_here
+RESEND_NOREPLY_EMAIL=noreply@marketplace-ai.pl
+RESEND_CONTACT_EMAIL=kontakt@marketplace-ai.pl
 ```
 
-> Get the key from resend.com → API Keys. For local testing, use `onboarding@resend.dev` as `RESEND_FROM_EMAIL` (Resend sandbox — no domain verification needed).
+> For local testing, set `RESEND_NOREPLY_EMAIL=onboarding@resend.dev` (Resend sandbox — no domain verification needed). Remove `RESEND_FROM_EMAIL` if it was previously set.
 
 - [ ] **Step 2: Start dev server**
 
@@ -323,12 +395,15 @@ Use Prisma Studio (`npx prisma studio`) or direct DB query to manipulate test da
 9. Generate one ad → credits decrement to 1
 10. Confirm email sent again (25-day window is past because we nulled the field)
 
-- [ ] **Step 4: Add `RESEND_API_KEY` to Vercel (production)**
+- [ ] **Step 4: Add env vars to Vercel (production)**
 
 In Vercel Dashboard → Project → Settings → Environment Variables:
 - `RESEND_API_KEY` = production key from Resend
+- `RESEND_NOREPLY_EMAIL` = `noreply@marketplace-ai.pl`
+- `RESEND_CONTACT_EMAIL` = `kontakt@marketplace-ai.pl`
+- Remove `RESEND_FROM_EMAIL` if it was previously set in Vercel
 
-> Domain verification for production: Resend Dashboard → Domains → Add `marketplace-ai.pl` → add the TXT/MX DNS records as instructed. Until verified, use Resend's sandbox sender for testing.
+> Domain verification for production: Resend Dashboard → Domains → Add `marketplace-ai.pl` → add the TXT/MX DNS records as instructed. Both `noreply@` and `kontakt@` must be verified senders (or use a catch-all on the domain).
 
 - [ ] **Step 5: Update CLAUDE.md env vars section**
 
@@ -337,7 +412,8 @@ Add to the `RESEND_*` env var docs in CLAUDE.md (in `.env.local` template):
 ```
 # Email (Resend)
 RESEND_API_KEY=re_your_key_here
-RESEND_FROM_EMAIL=kontakt@marketplace-ai.pl
+RESEND_NOREPLY_EMAIL=noreply@marketplace-ai.pl
+RESEND_CONTACT_EMAIL=kontakt@marketplace-ai.pl
 ```
 
 - [ ] **Step 6: Commit**
@@ -353,9 +429,10 @@ git commit -m "docs: document RESEND env vars in CLAUDE.md"
 
 | Task | Files changed | What it does |
 |---|---|---|
+| 0 | `lib/email.ts`, `emails/welcome.ts` | Switches sender to `noreply@`, adds `Reply-To: kontakt@` |
 | 1 | `prisma/schema.prisma` | Adds `lastLowCreditEmailAt` dedup field |
 | 2 | `lib/email.ts` (modified) | Appends `sendLowCreditsEmail` + HTML builder |
 | 3 | `lib/credits.ts` | Wires `maybeNotifyLowCredits` fire-and-forget into `consumeCredit` |
-| 4 | `.env.local` + Vercel + CLAUDE.md | Adds API key, smoke tests end-to-end |
+| 4 | `.env.local` + Vercel + CLAUDE.md | Adds new env vars, smoke tests end-to-end |
 
 No new routes. No UI changes. Fire-and-forget so generation latency is unaffected. Double-send protection via atomic `updateMany WHERE lastLowCreditEmailAt IS NULL OR < 25daysAgo`.
