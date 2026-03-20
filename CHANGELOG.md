@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.1.0] - 2026-03-20
+
+### Added
+- Email system: all outgoing emails now sent from `noreply@marketplace-ai.pl` with `Reply-To: kontakt@marketplace-ai.pl`
+- Low-credits email trigger: one-time Polish-language email via Resend when subscription credits drop to exactly 1
+- Dedup guard: atomic `updateMany WHERE lastLowCreditEmailAt IS NULL OR < 25 days` prevents double-sends
+- `lastLowCreditEmailAt DateTime?` field on User model for email dedup tracking
+- `sendLowCreditsEmail()` function with branded HTML template matching subscription confirmed style
+- Welcome email on first sign-in (sent via `auth.ts` signIn callback, fires once within 60s of account creation)
+
+### Changed
+- Low-credits email redesigned to match subscription confirmed template (gradient header, summary box, footer with legal links)
+- Privacy policy: added Resend to data processors table; updated email communications legal basis (art. 6 lit. b/f RODO)
+- Terms of service §5: added explicit list of all transactional emails sent by the service
+- Privacy policy §12 and terms §5: `privacy@marketplace-ai.pl` added as dedicated contact for RODO requests and notification opt-out
+
+### Fixed
+- Added `@react-email/render` peer dependency required by Resend SDK (fixes Vercel build warning)
+
+### Technical
+- `maybeNotifyLowCredits()` is fire-and-forget (`.catch(() => {})`) — does not affect generation latency
+- `RESEND_NOREPLY_EMAIL` and `RESEND_CONTACT_EMAIL` env vars replace old `RESEND_FROM_EMAIL`
+
+---
+
 ## [1.0.0] - 2026-03-20
 
 First production release.
