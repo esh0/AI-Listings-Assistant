@@ -194,6 +194,7 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
         if (!tpl) return;
         setPlatform(tpl.platform);
         setSelectedTone(tpl.tone);
+        setCondition(tpl.condition);
         setDelivery(tpl.delivery);
         if (tpl.notes) setNotes(tpl.notes);
         setSelectedBodyTemplate(tpl.bodyTemplate ?? "");
