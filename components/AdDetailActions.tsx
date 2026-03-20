@@ -27,11 +27,12 @@ interface AdDetailActionsProps {
     hasEdits?: boolean;
     editing?: boolean;
     onEditToggle?: () => void;
+    showLabels?: boolean;
 }
 
 type DialogType = "archive" | "delete" | null;
 
-export function AdDetailActions({ ad, title, description, hasEdits, editing, onEditToggle }: AdDetailActionsProps) {
+export function AdDetailActions({ ad, title, description, hasEdits, editing, onEditToggle, showLabels }: AdDetailActionsProps) {
     const router = useRouter();
     const [isUpdating, setIsUpdating] = useState(false);
     const [dialog, setDialog] = useState<DialogType>(null);
@@ -178,8 +179,8 @@ export function AdDetailActions({ ad, title, description, hasEdits, editing, onE
                     onClick={handleSaveEdits}
                     disabled={isUpdating || !title?.trim() || !description?.trim()}
                 >
-                    <Save className="h-4 w-4 sm:mr-1" />
-                    <span className="hidden sm:inline">Zapisz</span>
+                    <Save className={`h-4 w-4${showLabels ? " mr-1" : " sm:mr-1"}`} />
+                    <span className={showLabels ? "ml-0" : "hidden sm:inline"}>Zapisz</span>
                 </Button>
             )}
 
@@ -191,8 +192,8 @@ export function AdDetailActions({ ad, title, description, hasEdits, editing, onE
                     onClick={onEditToggle}
                     disabled={isUpdating}
                 >
-                    <Pencil className="h-4 w-4 sm:mr-1" />
-                    <span className="hidden sm:inline">{editing ? "Zakończ" : "Edytuj"}</span>
+                    <Pencil className={`h-4 w-4${showLabels ? " mr-1" : " sm:mr-1"}`} />
+                    <span className={showLabels ? "ml-0" : "hidden sm:inline"}>{editing ? "Zakończ" : "Edytuj"}</span>
                 </Button>
             )}
 
@@ -205,7 +206,7 @@ export function AdDetailActions({ ad, title, description, hasEdits, editing, onE
                     variant="outline"
                 >
                     <Upload className="h-4 w-4 mr-1" />
-                    <span className="hidden sm:inline">Opublikuj</span>
+                    <span className={showLabels ? "ml-0" : "hidden sm:inline"}>Opublikuj</span>
                 </Button>
             )}
 
@@ -218,7 +219,7 @@ export function AdDetailActions({ ad, title, description, hasEdits, editing, onE
                     variant="outline"
                 >
                     <ShoppingCart className="h-4 w-4 mr-1" />
-                    <span className="hidden sm:inline">Sprzedane</span>
+                    <span className={showLabels ? "ml-0" : "hidden sm:inline"}>Sprzedane</span>
                 </Button>
             )}
 
@@ -231,7 +232,7 @@ export function AdDetailActions({ ad, title, description, hasEdits, editing, onE
                     variant="outline"
                 >
                     <Ban className="h-4 w-4 mr-1" />
-                    <span className="hidden sm:inline">Wycofaj</span>
+                    <span className={showLabels ? "ml-0" : "hidden sm:inline"}>Wycofaj</span>
                 </Button>
             )}
 

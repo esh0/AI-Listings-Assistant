@@ -42,8 +42,8 @@ export function AdDetailView({ ad }: AdDetailViewProps) {
     const [description, setDescription] = useState(ad.description);
 
     return (
-        <div className="space-y-4">
-            {/* Top bar: back + actions */}
+        <div className="space-y-4 pb-20 sm:pb-0">
+            {/* Top bar: back + actions (desktop) */}
             <div className="flex items-center gap-2">
                 <Link href="/dashboard/ads" className="shrink-0">
                     <Button variant="ghost" size="sm">
@@ -52,7 +52,7 @@ export function AdDetailView({ ad }: AdDetailViewProps) {
                     </Button>
                 </Link>
 
-                <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap ml-auto">
+                <div className="hidden sm:flex items-center gap-1.5 sm:gap-2 ml-auto">
                     <AdDetailActions
                         ad={{
                             id: ad.id,
@@ -103,11 +103,35 @@ export function AdDetailView({ ad }: AdDetailViewProps) {
             {/* FAB */}
             <Link
                 href="/dashboard/new"
-                className="fixed bottom-[72px] right-6 z-50 sm:right-8 flex items-center gap-1.5 bg-gradient-primary text-primary-foreground font-semibold px-5 py-3 rounded-full shadow-lg hover:opacity-90 transition-opacity text-sm"
+                className="fixed bottom-[136px] sm:bottom-[72px] right-6 z-50 sm:right-8 flex items-center gap-1.5 bg-gradient-primary text-primary-foreground font-semibold px-5 py-3 rounded-full shadow-lg hover:opacity-90 transition-opacity text-sm"
             >
                 <Plus className="h-4 w-4" />
                 Nowe ogłoszenie
             </Link>
+
+            {/* Mobile sticky bottom bar */}
+            <div
+                className="fixed bottom-0 left-0 right-0 sm:hidden z-40 bg-card/95 backdrop-blur-sm border-t border-border px-4 flex items-center justify-end gap-2"
+                style={{ paddingTop: '12px', paddingBottom: 'max(12px, env(safe-area-inset-bottom))' }}
+            >
+                <AdDetailActions
+                    ad={{
+                        id: ad.id,
+                        status: ad.status,
+                        priceMin: ad.priceMin,
+                        priceMax: ad.priceMax,
+                        soldPrice: ad.soldPrice,
+                        publishPrice: ad.publishPrice,
+                        parameters: ad.parameters,
+                    }}
+                    title={title}
+                    description={description}
+                    hasEdits={title !== ad.title || description !== ad.description}
+                    editing={editing}
+                    onEditToggle={() => setEditing((e) => !e)}
+                    showLabels
+                />
+            </div>
         </div>
     );
 }
