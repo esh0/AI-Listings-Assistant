@@ -2,7 +2,8 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL ?? "kontakt@marketplace-ai.pl";
+const NOREPLY_EMAIL = process.env.RESEND_NOREPLY_EMAIL ?? "noreply@marketplace-ai.pl";
+const CONTACT_EMAIL = process.env.RESEND_CONTACT_EMAIL ?? "kontakt@marketplace-ai.pl";
 
 export async function sendEmail(to: string, subject: string, html: string): Promise<void> {
     if (!process.env.RESEND_API_KEY) {
@@ -12,7 +13,8 @@ export async function sendEmail(to: string, subject: string, html: string): Prom
 
     try {
         await resend.emails.send({
-            from: `Marketplace AI <${FROM_EMAIL}>`,
+            from: `Marketplace AI <${NOREPLY_EMAIL}>`,
+            replyTo: CONTACT_EMAIL,
             to,
             subject,
             html,
