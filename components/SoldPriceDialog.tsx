@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 
 interface SoldPriceDialogProps {
@@ -52,7 +53,7 @@ export function SoldPriceDialog({ open, defaultValue, defaultFree = false, title
 
     if (!open) return null;
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
             <div className="bg-card rounded-xl border border-border shadow-xl max-w-sm w-full p-6">
                 <div className="flex items-center gap-3 mb-4">
@@ -111,5 +112,5 @@ export function SoldPriceDialog({ open, defaultValue, defaultFree = false, title
                 </div>
             </div>
         </div>
-    );
+    , document.body);
 }

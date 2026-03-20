@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { AlertTriangle, Trash2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -42,7 +43,7 @@ export function ConfirmDialog({
 
     if (!open) return null;
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
             <div className="bg-card rounded-xl border border-border shadow-xl max-w-md w-full p-6">
                 <div className="flex items-center gap-3 mb-4">
@@ -88,5 +89,5 @@ export function ConfirmDialog({
                 </div>
             </div>
         </div>
-    );
+    , document.body);
 }
