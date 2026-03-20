@@ -101,9 +101,18 @@ export default function ReguaminPage() {
             <p>2. Płatności za Usługę są realizowane za pośrednictwem operatora płatności Stripe, Inc. Funkcję podmiotu obsługującego płatności w imieniu Usługodawcy pełni F.H.U. Krzysztof Szałach, ul. Radosna 36, 82-200 Grobelno, NIP: 579-209-58-51, REGON: 361923647. Dla planów płatnych dostępna jest płatność kartą (Visa, Mastercard); dla jednorazowych Dostawek Kredytów dostępna jest dodatkowo płatność BLIK.</p>
             <p>3. Opłata Subskrypcyjna jest uiszczana automatycznie, cyklicznie z góry co miesiąc, w dniu odpowiadającym dacie zawarcia Umowy. Za dzień płatności uznaje się dzień zaksięgowania kwoty na rachunku Usługodawcy.</p>
             <p>4. Po zaksięgowaniu wpłaty Usługodawca przesyła na adres poczty elektronicznej Usługobiorcy informację o udzieleniu dostępu do wybranego Planu. Faktury VAT są wystawiane automatycznie przez operatora płatności Stripe i dostępne w Panelu klienta Stripe.</p>
-            <p>5. Brak zapłaty Opłaty Subskrypcyjnej spowoduje wstrzymanie dostępu do płatnych funkcjonalności Aplikacji do momentu zaksięgowania należności.</p>
-            <p>6. Kredyty z Subskrypcji odnawiają się na początku każdego Okresu Subskrypcji; niewykorzystane Kredyty subskrypcji nie przechodzą na kolejny okres. Kredyty z Dostawek nie wygasają i są dostępne do ich wykorzystania. System zużywa najpierw Kredyty z Subskrypcji, następnie Kredyty z Dostawek.</p>
-            <p>7. Anulowanie Subskrypcji nie powoduje zwrotu za bieżący Okres Subskrypcji. Usługobiorca zachowuje dostęp do końca opłaconego okresu.</p>
+            <p>5. Usługodawca wysyła na adres poczty elektronicznej Usługobiorcy następujące wiadomości związane ze świadczoną Usługą:</p>
+            <ul>
+                <li><strong>Email powitalny</strong> — jednorazowo po pierwszej rejestracji Konta,</li>
+                <li><strong>Potwierdzenie aktywacji Planu</strong> — po każdej zmianie na Plan płatny (Starter lub Reseler),</li>
+                <li><strong>Potwierdzenie zakupu Doładowania</strong> — po zakupie jednorazowego pakietu Kredytów,</li>
+                <li><strong>Potwierdzenie anulowania Subskrypcji</strong> — po dezaktywacji Planu płatnego,</li>
+                <li><strong>Powiadomienie o niskim stanie Kredytów</strong> — jednorazowo w danym Okresie Subskrypcji, gdy liczba dostępnych Kredytów subskrypcyjnych spadnie do 1, z informacją o możliwości zakupu Doładowania lub zmiany Planu.</li>
+            </ul>
+            <p>Wiadomości powyższe mają charakter transakcyjny i serwisowy — są niezbędne do prawidłowej realizacji Usługi lub bezpośrednio z nią związane. Podstawą ich wysyłki jest art. 6 ust. 1 lit. b lub f RODO. Usługobiorca może zrezygnować z powiadomienia o niskim stanie Kredytów, kontaktując się z Administratorem pod adresem wskazanym w § 1 ust. 5.</p>
+            <p>6. Brak zapłaty Opłaty Subskrypcyjnej spowoduje wstrzymanie dostępu do płatnych funkcjonalności Aplikacji do momentu zaksięgowania należności.</p>
+            <p>7. Kredyty z Subskrypcji odnawiają się na początku każdego Okresu Subskrypcji; niewykorzystane Kredyty subskrypcji nie przechodzą na kolejny okres. Kredyty z Dostawek nie wygasają i są dostępne do ich wykorzystania. System zużywa najpierw Kredyty z Subskrypcji, następnie Kredyty z Dostawek.</p>
+            <p>8. Anulowanie Subskrypcji nie powoduje zwrotu za bieżący Okres Subskrypcji. Usługobiorca zachowuje dostęp do końca opłaconego okresu.</p>
 
             <hr />
 
