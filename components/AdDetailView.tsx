@@ -20,6 +20,7 @@ interface AdDetailViewProps {
         priceMin: number | null;
         priceMax: number | null;
         soldPrice: number | null;
+        publishPrice: number | null;
         createdAt: Date;
         updatedAt: Date;
         images: Array<{ url: string; quality?: string; suggestions?: string }>;
@@ -59,6 +60,7 @@ export function AdDetailView({ ad }: AdDetailViewProps) {
                             priceMin: ad.priceMin,
                             priceMax: ad.priceMax,
                             soldPrice: ad.soldPrice,
+                            publishPrice: ad.publishPrice,
                             parameters: ad.parameters,
                         }}
                         title={title}
@@ -90,6 +92,7 @@ export function AdDetailView({ ad }: AdDetailViewProps) {
                     priceMin={ad.priceMin}
                     priceMax={ad.priceMax}
                     soldPrice={ad.soldPrice}
+                    publishPrice={ad.publishPrice}
                     createdAt={ad.createdAt}
                     updatedAt={ad.updatedAt}
                     parameters={ad.parameters}

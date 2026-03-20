@@ -709,6 +709,7 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
                             priceMin={result.price?.min ?? null}
                             priceMax={result.price?.max ?? null}
                             soldPrice={null}
+                            publishPrice={null}
                             createdAt={new Date()}
                             updatedAt={new Date()}
                             parameters={{

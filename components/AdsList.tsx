@@ -27,6 +27,7 @@ interface Ad {
     priceMin?: number | null;
     priceMax?: number | null;
     soldPrice?: number | null;
+    publishPrice?: number | null;
     images: any;
     parameters?: unknown;
     createdAt: Date;
@@ -478,16 +479,12 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                         const params = ad.parameters as { priceType?: string; userPrice?: number } | null;
                         const priceType = params?.priceType;
                         const userPrice = params?.userPrice;
-                        const price = ad.soldPrice != null
-                            ? (ad.soldPrice === 0 ? "Za darmo" : `${ad.soldPrice} zł`)
-                            : priceType === "free"
-                            ? "Za darmo"
-                            : priceType === "user_provided" && userPrice
-                            ? `${userPrice} zł`
-                            : ad.priceMin && ad.priceMax
-                            ? `${ad.priceMin}–${ad.priceMax} zł`
-                            : ad.priceMin
-                            ? `${ad.priceMin} zł`
+                        const price = ad.soldPrice != null ? `${ad.soldPrice} zł`
+                            : ad.status === "SOLD" && ad.soldPrice === null ? "Za darmo"
+                            : priceType === "free" ? "Za darmo"
+                            : priceType === "user_provided" && userPrice ? `${userPrice} zł`
+                            : ad.priceMin && ad.priceMax ? `${ad.priceMin}–${ad.priceMax} zł`
+                            : ad.priceMin ? `${ad.priceMin} zł`
                             : null;
                         const date = new Date(ad.createdAt).toLocaleDateString("pl-PL");
 

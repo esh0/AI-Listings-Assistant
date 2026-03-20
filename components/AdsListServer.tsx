@@ -57,6 +57,7 @@ export async function AdsListServer({ searchParams }: AdsListServerProps) {
                 priceMin: true,
                 priceMax: true,
                 soldPrice: true,
+                publishPrice: true,
                 images: true,
                 createdAt: true,
                 updatedAt: true,

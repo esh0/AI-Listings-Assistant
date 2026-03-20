@@ -25,6 +25,7 @@ interface ListingSidebarProps {
     priceMin: number | null;
     priceMax: number | null;
     soldPrice: number | null;
+    publishPrice: number | null;
     createdAt: Date;
     updatedAt: Date;
     parameters: {
@@ -73,6 +74,7 @@ export function ListingSidebar({
     priceMin,
     priceMax,
     soldPrice,
+    publishPrice,
     createdAt,
     updatedAt,
     parameters,
@@ -112,13 +114,9 @@ export function ListingSidebar({
             ? (priceMin && priceMax ? `${priceMin}–${priceMax} zł` : `${priceMin ?? priceMax} zł`)
             : null;
 
-    // "Opublikowane za" row — price recorded when published (priceMin = set at publish time)
-    const publishedValue: string | null =
-        priceMin === 0 || (status !== "DRAFT" && priceMin === null && priceType === "free")
-            ? "Za darmo"
-            : priceMin != null
-            ? `${priceMin} zł`
-            : null;
+    // "Opublikowane za" row — from dedicated publishPrice field (null = Za darmo)
+    const publishedValue: string =
+        publishPrice != null ? `${publishPrice} zł` : "Za darmo";
 
     return (
         <div className="lg:col-span-2 space-y-4">
@@ -143,7 +141,7 @@ export function ListingSidebar({
                     )}
 
                     {/* Opublikowane za — show for PUBLISHED, SOLD, ARCHIVED */}
-                    {!isGuest && publishedValue && (status === "PUBLISHED" || status === "SOLD" || status === "ARCHIVED") && (
+                    {!isGuest && (status === "PUBLISHED" || status === "SOLD" || status === "ARCHIVED") && (
                         <div className="flex justify-between">
                             <span className="text-muted-foreground">Opublikowane za</span>
                             <span className="font-medium">{publishedValue}</span>
@@ -155,7 +153,7 @@ export function ListingSidebar({
                         <div className="flex justify-between">
                             <span className="text-muted-foreground">Sprzedane za</span>
                             <span className="font-medium text-success">
-                                {soldPrice != null ? (soldPrice === 0 ? "Za darmo" : `${soldPrice} zł`) : "Za darmo"}
+                                {soldPrice != null ? `${soldPrice} zł` : "Za darmo"}
                             </span>
                         </div>
                     )}

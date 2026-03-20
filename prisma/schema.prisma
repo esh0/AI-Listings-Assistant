@@ -76,9 +76,10 @@ model Ad {
   title       String
   description String   @db.Text
   status      AdStatus @default(DRAFT)
-  soldPrice   Float?
-  priceMin    Float?
-  priceMax    Float?
+  soldPrice    Float?
+  publishPrice Float?
+  priceMin     Float?
+  priceMax     Float?
   images      Json // Array<{ url: string, quality: string, suggestions: string }>
   parameters  Json // { condition, tone, delivery, productName, notes, priceType }
   createdAt   DateTime @default(now())

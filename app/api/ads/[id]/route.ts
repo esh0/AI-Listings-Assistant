@@ -54,7 +54,7 @@ export async function GET(
 
 /**
  * PATCH /api/ads/[id] - Update ad
- * Body: { title?, description?, status?, soldPrice?, priceMin?, priceMax?, parameters? }
+ * Body: { title?, description?, status?, soldPrice?, publishPrice?, priceMin?, priceMax?, parameters? }
  */
 export async function PATCH(
     request: NextRequest,
@@ -104,6 +104,7 @@ export async function PATCH(
             description,
             status,
             soldPrice,
+            publishPrice,
             priceMin,
             priceMax,
             parameters,
@@ -115,6 +116,7 @@ export async function PATCH(
         if (description !== undefined) updateData.description = description;
         if (status !== undefined) updateData.status = status;
         if (soldPrice !== undefined) updateData.soldPrice = soldPrice;
+        if (publishPrice !== undefined) updateData.publishPrice = publishPrice;
         if (priceMin !== undefined) updateData.priceMin = priceMin;
         if (priceMax !== undefined) updateData.priceMax = priceMax;
         if (parameters !== undefined) {

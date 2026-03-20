@@ -180,6 +180,7 @@ export const updateAdSchema = z.object({
     description: z.string().min(1, "Opis jest wymagany").max(5000, "Opis jest zbyt długi").optional(),
     status: adStatusEnum.optional(),
     soldPrice: z.number().nonnegative("Cena sprzedaży nie może być ujemna").nullable().optional(),
+    publishPrice: z.number().nonnegative("Cena publikacji nie może być ujemna").nullable().optional(),
     priceMin: z.number().nonnegative("Cena minimalna nie może być ujemna").nullable().optional(),
     priceMax: z.number().nonnegative("Cena maksymalna nie może być ujemna").nullable().optional(),
     parameters: z.record(z.unknown()).optional(),

@@ -16,6 +16,7 @@ interface AdDetailActionsProps {
         priceMin?: number | null;
         priceMax?: number | null;
         soldPrice?: number | null;
+        publishPrice?: number | null;
         parameters?: {
             priceType?: string;
             userPrice?: number;
@@ -38,20 +39,19 @@ export function AdDetailActions({ ad, title, description, hasEdits, editing, onE
     const [soldDialogOpen, setSoldDialogOpen] = useState(false);
     const isProcessingRef = useRef(false);
 
-    // Default price for publish dialog: userPrice if user_provided, else midpoint of AI range
+    // Default price for publish dialog: userPrice if user_provided, midpoint of AI range, or undefined for free
     const publishDefaultPrice = (() => {
         const { priceType, userPrice } = ad.parameters ?? {};
+        if (priceType === "free") return undefined;
         if (priceType === "user_provided" && userPrice) return userPrice;
         if (ad.priceMin != null && ad.priceMax != null) return Math.round((ad.priceMin + ad.priceMax) / 2);
         return ad.priceMin ?? ad.priceMax ?? undefined;
     })();
+    const publishDefaultFree = ad.parameters?.priceType === "free";
 
-    // Default price for sold dialog: price recorded at publish time (publishedPrice from sidebar logic)
-    const soldDefaultPrice = (() => {
-        const { priceType, userPrice } = ad.parameters ?? {};
-        if (priceType === "user_provided" && userPrice) return userPrice;
-        return ad.priceMin ?? undefined;
-    })();
+    // Default price for sold dialog: price recorded at publish time
+    const soldDefaultPrice = ad.publishPrice ?? undefined;
+    const soldDefaultFree = ad.publishPrice === null && ad.status === "PUBLISHED";
 
     const patch = async (body: object) => {
         if (isProcessingRef.current) return;
@@ -120,7 +120,7 @@ export function AdDetailActions({ ad, title, description, hasEdits, editing, onE
 
     const handlePublishConfirm = async (price: number | null) => {
         setPublishDialogOpen(false);
-        await patch({ status: "PUBLISHED", priceMin: price, priceMax: price });
+        await patch({ status: "PUBLISHED", publishPrice: price });
         toast.success("Ogłoszenie oznaczone jako opublikowane");
     };
 
@@ -150,6 +150,7 @@ export function AdDetailActions({ ad, title, description, hasEdits, editing, onE
             <SoldPriceDialog
                 open={publishDialogOpen}
                 defaultValue={publishDefaultPrice}
+                defaultFree={publishDefaultFree}
                 title="Opublikuj ogłoszenie"
                 description="Podaj cenę za jaką oferujesz produkt."
                 confirmLabel="Opublikuj"
@@ -160,6 +161,7 @@ export function AdDetailActions({ ad, title, description, hasEdits, editing, onE
             <SoldPriceDialog
                 open={soldDialogOpen}
                 defaultValue={soldDefaultPrice}
+                defaultFree={soldDefaultFree}
                 title="Oznacz jako sprzedane"
                 description="Podaj cenę za jaką sprzedałeś produkt."
                 confirmLabel="Potwierdź sprzedaż"

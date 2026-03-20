@@ -6,6 +6,7 @@ import { X } from "lucide-react";
 interface SoldPriceDialogProps {
     open: boolean;
     defaultValue?: number;
+    defaultFree?: boolean;
     title?: string;
     description?: string;
     confirmLabel?: string;
@@ -14,7 +15,7 @@ interface SoldPriceDialogProps {
     onCancel: () => void;
 }
 
-export function SoldPriceDialog({ open, defaultValue, title = "Oznacz jako sprzedane", description, confirmLabel = "Potwierdź sprzedaż", showFree = false, onConfirm, onCancel }: SoldPriceDialogProps) {
+export function SoldPriceDialog({ open, defaultValue, defaultFree = false, title = "Oznacz jako sprzedane", description, confirmLabel = "Potwierdź sprzedaż", showFree = false, onConfirm, onCancel }: SoldPriceDialogProps) {
     const [value, setValue] = useState("");
     const [isFree, setIsFree] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -23,14 +24,14 @@ export function SoldPriceDialog({ open, defaultValue, title = "Oznacz jako sprze
     useEffect(() => {
         if (open) {
             setValue(defaultValue != null ? String(defaultValue) : "");
-            setIsFree(false);
+            setIsFree(defaultFree);
             setError(null);
             setTimeout(() => {
                 inputRef.current?.focus();
                 inputRef.current?.select();
             }, 50);
         }
-    }, [open, defaultValue]);
+    }, [open, defaultValue, defaultFree]);
 
     useEffect(() => {
         const handler = (e: KeyboardEvent) => {

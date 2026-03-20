@@ -41,6 +41,7 @@ export async function AdDetailServer({ id }: { id: string }) {
                 priceMin: ad.priceMin,
                 priceMax: ad.priceMax,
                 soldPrice: ad.soldPrice,
+                publishPrice: ad.publishPrice,
                 createdAt: ad.createdAt,
                 updatedAt: ad.updatedAt,
                 images,
