@@ -4,11 +4,12 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { Platform, ToneStyle } from "@prisma/client";
 import { CONDITION_MAP } from "@/lib/condition-map";
+import { ToneStyleSchema } from "@/lib/schemas";
 
 const createTemplateSchema = z.object({
     name: z.string().min(1).max(100),
     platform: z.enum(["olx", "allegro_lokalnie", "facebook_marketplace", "vinted"]),
-    tone: z.enum(["professional", "friendly", "casual"]),
+    tone: ToneStyleSchema,
     condition: z.enum([
         "nowy",
         "używany, jak nowy",
