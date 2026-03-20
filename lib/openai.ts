@@ -218,6 +218,76 @@ function getToneInstructions(tone: ToneStyle): string {
   * CTA: "Gadaj jak coś!", "Pisz!", "Dzwoń śmiało"
   * Negocjacje: "Cena do gada"
   * Za darmo: "Za free", "Daję za darmo", "Oddaje"`,
+
+    enthusiastic: `## TON: ENTHUSIASTIC (Entuzjastyczny)
+- Ton energetyczny, pełen entuzjazmu i emocji
+- Wykrzyknienia dozwolone i pożądane (1-2 na akapit)
+- Wyrażenia emocjonalne: "Niesamowita okazja!", "Musisz to zobaczyć!"
+- Podkreśl wyjątkowość i wartość produktu
+- Emoji mile widziane (2-3, dopasowane do kontekstu)
+- Zaraźliwy entuzjazm — kupujący powinien poczuć ekscytację
+- Przykłady fraz:
+  * Wprowadzenie: "Niesamowita okazja — sprzedam [produkt]!", "To must-have!"
+  * Stan: "W idealnym stanie — wygląda jak nowy!", "Absolutnie bez zarzutu!"
+  * CTA: "Nie czekaj, to zniknie szybko!", "Pisz teraz, zanim ktoś inny skorzysta!"
+  * Negocjacje: "Cena świetna, ale coś ugadamy!"
+  * Za darmo: "Oddaję za darmo — prawdziwa gratka!"`,
+
+    funny: `## TON: FUNNY (Zabawny)
+- Lekki humor i dowcip sytuacyjny nawiązujący do produktu
+- Żarty nie mogą podważać wiarygodności ani stanu produktu
+- Luźny, konwersacyjny styl z przymrużeniem oka
+- Emoji dozwolone (2-3, kompatybilne z humorem)
+- Kupujący powinien się uśmiechnąć lub roześmiać
+- Unikaj żartów wymuszonych lub niezwiązanych z produktem
+- Przykłady fraz:
+  * Wprowadzenie: "Sprzedam [produkt], bo [zabawny powód]", "Mój [produkt] szuka nowego domu (obiecuję, że jest niegroźny)"
+  * Stan: "Stan bardzo dobry — sam się zdziwiłem", "Używany, ale z klasą"
+  * CTA: "Pisz śmiało, nie gryzę 😄", "Pytania? Odpowiem szybciej niż dostawa ekspresowa!"
+  * Negocjacje: "Cena elastyczna jak moje podejście do poniedziałków"
+  * Za darmo: "Za free — bo życie jest za krótkie na zbędne rzeczy w szafie"`,
+
+    technical: `## TON: TECHNICAL (Techniczny)
+- Styl dokumentacyjny: precyzja, dane, specyfikacje
+- Każde zdanie niesie konkretną informację — parametry, materiały, wymiary
+- ZERO ozdobników, metafor, emocji
+- Bullet points do opisu cech technicznych
+- Terminologia branżowa dozwolona i pożądana
+- Nie używaj przymiotników wartościujących bez podstaw ("super", "świetny") — tylko fakty
+- Przykłady fraz:
+  * Wprowadzenie: "Do sprzedaży: [produkt] — [model/parametr kluczowy]"
+  * Stan: "Stan techniczny: dobry. Brak uszkodzeń mechanicznych. Śladowe zarysowania."
+  * CTA: "Kontakt mailowy lub SMS. Możliwość oględzin."
+  * Negocjacje: "Cena: [X] zł. Negocjacja możliwa przy odbiorze osobistym."
+  * Za darmo: "Przekazanie bezpłatne. Odbiór własny."`,
+
+    persuasive: `## TON: PERSUASIVE (Przekonujący)
+- Koncentracja na korzyściach kupującego, nie cechach produktu
+- Argumenty: "dzięki temu zyskasz...", "oszczędzisz...", "będziesz mógł..."
+- Social proof: "bardzo popularny model", "ceniony przez użytkowników"
+- Poczucie pilności: "ostatnia sztuka", "okazja cenowa", "nie trafi się drugi raz"
+- Wyraźne CTA zachęcające do działania teraz
+- Balans między perswazją a wiarygodnością — nie przesadzaj
+- Przykłady fraz:
+  * Wprowadzenie: "Oto okazja, której szukałeś — [produkt] w świetnej cenie"
+  * Stan: "Zadbany, gotowy do użytku od zaraz — żadnych ukrytych kosztów"
+  * CTA: "Napisz teraz i umów odbiór jeszcze dziś!", "Zostało tylko [X] — nie zwlekaj!"
+  * Negocjacje: "Cena już obniżona — ostatnie słowo"
+  * Za darmo: "Zupełnie za darmo — oszczędzasz [X] zł w porównaniu do sklepu"`,
+
+    concise: `## TON: CONCISE (Zwięzły)
+- Minimum słów, maksimum informacji
+- Krótkie zdania lub bullet points zamiast akapitów
+- Tytuł = najważniejsza cecha + stan
+- Opis = tylko niezbędne fakty, zero lania wody
+- Zero wypełniaczy: "warto", "polecam", "okazja", "zapraszam"
+- Jedna myśl = jedno zdanie lub jeden bullet
+- Przykłady fraz:
+  * Wprowadzenie: "[Produkt]. [Stan]. [Cena]."
+  * Stan: "Stan dobry.", "Bez uszkodzeń.", "Ślad użytkowania."
+  * CTA: "Pisz.", "SMS."
+  * Negocjacje: "Cena do rozmowy."
+  * Za darmo: "Gratis. Odbiór osobisty."`,
   };
 
   return toneMap[tone];
