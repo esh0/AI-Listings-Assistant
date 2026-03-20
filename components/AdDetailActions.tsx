@@ -178,8 +178,8 @@ export function AdDetailActions({ ad, title, description, hasEdits, editing, onE
                     onClick={handleSaveEdits}
                     disabled={isUpdating || !title?.trim() || !description?.trim()}
                 >
-                    <Save className="h-4 w-4 mr-1" />
-                    Zapisz
+                    <Save className="h-4 w-4 sm:mr-1" />
+                    <span className="hidden sm:inline">Zapisz</span>
                 </Button>
             )}
 
@@ -191,8 +191,8 @@ export function AdDetailActions({ ad, title, description, hasEdits, editing, onE
                     onClick={onEditToggle}
                     disabled={isUpdating}
                 >
-                    <Pencil className="h-4 w-4 mr-1" />
-                    {editing ? "Zakończ" : "Edytuj"}
+                    <Pencil className="h-4 w-4 sm:mr-1" />
+                    <span className="hidden sm:inline">{editing ? "Zakończ" : "Edytuj"}</span>
                 </Button>
             )}
 
