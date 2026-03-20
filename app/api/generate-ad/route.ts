@@ -6,6 +6,7 @@ import { auth } from "@/auth";
 import { consumeCredit, IMAGE_LIMITS } from "@/lib/credits";
 import { checkGuestLimit, consumeGuestCredit, hashIP, GUEST_MAX_IMAGES } from "@/lib/guest-tracking";
 import { logActivity, adDetail } from "@/lib/activity";
+import { RESELER_TONES } from "@/lib/types";
 
 export const runtime = "nodejs";
 export const maxDuration = 60; // 60 seconds timeout
@@ -57,6 +58,17 @@ export async function POST(request: NextRequest) {
                         error: `Twój plan pozwala na maksymalnie ${maxImages} zdjęć na generację. Zmień plan na wyższy, aby przesyłać więcej.`,
                     },
                     { status: 400 }
+                );
+            }
+
+            // Enforce RESELER-only tones
+            if (RESELER_TONES.includes(validatedData.tone) && plan !== "RESELER") {
+                return NextResponse.json(
+                    {
+                        isValid: false,
+                        error: "Ten styl komunikacji dostępny jest tylko w planie Reseler.",
+                    },
+                    { status: 403 }
                 );
             }
 
