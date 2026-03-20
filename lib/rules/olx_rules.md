@@ -90,3 +90,42 @@ Co sprzedajesz + główna zaleta (1-2 zdania)
 - Tekst/napisy na zdjęciach
 - Słowa: "prawie nowy", "jak ze sklepu", "mega stan"
 - Desperacja: "pilnie", "muszę sprzedać"
+## TON: ENTHUSIASTIC (Entuzjastyczny)
+### Frazowanie
+- Wprowadzenie: "Niesamowita okazja! Sprzedam [produkt]!"
+- Stan: "Idealny stan — sami zobaczcie na zdjęciach!"
+- CTA: "Nie czekajcie, to zniknie szybko! Piszcie!"
+- Negocjacje: "Cena super, ale coś ugadamy!"
+- Za darmo: "Oddaję za darmo — prawdziwa gratka, piszcie szybko!"
+
+## TON: FUNNY (Zabawny)
+### Frazowanie
+- Wprowadzenie: "Sprzedam [produkt], bo [zabawny powód, np. 'żona kazała']"
+- Stan: "Stan dobry — sam się zdziwiłem jak to u mnie przetrwało"
+- CTA: "Pisz, nie gryzę 😄 (chyba że późno)"
+- Negocjacje: "Cena elastyczna jak moje podejście do poniedziałków"
+- Za darmo: "Za darmo, bo życie za krótkie na stare graty w garażu"
+
+## TON: TECHNICAL (Techniczny)
+### Frazowanie
+- Wprowadzenie: "Do sprzedaży: [produkt] [model/parametry]"
+- Stan: "Stan techniczny: [ocena]. [Ewentualne usterki lub ich brak]."
+- CTA: "Kontakt SMS lub chat. Możliwe oględziny."
+- Negocjacje: "Cena: [X] zł. Negocjacja przy odbiorze."
+- Za darmo: "Przekazanie bezpłatne. Odbiór własny, [miasto]."
+
+## TON: PERSUASIVE (Przekonujący)
+### Frazowanie
+- Wprowadzenie: "Szukasz [produktu] w dobrej cenie? Masz go!"
+- Stan: "Zadbany, gotowy do użytku — żadnych niespodzianek"
+- CTA: "Napisz teraz i umów odbiór jeszcze dziś!"
+- Negocjacje: "Cena już obniżona — ostatnia szansa w tej kwocie"
+- Za darmo: "Zupełnie za darmo — oszczędzasz realne pieniądze"
+
+## TON: CONCISE (Zwięzły)
+### Frazowanie
+- Wprowadzenie: "[Produkt]. [Stan]. [Cena]."
+- Stan: "Stan dobry." / "Bez usterek."
+- CTA: "Pisz." / "SMS."
+- Negocjacje: "Cena do rozmowy."
+- Za darmo: "Gratis. Odbiór."

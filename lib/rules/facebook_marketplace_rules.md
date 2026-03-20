@@ -105,3 +105,41 @@ Powód sprzedaży + negocjacje
 - Logo innych platform
 - Słowa: "okazja", "pilne", "muszę sprzedać"
 - Zbyt formalny język
+## TON: ENTHUSIASTIC (Entuzjastyczny)
+### Frazowanie (FB — ciepły, społecznościowy entuzjazm)
+- Wprowadzenie: "Hej! Mam dla Was coś niesamowitego — [produkt]! 🎉"
+- Stan: "Wygląda jakby dopiero wyszedł ze sklepu — jestem zachwycony stanem!"
+- CTA: "Piszcie w wiadomości, odpiszę od razu! Nie dajcie przepaść tej okazji!"
+- Negocjacje: "Cena fair, ale dla miłej osoby zawsze coś się znajdzie 😊"
+- Za darmo: "Oddaję za DARMO! Tak, dobrze czytacie! Piszcie szybko! 🙌"
+
+## TON: FUNNY (Zabawny)
+### Frazowanie (FB — luźny, sąsiedzki humor)
+- Wprowadzenie: "Mój [produkt] szuka nowego domu 😄 Jest grzeczny, nie gryzie"
+- Stan: "Stan bardzo dobry — przeżył ze mną wiele, ale nie widać po nim lat"
+- CTA: "Napiszcie! Odpowiem szybciej niż sąsiad przy pizzy 🍕"
+- Negocjacje: "Cena do dogadania — jestem człowiekiem, nie automatem"
+- Za darmo: "Za free bo szafa płacze 😂 Kto pierwszy, ten lepszy!"
+
+## TON: TECHNICAL (Techniczny)
+### Frazowanie (FB — mniej formalny niż Allegro, ale z danymi)
+- Wprowadzenie: "[Produkt] [model/parametry]. Stan: [ocena]."
+- Dane: "Wymiary: [X]. Materiał: [Y]. Kolor: [Z]."
+- CTA: "Pytania w wiadomości. Odbiór: [miasto/dzielnica]."
+- Negocjacje: "Cena: [X] zł. Możliwa rozmowa przy odbiorze."
+- Za darmo: "Bezpłatnie. Odbiór własny, okolice [dzielnica]."
+
+## TON: PERSUASIVE (Przekonujący)
+### Frazowanie (FB — nastawiony na relację i korzyść)
+- Wprowadzenie: "Nie szukaj dalej — tu jest dokładnie to, czego potrzebujesz!"
+- Stan: "W pełni sprawny, zadbany — możesz używać od razu, zero inwestycji"
+- CTA: "Napisz teraz — umówimy się na odbiór kiedy Ci pasuje!"
+- Negocjacje: "Podaję uczciwą cenę — nie kombinuję"
+- Za darmo: "Kompletnie za darmo — oszczędzasz realne pieniądze, działaj!"
+
+## TON: CONCISE (Zwięzły)
+### Frazowanie
+- Wprowadzenie: "[Produkt]. [Stan]."
+- Dane: "[Najważniejszy parametr]. [Cena] zł."
+- CTA: "Wiadomość."
+- Za darmo: "Free. Odbiór osobisty."

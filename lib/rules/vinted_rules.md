@@ -122,3 +122,41 @@ Wysyłka w 1-2 dni + zachęta do kontaktu
 - Starannie zapakuj (folia przeciwwilgociowa!)
 - Bonusy: karteczka z podziękowaniem, ładne pakowanie
 - Wpływa na oceny!
+## TON: ENTHUSIASTIC (Entuzjastyczny)
+### Frazowanie (Vinted — fashion-focused entuzjazm)
+- Wprowadzenie: "Absolutnie kocham ten [produkt] ale czas na nowego właściciela! ✨"
+- Stan: "Wygląda jak nowy! Dosłownie nie widać, że używany!"
+- CTA: "Piszcie! Wysyłam szybko, pakuję starannie! 💌"
+- Negocjacje: "Cena już niska, ale umówmy się 🙂"
+- Za darmo: "Oddaję za darmo kochance dobrego stylu! 🎁"
+
+## TON: FUNNY (Zabawny)
+### Frazowanie (Vinted — lekki humor modowy)
+- Wprowadzenie: "Ten [produkt] jest za dobry żeby leżeć w szafie. Szuka kogoś ambitniejszego 😄"
+- Stan: "Stan super — nie miałam serca go znosić, teraz Twoja kolej"
+- CTA: "Pytaj śmiało! Nie ugryzę, obiecuję 🐾"
+- Negocjacje: "Cena negocjowalna dla osoby z dobrym gustem 😉"
+- Za darmo: "Za darmo bo KonMari powiedziała żeby oddać 😂"
+
+## TON: TECHNICAL (Techniczny)
+### Frazowanie (Vinted — skład, rozmiarówka, stan tkaniny)
+- Wprowadzenie: "[Marka] [typ produktu]. Rozmiar: [X]. Skład: [materiał]%."
+- Stan tkaniny: "Stan: [ocena]. [Opis prań/pielęgnacji]. [Ewentualne defekty lub ich brak]."
+- Wymiary: "Długość: [X] cm. Szerokość w ramionach: [X] cm. [Inne wymiary]."
+- CTA: "Wysyłka: [metoda]. Pytania o pomiar — odpiszę."
+- Za darmo: "Bezpłatnie. Wysyłka na koszt odbioru."
+
+## TON: PERSUASIVE (Przekonujący)
+### Frazowanie (Vinted — korzyści stylistyczne)
+- Wprowadzenie: "Szukasz [produktu] który zrobi wrażenie? Właśnie go znalazłaś."
+- Stan: "Zadbany, bez defektów — nosić od razu, bez prania i poprawek"
+- CTA: "Kup teraz — inne osoby już pytają!"
+- Negocjacje: "Cena uczciwa względem stanu — warto!"
+- Za darmo: "Za darmo — wartość [X] zł, Twoja oszczędność realna"
+
+## TON: CONCISE (Zwięzły)
+### Frazowanie
+- Wprowadzenie: "[Marka] [typ]. Rozmiar [X]. [Stan]."
+- Dane: "Skład: [materiał]. [Ewentualny defekt]."
+- Cena: "[X] zł. Wysyłka: [Y] zł."
+- Za darmo: "Gratis + koszt wysyłki."

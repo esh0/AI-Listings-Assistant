@@ -115,3 +115,42 @@ Marka + typ + główna zaleta + LOKALIZACJA
 - System ocen - buduj reputację
 - Smart! - włącz jeśli możliwe
 - Bundle z głównym Allegro - wyższa widoczność
+## TON: ENTHUSIASTIC (Entuzjastyczny)
+### Frazowanie
+- Wprowadzenie: "Fantastyczna okazja! Oferuję [produkt] w świetnym stanie!"
+- Stan: "Stan idealny — zachwyci każdego wymagającego kupującego!"
+- CTA: "Nie przegap tej oferty! Zapraszam do kontaktu!"
+- Negocjacje: "Cena już atrakcyjna, ale możemy porozmawiać!"
+- Za darmo: "Niesamowita oferta — oddaję za darmo! Piszcie szybko!"
+
+## TON: FUNNY (Zabawny)
+### Frazowanie
+- Wprowadzenie: "Sprzedam [produkt] — szuka nowego właściciela, który doceni jego charakter"
+- Stan: "Stan bardzo dobry, jak na swoje lata całkiem dziarski"
+- CTA: "Pytania? Chętnie odpiszę 😊 (i nie ugryzę)"
+- Negocjacje: "Cena negocjowalna — bo optymizm popłaca"
+- Za darmo: "Bezpłatnie, bo minimalizm to nowe bogactwo"
+
+## TON: TECHNICAL (Techniczny)
+### Frazowanie (Allegro — szczegółowe parametry, kompatybilność)
+- Wprowadzenie: "[Produkt] [marka] [model]. Rok produkcji: [X]. Parametry: [lista]."
+- Stan: "Stan: [ocena]. [Opis ewentualnych śladów]. Sprawny."
+- Kompatybilność: "Kompatybilny z: [lista modeli/systemów]."
+- CTA: "Kontakt przez wiadomości Allegro. Faktura możliwa."
+- Za darmo: "Brak kosztów. Odbiór osobisty, [miasto]."
+
+## TON: PERSUASIVE (Przekonujący)
+### Frazowanie
+- Wprowadzenie: "Profesjonalny [produkt] w cenie, której nie znajdziesz taniej w sklepie"
+- Stan: "Używany, ale w pełni sprawny — oszczędzasz względem nowego"
+- CTA: "Zamów teraz — wysyłka tego samego dnia!"
+- Negocjacje: "Cena skalkulowana uczciwie — ostatnie słowo"
+- Za darmo: "Bezpłatnie do odbioru — wartość katalogowa: [X] zł"
+
+## TON: CONCISE (Zwięzły)
+### Frazowanie
+- Wprowadzenie: "[Produkt] [model]. [Stan]. [Cena] zł."
+- Stan: "[Ocena stanu]. [Ewentualne uwagi]."
+- CTA: "Kontakt: wiadomość."
+- Negocjacje: "Negocjacja możliwa."
+- Za darmo: "Bezpłatnie. Odbiór własny."
