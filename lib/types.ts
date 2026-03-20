@@ -14,7 +14,13 @@ export type ProductCondition =
 
 export type DeliveryOption = "odbiór osobisty" | "wysyłka";
 
-export type ToneStyle = "professional" | "friendly" | "casual";
+export type ToneStyle =
+    | "professional" | "friendly" | "casual"
+    | "enthusiastic" | "funny" | "technical"
+    | "persuasive" | "concise";
+
+export const FREE_TONES: ToneStyle[] = ["professional", "friendly", "casual"];
+export const RESELER_TONES: ToneStyle[] = ["enthusiastic", "funny", "technical", "persuasive", "concise"];
 
 export type PriceType = "user_provided" | "ai_suggest" | "free";
 
@@ -152,6 +158,11 @@ export const TONE_STYLE_NAMES: Record<ToneStyle, string> = {
     professional: "Profesjonalny",
     friendly: "Przyjazny",
     casual: "Swobodny",
+    enthusiastic: "Entuzjastyczny",
+    funny: "Zabawny",
+    technical: "Techniczny",
+    persuasive: "Przekonujący",
+    concise: "Zwięzły",
 };
 
 // Tone style descriptions
@@ -159,4 +170,9 @@ export const TONE_STYLE_DESCRIPTIONS: Record<ToneStyle, string> = {
     professional: "Formalny, rzeczowy styl idealny dla poważnych transakcji",
     friendly: "Ciepły i przystępny ton budujący zaufanie",
     casual: "Bezpośredni i luźny język jak w rozmowie",
+    enthusiastic: "Energetyczny, pełen emocji styl przyciągający uwagę",
+    funny: "Lekki humor i luźna atmosfera bez utraty wiarygodności",
+    technical: "Precyzyjne dane i specyfikacje bez ozdobników",
+    persuasive: "Argumenty korzyści i CTA skłaniające do zakupu",
+    concise: "Minimum słów, maksimum treści — bullet points i krótkie zdania",
 };

@@ -2,7 +2,11 @@ import { z } from "zod";
 import type { ToneStyle, PriceType } from "@/lib/types";
 
 // Enum schemas for tone and price types
-export const ToneStyleSchema = z.enum(["professional", "friendly", "casual"]);
+export const ToneStyleSchema = z.enum([
+    "professional", "friendly", "casual",
+    "enthusiastic", "funny", "technical",
+    "persuasive", "concise",
+]);
 export const PriceTypeSchema = z.enum(["user_provided", "ai_suggest", "free"]);
 
 // Form validation schema
