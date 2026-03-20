@@ -17,10 +17,9 @@ import {
     CreditCard,
     Settings,
 } from "lucide-react";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
-import { toast } from "sonner";
 
 interface SidebarProps {
     user: {
@@ -61,7 +60,6 @@ const mainItems = [
 export function Sidebar({ user, collapsed = false }: SidebarProps) {
     const pathname = usePathname();
     const [isMobileOpen, setIsMobileOpen] = useState(false);
-    const [isPortalLoading, setIsPortalLoading] = useState(false);
     const { data: session } = useSession();
 
     useEffect(() => {
@@ -70,7 +68,6 @@ export function Sidebar({ user, collapsed = false }: SidebarProps) {
     }, [isMobileOpen]);
 
     const plan = (session?.user?.plan ?? user.plan ?? "FREE") as "FREE" | "STARTER" | "RESELER";
-    const isPaid = plan !== "FREE";
     const credits = session?.user?.creditsAvailable ?? user.creditsAvailable ?? 0;
     const boost = session?.user?.boostCredits ?? user.boostCredits ?? 0;
     const planLimit = PLAN_CREDITS[plan] ?? 5;
@@ -85,20 +82,6 @@ export function Sidebar({ user, collapsed = false }: SidebarProps) {
         if (days === 1) return "jutro";
         return `za ${days} dni`;
     };
-
-    const handlePortal = useCallback(async () => {
-        setIsPortalLoading(true);
-        try {
-            const res = await fetch("/api/stripe/portal", { method: "POST" });
-            if (!res.ok) throw new Error();
-            const data = await res.json();
-            if (data.url) window.location.href = data.url;
-        } catch {
-            toast.error("Nie udało się otworzyć panelu subskrypcji. Spróbuj ponownie.");
-        } finally {
-            setIsPortalLoading(false);
-        }
-    }, []);
 
     const handleSignOut = () => signOut({ callbackUrl: "/" });
 
@@ -212,16 +195,6 @@ export function Sidebar({ user, collapsed = false }: SidebarProps) {
 
                 {/* Bottom nav */}
                 <div className="space-y-0.5">
-                    {isPaid && !collapsed && (
-                        <button
-                            onClick={handlePortal}
-                            disabled={isPortalLoading}
-                            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-foreground hover:bg-accent/50 transition-colors disabled:opacity-50"
-                        >
-                            <span className="h-4 w-4 shrink-0" />
-                            <span>{isPortalLoading ? "Przekierowuję…" : "Zarządzaj subskrypcją"}</span>
-                        </button>
-                    )}
                     <button
                         onClick={handleSignOut}
                         title={collapsed ? "Wyloguj" : undefined}
