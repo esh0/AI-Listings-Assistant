@@ -100,6 +100,11 @@ STRIPE_PRICE_BOOST_10=price_...
 STRIPE_PRICE_BOOST_30=price_...
 STRIPE_PRICE_BOOST_60=price_...
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
+
+# Email (Resend)
+RESEND_API_KEY=re_your_key_here
+RESEND_NOREPLY_EMAIL=noreply@marketplace-ai.pl
+RESEND_CONTACT_EMAIL=kontakt@marketplace-ai.pl
 ```
 
 **Required keys:**
