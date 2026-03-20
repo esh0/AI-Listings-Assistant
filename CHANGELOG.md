@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.2.0] - 2026-03-20
+
+### Added
+- Google Analytics 4 (G-NER153CSFW) — automatic page view tracking, scroll depth, outbound clicks
+
+---
+
 ## [1.1.0] - 2026-03-20
 
 ### Added
