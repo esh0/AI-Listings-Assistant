@@ -11,6 +11,8 @@ import {
     TONE_STYLE_NAMES,
     DELIVERY_NAMES,
     CONDITION_NAMES,
+    FREE_TONES,
+    RESELER_TONES,
 } from "@/lib/types";
 import type { Platform, ToneStyle, DeliveryOption, ProductCondition } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -196,7 +198,7 @@ export function TemplateFormModal({ template, onClose }: Props) {
                     <fieldset className="space-y-3">
                         <legend className="text-sm font-medium">Styl komunikacji</legend>
                         <div className="flex gap-2 flex-wrap">
-                            {(["professional", "friendly", "casual"] as ToneStyle[]).map((t) => (
+                            {([...FREE_TONES, ...RESELER_TONES] as ToneStyle[]).map((t) => (
                                 <button
                                     key={t}
                                     type="button"
