@@ -156,8 +156,8 @@ export function UploadDropzone({ onImagesChange, images, maxImages }: UploadDrop
                                 src={image.preview}
                                 alt={`Zdjęcie produktu ${index + 1}`}
                                 className="w-full h-full object-cover transition-transform group-hover:scale-105"
-                                width={400}
-                                height={400}
+                                width={144}
+                                height={144}
                                 loading="lazy"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-3">

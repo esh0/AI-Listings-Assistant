@@ -171,7 +171,7 @@ export function ProductForm({
                                         )}
                                         aria-disabled="true"
                                     >
-                                        <Crown className="h-3 w-3" />
+                                        <Crown className="h-3 w-3" aria-hidden="true" />
                                         {TONE_STYLE_NAMES[tone]}
                                     </button>
                                     {tooltipTone === tone && (
@@ -303,7 +303,7 @@ export function ProductParameters({
                             aria-label="Cena produktu"
                             autoComplete="off"
                         />
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm" aria-label="Waluta">
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm" aria-hidden="true">
                             PLN
                         </span>
                     </div>

@@ -330,7 +330,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
             {/* Search + filter toggle */}
             <div className="flex gap-2">
                 <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
                     <Input
                         type="search"
                         placeholder="Szukaj ogłoszeń…"
@@ -342,9 +342,10 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                     {searchQuery && (
                         <button
                             onClick={() => setSearchQuery("")}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                            aria-label="Wyczyść wyszukiwanie"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
                         >
-                            <X className="h-4 w-4" />
+                            <X className="h-4 w-4" aria-hidden="true" />
                         </button>
                     )}
                 </div>
@@ -352,9 +353,11 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                     variant="outline"
                     size="icon"
                     onClick={() => setShowFilters((v) => !v)}
+                    aria-label="Filtry i sortowanie"
+                    aria-expanded={showFilters}
                     className={cn("shrink-0 relative", (showFilters || currentFilter !== "all" || currentPlatform !== "all") && "border-primary text-primary")}
                 >
-                    <Filter className="h-4 w-4" />
+                    <Filter className="h-4 w-4" aria-hidden="true" />
                     {(currentFilter !== "all" || currentPlatform !== "all") && (
                         <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-primary" />
                     )}
@@ -449,7 +452,7 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
             {ads.length > 0 && (
                 <button
                     onClick={handleToggleAll}
-                    className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                    className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
                 >
                     {allSelected
                         ? <CheckSquare className="h-3.5 w-3.5" />
@@ -501,7 +504,9 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                                 {/* Checkbox */}
                                 <button
                                     onClick={(e) => { e.stopPropagation(); handleToggleSelect(ad.id); }}
-                                    className="shrink-0 text-muted-foreground hover:text-foreground"
+                                    aria-label={isSelected ? `Odznacz ogłoszenie: ${ad.title}` : `Zaznacz ogłoszenie: ${ad.title}`}
+                                    aria-pressed={isSelected}
+                                    className="shrink-0 text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
                                 >
                                     {isSelected
                                         ? <CheckSquare className="h-4 w-4 text-primary" />
@@ -551,48 +556,56 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                                         variant="ghost"
                                         size="icon"
                                         className="h-8 w-8"
+                                        aria-label="Opcje ogłoszenia"
+                                        aria-expanded={openMenuId === ad.id}
+                                        aria-haspopup="menu"
                                         onClick={(e) => { e.stopPropagation(); setOpenMenuId(openMenuId === ad.id ? null : ad.id); }}
                                     >
-                                        <MoreHorizontal className="h-4 w-4" />
+                                        <MoreHorizontal className="h-4 w-4" aria-hidden="true" />
                                     </Button>
                                     {openMenuId === ad.id && (
-                                        <div className="absolute right-0 top-full mt-1 z-50 min-w-[180px] bg-card border border-border rounded-lg shadow-md py-1">
+                                        <div role="menu" className="absolute right-0 top-full mt-1 z-50 min-w-[180px] bg-card border border-border rounded-lg shadow-md py-1">
                                             <button
+                                                role="menuitem"
                                                 onClick={() => { router.push(`/dashboard/ads/${ad.id}`); setOpenMenuId(null); }}
-                                                className="flex items-center w-full px-3 py-1.5 text-sm hover:bg-muted gap-2"
+                                                className="flex items-center w-full px-3 py-1.5 text-sm hover:bg-muted gap-2 focus-visible:outline-none focus-visible:bg-muted"
                                             >
-                                                <Eye className="h-3.5 w-3.5" /> Podgląd
+                                                <Eye className="h-3.5 w-3.5" aria-hidden="true" /> Podgląd
                                             </button>
                                             {ad.status === "DRAFT" && (
                                                 <button
+                                                    role="menuitem"
                                                     onClick={() => handleMarkAsPublished(ad.id)}
-                                                    className="flex items-center w-full px-3 py-1.5 text-sm hover:bg-muted gap-2"
+                                                    className="flex items-center w-full px-3 py-1.5 text-sm hover:bg-muted gap-2 focus-visible:outline-none focus-visible:bg-muted"
                                                 >
-                                                    <Check className="h-3.5 w-3.5" /> Opublikuj
+                                                    <Check className="h-3.5 w-3.5" aria-hidden="true" /> Opublikuj
                                                 </button>
                                             )}
                                             {ad.status === "PUBLISHED" && (
                                                 <>
                                                     <button
+                                                        role="menuitem"
                                                         onClick={() => handleMarkAsSold(ad.id)}
-                                                        className="flex items-center w-full px-3 py-1.5 text-sm hover:bg-muted gap-2"
+                                                        className="flex items-center w-full px-3 py-1.5 text-sm hover:bg-muted gap-2 focus-visible:outline-none focus-visible:bg-muted"
                                                     >
-                                                        <ShoppingCart className="h-3.5 w-3.5" /> Sprzedane
+                                                        <ShoppingCart className="h-3.5 w-3.5" aria-hidden="true" /> Sprzedane
                                                     </button>
                                                     <button
+                                                        role="menuitem"
                                                         onClick={() => handleMarkAsArchived(ad.id)}
-                                                        className="flex items-center w-full px-3 py-1.5 text-sm hover:bg-muted gap-2"
+                                                        className="flex items-center w-full px-3 py-1.5 text-sm hover:bg-muted gap-2 focus-visible:outline-none focus-visible:bg-muted"
                                                     >
-                                                        <Ban className="h-3.5 w-3.5" /> Wycofaj
+                                                        <Ban className="h-3.5 w-3.5" aria-hidden="true" /> Wycofaj
                                                     </button>
                                                 </>
                                             )}
                                             <div className="border-t border-border my-1" />
                                             <button
+                                                role="menuitem"
                                                 onClick={() => handleDelete(ad.id)}
-                                                className="flex items-center w-full px-3 py-1.5 text-sm hover:bg-muted gap-2 text-destructive"
+                                                className="flex items-center w-full px-3 py-1.5 text-sm hover:bg-muted gap-2 text-destructive focus-visible:outline-none focus-visible:bg-muted"
                                             >
-                                                <Trash2 className="h-3.5 w-3.5" /> Usuń
+                                                <Trash2 className="h-3.5 w-3.5" aria-hidden="true" /> Usuń
                                             </button>
                                         </div>
                                     )}

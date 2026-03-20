@@ -102,7 +102,7 @@ export function Sidebar({ user, collapsed = false }: SidebarProps) {
                 {!collapsed && (
                     <button
                         onClick={() => setIsMobileOpen(false)}
-                        className="lg:hidden p-1.5 rounded-md hover:bg-muted transition-colors"
+                        className="lg:hidden p-1.5 rounded-md hover:bg-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                         aria-label="Zamknij menu"
                     >
                         <X className="h-5 w-5" />
@@ -198,8 +198,9 @@ export function Sidebar({ user, collapsed = false }: SidebarProps) {
                     <button
                         onClick={handleSignOut}
                         title={collapsed ? "Wyloguj" : undefined}
+                        aria-label="Wyloguj"
                         className={cn(
-                            "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-foreground hover:bg-destructive/10 hover:text-destructive transition-colors",
+                            "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-foreground hover:bg-destructive/10 hover:text-destructive transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                             collapsed && "justify-center px-2"
                         )}
                     >

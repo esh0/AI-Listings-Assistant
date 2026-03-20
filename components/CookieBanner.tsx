@@ -32,14 +32,14 @@ export function CookieBanner() {
                 </p>
                 <button
                     onClick={dismiss}
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium transition-colors shrink-0"
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium transition-colors shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 >
                     Rozumiem
                 </button>
                 <button
                     onClick={dismiss}
                     aria-label="Zamknij"
-                    className="p-1.5 rounded-md hover:bg-muted transition-colors text-muted-foreground shrink-0"
+                    className="p-1.5 rounded-md hover:bg-muted transition-colors text-muted-foreground shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                     <X className="h-4 w-4" />
                 </button>
