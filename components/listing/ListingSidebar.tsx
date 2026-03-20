@@ -144,7 +144,7 @@ export function ListingSidebar({
                     {priceType === "free" && (
                         <div className="flex justify-between">
                             <span className="text-muted-foreground">Cena</span>
-                            <span className="font-medium text-success">Za darmo</span>
+                            <span className="font-medium">Za darmo</span>
                         </div>
                     )}
                     {!priceMin && !priceMax && !soldPrice && priceType !== "free" && !(isGuest && priceType === "user_provided" && userPrice) && (

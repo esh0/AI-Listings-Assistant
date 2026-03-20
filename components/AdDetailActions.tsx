@@ -118,16 +118,16 @@ export function AdDetailActions({ ad, title, description, hasEdits, editing, onE
         }
     };
 
-    const handlePublishConfirm = async (price: number) => {
+    const handlePublishConfirm = async (price: number | null) => {
         setPublishDialogOpen(false);
         await patch({ status: "PUBLISHED", priceMin: price, priceMax: price });
         toast.success("Ogłoszenie oznaczone jako opublikowane");
     };
 
-    const handleSoldConfirm = async (price: number) => {
+    const handleSoldConfirm = async (price: number | null) => {
         setSoldDialogOpen(false);
         await patch({ status: "SOLD", soldPrice: price });
-        toast.success(`Ogłoszenie sprzedane za ${price} zł`);
+        toast.success(price != null ? `Ogłoszenie sprzedane za ${price} zł` : "Ogłoszenie oznaczone jako sprzedane");
     };
 
     return (
@@ -151,14 +151,17 @@ export function AdDetailActions({ ad, title, description, hasEdits, editing, onE
                 open={publishDialogOpen}
                 defaultValue={publishDefaultPrice}
                 title="Opublikuj ogłoszenie"
-                description="Podaj cenę za jaką oferujesz produkt (w złotych)."
+                description="Podaj cenę za jaką oferujesz produkt."
                 confirmLabel="Opublikuj"
+                showFree
                 onConfirm={handlePublishConfirm}
                 onCancel={() => setPublishDialogOpen(false)}
             />
             <SoldPriceDialog
                 open={soldDialogOpen}
                 defaultValue={soldDefaultPrice}
+                title="Oznacz jako sprzedane"
+                confirmLabel="Potwierdź sprzedaż"
                 onConfirm={handleSoldConfirm}
                 onCancel={() => setSoldDialogOpen(false)}
             />

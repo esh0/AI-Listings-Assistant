@@ -246,13 +246,13 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
         }
     };
 
-    const handleSoldConfirm = async (price: number) => {
+    const handleSoldConfirm = async (price: number | null) => {
         const id = soldDialog;
         setSoldDialog(null);
         if (!id) return;
         try {
             await patchAd(id, { status: "SOLD", soldPrice: price });
-            toast.success(`Ogłoszenie sprzedane za ${price} zł`);
+            toast.success(price != null ? `Ogłoszenie sprzedane za ${price} zł` : "Ogłoszenie oznaczone jako sprzedane");
             router.refresh();
         } catch {
             toast.error("Nie udało się zaktualizować ogłoszenia");
