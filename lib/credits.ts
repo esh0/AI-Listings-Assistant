@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { sendLowCreditsEmail } from "@/lib/email";
 import type { Plan } from "@prisma/client";
 
 /**
@@ -56,6 +57,8 @@ export async function getAvailableCredits(userId: string): Promise<number> {
  * Consume one credit for ad generation.
  * Uses subscription credits first, then boost credits.
  * Atomic: uses conditional UPDATE to prevent TOCTOU race conditions.
+ * Side-effect: sends low-credits email (fire-and-forget) when subscription
+ * credits drop to exactly 1.
  */
 export async function consumeCredit(userId: string): Promise<void> {
     // Atomic decrement of subscription credits (only if > 0)
@@ -64,7 +67,11 @@ export async function consumeCredit(userId: string): Promise<void> {
         data: { creditsAvailable: { decrement: 1 } },
     });
 
-    if (subResult.count > 0) return; // Success
+    if (subResult.count > 0) {
+        // Fire-and-forget: check if we should send low-credits email
+        maybeNotifyLowCredits(userId).catch(() => {});
+        return;
+    }
 
     // Atomic decrement of boost credits (only if > 0)
     const boostResult = await prisma.user.updateMany({
@@ -72,7 +79,7 @@ export async function consumeCredit(userId: string): Promise<void> {
         data: { boostCredits: { decrement: 1 } },
     });
 
-    if (boostResult.count > 0) return; // Success
+    if (boostResult.count > 0) return; // Boost credits used — no email for boost path
 
     // No credits available — fetch plan for user-friendly error message
     const user = await prisma.user.findUnique({
@@ -88,6 +95,51 @@ export async function consumeCredit(userId: string): Promise<void> {
     throw new Error(
         "Brak dostępnych kredytów. Dokup pakiet kredytów lub zmień plan na wyższy."
     );
+}
+
+/**
+ * Atomically claim the low-credits email slot, then send if slot was claimed.
+ * Uses a conditional updateMany (WHERE lastLowCreditEmailAt IS NULL OR < 25 days ago)
+ * so only one concurrent caller can win the slot — reduces double-send probability.
+ * Not a hard guarantee under all race conditions, but sufficient for this use case.
+ */
+async function maybeNotifyLowCredits(userId: string): Promise<void> {
+    const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+            id: true,
+            email: true,
+            name: true,
+            plan: true,
+            creditsAvailable: true,
+        },
+    });
+
+    if (!user) return;
+    if (user.creditsAvailable !== 1) return;
+
+    const twentyFiveDaysAgo = new Date(Date.now() - 25 * 24 * 60 * 60 * 1000);
+
+    // Atomically claim the send slot: only update if no email was sent recently
+    const claimed = await prisma.user.updateMany({
+        where: {
+            id: userId,
+            OR: [
+                { lastLowCreditEmailAt: null },
+                { lastLowCreditEmailAt: { lt: twentyFiveDaysAgo } },
+            ],
+        },
+        data: { lastLowCreditEmailAt: new Date() },
+    });
+
+    if (claimed.count === 0) return; // Another request already claimed the slot
+
+    await sendLowCreditsEmail({
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        plan: user.plan,
+    });
 }
 
 /**
