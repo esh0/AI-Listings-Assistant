@@ -168,6 +168,11 @@ enum ToneStyle {
   professional
   friendly
   casual
+  enthusiastic
+  funny
+  technical
+  persuasive
+  concise
 }
 
 enum ProductCondition {
