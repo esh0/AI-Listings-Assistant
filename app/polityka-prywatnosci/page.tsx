@@ -161,7 +161,7 @@ export default function PolitykaPrywatnosci() {
             <p>Masz prawo sprzeciwić się przetwarzaniu danych opartemu na prawnie uzasadnionym interesie (art. 6 ust. 1 lit. f RODO), w tym przetwarzaniu na potrzeby rate-limitingu i historii aktywności.</p>
 
             <h3>6.7. Prawo do wycofania zgody</h3>
-            <p>Jeśli przetwarzanie oparte jest na zgodzie (np. marketing), możesz ją wycofać w dowolnym momencie. Wycofanie zgody nie wpływa na zgodność z prawem przetwarzania przed wycofaniem.</p>
+            <p>Jeśli przetwarzanie oparte jest na zgodzie, możesz ją wycofać w dowolnym momencie. W sprawach dotyczących rezygnacji z powiadomień lub realizacji praw RODO skontaktuj się pod adresem: <a href="mailto:privacy@marketplace-ai.pl">privacy@marketplace-ai.pl</a>. Wycofanie zgody nie wpływa na zgodność z prawem przetwarzania przed wycofaniem.</p>
 
             <h3>6.8. Prawo do skargi</h3>
             <p>Masz prawo złożyć skargę do organu nadzorczego:</p>
@@ -252,7 +252,9 @@ export default function PolitykaPrywatnosci() {
             <hr />
 
             <h2>12. Kontakt</h2>
-            <p>W sprawach związanych z ochroną danych osobowych prosimy o kontakt:</p>
+            <p>W sprawach związanych z ochroną danych osobowych, realizacją praw RODO oraz rezygnacją z powiadomień:</p>
+            <p><strong>Email:</strong> <a href="mailto:privacy@marketplace-ai.pl">privacy@marketplace-ai.pl</a></p>
+            <p>W pozostałych sprawach dotyczących Serwisu:</p>
             <p><strong>Email:</strong> kontakt@marketplace-ai.pl</p>
             <p><strong>Adres:</strong> Anna Szałach, ul. Radosna 36, 82-200 Grobelno</p>
         </LegalLayout>
