@@ -101,11 +101,24 @@ export function ListingSidebar({
 
     const hasShipping = Array.isArray(delivery) ? delivery.includes("wysyłka") : false;
 
-    // "Opublikowane za" — userPrice when priceType is user_provided, else priceMin
-    const publishedPrice =
-        priceType === "user_provided" && userPrice
-            ? userPrice
-            : priceMin ?? null;
+    // "Proponowana" row — what was set at generation time
+    const proposedLabel = priceType === "ai_suggest" ? "Proponowana (AI)" : "Proponowana";
+    const proposedValue: string | null =
+        priceType === "free"
+            ? "Za darmo"
+            : priceType === "user_provided" && userPrice
+            ? `${userPrice} zł`
+            : priceType === "ai_suggest" && (priceMin || priceMax)
+            ? (priceMin && priceMax ? `${priceMin}–${priceMax} zł` : `${priceMin ?? priceMax} zł`)
+            : null;
+
+    // "Opublikowane za" row — price recorded when published (priceMin = set at publish time)
+    const publishedValue: string | null =
+        priceMin === 0 || (status !== "DRAFT" && priceMin === null && priceType === "free")
+            ? "Za darmo"
+            : priceMin != null
+            ? `${priceMin} zł`
+            : null;
 
     return (
         <div className="lg:col-span-2 space-y-4">
@@ -113,41 +126,42 @@ export function ListingSidebar({
             <div className="rounded-xl border border-border bg-card p-4 sm:p-5 space-y-3">
                 <h3 className="text-sm font-medium">Ceny</h3>
                 <div className="space-y-2 text-sm">
-                    {(priceMin || priceMax) && priceType === "ai_suggest" && (
+                    {/* Proponowana — always show if we have a value */}
+                    {proposedValue && (
                         <div className="flex justify-between">
-                            <span className="text-muted-foreground">Sugerowana (AI)</span>
-                            <span className="font-medium">
-                                {priceMin && priceMax
-                                    ? `${priceMin}–${priceMax} zł`
-                                    : `${priceMin ?? priceMax} zł`}
-                            </span>
+                            <span className="text-muted-foreground">{proposedLabel}</span>
+                            <span className="font-medium">{proposedValue}</span>
                         </div>
                     )}
-                    {!isGuest && publishedPrice && !soldPrice && (status === "PUBLISHED" || status === "SOLD" || status === "ARCHIVED") && (
-                        <div className="flex justify-between">
-                            <span className="text-muted-foreground">Opublikowane za</span>
-                            <span className="font-medium">{publishedPrice} zł</span>
-                        </div>
-                    )}
+
+                    {/* Twoja cena — guest with user_provided */}
                     {isGuest && priceType === "user_provided" && userPrice && (
                         <div className="flex justify-between">
                             <span className="text-muted-foreground">Twoja cena</span>
                             <span className="font-medium">{userPrice} zł</span>
                         </div>
                     )}
-                    {!isGuest && soldPrice && (
+
+                    {/* Opublikowane za — show for PUBLISHED, SOLD, ARCHIVED */}
+                    {!isGuest && publishedValue && (status === "PUBLISHED" || status === "SOLD" || status === "ARCHIVED") && (
+                        <div className="flex justify-between">
+                            <span className="text-muted-foreground">Opublikowane za</span>
+                            <span className="font-medium">{publishedValue}</span>
+                        </div>
+                    )}
+
+                    {/* Sprzedane za — show for SOLD */}
+                    {!isGuest && status === "SOLD" && (
                         <div className="flex justify-between">
                             <span className="text-muted-foreground">Sprzedane za</span>
-                            <span className="font-medium text-success">{soldPrice} zł</span>
+                            <span className="font-medium text-success">
+                                {soldPrice != null ? (soldPrice === 0 ? "Za darmo" : `${soldPrice} zł`) : "Za darmo"}
+                            </span>
                         </div>
                     )}
-                    {priceType === "free" && (
-                        <div className="flex justify-between">
-                            <span className="text-muted-foreground">Cena</span>
-                            <span className="font-medium">Za darmo</span>
-                        </div>
-                    )}
-                    {!priceMin && !priceMax && !soldPrice && priceType !== "free" && !(isGuest && priceType === "user_provided" && userPrice) && (
+
+                    {/* Fallback */}
+                    {!proposedValue && !(isGuest && priceType === "user_provided" && userPrice) && (
                         <p className="text-muted-foreground">Do ustalenia</p>
                     )}
                 </div>

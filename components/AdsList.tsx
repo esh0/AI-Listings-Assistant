@@ -28,6 +28,7 @@ interface Ad {
     priceMax?: number | null;
     soldPrice?: number | null;
     images: any;
+    parameters?: unknown;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -317,6 +318,10 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
             )}
             <SoldPriceDialog
                 open={!!soldDialog}
+                title="Oznacz jako sprzedane"
+                description="Podaj cenę za jaką sprzedałeś produkt."
+                confirmLabel="Potwierdź sprzedaż"
+                showFree
                 onConfirm={handleSoldConfirm}
                 onCancel={() => setSoldDialog(null)}
             />
@@ -470,8 +475,15 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                         const statusStyle = STATUS_STYLES[ad.status] ?? "bg-muted text-muted-foreground";
                         const statusLabel = STATUS_LABELS[ad.status] ?? ad.status;
                         const platformLabel = PLATFORM_NAMES[ad.platform] ?? ad.platform;
-                        const price = ad.soldPrice
-                            ? `${ad.soldPrice} zł`
+                        const params = ad.parameters as { priceType?: string; userPrice?: number } | null;
+                        const priceType = params?.priceType;
+                        const userPrice = params?.userPrice;
+                        const price = ad.soldPrice != null
+                            ? (ad.soldPrice === 0 ? "Za darmo" : `${ad.soldPrice} zł`)
+                            : priceType === "free"
+                            ? "Za darmo"
+                            : priceType === "user_provided" && userPrice
+                            ? `${userPrice} zł`
                             : ad.priceMin && ad.priceMax
                             ? `${ad.priceMin}–${ad.priceMax} zł`
                             : ad.priceMin

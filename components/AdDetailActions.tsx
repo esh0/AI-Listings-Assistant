@@ -161,7 +161,9 @@ export function AdDetailActions({ ad, title, description, hasEdits, editing, onE
                 open={soldDialogOpen}
                 defaultValue={soldDefaultPrice}
                 title="Oznacz jako sprzedane"
+                description="Podaj cenę za jaką sprzedałeś produkt."
                 confirmLabel="Potwierdź sprzedaż"
+                showFree
                 onConfirm={handleSoldConfirm}
                 onCancel={() => setSoldDialogOpen(false)}
             />

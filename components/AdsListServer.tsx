@@ -60,6 +60,7 @@ export async function AdsListServer({ searchParams }: AdsListServerProps) {
                 images: true,
                 createdAt: true,
                 updatedAt: true,
+                parameters: true,
             },
         }),
         prisma.ad.count({ where }),
