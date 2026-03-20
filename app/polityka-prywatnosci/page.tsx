@@ -14,6 +14,7 @@ export default function PolitykaPrywatnosci() {
             <h2>1. Administrator danych osobowych</h2>
             <p>Administratorem Twoich danych osobowych jest Anna Szałach, zamieszkała pod adresem ul. Radosna 36, 82-200 Grobelno (dalej: „Administrator").</p>
             <p>Kontakt z Administratorem: kontakt@marketplace-ai.pl</p>
+            <p><em>Ostatnia aktualizacja: 20 marca 2026 r.</em></p>
 
             <hr />
 
@@ -71,7 +72,7 @@ export default function PolitykaPrywatnosci() {
                     <tr><td>Rate-limiting gości</td><td>UUID, hash IP</td><td>Art. 6 ust. 1 lit. f — uzasadniony interes: ochrona przed nadużyciami</td></tr>
                     <tr><td>Rozpatrywanie reklamacji</td><td>Email, dane konta</td><td>Art. 6 ust. 1 lit. b — wykonanie umowy</td></tr>
                     <tr><td>Wystawianie faktur</td><td>Dane do faktury (jeśli podane)</td><td>Art. 6 ust. 1 lit. c — obowiązek prawny</td></tr>
-                    <tr><td>Marketing bezpośredni (email)</td><td>Email</td><td>Art. 6 ust. 1 lit. a — zgoda (opcjonalna)</td></tr>
+                    <tr><td>Powiadomienia transakcyjne (email potwierdzający rejestrację, aktywację planu, zakup doładowania) oraz powiadomienia o stanie konta (np. niski stan kredytów)</td><td>Email</td><td>Art. 6 ust. 1 lit. b — wykonanie umowy / Art. 6 ust. 1 lit. f — uzasadniony interes Administratora</td></tr>
                     <tr><td>Prowadzenie historii aktywności</td><td>Typ akcji, ID ogłoszenia, data</td><td>Art. 6 ust. 1 lit. f — uzasadniony interes: zapewnienie ciągłości usługi i audytowalności</td></tr>
                 </tbody>
             </table>
@@ -96,6 +97,7 @@ export default function PolitykaPrywatnosci() {
                     <tr><td><strong>Supabase</strong></td><td>Baza danych, storage</td><td>EU/USA</td><td>SCCs, szyfrowanie</td></tr>
                     <tr><td><strong>Stripe</strong> (za pośrednictwem F.H.U. Krzysztof Szałach, NIP: 579-209-58-51)</td><td>Płatności</td><td>EU</td><td>Certyfikat PCI DSS Level 1</td></tr>
                     <tr><td><strong>Vercel</strong></td><td>Hosting aplikacji</td><td>EU/USA</td><td>SCCs, Edge Functions</td></tr>
+                    <tr><td><strong>Resend</strong> (Resend Inc.)</td><td>Wysyłka emaili transakcyjnych (rejestracja, zakup planu, stan kredytów)</td><td>USA</td><td>SCCs, Data Processing Agreement</td></tr>
                     <tr><td><strong>Sentry</strong> (Functional Software, Inc.)</td><td>Monitoring błędów aplikacji</td><td>USA</td><td>SCCs</td></tr>
                     <tr><td><strong>Vercel Analytics</strong></td><td>Anonimowe statystyki odwiedzin (brak danych osobowych)</td><td>EU/USA</td><td>Dane anonimowe, brak wymogu zgody</td></tr>
                 </tbody>
@@ -159,7 +161,7 @@ export default function PolitykaPrywatnosci() {
             <p>Masz prawo sprzeciwić się przetwarzaniu danych opartemu na prawnie uzasadnionym interesie (art. 6 ust. 1 lit. f RODO), w tym przetwarzaniu na potrzeby rate-limitingu i historii aktywności.</p>
 
             <h3>6.7. Prawo do wycofania zgody</h3>
-            <p>Jeśli przetwarzanie oparte jest na zgodzie (np. marketing), możesz ją wycofać w dowolnym momencie. Wycofanie zgody nie wpływa na zgodność z prawem przetwarzania przed wycofaniem.</p>
+            <p>Jeśli przetwarzanie oparte jest na zgodzie, możesz ją wycofać w dowolnym momencie. W sprawach dotyczących rezygnacji z powiadomień lub realizacji praw RODO skontaktuj się pod adresem: <a href="mailto:privacy@marketplace-ai.pl">privacy@marketplace-ai.pl</a>. Wycofanie zgody nie wpływa na zgodność z prawem przetwarzania przed wycofaniem.</p>
 
             <h3>6.8. Prawo do skargi</h3>
             <p>Masz prawo złożyć skargę do organu nadzorczego:</p>
@@ -250,7 +252,9 @@ export default function PolitykaPrywatnosci() {
             <hr />
 
             <h2>12. Kontakt</h2>
-            <p>W sprawach związanych z ochroną danych osobowych prosimy o kontakt:</p>
+            <p>W sprawach związanych z ochroną danych osobowych, realizacją praw RODO oraz rezygnacją z powiadomień:</p>
+            <p><strong>Email:</strong> <a href="mailto:privacy@marketplace-ai.pl">privacy@marketplace-ai.pl</a></p>
+            <p>W pozostałych sprawach dotyczących Serwisu:</p>
             <p><strong>Email:</strong> kontakt@marketplace-ai.pl</p>
             <p><strong>Adres:</strong> Anna Szałach, ul. Radosna 36, 82-200 Grobelno</p>
         </LegalLayout>

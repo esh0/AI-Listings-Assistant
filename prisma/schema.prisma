@@ -59,6 +59,7 @@ model User {
   creditsAvailable Int       @default(5)
   creditsResetAt   DateTime  @default(now())
   boostCredits     Int       @default(0)
+  lastLowCreditEmailAt DateTime?
   stripeCustomerId     String?  @unique
   stripeSubscriptionId String?  @unique
 

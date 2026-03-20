@@ -21,7 +21,7 @@ export function welcomeEmailHtml(name: string): string {
         <a href="https://marketplace-ai.pl/dashboard" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;text-decoration:none;padding:14px 32px;border-radius:8px;font-weight:600;font-size:16px;display:inline-block;">Przejdź do dashboardu →</a>
       </div>
       <hr style="border:none;border-top:1px solid #e5e7eb;margin:32px 0;">
-      <p style="margin:0;color:#6b7280;font-size:14px;line-height:1.6;">Jeśli masz pytania, odpiszemy na: <a href="mailto:kontakt@marketplace-ai.pl" style="color:#6366f1;">kontakt@marketplace-ai.pl</a></p>
+      <p style="margin:0;color:#6b7280;font-size:14px;line-height:1.6;">Jeśli masz pytania, napisz do nas: <a href="mailto:kontakt@marketplace-ai.pl" style="color:#6366f1;">kontakt@marketplace-ai.pl</a></p>
     </div>
     <div style="background:#f9fafb;padding:24px 40px;text-align:center;">
       <p style="margin:0;color:#9ca3af;font-size:12px;">© 2026 Marketplace AI · <a href="https://marketplace-ai.pl/polityka-prywatnosci" style="color:#9ca3af;">Polityka prywatności</a> · <a href="https://marketplace-ai.pl/regulamin" style="color:#9ca3af;">Regulamin</a></p>
