@@ -23,6 +23,7 @@ import {
     Facebook,
     Shirt,
     Pencil,
+    Crown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -49,6 +50,8 @@ import {
     PLATFORM_DEFAULT_TONES,
     DELIVERY_NAMES,
     TONE_STYLE_NAMES,
+    FREE_TONES,
+    RESELER_TONES,
 } from "@/lib/types";
 
 // Dynamic imports for conditionally rendered components
@@ -123,6 +126,8 @@ export function LandingForm() {
     const [selectedTone, setSelectedTone] = useState<ToneStyle>(DEFAULT_TONE);
     const [priceType, setPriceType] = useState<PriceType>(DEFAULT_PRICE_TYPE);
     const [isFreeChecked, setIsFreeChecked] = useState(false);
+    const [tooltipTone, setTooltipTone] = useState<ToneStyle | null>(null);
+    const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     // Editable content state
     const [editedTitle, setEditedTitle] = useState<string>("");
@@ -152,6 +157,20 @@ export function LandingForm() {
         () => images.length > 0 && delivery.length > 0,
         [images.length, delivery.length]
     );
+
+    const userPlan = status === "authenticated" ? (session?.user?.plan ?? "FREE") : "FREE";
+
+    const handleLockedToneClick = useCallback((tone: ToneStyle) => {
+        if (timerRef.current) clearTimeout(timerRef.current);
+        setTooltipTone(tone);
+        timerRef.current = setTimeout(() => setTooltipTone(null), 2000);
+    }, []);
+
+    useEffect(() => {
+        return () => {
+            if (timerRef.current) clearTimeout(timerRef.current);
+        };
+    }, []);
 
     // Check if authenticated user has credits
     const userCredits = useMemo(() => {
@@ -834,8 +853,55 @@ export function LandingForm() {
                                                 Styl komunikacji
                                             </legend>
                                             <div className="flex gap-2 flex-wrap" role="radiogroup" aria-label="Wybór stylu komunikacji">
-                                                {(["professional", "friendly", "casual"] as ToneStyle[]).map((tone) => {
+                                                {FREE_TONES.map((tone) => {
                                                     const isSelected = selectedTone === tone;
+                                                    return (
+                                                        <button
+                                                            key={tone}
+                                                            type="button"
+                                                            role="radio"
+                                                            aria-checked={isSelected}
+                                                            onClick={() => setSelectedTone(tone)}
+                                                            className={cn(
+                                                                "px-4 py-1.5 rounded-full border text-sm cursor-pointer transition-all duration-200",
+                                                                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                                                                isSelected
+                                                                    ? "border-primary bg-primary/10 text-primary"
+                                                                    : "border-border text-muted-foreground hover:border-primary/50"
+                                                            )}
+                                                        >
+                                                            {TONE_STYLE_NAMES[tone]}
+                                                        </button>
+                                                    );
+                                                })}
+                                                {RESELER_TONES.map((tone) => {
+                                                    const isLocked = userPlan !== "RESELER";
+                                                    const isSelected = selectedTone === tone;
+                                                    if (isLocked) {
+                                                        return (
+                                                            <div key={tone} className="relative">
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => handleLockedToneClick(tone)}
+                                                                    className={cn(
+                                                                        "px-4 py-1.5 rounded-full border text-sm transition-all duration-200",
+                                                                        "flex items-center gap-1.5 cursor-not-allowed",
+                                                                        "border-violet-100 bg-violet-50 text-violet-300"
+                                                                    )}
+                                                                    aria-disabled="true"
+                                                                >
+                                                                    <Crown className="h-3 w-3" />
+                                                                    {TONE_STYLE_NAMES[tone]}
+                                                                </button>
+                                                                {tooltipTone === tone && (
+                                                                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1.5 rounded-lg bg-foreground text-background text-xs whitespace-nowrap z-10 pointer-events-none">
+                                                                        Dostępne w planie Reseler
+                                                                        <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-foreground" />
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    }
                                                     return (
                                                         <button
                                                             key={tone}
