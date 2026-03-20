@@ -30,39 +30,43 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://marketplace-ai.pl"
 function buildLowCreditsHtml(name: string, plan: string): string {
     const planDisplay = plan === "FREE" ? "Free" : plan === "STARTER" ? "Starter" : "Reseler";
     const pricingUrl = `${SITE_URL}/pricing`;
+    const dashboardUrl = `${SITE_URL}/dashboard/new`;
 
     return `<!DOCTYPE html>
 <html lang="pl">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 16px;color:#111;">
-  <p style="font-size:24px;font-weight:bold;margin-bottom:4px;">Marketplace <em style="color:#7c3aed;">AI</em></p>
-  <hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0;">
-  <p>Hej ${name},</p>
-  <p>W Twoim planie <strong>${planDisplay}</strong> została już tylko <strong>1 generacja</strong> w tym miesiącu.</p>
-  <p>Żeby nie zatrzymywać się w połowie drogi, możesz szybko doładować konto:</p>
-  <table style="margin:24px 0;border-collapse:collapse;width:100%;">
-    <tr>
-      <td style="padding:12px 16px;border:1px solid #e5e7eb;border-radius:8px 0 0 8px;background:#f9fafb;">
-        <strong>Doładowanie kredytów</strong><br>
-        <span style="color:#6b7280;font-size:14px;">10 generacji jednorazowo</span>
-      </td>
-      <td style="padding:12px 16px;border:1px solid #e5e7eb;border-left:none;text-align:center;white-space:nowrap;">
-        <strong>9,99 zł</strong>
-      </td>
-      <td style="padding:12px 16px;border:1px solid #e5e7eb;border-left:none;border-radius:0 8px 8px 0;text-align:center;">
-        <a href="${pricingUrl}" style="background:#7c3aed;color:#fff;padding:8px 16px;border-radius:6px;text-decoration:none;font-size:14px;font-weight:600;">Kup teraz</a>
-      </td>
-    </tr>
-  </table>
-  <p style="color:#6b7280;font-size:14px;">
-    Chcesz więcej generacji co miesiąc?
-    <a href="${pricingUrl}" style="color:#7c3aed;">Sprawdź plany Starter i Reseler →</a>
-  </p>
-  <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0;">
-  <p style="color:#9ca3af;font-size:12px;">
-    Marketplace AI · <a href="${SITE_URL}" style="color:#9ca3af;">${SITE_URL}</a><br>
-    Otrzymujesz ten email ponieważ jesteś zarejestrowanym użytkownikiem.
-  </p>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zostało Ci tylko 1 generacja</title>
+</head>
+<body style="margin:0;padding:0;background:#f9fafb;font-family:system-ui,-apple-system,sans-serif;">
+  <div style="max-width:600px;margin:40px auto;background:white;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+    <div style="background:linear-gradient(135deg,#d97706,#f59e0b);padding:40px 40px 32px;text-align:center;">
+      <div style="font-size:48px;margin-bottom:16px;">⚡</div>
+      <h1 style="margin:0;color:white;font-size:28px;font-weight:700;">Zostało Ci tylko 1 generacja!</h1>
+    </div>
+    <div style="padding:40px;">
+      <p style="margin:0 0 16px;color:#374151;font-size:16px;line-height:1.6;">Cześć ${name}! W Twoim planie <strong>${planDisplay}</strong> została już tylko <strong>1 generacja</strong> w tym miesiącu.</p>
+      <p style="margin:0 0 24px;color:#374151;font-size:16px;line-height:1.6;">Żeby nie zatrzymywać się w połowie drogi, możesz szybko doładować konto:</p>
+      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:20px;margin:0 0 24px;">
+        <table style="width:100%;border-collapse:collapse;">
+          <tr><td style="color:#374151;font-size:15px;padding:6px 0;">Doładowanie kredytów</td><td style="color:#374151;font-size:15px;font-weight:600;text-align:right;">10 generacji jednorazowo</td></tr>
+          <tr><td style="color:#374151;font-size:15px;padding:6px 0;">Cena</td><td style="color:#374151;font-size:15px;font-weight:600;text-align:right;">9,99 zł</td></tr>
+        </table>
+      </div>
+      <div style="text-align:center;margin:32px 0 16px;">
+        <a href="${pricingUrl}" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;text-decoration:none;padding:14px 32px;border-radius:8px;font-weight:600;font-size:16px;display:inline-block;">Dokup kredyty →</a>
+      </div>
+      <p style="text-align:center;margin:0 0 32px;">
+        <a href="${pricingUrl}" style="color:#6366f1;font-size:14px;text-decoration:none;">Sprawdź też plany Starter i Reseler z więcej generacjami miesięcznie →</a>
+      </p>
+      <hr style="border:none;border-top:1px solid #e5e7eb;margin:32px 0;">
+      <p style="margin:0;color:#6b7280;font-size:14px;">Masz jeszcze 1 generację — <a href="${dashboardUrl}" style="color:#6366f1;">użyj jej teraz</a>.</p>
+    </div>
+    <div style="background:#f9fafb;padding:24px 40px;text-align:center;">
+      <p style="margin:0;color:#9ca3af;font-size:12px;">© 2026 Marketplace AI · <a href="${SITE_URL}/polityka-prywatnosci" style="color:#9ca3af;">Polityka prywatności</a> · <a href="${SITE_URL}/regulamin" style="color:#9ca3af;">Regulamin</a></p>
+    </div>
+  </div>
 </body>
 </html>`;
 }
