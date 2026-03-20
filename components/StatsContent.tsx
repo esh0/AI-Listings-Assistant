@@ -76,25 +76,20 @@ export function StatsContent({ stats }: StatsContentProps) {
                         {stats.weeklyDays.map((day, i) => (
                             <div
                                 key={i}
-                                className="flex-1 flex flex-col items-center justify-end gap-1"
+                                className="flex-1 flex flex-col justify-end h-full"
                                 title={`${day.label}: ${day.count} ogłoszeń`}
                             >
                                 <div
-                                    className="w-full rounded-t-sm overflow-hidden"
+                                    className="w-full rounded-t-sm"
                                     style={{
                                         height: `${(day.count / maxCount) * 100}%`,
                                         minHeight: day.count > 0 ? "4px" : "0",
+                                        background: day.count > 0
+                                            ? "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)))"
+                                            : "transparent",
+                                        opacity: 0.75,
                                     }}
-                                >
-                                    <div
-                                        className="w-full h-full"
-                                        style={{
-                                            background:
-                                                "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)))",
-                                            opacity: 0.75,
-                                        }}
-                                    />
-                                </div>
+                                />
                             </div>
                         ))}
                     </div>
