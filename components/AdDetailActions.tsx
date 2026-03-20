@@ -13,6 +13,13 @@ interface AdDetailActionsProps {
     ad: {
         id: string;
         status: AdStatus;
+        priceMin?: number | null;
+        priceMax?: number | null;
+        soldPrice?: number | null;
+        parameters?: {
+            priceType?: string;
+            userPrice?: number;
+        } | null;
     };
     title?: string;
     description?: string;
@@ -21,14 +28,30 @@ interface AdDetailActionsProps {
     onEditToggle?: () => void;
 }
 
-type DialogType = "publish" | "archive" | "delete" | null;
+type DialogType = "archive" | "delete" | null;
 
 export function AdDetailActions({ ad, title, description, hasEdits, editing, onEditToggle }: AdDetailActionsProps) {
     const router = useRouter();
     const [isUpdating, setIsUpdating] = useState(false);
     const [dialog, setDialog] = useState<DialogType>(null);
+    const [publishDialogOpen, setPublishDialogOpen] = useState(false);
     const [soldDialogOpen, setSoldDialogOpen] = useState(false);
     const isProcessingRef = useRef(false);
+
+    // Default price for publish dialog: userPrice if user_provided, else midpoint of AI range
+    const publishDefaultPrice = (() => {
+        const { priceType, userPrice } = ad.parameters ?? {};
+        if (priceType === "user_provided" && userPrice) return userPrice;
+        if (ad.priceMin != null && ad.priceMax != null) return Math.round((ad.priceMin + ad.priceMax) / 2);
+        return ad.priceMin ?? ad.priceMax ?? undefined;
+    })();
+
+    // Default price for sold dialog: price recorded at publish time (publishedPrice from sidebar logic)
+    const soldDefaultPrice = (() => {
+        const { priceType, userPrice } = ad.parameters ?? {};
+        if (priceType === "user_provided" && userPrice) return userPrice;
+        return ad.priceMin ?? undefined;
+    })();
 
     const patch = async (body: object) => {
         if (isProcessingRef.current) return;
@@ -57,7 +80,7 @@ export function AdDetailActions({ ad, title, description, hasEdits, editing, onE
     };
 
     const handleMarkAsPublished = () => {
-        setDialog("publish");
+        setPublishDialogOpen(true);
     };
 
     const handleMarkAsSold = () => {
@@ -75,10 +98,7 @@ export function AdDetailActions({ ad, title, description, hasEdits, editing, onE
     const handleDialogConfirm = async () => {
         const type = dialog;
         setDialog(null);
-        if (type === "publish") {
-            await patch({ status: "PUBLISHED" });
-            toast.success("Ogłoszenie oznaczone jako opublikowane");
-        } else if (type === "archive") {
+        if (type === "archive") {
             await patch({ status: "ARCHIVED" });
             toast.success("Ogłoszenie zostało wycofane");
         } else if (type === "delete") {
@@ -98,6 +118,12 @@ export function AdDetailActions({ ad, title, description, hasEdits, editing, onE
         }
     };
 
+    const handlePublishConfirm = async (price: number) => {
+        setPublishDialogOpen(false);
+        await patch({ status: "PUBLISHED", priceMin: price, priceMax: price });
+        toast.success("Ogłoszenie oznaczone jako opublikowane");
+    };
+
     const handleSoldConfirm = async (price: number) => {
         setSoldDialogOpen(false);
         await patch({ status: "SOLD", soldPrice: price });
@@ -110,25 +136,29 @@ export function AdDetailActions({ ad, title, description, hasEdits, editing, onE
                 open={!!dialog}
                 title={
                     dialog === "delete" ? "Usuń ogłoszenie" :
-                    dialog === "archive" ? "Wycofaj ogłoszenie" :
-                    "Opublikuj ogłoszenie"
+                    "Wycofaj ogłoszenie"
                 }
                 description={
                     dialog === "delete" ? "Czy na pewno chcesz usunąć to ogłoszenie? Ta operacja jest nieodwracalna." :
-                    dialog === "archive" ? "Czy na pewno chcesz wycofać to ogłoszenie?" :
-                    "Oznaczyć ogłoszenie jako opublikowane?"
+                    "Czy na pewno chcesz wycofać to ogłoszenie?"
                 }
-                confirmLabel={
-                    dialog === "delete" ? "Usuń" :
-                    dialog === "archive" ? "Wycofaj" :
-                    "Opublikuj"
-                }
+                confirmLabel={dialog === "delete" ? "Usuń" : "Wycofaj"}
                 variant={dialog === "delete" ? "destructive" : "default"}
                 onConfirm={handleDialogConfirm}
                 onCancel={() => setDialog(null)}
             />
             <SoldPriceDialog
+                open={publishDialogOpen}
+                defaultValue={publishDefaultPrice}
+                title="Opublikuj ogłoszenie"
+                description="Podaj cenę za jaką oferujesz produkt (w złotych)."
+                confirmLabel="Opublikuj"
+                onConfirm={handlePublishConfirm}
+                onCancel={() => setPublishDialogOpen(false)}
+            />
+            <SoldPriceDialog
                 open={soldDialogOpen}
+                defaultValue={soldDefaultPrice}
                 onConfirm={handleSoldConfirm}
                 onCancel={() => setSoldDialogOpen(false)}
             />

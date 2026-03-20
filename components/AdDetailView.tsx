@@ -53,7 +53,14 @@ export function AdDetailView({ ad }: AdDetailViewProps) {
 
                 <div className="flex flex-wrap items-center gap-2">
                     <AdDetailActions
-                        ad={{ id: ad.id, status: ad.status }}
+                        ad={{
+                            id: ad.id,
+                            status: ad.status,
+                            priceMin: ad.priceMin,
+                            priceMax: ad.priceMax,
+                            soldPrice: ad.soldPrice,
+                            parameters: ad.parameters,
+                        }}
                         title={title}
                         description={description}
                         hasEdits={title !== ad.title || description !== ad.description}

@@ -5,22 +5,29 @@ import { CircleDollarSign, X } from "lucide-react";
 
 interface SoldPriceDialogProps {
     open: boolean;
+    defaultValue?: number;
+    title?: string;
+    description?: string;
+    confirmLabel?: string;
     onConfirm: (price: number) => void;
     onCancel: () => void;
 }
 
-export function SoldPriceDialog({ open, onConfirm, onCancel }: SoldPriceDialogProps) {
+export function SoldPriceDialog({ open, defaultValue, title = "Oznacz jako sprzedane", description = "Podaj cenę sprzedaży w złotych.", confirmLabel = "Potwierdź sprzedaż", onConfirm, onCancel }: SoldPriceDialogProps) {
     const [value, setValue] = useState("");
     const [error, setError] = useState<string | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         if (open) {
-            setValue("");
+            setValue(defaultValue != null ? String(defaultValue) : "");
             setError(null);
-            setTimeout(() => inputRef.current?.focus(), 50);
+            setTimeout(() => {
+                inputRef.current?.focus();
+                inputRef.current?.select();
+            }, 50);
         }
-    }, [open]);
+    }, [open, defaultValue]);
 
     useEffect(() => {
         const handler = (e: KeyboardEvent) => {
@@ -47,7 +54,7 @@ export function SoldPriceDialog({ open, onConfirm, onCancel }: SoldPriceDialogPr
                     <div className="p-2 rounded-full bg-primary/10 shrink-0">
                         <CircleDollarSign className="h-5 w-5 text-primary" />
                     </div>
-                    <h3 className="text-base font-semibold">Oznacz jako sprzedane</h3>
+                    <h3 className="text-base font-semibold">{title}</h3>
                     <button
                         onClick={onCancel}
                         className="ml-auto p-1.5 rounded-md hover:bg-muted transition-colors text-muted-foreground"
@@ -56,7 +63,7 @@ export function SoldPriceDialog({ open, onConfirm, onCancel }: SoldPriceDialogPr
                         <X className="h-4 w-4" />
                     </button>
                 </div>
-                <p className="text-sm text-muted-foreground mb-4">Podaj cenę sprzedaży w złotych.</p>
+                <p className="text-sm text-muted-foreground mb-4">{description}</p>
                 <div className="mb-4">
                     <div className="relative">
                         <input
@@ -85,7 +92,7 @@ export function SoldPriceDialog({ open, onConfirm, onCancel }: SoldPriceDialogPr
                         className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium transition-colors"
                     >
                         <CircleDollarSign className="h-4 w-4" />
-                        Potwierdź sprzedaż
+                        {confirmLabel}
                     </button>
                 </div>
             </div>
