@@ -44,15 +44,15 @@ export function AdDetailView({ ad }: AdDetailViewProps) {
     return (
         <div className="space-y-4">
             {/* Top bar: back + actions */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <Link href="/dashboard/ads">
+            <div className="flex items-center justify-between gap-2">
+                <Link href="/dashboard/ads" className="shrink-0">
                     <Button variant="ghost" size="sm">
                         <ArrowLeft className="h-4 w-4 mr-1" />
                         Moje ogłoszenia
                     </Button>
                 </Link>
 
-                <div className="flex flex-wrap items-center gap-2">
+                <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-end">
                     <AdDetailActions
                         ad={{
                             id: ad.id,
