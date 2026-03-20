@@ -4,7 +4,7 @@ import React, { useState, useCallback, useMemo, useEffect, useRef } from "react"
 import dynamic from "next/dynamic";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { RotateCcw, Check, ArrowLeft, Plus, Pencil } from "lucide-react";
+import { RotateCcw, Check, ArrowLeft, Plus, Pencil, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
@@ -528,36 +528,54 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
 
                     {/* Card 2: Platform + Tone */}
                     <CardWrapper className="min-h-[400px]">
-                        {status === "authenticated" && session?.user?.plan === "RESELER" && templates.length > 0 && (
+                        {status === "authenticated" && (
                             <div className="space-y-2 mb-6">
-                                <label htmlFor="template-select" className="text-sm font-medium leading-none">
+                                <label className="text-sm font-medium leading-none">
                                     Szablon
                                 </label>
-                                <div className="flex items-center gap-2">
-                                    <select
-                                        id="template-select"
-                                        value={selectedTemplateId}
-                                        onChange={(e) => handleTemplateSelect(e.target.value)}
-                                        className="h-10 flex-1 border border-input rounded-lg px-3 bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
-                                    >
-                                        <option value="">Brak (domyślny)</option>
-                                        {templates.map((t) => (
-                                            <option key={t.id} value={t.id}>{t.name}</option>
-                                        ))}
-                                    </select>
-                                    {selectedTemplateId && (
-                                        <Button
-                                            type="button"
-                                            variant="ghost"
-                                            size="sm"
-                                            className="h-10 w-10 p-0 shrink-0"
-                                            onClick={() => setEditingTemplate(templates.find((t) => t.id === selectedTemplateId) ?? null)}
-                                            aria-label="Edytuj szablon"
+                                {session?.user?.plan === "RESELER" ? (
+                                    <div className="flex items-center gap-2">
+                                        <select
+                                            id="template-select"
+                                            value={selectedTemplateId}
+                                            onChange={(e) => handleTemplateSelect(e.target.value)}
+                                            className="h-10 flex-1 border border-input rounded-lg px-3 bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
                                         >
-                                            <Pencil className="h-4 w-4" />
-                                        </Button>
-                                    )}
-                                </div>
+                                            <option value="">Brak (domyślny)</option>
+                                            {templates.map((t) => (
+                                                <option key={t.id} value={t.id}>{t.name}</option>
+                                            ))}
+                                        </select>
+                                        {selectedTemplateId && (
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="sm"
+                                                className="h-10 w-10 p-0 shrink-0"
+                                                onClick={() => setEditingTemplate(templates.find((t) => t.id === selectedTemplateId) ?? null)}
+                                                aria-label="Edytuj szablon"
+                                            >
+                                                <Pencil className="h-4 w-4" />
+                                            </Button>
+                                        )}
+                                        {templates.length === 0 && (
+                                            <a
+                                                href="/dashboard/templates"
+                                                className="text-xs text-primary hover:underline shrink-0"
+                                            >
+                                                Utwórz pierwszy szablon →
+                                            </a>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center justify-between h-10 px-3 border border-input rounded-lg bg-muted opacity-50 cursor-not-allowed">
+                                        <span className="text-sm text-muted-foreground">Brak (domyślny)</span>
+                                        <span className="flex items-center gap-1 text-xs text-violet-500 font-medium">
+                                            <Crown className="h-3.5 w-3.5" />
+                                            Plan Reseler
+                                        </span>
+                                    </div>
+                                )}
                             </div>
                         )}
                         <ProductForm
@@ -565,6 +583,7 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
                             selectedTone={selectedTone}
                             onPlatformChange={setPlatform}
                             onToneChange={setSelectedTone}
+                            userPlan={session?.user?.plan ?? "FREE"}
                         />
                     </CardWrapper>
 
