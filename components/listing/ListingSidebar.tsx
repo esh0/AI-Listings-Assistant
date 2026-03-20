@@ -158,10 +158,6 @@ export function ListingSidebar({
                         </div>
                     )}
 
-                    {/* Fallback */}
-                    {!proposedValue && !(isGuest && priceType === "user_provided" && userPrice) && (
-                        <p className="text-muted-foreground">Do ustalenia</p>
-                    )}
                 </div>
             </div>
 

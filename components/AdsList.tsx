@@ -480,7 +480,9 @@ export function AdsList({ ads, counts, currentFilter, currentPage, totalPages, t
                         const priceType = params?.priceType;
                         const userPrice = params?.userPrice;
                         const price = ad.soldPrice != null ? `${ad.soldPrice} zł`
-                            : ad.status === "SOLD" && ad.soldPrice === null ? "Za darmo"
+                            : ad.status === "SOLD" ? "Za darmo"
+                            : (ad.status === "PUBLISHED" || ad.status === "ARCHIVED")
+                            ? (ad.publishPrice != null ? `${ad.publishPrice} zł` : "Za darmo")
                             : priceType === "free" ? "Za darmo"
                             : priceType === "user_provided" && userPrice ? `${userPrice} zł`
                             : ad.priceMin && ad.priceMax ? `${ad.priceMin}–${ad.priceMax} zł`
