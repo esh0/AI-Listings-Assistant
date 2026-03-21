@@ -21,7 +21,7 @@ export async function sendEmail(to: string, subject: string, html: string): Prom
         });
     } catch (err) {
         console.error("[email] Failed to send email to", to, err);
-        // Don't throw — email failures should not break the main flow
+        throw err;
     }
 }
 
@@ -80,8 +80,8 @@ export interface LowCreditsEmailUser {
 
 /**
  * Send "1 credit remaining" email via Resend.
- * Safe to call fire-and-forget — logs errors but never throws.
- * Uses the existing sendEmail() helper internally.
+ * Note: Since sendEmail now throws on delivery failure, this function will also throw.
+ * Callers should wrap in try/catch if they want to handle delivery failures gracefully.
  */
 export async function sendLowCreditsEmail(user: LowCreditsEmailUser): Promise<void> {
     const name = user.name ?? "użytkowniku";

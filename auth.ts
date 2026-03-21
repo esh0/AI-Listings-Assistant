@@ -1,5 +1,7 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import FacebookProvider from "next-auth/providers/facebook";
+import ResendProvider from "next-auth/providers/resend";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
 import type { Plan } from "@prisma/client";
@@ -12,6 +14,21 @@ const { handlers, auth: uncachedAuth, signIn, signOut } = NextAuth({
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
+    FacebookProvider({
+      clientId: process.env.AUTH_FACEBOOK_ID!,
+      clientSecret: process.env.AUTH_FACEBOOK_SECRET!,
+    }),
+    ResendProvider({
+      async sendVerificationRequest({ identifier: email, url }) {
+        const { sendEmail } = await import("@/lib/email");
+        const { magicLinkEmailHtml } = await import("@/emails/magic-link");
+        await sendEmail(
+          email,
+          "Twój link do logowania — Marketplace AI",
+          magicLinkEmailHtml(url),
+        );
+      },
     }),
   ],
   pages: {

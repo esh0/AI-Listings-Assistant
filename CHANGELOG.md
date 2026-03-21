@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.3.0] - 2026-03-21
+
+### Added
+- Facebook OAuth login via NextAuth v5 FacebookProvider
+- Email magic link login via NextAuth v5 ResendProvider — sends branded Polish-language email via existing Resend integration
+- Sign-in page updated with Facebook button, email form, and confirmation state
+
+---
+
 ## [1.2.1] - 2026-03-21
 
 ### Fixed
