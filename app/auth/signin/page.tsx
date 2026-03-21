@@ -112,7 +112,7 @@ function SignInForm() {
                     <button
                         type="button"
                         onClick={() => { setEmailSent(false); setEmail(""); }}
-                        className="text-sm text-primary hover:underline mt-2"
+                        className="text-sm text-primary hover:underline mt-2 focus:outline-none focus:ring-2 focus:ring-ring rounded"
                     >
                         Podaj inny adres email
                     </button>
