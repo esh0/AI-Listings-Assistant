@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.2.1] - 2026-03-21
+
+### Fixed
+- Landing page: prevented horizontal scroll on mobile caused by oversized background blob element
+
+---
+
 ## [1.2.0] - 2026-03-20
 
 ### Added
