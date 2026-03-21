@@ -49,7 +49,7 @@ function SignInForm() {
             {/* Logo */}
             <div className="flex justify-center mb-6">
                 <div className="p-4 bg-primary/10 rounded-full">
-                    <ShoppingBag className="h-12 w-12 text-primary" />
+                    <ShoppingBag className="h-12 w-12 text-primary" aria-hidden="true" />
                 </div>
             </div>
 
@@ -109,6 +109,13 @@ function SignInForm() {
                     <p className="text-sm text-muted-foreground">
                         Link jest ważny 24 godziny. Nie widzisz wiadomości? Sprawdź folder spam.
                     </p>
+                    <button
+                        type="button"
+                        onClick={() => { setEmailSent(false); setEmail(""); }}
+                        className="text-sm text-primary hover:underline mt-2"
+                    >
+                        Podaj inny adres email
+                    </button>
                 </div>
             ) : (
                 <form onSubmit={handleEmailSignIn} className="space-y-3">
@@ -116,6 +123,7 @@ function SignInForm() {
                         type="email"
                         required
                         autoComplete="email"
+                        aria-label="Adres email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="twoj@email.pl"
@@ -154,7 +162,7 @@ function SignInForm() {
 export default function SignInPage() {
     return (
         <div className="min-h-screen flex items-center justify-center bg-muted p-4">
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<div>Ładowanie…</div>}>
                 <SignInForm />
             </Suspense>
         </div>
