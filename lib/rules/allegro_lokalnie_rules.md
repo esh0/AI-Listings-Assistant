@@ -127,7 +127,7 @@ Marka + typ + główna zaleta + LOKALIZACJA
 ### Frazowanie
 - Wprowadzenie: "Sprzedam [produkt] — szuka nowego właściciela, który doceni jego charakter"
 - Stan: "Stan bardzo dobry, jak na swoje lata całkiem dziarski"
-- CTA: "Pytania? Chętnie odpiszę 😊 (i nie ugryzę)"
+- CTA: "Pytania? Chętnie odpiszę :) (i nie ugryzę)"
 - Negocjacje: "Cena negocjowalna — bo optymizm popłaca"
 - Za darmo: "Bezpłatnie, bo minimalizm to nowe bogactwo"
 

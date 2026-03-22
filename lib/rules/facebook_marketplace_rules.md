@@ -15,9 +15,9 @@ friendly
 ### Frazowanie
 - Wprowadzenie: "Sprzedam [produkt]"
 - Stan: "Super stan", "W bardzo dobrym stanie"
-- CTA: "Pisz na Messengerze! 😊", "Napisz jak masz pytania!"
+- CTA: "Pisz na Messengerze! :)", "Napisz jak masz pytania!"
 - Negocjacje: "Cena do dogadania"
-- Za darmo: "Oddam za darmo! 🎁"
+- Za darmo: "Oddam za darmo!"
 
 ## TON: CASUAL
 ### Frazowanie
@@ -29,10 +29,10 @@ friendly
 
 ## ZA DARMO na Facebook Marketplace
 - Bardzo popularne, szczególnie w lokalnych grupach
-- Emoji 🎁 często używane i mile widziane
+- Emoji często używane i mile widziane
 - Prosty, bezpośredni język
 - Zachęć do szybkiego kontaktu
-- Przykład: "Oddam za darmo! 🎁 Sprawny, dobry stan. Pisz szybko!"
+- Przykład: "Oddam za darmo! Sprawny, dobry stan. Pisz szybko!"
 
 ## TYTUŁ (do 60 znaków widocznych w podglądzie)
 - Formuła: [MARKA/TYP] + [MODEL] + [PARAMETR] + [STAN opcjonalnie]
@@ -52,7 +52,7 @@ Co to + stan + główna zaleta
 - Krótki opis + wady jeśli są
 
 ### Odbiór i kontakt
-📍 Lokalizacja + dostępność + preferencje
+Lokalizacja + dostępność + preferencje
 
 ### Dodatkowe info
 Powód sprzedaży + negocjacje
@@ -83,7 +83,7 @@ Powód sprzedaży + negocjacje
 ## KOMUNIKACJA PRZEZ MESSENGER
 - Odpowiadaj SZYBKO (<30 min - 2h)
 - Badge "Bardzo responsywny" zwiększa zaufanie
-- Ton nieformalny: "Cześć! Tak, jest dostępne 😊"
+- Ton nieformalny: "Cześć! Tak, jest dostępne :)"
 - Szybkie odpowiedzi:
   - "Czy dostępne?" → "Cześć! Tak, kiedy możesz odebrać?"
   - "Dasz taniej?" → "Przy szybkiej decyzji możemy pogadać o cenie"
@@ -107,19 +107,19 @@ Powód sprzedaży + negocjacje
 - Zbyt formalny język
 ## TON: ENTHUSIASTIC (Entuzjastyczny)
 ### Frazowanie (FB — ciepły, społecznościowy entuzjazm)
-- Wprowadzenie: "Hej! Mam dla Was coś niesamowitego — [produkt]! 🎉"
+- Wprowadzenie: "Hej! Mam dla Was coś niesamowitego — [produkt]!"
 - Stan: "Wygląda jakby dopiero wyszedł ze sklepu — jestem zachwycony stanem!"
 - CTA: "Piszcie w wiadomości, odpiszę od razu! Nie dajcie przepaść tej okazji!"
-- Negocjacje: "Cena fair, ale dla miłej osoby zawsze coś się znajdzie 😊"
-- Za darmo: "Oddaję za DARMO! Tak, dobrze czytacie! Piszcie szybko! 🙌"
+- Negocjacje: "Cena fair, ale dla miłej osoby zawsze coś się znajdzie :)"
+- Za darmo: "Oddaję za DARMO! Tak, dobrze czytacie! Piszcie szybko!"
 
 ## TON: FUNNY (Zabawny)
 ### Frazowanie (FB — luźny, sąsiedzki humor)
-- Wprowadzenie: "Mój [produkt] szuka nowego domu 😄 Jest grzeczny, nie gryzie"
+- Wprowadzenie: "Mój [produkt] szuka nowego domu :) Jest grzeczny, nie gryzie"
 - Stan: "Stan bardzo dobry — przeżył ze mną wiele, ale nie widać po nim lat"
-- CTA: "Napiszcie! Odpowiem szybciej niż sąsiad przy pizzy 🍕"
+- CTA: "Napiszcie! Odpowiem szybciej niż sąsiad przy pizzy"
 - Negocjacje: "Cena do dogadania — jestem człowiekiem, nie automatem"
-- Za darmo: "Za free bo szafa płacze 😂 Kto pierwszy, ten lepszy!"
+- Za darmo: "Za free bo szafa płacze :D Kto pierwszy, ten lepszy!"
 
 ## TON: TECHNICAL (Techniczny)
 ### Frazowanie (FB — mniej formalny niż Allegro, ale z danymi)
