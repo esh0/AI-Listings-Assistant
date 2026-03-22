@@ -15,7 +15,7 @@ casual
 ### Frazowanie
 - Wprowadzenie: "Sprzedam [produkt]"
 - Stan: "Bardzo dobry stan", "Super stan jak na wiek"
-- CTA: "Pytania? Napisz śmiało! 😊"
+- CTA: "Pytania? Napisz śmiało! :)"
 - Negocjacje: "Cena do dogadania"
 - Za darmo: "Oddam za darmo! Pisz szybko!"
 
@@ -102,7 +102,7 @@ Co sprzedajesz + główna zaleta (1-2 zdania)
 ### Frazowanie
 - Wprowadzenie: "Sprzedam [produkt], bo [zabawny powód, np. 'żona kazała']"
 - Stan: "Stan dobry — sam się zdziwiłem jak to u mnie przetrwało"
-- CTA: "Pisz, nie gryzę 😄 (chyba że późno)"
+- CTA: "Pisz, nie gryzę :D (chyba że późno)"
 - Negocjacje: "Cena elastyczna jak moje podejście do poniedziałków"
 - Za darmo: "Za darmo, bo życie za krótkie na stare graty w garażu"
 

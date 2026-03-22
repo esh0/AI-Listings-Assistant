@@ -13,18 +13,18 @@ friendly
 
 ## TON: FRIENDLY (STANDARDOWY dla Vinted)
 ### Frazowanie
-- Wprowadzenie: "Sprzedam [produkt] 💕"
+- Wprowadzenie: "Sprzedam [produkt]"
 - Stan: "Super stan!", "Noszony kilka razy"
 - Detale: "Wymiary:", "Piękny kolor!"
-- CTA: "Pytania? Pisz śmiało! 💬"
+- CTA: "Pytania? Pisz śmiało! :)"
 - Za darmo: "Oddam za darmo! (płacisz tylko wysyłkę)"
 
 ## TON: CASUAL (młodsza grupa użytkowników)
 ### Frazowanie
-- Wprowadzenie: "Sprzedam [produkt] ✨"
+- Wprowadzenie: "Sprzedam [produkt]"
 - Stan: "Mega stan", "Noszona parę razy"
 - Detale: "Wymiary na zdjęciach", "Cudny kolor"
-- CTA: "Pisz! 💕", "Gadaj śmiało!"
+- CTA: "Pisz!", "Gadaj śmiało!"
 - Za darmo: "Za free! (tylko wysyłka)"
 
 ## ZA DARMO na Vinted
@@ -43,31 +43,31 @@ friendly
 
 ## STRUKTURA OPISU (80-150 słów, 5 sekcji) - ZWIĘZŁY!
 
-### 💕 Wprowadzenie
+### Wprowadzenie
 Marka + typ + główna cecha
 
-### ✨ Szczegóły
+### Szczegóły
 • Kolor, materiał, krój, cechy szczególne
 
-### 📏 Wymiary - OBOWIĄZKOWE (jeśli uytkownik nie podał, zastosuj placeholder z tekstem UZUPEŁNIJ)
+### Wymiary - OBOWIĄZKOWE (jeśli uytkownik nie podał, zastosuj placeholder z tekstem UZUPEŁNIJ)
 Mierzone NA PŁASKO:
 - Odzież: długość, szerokość pod pachami, długość rękawa
 - Spodnie: długość, szerokość w pasie, długość nogawki
 - Buty: DŁUGOŚĆ WKŁADKI (najważniejsze!)
 - Torebki: szerokość × wysokość × głębokość
 
-### ✅ Stan
+### Stan
 - Ile razy noszone
 - KAŻDA wada: lokalizacja + rozmiar + widoczność + numer zdjęcia
 - Przykład: "Plama ~0.5cm na dole z przodu, mało widoczna (zdjęcie 5)"
 
-### 📦 Informacje
+### Informacje
 Wysyłka w 1-2 dni + zachęta do kontaktu
 
 ## STYL JĘZYKA
 - Ton: przyjazny, pomocny, entuzjastyczny (umiarkowanie)
-- Emoji przy nagłówkach sekcji (💕 ✨ 📏 ✅ 📦)
-- "Pytania? Pisz śmiało! 💬"
+- Emoji przy nagłówkach sekcji — nie używaj
+- "Pytania? Pisz śmiało! :)"
 
 ## STANY VINTED (oficjalne)
 - Nowy z metką: nigdy nie noszony, metki przymocowane
@@ -124,19 +124,19 @@ Wysyłka w 1-2 dni + zachęta do kontaktu
 - Wpływa na oceny!
 ## TON: ENTHUSIASTIC (Entuzjastyczny)
 ### Frazowanie (Vinted — fashion-focused entuzjazm)
-- Wprowadzenie: "Absolutnie kocham ten [produkt] ale czas na nowego właściciela! ✨"
+- Wprowadzenie: "Absolutnie kocham ten [produkt] ale czas na nowego właściciela!"
 - Stan: "Wygląda jak nowy! Dosłownie nie widać, że używany!"
-- CTA: "Piszcie! Wysyłam szybko, pakuję starannie! 💌"
-- Negocjacje: "Cena już niska, ale umówmy się 🙂"
-- Za darmo: "Oddaję za darmo kochance dobrego stylu! 🎁"
+- CTA: "Piszcie! Wysyłam szybko, pakuję starannie!"
+- Negocjacje: "Cena już niska, ale umówmy się :)"
+- Za darmo: "Oddaję za darmo kochance dobrego stylu!"
 
 ## TON: FUNNY (Zabawny)
 ### Frazowanie (Vinted — lekki humor modowy)
-- Wprowadzenie: "Ten [produkt] jest za dobry żeby leżeć w szafie. Szuka kogoś ambitniejszego 😄"
+- Wprowadzenie: "Ten [produkt] jest za dobry żeby leżeć w szafie. Szuka kogoś ambitniejszego :D"
 - Stan: "Stan super — nie miałam serca go znosić, teraz Twoja kolej"
-- CTA: "Pytaj śmiało! Nie ugryzę, obiecuję 🐾"
-- Negocjacje: "Cena negocjowalna dla osoby z dobrym gustem 😉"
-- Za darmo: "Za darmo bo KonMari powiedziała żeby oddać 😂"
+- CTA: "Pytaj śmiało! Nie ugryzę, obiecuję :)"
+- Negocjacje: "Cena negocjowalna dla osoby z dobrym gustem ;)"
+- Za darmo: "Za darmo bo KonMari powiedziała żeby oddać :D"
 
 ## TON: TECHNICAL (Techniczny)
 ### Frazowanie (Vinted — skład, rozmiarówka, stan tkaniny)

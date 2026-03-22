@@ -1,6 +1,6 @@
 # Marketing Progress — marketplace-ai.pl
 
-Ostatnia aktualizacja: 2026-03-21
+Ostatnia aktualizacja: 2026-03-22 (wieczór)
 
 ## Status ogólny
 
@@ -17,7 +17,7 @@ Budżet: 250–400 PLN/miesiąc (na razie 0 PLN wydanych — etap organiczny)
 
 ### Social media — konta
 - [x] Instagram: `@marketplace_ai.pl`
-- [x] TikTok: `@markeplace_ai.pl` ⚠️ literówka (brakuje 't') — zmiana możliwa po 7 dniach od założenia (ok. 28.03.2026)
+- [x] TikTok: `@markeplace_ai.pl` ⚠️ literówka (brakuje 't') — zmiana możliwa od ~28.03.2026
 - [x] Facebook Page: Marketplace AI — założona, niepołączona jeszcze z Instagramem
 
 ### Instagram — posty (grafiki w Canva, format 1080x1080px)
@@ -28,51 +28,18 @@ Czcionka: Montserrat (Bold dla nagłówków, Regular dla podtytułów)
 |---|-------|----------|--------|
 | 1 | Powitalny | Twórz ogłoszenia w 30 sekund | ✅ opublikowany |
 | 2 | Przed/Po | Pisałeś ogłoszenie 20 minut? | ✅ opublikowany |
-| 3 | Bezpłatny plan | 5 ogłoszeń miesięcznie za darmo | ✅ gotowy |
-| 4 | 4 platformy | OLX, Allegro, Vinted, Facebook | ✅ gotowy |
-| 5 | AI rozpoznaje | AI rozpoznaje, co sprzedajesz | ✅ gotowy |
-| 6 | Ton ogłoszenia | Profesjonalnie, przyjaźnie czy swobodnie? | ✅ gotowy |
-| 7 | Cena | Ile warto wziąć za ten produkt? | ✅ gotowy |
-| 8 | Ile rzeczy | Ile masz rzeczy do sprzedania? | ✅ gotowy |
-| 9 | Końcowy CTA | Mniej pisania, więcej sprzedawania | ✅ gotowy |
-| 10 | Social proof | 5.0/5 za pierwsze ogłoszenia z AI | ✅ gotowy |
+| 3 | Bezpłatny plan | 5 ogłoszeń miesięcznie za darmo | ⏳ do publikacji dziś |
+| 4 | 4 platformy | OLX, Allegro, Vinted, Facebook | ⏳ do publikacji dziś |
+| 5 | AI rozpoznaje | AI rozpoznaje, co sprzedajesz | ⏳ do publikacji dziś |
+| 6 | Ton ogłoszenia | Profesjonalnie, przyjaźnie czy swobodnie? | ⏳ do publikacji pon. |
+| 7 | Cena | Ile warto wziąć za ten produkt? | ⏳ do publikacji pon. |
+| 8 | Ile rzeczy | Ile masz rzeczy do sprzedania? | ⏳ do publikacji pon. |
+| 9 | Końcowy CTA | Mniej pisania, więcej sprzedawania | ⏳ do publikacji pon. |
+| 10 | Social proof | 5.0/5 za pierwsze ogłoszenia z AI | ✅ opublikowany |
 
-### Harmonogram publikacji
-- Dziś: Post 1 (opublikowany), Post 10 (opinie)
-- Jutro: Posty 2, 3, 4
-- Pojutrze: Posty 5, 6, 7
-- Za 3 dni: Posty 8, 9
-
-### Social proof
-- 3 sprzedaże na OLX przy użyciu generatora
-- Oceny: 5.0/5 (3 opinie, wszystkie zweryfikowane przez OLX)
-- Tagi: "Przedmiot zgodny z opisem", "Szybko nadane", "Bezpieczne opakowanie"
-
----
-
-## Do zrobienia
-
-### Najbliższe kroki
-- [ ] Nagrać Reels #1 — nagranie ekranu telefonu (scenariusz gotowy, patrz niżej)
-- [ ] Opublikować posty 3–9 zgodnie z harmonogramem
-- [ ] Poprawić literówkę w TikTok username (od ~28.03.2026)
-- [ ] Połączyć Facebook Page z Instagramem
-- [ ] Założyć skrzynkę `privacy@marketplace-ai.pl` na home.pl
-- [ ] Napisać posty na Facebook Page
-
-### Tydzień 3–4 (płatne)
-- [ ] Zainstalować Meta Pixel
-- [ ] Uruchomić boost Meta Ads ~150–200 PLN
-- [ ] Uruchomić Google Ads ~100–150 PLN
-- [ ] Napisać pierwszy artykuł SEO: "Jak napisać ogłoszenie na OLX"
-
----
-
-## Scenariusz Reels #1
-
+### Reels #1 — scenariusz gotowy, nagranie w poniedziałek
 **Temat:** "Zdjęcie → ogłoszenie w 30 sekund"
-**Długość:** 30 sekund
-**Format:** nagranie ekranu telefonu (pion 9:16)
+**Format:** nagranie ekranu telefonu (pion 9:16), 30 sekund
 
 | Czas | Co pokazujesz |
 |------|---------------|
@@ -89,6 +56,13 @@ Czcionka: Montserrat (Bold dla nagłówków, Regular dla podtytułów)
 - Włącz tryb samolotowy (brak powiadomień)
 - Nagrywanie ekranu iPhone: Ustawienia → Centrum sterowania → Nagrywanie ekranu
 
+**Montaż w Instagram Reels:**
+1. Instagram → Reels → + → wgraj nagranie
+2. Przytnij do 30 sekund
+3. Dodaj trending audio (ikona z strzałką w górę)
+4. Dodaj tekst na początku: "zdjęcie → ogłoszenie w 30 sekund"
+5. Opublikuj
+
 **Caption do Reels:**
 ```
 Zdjęcie → gotowe ogłoszenie w 30 sekund
@@ -98,16 +72,191 @@ Wypróbuj za darmo → link w bio
 #olx #vinted #ai #sprzedajemy #ogłoszenia
 ```
 
-**Montaż w Instagram Reels:**
-1. Instagram → Reels → + → wgraj nagranie
-2. Przytnij do 30 sekund
-3. Dodaj trending audio (ikona z strzałką w górę)
-4. Dodaj tekst na początku: "zdjęcie → ogłoszenie w 30 sekund"
-5. Opublikuj
+### Social proof
+- 3 sprzedaże na OLX przy użyciu generatora
+- Oceny: 5.0/5 (3 opinie, wszystkie zweryfikowane przez OLX)
+- Tagi: "Przedmiot zgodny z opisem", "Szybko nadane", "Bezpieczne opakowanie"
+
+### Facebook Page — posty
+- [x] Post 1 — Powitalny (grafika 1200x630px, Canva, kurtka jeansowa PRZED/PO, opublikowany nd 22.03 wieczór)
 
 ---
 
-## Captiony do wszystkich postów
+## Do zrobienia
+
+### Najbliższe kroki
+- [ ] Opublikować posty Instagram 3–5 (dziś, niedziela)
+- [ ] Opublikować posty Instagram 6–9 (poniedziałek)
+- [ ] Nagrać Reels #1 (poniedziałek)
+- [ ] Opublikować posty Facebook Page 2–5 (harmonogram w sekcji poniżej)
+- [ ] Poprawić literówkę w TikTok username (od ~28.03.2026)
+- [ ] Połączyć Facebook Page z Instagramem
+- [ ] Założyć skrzynkę `privacy@marketplace-ai.pl` na home.pl
+- [ ] Czekać na approve Facebook App Review (weryfikacja biznesowa wysłana)
+
+### Tydzień 3–4 (płatne)
+- [ ] Zainstalować Meta Pixel
+- [ ] Uruchomić boost Meta Ads ~150–200 PLN
+- [ ] Uruchomić Google Ads ~100–150 PLN
+- [ ] Napisać pierwszy artykuł SEO: "Jak napisać ogłoszenie na OLX"
+
+---
+
+## Facebook Page — posty
+
+**Strategia:** dłuższy tekst niż Instagram, bezpośrednie linki w postach, cel: komentarze i udostępnienia. Posty 4 i 5 celowo bez brandingu na grafice — wyglądają jak organiczne posty, nie reklamy. Odpowiadaj na komentarze w ciągu 2–3h — Facebook algorytmicznie premiuje aktywne wątki.
+
+| # | Temat | Termin | Cel | Status |
+|---|-------|--------|-----|--------|
+| 1 | Powitalny | Nd 22.03 wieczór | Reakcje + kliknięcia | ✅ opublikowany |
+| 2 | Jak to działa (krok po kroku) | Czw 20:00 | Udostępnienia | ⏳ |
+| 3 | Social proof (3 sprzedaże, 5.0/5) | Nd 17:00 | Komentarze | ⏳ |
+| 4 | Pain point ("jutro wystawię") | Wt 20:30 | Tagi znajomych | ⏳ |
+| 5 | Pytanie do komentarzy | Nd 16:00 | Zasięg organiczny | ⏳ |
+
+---
+
+### FB Post 1 — Powitalny
+**Termin:** wtorek, 19:30 | **Grafika:** screenshot aplikacji — zdjęcie produktu + gotowe ogłoszenie OLX obok siebie
+
+```
+Cześć! Tu Marketplace AI i to jest nasz pierwszy post na Facebooku, więc powiemy wprost, czym jesteśmy.
+
+Jeśli kiedykolwiek siadałeś do wystawienia rzeczy na OLX albo Vinted i po 20 minutach wciąż wpatrywałeś się w puste pole "opis" — to właśnie dla Ciebie powstało to narzędzie.
+
+Marketplace AI to polska aplikacja, która pisze ogłoszenia sprzedażowe za Ciebie.
+
+Działanie jest proste:
+— wrzucasz zdjęcie produktu
+— wybierasz platformę (OLX, Allegro Lokalnie, Vinted albo Facebook Marketplace)
+— wybierasz styl (bardziej formalny albo luźniejszy)
+— AI analizuje zdjęcie i w kilka sekund generuje gotowy tytuł, opis i sugerowaną cenę
+
+Nie musisz pisać nic od siebie, jeśli nie chcesz. Możesz skopiować wynik od razu.
+
+Plan darmowy daje 5 ogłoszeń miesięcznie — bez podawania karty, bez zobowiązań.
+
+Jeśli regularnie sprzedajesz używane rzeczy w domu i nie przepadasz za pisaniem — zajrzyj i sprawdź sam.
+
+marketplace-ai.pl
+
+Jak Ci się podoba pomysł? Daj znać w komentarzu.
+```
+
+---
+
+### FB Post 2 — Jak to działa
+**Termin:** czwartek, 20:00 | **Grafika:** 3–4 kadry: zdjęcie produktu → ekran aplikacji → gotowe ogłoszenie → OLX z ogłoszeniem
+
+```
+Kilka osób zapytało nas, jak dokładnie działa Marketplace AI. Tłumaczymy krok po kroku — bez żadnego marketingowego bełkotu.
+
+KROK 1 — Robisz zdjęcie
+Nie musi być idealne. Telefon w zupełności wystarczy. Możesz wrzucić też kilka zdjęć naraz, żeby AI lepiej "zrozumiało" produkt.
+
+KROK 2 — Wybierasz platformę i styl
+OLX, Allegro Lokalnie, Vinted czy Facebook Marketplace — każdy ma inne zasady i inaczej "czyta" ogłoszenia. W aplikacji wybierasz, gdzie chcesz sprzedać. Potem wybierasz styl: bardziej profesjonalny (dobrze sprawdza się na Allegro), przyjazny (Vinted, Facebook) albo swobodny (OLX).
+
+KROK 3 — AI pisze ogłoszenie
+Algorytm analizuje zdjęcie, rozpoznaje produkt, jego stan i na tej podstawie generuje:
+— tytuł (dostosowany do limitów znaków danej platformy)
+— pełny opis
+— sugerowaną cenę rynkową
+
+KROK 4 — Kopiujesz i wklejasz
+Możesz użyć tekstu dokładnie tak, jak go dostałeś. Możesz też edytować go bezpośrednio w aplikacji, jeśli chcesz coś zmienić. Jedno kliknięcie kopiuje wszystko do schowka.
+
+Cały proces zajmuje mniej niż minutę.
+
+Darmowe konto: 5 ogłoszeń miesięcznie, rejestracja przez Google, bez karty.
+
+marketplace-ai.pl
+
+Jeśli znasz kogoś, kto regularnie sprzedaje rzeczy online i traci czas na pisanie opisów — prześlij mu tego posta. Serio, może mu zaoszczędzić kilka godzin w miesiącu.
+```
+
+---
+
+### FB Post 3 — Social proof
+**Termin:** niedziela, 17:00 | **Grafika:** 3 kafelki z 5 gwiazdkami, ciepłe tło (beż/jasna zieleń), lub zdjęcie telefonu z otwartym ogłoszeniem OLX
+
+```
+Prawdziwa historia z ostatnich tygodni.
+
+Jedna z naszych użytkowniczek wystawiła 3 rzeczy na OLX w ciągu jednego wieczoru — kurtkę zimową, wózek i blender kuchenny. Każde ogłoszenie zajęło jej mniej niż dwie minuty. Wszystkie trzy sprzedały się w ciągu tygodnia.
+
+Napisała do nas potem: "Nie wierzę, że tak długo robiłam to ręcznie."
+
+Nie jesteśmy w stanie obiecać, że każde ogłoszenie wygenerowane przez Marketplace AI sprzeda się błyskawicznie — to zależy od ceny, popytu i szczęścia. Ale możemy obiecać, że samo napisanie ogłoszenia nie będzie już wymówką, żeby odkładać sprzedaż na "kiedyś".
+
+Aktualnie aplikacja ma ocenę 5.0 na 5 od naszych pierwszych użytkowników.
+
+Jeśli masz w domu rzeczy, które chcesz sprzedać, ale wciąż odkładasz to na później — to jeden z powodów jest prawdopodobnie ten: nie chce Ci się pisać ogłoszenia. Rozumiemy to. Dlatego zrobiliśmy Marketplace AI.
+
+Pierwszych 5 ogłoszeń jest bezpłatnych.
+
+marketplace-ai.pl
+
+Ile rzeczy czeka u Ciebie na wystawienie? Napisz w komentarzu — obstawiamy, że więcej niż jedna.
+```
+
+---
+
+### FB Post 4 — Pain point
+**Termin:** wtorek, 20:30 | **Grafika:** ciemnogranatowe tło, biały tekst: "Wiesz, że powinieneś to wystawić. Tylko jeszcze nie dziś." — bez brandingu
+
+```
+Znasz ten scenariusz?
+
+Masz w szafie kurtkę, której nie założyłeś od dwóch sezonów. Wiesz, że powinieneś ją wystawić. Byłoby fajnie dostać za nią te 80–120 złotych. Ale.
+
+Trzeba zrobić dobre zdjęcia. Potem usiąść i napisać opis. Co tu napisać? Jaki rozmiar, jaki skład, w jakim stanie. Jaką dać cenę, żeby nie przesadzić, ale żeby się nie okazało, że sprzedałeś za grosze. Tytuł musi zawierać odpowiednie słowa, bo inaczej nikt nie trafi na ogłoszenie. Na OLX jest limit znaków. Na Vinted znowu inaczej...
+
+I po chwili decydujesz: dobra, jutro.
+
+Jutro zamienia się w za tydzień. Za tydzień w za miesiąc. Kurtka wisi.
+
+To nie lenistwo. To po prostu za dużo decyzji i za dużo pisania jak na jeden wieczór po pracy.
+
+Marketplace AI robi ten najtrudniejszy kawałek za Ciebie — analizuje zdjęcie i pisze ogłoszenie, które brzmi naturalnie i jest dostosowane do platformy, na której sprzedajesz.
+
+Ty tylko wklejasz i klikasz "Wystaw".
+
+Plan darmowy, bez rejestracji karty.
+
+marketplace-ai.pl
+
+A u Ciebie? Ile rzeczy czeka na "jutro"? Napisz w komentarzu — tu nie ma oceniania.
+```
+
+---
+
+### FB Post 5 — Engagement (pytanie)
+**Termin:** niedziela, 16:00 | **Grafika:** prosta, bez brandingu — np. zdjęcie stosu ubrań na krzesle lub stół z rzeczami do sprzedania. Bez linku w poście.
+
+```
+Mamy do Was jedno pytanie i naprawdę jesteśmy ciekawi odpowiedzi.
+
+Co jest najtrudniejszego w sprzedawaniu rzeczy online?
+
+Piszemy tę aplikację dla osób, które sprzedają używane rzeczy — ubrania, sprzęt, meble, zabawki. I żeby robić to dobrze, chcemy rozumieć, co naprawdę sprawia największy kłopot.
+
+Czy to:
+— pisanie opisów i tytułów ("nie wiem, co napisać")
+— robienie zdjęć ("jak to sfotografować, żeby dobrze wyglądało")
+— ustalenie ceny ("za ile to wystawić, żeby nie przepłacić i sprzedać")
+— targi z kupującymi ("czy da się taniej, czy dotrze przed świętami")
+— wybór platformy ("OLX, Vinted, Allegro czy Facebook, nigdy nie wiem gdzie wystawić tę konkretną rzecz")
+— coś zupełnie innego?
+
+Napiszcie w komentarzu. Czytamy każdą odpowiedź i serio bierzemy je pod uwagę przy kolejnych funkcjach.
+
+A jeśli ktoś z Was ma swojego "ulubionego" klienta z historią, która Was rozśmieszyła albo zaskoczyła — też chętnie posłuchamy.
+```
+
+---
+
+## Instagram — captiony do wszystkich postów
 
 ### Post 1 — powitalny
 ```
