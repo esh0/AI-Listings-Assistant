@@ -1,6 +1,6 @@
 # Marketing Progress — marketplace-ai.pl
 
-Ostatnia aktualizacja: 2026-03-22
+Ostatnia aktualizacja: 2026-03-22 (wieczór)
 
 ## Status ogólny
 
@@ -77,6 +77,9 @@ Wypróbuj za darmo → link w bio
 - Oceny: 5.0/5 (3 opinie, wszystkie zweryfikowane przez OLX)
 - Tagi: "Przedmiot zgodny z opisem", "Szybko nadane", "Bezpieczne opakowanie"
 
+### Facebook Page — posty
+- [x] Post 1 — Powitalny (grafika 1200x630px, Canva, kurtka jeansowa PRZED/PO, opublikowany nd 22.03 wieczór)
+
 ---
 
 ## Do zrobienia
@@ -85,7 +88,7 @@ Wypróbuj za darmo → link w bio
 - [ ] Opublikować posty Instagram 3–5 (dziś, niedziela)
 - [ ] Opublikować posty Instagram 6–9 (poniedziałek)
 - [ ] Nagrać Reels #1 (poniedziałek)
-- [ ] Opublikować posty Facebook Page 1–5 (harmonogram poniżej)
+- [ ] Opublikować posty Facebook Page 2–5 (harmonogram w sekcji poniżej)
 - [ ] Poprawić literówkę w TikTok username (od ~28.03.2026)
 - [ ] Połączyć Facebook Page z Instagramem
 - [ ] Założyć skrzynkę `privacy@marketplace-ai.pl` na home.pl
@@ -103,13 +106,13 @@ Wypróbuj za darmo → link w bio
 
 **Strategia:** dłuższy tekst niż Instagram, bezpośrednie linki w postach, cel: komentarze i udostępnienia. Posty 4 i 5 celowo bez brandingu na grafice — wyglądają jak organiczne posty, nie reklamy. Odpowiadaj na komentarze w ciągu 2–3h — Facebook algorytmicznie premiuje aktywne wątki.
 
-| # | Temat | Termin | Cel |
-|---|-------|--------|-----|
-| 1 | Powitalny | Wt 19:30 | Reakcje + kliknięcia |
-| 2 | Jak to działa (krok po kroku) | Czw 20:00 | Udostępnienia |
-| 3 | Social proof (3 sprzedaże, 5.0/5) | Nd 17:00 | Komentarze |
-| 4 | Pain point ("jutro wystawię") | Wt 20:30 | Tagi znajomych |
-| 5 | Pytanie do komentarzy | Nd 16:00 | Zasięg organiczny |
+| # | Temat | Termin | Cel | Status |
+|---|-------|--------|-----|--------|
+| 1 | Powitalny | Nd 22.03 wieczór | Reakcje + kliknięcia | ✅ opublikowany |
+| 2 | Jak to działa (krok po kroku) | Czw 20:00 | Udostępnienia | ⏳ |
+| 3 | Social proof (3 sprzedaże, 5.0/5) | Nd 17:00 | Komentarze | ⏳ |
+| 4 | Pain point ("jutro wystawię") | Wt 20:30 | Tagi znajomych | ⏳ |
+| 5 | Pytanie do komentarzy | Nd 16:00 | Zasięg organiczny | ⏳ |
 
 ---
 
