@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.3.1] - 2026-03-22
+
+### Fixed
+- Sign-in page: friendly error banner when user tries to sign in with a different provider than the one used at registration (OAuthAccountNotLinked)
+- `sendEmail()` now throws on error so magic link delivery failures surface to the user instead of silently succeeding
+- Sign-in page accessibility: email input aria-label, focus ring on reset button, aria-hidden on decorative icon, Polish Suspense fallback
+
+---
+
 ## [1.3.0] - 2026-03-21
 
 ### Added

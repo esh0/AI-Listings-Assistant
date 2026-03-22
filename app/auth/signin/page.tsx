@@ -20,6 +20,7 @@ function getSafeCallbackUrl(raw: string | null): string {
 function SignInForm() {
     const searchParams = useSearchParams();
     const callbackUrl = getSafeCallbackUrl(searchParams.get("callbackUrl"));
+    const error = searchParams.get("error");
 
     const [email, setEmail] = useState("");
     const [emailSent, setEmailSent] = useState(false);
@@ -62,6 +63,13 @@ function SignInForm() {
                     Zaloguj się, aby zarządzać swoimi ogłoszeniami
                 </p>
             </div>
+
+            {/* Error banner */}
+            {error === "OAuthAccountNotLinked" && (
+                <div className="mb-6 rounded-lg border border-warning/30 bg-warning/10 px-4 py-3 text-sm text-warning">
+                    Ten adres email jest już powiązany z inną metodą logowania. Spróbuj zalogować się przez Google, Facebook lub wyślij link na email.
+                </div>
+            )}
 
             {/* OAuth buttons */}
             <div className="space-y-3">
