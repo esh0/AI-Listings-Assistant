@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.3.2] - 2026-03-22
+
+### Fixed
+- Removed emoji characters from all platform rules (OLX, Allegro Lokalnie, Facebook Marketplace, Vinted) — replaced with text emoticons (`:)` `:D` `;)`) or removed where decorative; prevents "invalid character" errors on platforms that block Unicode emoji
+- Horizontal scroll on mobile: moved `overflow-x-hidden` from landing page only to `<body>` in root layout — now applies to all pages (dashboard, pricing, auth, legal)
+
+---
+
 ## [1.3.1] - 2026-03-22
 
 ### Fixed
