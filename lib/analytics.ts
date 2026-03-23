@@ -37,6 +37,7 @@ export function setAnalyticsConsent(accepted: boolean): void {
 export function initGA4(): void {
   if (typeof window === "undefined") return;
   if (document.getElementById("ga4-script")) return; // already loaded
+  if (window.gtag) return; // already initialised
 
   const script = document.createElement("script");
   script.id = "ga4-script";
@@ -61,8 +62,8 @@ export function trackEvent(
   eventName: string,
   params?: Record<string, unknown>
 ): void {
-  if (!hasAnalyticsConsent()) return;
   if (typeof window === "undefined") return;
+  if (!hasAnalyticsConsent()) return;
   if (typeof window.gtag !== "function") return;
   window.gtag("event", eventName, params ?? {});
 }
