@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { Check, Zap, Crown, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { trackEvent } from "@/lib/analytics";
 
 const PLANS = [
     {
@@ -75,7 +76,12 @@ export default function DashboardPricingPage() {
 
     const currentPlan = session?.user?.plan ?? "FREE";
 
+    useEffect(() => {
+        trackEvent("pricing_page_viewed", { page_context: "dashboard" });
+    }, []);
+
     const handleCheckout = async (plan: string) => {
+        trackEvent("plan_upgrade_initiated", { plan_selected: plan, page_context: "dashboard" });
         setLoadingPlan(plan);
         try {
             const res = await fetch("/api/stripe/checkout", {
@@ -91,6 +97,7 @@ export default function DashboardPricingPage() {
     };
 
     const handleBoost = async (boostPack: string) => {
+        trackEvent("boost_pack_initiated", { boost_pack: boostPack, page_context: "dashboard" });
         setLoadingBoost(boostPack);
         try {
             const res = await fetch("/api/stripe/boost", {

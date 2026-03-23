@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.3.5] - 2026-03-23
+
+### Added
+- GA4 custom events for monetization funnel tracking (consent-gated via `trackEvent()`):
+  - `guest_generation_requested` — guest clicks "Generuj ogłoszenie" (platform, tone, condition, price_type, num_images)
+  - `guest_limit_exhausted` — guest hits 3-generation rate limit (triggers SoftWall)
+  - `softwall_shown` — SoftWall modal becomes visible (mode: save|limit)
+  - `softwall_signin_clicked` — user clicks sign-in inside SoftWall
+  - `pricing_page_viewed` — public or dashboard pricing page loaded (page_context)
+  - `plan_upgrade_initiated` — user clicks STARTER/RESELER checkout button (plan_selected, page_context)
+  - `boost_pack_initiated` — user clicks boost pack checkout button (boost_pack, page_context)
+  - `subscription_activated` — Stripe webhook: subscription checkout completed (server-side via Measurement Protocol)
+  - `boost_purchase_completed` — Stripe webhook: boost payment completed (server-side)
+  - `subscription_cancelled` — Stripe webhook: subscription deleted (server-side)
+- `sendServerEvent()` added to `lib/analytics.ts` — GA4 Measurement Protocol helper for server-side event tracking
+
+---
+
 ## [1.3.4] - 2026-03-23
 
 ### Fixed

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { Check, ArrowLeft, Zap, Crown, Star } from "lucide-react";
@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Footer } from "@/components/Footer";
+import { trackEvent } from "@/lib/analytics";
 
 const PLANS = [
     {
@@ -78,12 +79,17 @@ export default function PricingPage() {
     const currentPlan = session?.user?.plan ?? "FREE";
     const isAuthenticated = status === "authenticated";
 
+    useEffect(() => {
+        trackEvent("pricing_page_viewed", { page_context: "public" });
+    }, []);
+
     const handleCheckout = async (plan: string) => {
         if (!isAuthenticated) {
             window.location.href = `/auth/signin?callbackUrl=/pricing`;
             return;
         }
 
+        trackEvent("plan_upgrade_initiated", { plan_selected: plan, page_context: "public" });
         setLoadingPlan(plan);
         try {
             const res = await fetch("/api/stripe/checkout", {
@@ -106,6 +112,7 @@ export default function PricingPage() {
             return;
         }
 
+        trackEvent("boost_pack_initiated", { boost_pack: boostPack, page_context: "public" });
         setLoadingBoost(boostPack);
         try {
             const res = await fetch("/api/stripe/boost", {
