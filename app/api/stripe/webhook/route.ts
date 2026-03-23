@@ -3,6 +3,7 @@ import { stripe } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
 import { changePlan, addBoostCredits, CREDIT_LIMITS } from "@/lib/credits";
 import type Stripe from "stripe";
+import { sendServerEvent } from "@/lib/analytics";
 
 export const runtime = "nodejs";
 
@@ -61,6 +62,10 @@ export async function POST(request: NextRequest) {
                             subscriptionConfirmedEmailHtml(user.name ?? "Użytkowniku", plan)
                         );
                     }
+                    void sendServerEvent(userId, "subscription_activated", {
+                        plan: session.metadata?.plan,
+                        user_id: userId,
+                    });
                 }
             } else if (session.mode === "payment") {
                 const credits = parseInt(session.metadata?.credits || "0", 10);
@@ -76,6 +81,10 @@ export async function POST(request: NextRequest) {
                             boostConfirmedEmailHtml(user.name ?? "Użytkowniku", credits)
                         );
                     }
+                    void sendServerEvent(userId, "boost_purchase_completed", {
+                        credits,
+                        user_id: userId,
+                    });
                 }
             }
             break;
@@ -131,6 +140,9 @@ export async function POST(request: NextRequest) {
                         subscriptionCancelledEmailHtml(user.name ?? "Użytkowniku")
                     );
                 }
+                void sendServerEvent(user.id, "subscription_cancelled", {
+                    user_id: user.id,
+                });
             }
             break;
         }
