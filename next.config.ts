@@ -26,7 +26,7 @@ const nextConfig: NextConfig = {
                     },
                     {
                         key: "Content-Security-Policy",
-                        value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://js.stripe.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' https://api.openai.com https://api.stripe.com https://*.supabase.co https://*.sentry.io https://vitals.vercel-insights.com https://o*.ingest.sentry.io https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com; frame-src https://js.stripe.com https://hooks.stripe.com; worker-src blob:;",
+                        value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://js.stripe.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' https://api.openai.com https://api.stripe.com https://*.supabase.co https://*.sentry.io https://vitals.vercel-insights.com https://www.google-analytics.com https://*.google-analytics.com https://analytics.google.com https://www.googletagmanager.com; frame-src https://js.stripe.com https://hooks.stripe.com; worker-src blob:;",
                     },
                 ],
             },
