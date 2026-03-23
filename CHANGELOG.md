@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.3.6] - 2026-03-23
+
+### Fixed
+- CSP: added `https://www.googletagmanager.com` to `script-src` — GA4 script was blocked by Content Security Policy
+- CSP: added `https://*.google-analytics.com` (wildcard) to `connect-src` — covers `region1.google-analytics.com` and other GA4 regional endpoints
+- CSP: removed invalid `https://o*.ingest.sentry.io` from `connect-src` (mid-hostname wildcards not supported by CSP spec) — `https://*.sentry.io` already covers Sentry ingestion
+
+---
+
 ## [1.3.5] - 2026-03-23
 
 ### Added
