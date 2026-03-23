@@ -75,14 +75,6 @@ export default async function RootLayout({
                 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
                 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
                 <meta name="theme-color" content="#0a0d14" media="(prefers-color-scheme: dark)" />
-                {/* Google Analytics 4 */}
-                <script async src="https://www.googletagmanager.com/gtag/js?id=G-NER153CSFW" />
-                <script dangerouslySetInnerHTML={{ __html: `
-                    window.dataLayer = window.dataLayer || [];
-                    function gtag(){dataLayer.push(arguments);}
-                    gtag('js', new Date());
-                    gtag('config', 'G-NER153CSFW');
-                `}} />
             </head>
             <body className="antialiased overflow-x-hidden">
                 <AuthProvider session={session}>

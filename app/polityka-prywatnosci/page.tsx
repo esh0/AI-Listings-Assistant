@@ -14,7 +14,7 @@ export default function PolitykaPrywatnosci() {
             <h2>1. Administrator danych osobowych</h2>
             <p>Administratorem Twoich danych osobowych jest Anna Szałach, zamieszkała pod adresem ul. Radosna 36, 82-200 Grobelno (dalej: „Administrator").</p>
             <p>Kontakt z Administratorem: kontakt@marketplace-ai.pl</p>
-            <p><em>Ostatnia aktualizacja: 20 marca 2026 r.</em></p>
+            <p><em>Ostatnia aktualizacja: 23 marca 2026 r.</em></p>
 
             <hr />
 
@@ -99,6 +99,7 @@ export default function PolitykaPrywatnosci() {
                     <tr><td><strong>Vercel</strong></td><td>Hosting aplikacji</td><td>EU/USA</td><td>SCCs, Edge Functions</td></tr>
                     <tr><td><strong>Resend</strong> (Resend Inc.)</td><td>Wysyłka emaili transakcyjnych (rejestracja, zakup planu, stan kredytów)</td><td>USA</td><td>SCCs, Data Processing Agreement</td></tr>
                     <tr><td><strong>Sentry</strong> (Functional Software, Inc.)</td><td>Monitoring błędów aplikacji</td><td>USA</td><td>SCCs</td></tr>
+                    <tr><td><strong>Google LLC</strong> (Google Analytics 4)</td><td>Analityka ruchu i zachowania użytkowników (za zgodą)</td><td>USA</td><td>Standardowe klauzule umowne (SCCs)</td></tr>
                     <tr><td><strong>Vercel Analytics</strong></td><td>Anonimowe statystyki odwiedzin (brak danych osobowych)</td><td>EU/USA</td><td>Dane anonimowe, brak wymogu zgody</td></tr>
                 </tbody>
             </table>
@@ -200,10 +201,31 @@ export default function PolitykaPrywatnosci() {
                 <tbody>
                     <tr><td><code>guest_uuid</code></td><td>Local Storage</td><td>Identyfikacja gościa (rate-limiting)</td><td>Do ręcznego usunięcia</td></tr>
                     <tr><td><code>pending_ad</code></td><td>IndexedDB</td><td>Tymczasowe ogłoszenie (soft-wall)</td><td>Do zalogowania lub ręcznego usunięcia</td></tr>
+                    <tr><td><code>cookie_analytics_consent</code></td><td>Local Storage</td><td>Zapamiętanie wyboru plików cookie analitycznych (GA4)</td><td>Do ręcznego usunięcia</td></tr>
                 </tbody>
             </table>
 
-            <h3>7.3. Cookies analityczne i marketingowe</h3>
+            <h3>7.3. Cookies analityczne (wymagają zgody)</h3>
+            <p>Serwis korzysta z <strong>Google Analytics 4</strong> (GA4) — narzędzia analitycznego Google LLC. GA4 ustawia pliki cookie wyłącznie po wyrażeniu przez Użytkownika zgody na cookies analityczne w banerze cookie.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cookie</th>
+                        <th>Cel</th>
+                        <th>Czas</th>
+                        <th>Dostawca</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>_ga</code></td><td>Unikalny identyfikator przeglądarki (pseudonimowy)</td><td>2 lata</td><td>Google LLC</td></tr>
+                    <tr><td><code>_gid</code></td><td>Identyfikator sesji</td><td>24 godziny</td><td>Google LLC</td></tr>
+                    <tr><td><code>_ga_NER153CSFW</code></td><td>Stan sesji GA4 dla tej właściwości</td><td>2 lata</td><td>Google LLC</td></tr>
+                </tbody>
+            </table>
+            <p>Dane zbierane przez GA4 obejmują: pseudonimowy identyfikator klienta, odwiedzone strony, interakcje z formularzem i ścieżkę rejestracji. Dane przekazywane są na serwery Google w USA na podstawie Standardowych Klauzul Umownych (SCCs). Podstawa prawna: <strong>art. 6 ust. 1 lit. a RODO — zgoda</strong>.</p>
+            <p>Możesz wycofać zgodę w dowolnym momencie, usuwając klucz <code>cookie_analytics_consent</code> z localStorage przeglądarki (DevTools → Application → Local Storage) oraz cookies <code>_ga</code>, <code>_gid</code>, <code>_ga_NER153CSFW</code> (DevTools → Application → Cookies). Możesz też skontaktować się z nami pod adresem <a href="mailto:privacy@marketplace-ai.pl">privacy@marketplace-ai.pl</a>.</p>
+
+            <h3>7.4. Anonimowe statystyki odwiedzin (bez zgody)</h3>
             <p>Serwis korzysta z <strong>Vercel Web Analytics</strong> — narzędzia analitycznego, które:</p>
             <ul>
                 <li>Nie używa plików cookie ani localStorage</li>
@@ -211,7 +233,6 @@ export default function PolitykaPrywatnosci() {
                 <li>Mierzy wyłącznie anonimowe metryki (liczba odwiedzin, strony, kraj — na poziomie zagregowanym)</li>
                 <li>Nie wymaga zgody użytkownika (nie jest narzędziem śledzącym w rozumieniu dyrektywy ePrivacy)</li>
             </ul>
-            <p>Serwis <strong>nie korzysta</strong> z Google Analytics, Facebook Pixel ani żadnych innych zewnętrznych narzędzi śledzących.</p>
 
             <hr />
 
@@ -230,7 +251,7 @@ export default function PolitykaPrywatnosci() {
             <hr />
 
             <h2>9. Transfer danych poza EOG</h2>
-            <p>Niektórzy nasi dostawcy usług mają siedziby w USA (OpenAI, Google, Vercel). Transfer danych odbywa się na podstawie:</p>
+            <p>Niektórzy nasi dostawcy usług mają siedziby w USA (OpenAI, Google OAuth, Google Analytics, Vercel, Resend, Sentry). Transfer danych odbywa się na podstawie:</p>
             <ul>
                 <li><strong>Standardowych klauzul umownych (SCCs)</strong> zatwierdzonych przez Komisję Europejską</li>
                 <li><strong>Data Processing Agreements (DPA)</strong> z każdym dostawcą</li>
