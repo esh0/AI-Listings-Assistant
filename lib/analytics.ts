@@ -68,6 +68,37 @@ export function trackEvent(
   window.gtag("event", eventName, params ?? {});
 }
 
+/**
+ * Send a GA4 event from server-side code (e.g. Stripe webhook handler).
+ * Uses GA4 Measurement Protocol — requires GA4_API_SECRET env var.
+ * No-op if the secret is not configured (safe for local dev).
+ */
+export async function sendServerEvent(
+  clientId: string,
+  eventName: string,
+  params?: Record<string, unknown>
+): Promise<void> {
+  const measurementId = process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID ?? GA_ID;
+  const apiSecret = process.env.GA4_API_SECRET;
+  if (!apiSecret) return; // not configured — skip silently
+
+  try {
+    await fetch(
+      `https://www.google-analytics.com/mp/collect?measurement_id=${measurementId}&api_secret=${apiSecret}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          client_id: clientId,
+          events: [{ name: eventName, params: params ?? {} }],
+        }),
+      }
+    );
+  } catch {
+    // Fire-and-forget — never let analytics errors bubble up to callers
+  }
+}
+
 // Extend Window to avoid TS errors
 declare global {
   interface Window {
