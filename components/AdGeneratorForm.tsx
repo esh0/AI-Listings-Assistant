@@ -26,6 +26,7 @@ import type {
     PriceType,
 } from "@/lib/types";
 import type { Template } from "@/components/TemplatesList";
+import { trackEvent } from "@/lib/analytics";
 
 // Dynamic imports
 const FullscreenLoading = dynamic(() => import("@/components/FullscreenLoading").then(mod => ({ default: mod.FullscreenLoading })), {
@@ -343,6 +344,17 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
             // Store base64 images for saving later (both authenticated and unauthenticated users)
             setBase64Images(imagesForRequest);
 
+            // Track guest generation attempt (before API call)
+            if (!session?.user?.id) {
+                trackEvent("guest_generation_requested", {
+                    platform,
+                    tone: selectedTone,
+                    condition,
+                    price_type: priceType,
+                    num_images: images.length,
+                });
+            }
+
             const response = await fetch("/api/generate-ad", {
                 method: "POST",
                 headers: {
@@ -369,6 +381,10 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
             if (!response.ok) {
                 if (response.status === 429) {
                     setShowSoftWall(true);
+                    trackEvent("guest_limit_exhausted", {
+                        platform,
+                        tone: selectedTone,
+                    });
                     return;
                 } else if (response.status === 403) {
                     setShowNoCredits(true);
