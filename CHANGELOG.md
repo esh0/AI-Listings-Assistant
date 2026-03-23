@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.3.4] - 2026-03-23
+
+### Fixed
+- GDPR/RODO: GA4 was loading unconditionally before user consent — moved to consent-conditional initialisation via `lib/analytics.ts`
+- GDPR/RODO: Cookie banner redesigned with "Akceptuję" / "Tylko niezbędne" binary choice — previous "Rozumiem" button was not valid RODO consent
+- GDPR/RODO: Migrated consent storage from legacy `cookie_notice_accepted` key to `cookie_analytics_consent` — existing users shown banner again to give explicit consent
+- Privacy policy: removed false statement "Serwis nie korzysta z Google Analytics" — replaced with full GA4 disclosure including cookie table, retention periods, and legal basis
+- Privacy policy: added `cookie_analytics_consent` localStorage key to section 7.2
+- Privacy policy: added Google LLC (Google Analytics 4) to processors table (section 4) and data transfers list (section 9)
+
+---
+
 ## [1.3.3] - 2026-03-23
 
 ### Fixed
