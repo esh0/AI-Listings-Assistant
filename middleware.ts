@@ -3,12 +3,18 @@ import { NextResponse } from "next/server";
 
 export default auth((req) => {
   const isLoggedIn = !!req.auth;
-  const isDashboardRoute = req.nextUrl.pathname.startsWith("/dashboard");
+  const { pathname } = req.nextUrl;
+  const isDashboardRoute = pathname.startsWith("/dashboard");
+
+  // Redirect authenticated users from home page to dashboard (server-side — Googlebot is never authenticated)
+  if (pathname === "/" && isLoggedIn) {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
+  }
 
   // Protect dashboard routes - redirect to signin if not authenticated
   if (isDashboardRoute && !isLoggedIn) {
     const signInUrl = new URL("/auth/signin", req.url);
-    signInUrl.searchParams.set("callbackUrl", req.nextUrl.pathname);
+    signInUrl.searchParams.set("callbackUrl", pathname);
     return NextResponse.redirect(signInUrl);
   }
 

@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { ShoppingBag, Sparkles, ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -15,9 +13,6 @@ const DEMO_TEXT =
     "Elegancki zegarek w stylu vintage, idealny na prezent. Mechanizm kwarcowy, skórzany pasek, stan bardzo dobry. Wysyłka w 24h.";
 
 export default function HomePage() {
-    const { status } = useSession();
-    const router = useRouter();
-
     const [typedText, setTypedText] = useState("");
     const [showCursor, setShowCursor] = useState(true);
     const [scrolled, setScrolled] = useState(false);
@@ -42,38 +37,6 @@ export default function HomePage() {
         return () => clearInterval(interval);
     }, []);
 
-    // Redirect authenticated users to dashboard
-    useEffect(() => {
-        if (status === "authenticated") {
-            router.push("/dashboard");
-        }
-    }, [status, router]);
-
-    // Show loading while checking auth
-    if (status === "loading") {
-        return (
-            <div className="min-h-screen bg-background flex items-center justify-center">
-                <div className="text-center space-y-4">
-                    <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
-                    <p className="text-muted-foreground">Ładowanie...</p>
-                </div>
-            </div>
-        );
-    }
-
-    // Redirect is happening
-    if (status === "authenticated") {
-        return (
-            <div className="min-h-screen bg-background flex items-center justify-center">
-                <div className="text-center space-y-4">
-                    <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
-                    <p className="text-muted-foreground">Przekierowywanie...</p>
-                </div>
-            </div>
-        );
-    }
-
-    // Landing page for unauthenticated users
     return (
         <div className="min-h-screen bg-background overflow-x-hidden">
             {/* Navbar */}

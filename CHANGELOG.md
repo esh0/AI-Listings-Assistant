@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.3.3] - 2026-03-23
+
+### Fixed
+- SEO: strona główna nie była indeksowana przez Google — Googlebot wykrywał client-side `router.push("/dashboard")` jako przekierowanie i nie indeksował strony. Redirect przeniesiony do middleware (server-side) — zalogowani użytkownicy dostają 307 przed renderem, Googlebot (niezalogowany) widzi pełną stronę lądowania
+- Usunięto `useSession` i `useRouter` z `app/page.tsx` — uproszczono komponent, który nie potrzebował już tych zależności
+
+---
+
 ## [1.3.2] - 2026-03-22
 
 ### Fixed
