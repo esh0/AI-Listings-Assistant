@@ -8,6 +8,7 @@ import { Save, LogIn, X } from "lucide-react";
 import { savePendingAd, type PendingAd } from "@/lib/storage";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { trackEvent } from "@/lib/analytics";
 
 interface SoftWallModalProps {
     adData?: {
@@ -45,6 +46,18 @@ export function SoftWallModal({ adData, mode = "save", isVisible, onClose }: Sof
     const previouslyFocusedRef = useRef<HTMLElement | null>(null);
 
     const isLimitMode = mode === "limit";
+
+    // Track softwall_shown event — fires once per open, resets on close
+    const hasFiredShownRef = useRef(false);
+    useEffect(() => {
+        if (isVisible && !hasFiredShownRef.current) {
+            hasFiredShownRef.current = true;
+            trackEvent("softwall_shown", { mode });
+        }
+        if (!isVisible) {
+            hasFiredShownRef.current = false;
+        }
+    }, [isVisible, mode]);
 
     // Auto-hide if user is already logged in
     useEffect(() => {
@@ -111,6 +124,7 @@ export function SoftWallModal({ adData, mode = "save", isVisible, onClose }: Sof
     }
 
     const handleSignIn = async () => {
+        trackEvent("softwall_signin_clicked", { mode });
         setIsSaving(true);
 
         try {
