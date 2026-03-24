@@ -35,6 +35,7 @@ export interface Template {
     notes?: string | null;
     isDefault: boolean;
     createdAt: string;
+    customToneInstructions?: string | null;
 }
 
 export function TemplatesList({ initialTemplates }: { initialTemplates: Template[] }) {
