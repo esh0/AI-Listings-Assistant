@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.3.9] - 2026-03-24
+
+### Added
+- Custom style for RESELER templates: define free-text AI tone instructions within a Template
+- When a template uses custom style, the standard tone instructions are replaced by user-defined instructions
+- `customToneInstructions` field added to Template model (Prisma migration applied)
+- New textarea in TemplateFormModal (max 500 chars, RESELER only with Crown lock for others)
+- "Styl z szablonu: Własny" indicator replaces tone selector in generator when custom template active
+- API guard: custom tone blocked for FREE/STARTER users at generate-ad endpoint
+
+---
+
 ## [1.3.8] - 2026-03-24
 
 ### Added
