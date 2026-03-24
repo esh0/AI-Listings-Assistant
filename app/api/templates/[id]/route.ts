@@ -8,7 +8,7 @@ import { ToneStyleSchema } from "@/lib/schemas";
 
 const updateTemplateSchema = z.object({
     name: z.string().min(1).max(100).optional(),
-    platform: z.enum(["olx", "allegro_lokalnie", "facebook_marketplace", "vinted"]).optional(),
+    platform: z.enum(["olx", "allegro_lokalnie", "facebook_marketplace", "vinted", "ebay", "amazon", "etsy"]).optional(),
     tone: ToneStyleSchema.optional(),
     condition: z
         .enum([

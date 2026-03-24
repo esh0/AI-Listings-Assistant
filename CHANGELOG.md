@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.3.8] - 2026-03-24
+
+### Added
+- 3 new marketplace platforms for RESELER plan: eBay (80/1000 chars), Amazon (200/2000 chars), Etsy (140/1000 chars)
+- Platform-specific AI generation rules for all 3 platforms (`lib/rules/ebay_rules.md`, `lib/rules/amazon_rules.md`, `lib/rules/etsy_rules.md`)
+- Platform tiles with Crown lock (opacity-50, tooltip) for FREE and STARTER users
+- New platform filters in ad management dashboard
+- Pricing page updated: RESELER shows "7 platform", STARTER/FREE show "4 platformy"
+
+---
+
 ## [1.3.7] - 2026-03-24
 
 ### Changed
