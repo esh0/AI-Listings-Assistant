@@ -51,7 +51,7 @@ import {
     DELIVERY_NAMES,
     TONE_STYLE_NAMES,
     FREE_TONES,
-    RESELER_TONES,
+    ADVANCED_TONES,
 } from "@/lib/types";
 
 // Dynamic imports for conditionally rendered components
@@ -874,8 +874,8 @@ export function LandingForm() {
                                                         </button>
                                                     );
                                                 })}
-                                                {RESELER_TONES.map((tone) => {
-                                                    const isLocked = userPlan !== "RESELER";
+                                                {ADVANCED_TONES.map((tone) => {
+                                                    const isLocked = userPlan === "FREE";
                                                     const isSelected = selectedTone === tone;
                                                     if (isLocked) {
                                                         return (
@@ -895,7 +895,7 @@ export function LandingForm() {
                                                                 </button>
                                                                 {tooltipTone === tone && (
                                                                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1.5 rounded-lg bg-foreground text-background text-xs whitespace-nowrap z-10 pointer-events-none">
-                                                                        Dostępne w planie Reseler
+                                                                        Dostępne w planach Starter i Reseler
                                                                         <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-foreground" />
                                                                     </div>
                                                                 )}
