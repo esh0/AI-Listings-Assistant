@@ -163,6 +163,9 @@ enum Platform {
   allegro_lokalnie
   facebook_marketplace
   vinted
+  ebay
+  amazon
+  etsy
 }
 
 enum ToneStyle {

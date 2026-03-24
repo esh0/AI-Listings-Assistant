@@ -3,7 +3,10 @@ export type Platform =
     | "olx"
     | "allegro_lokalnie"
     | "facebook_marketplace"
-    | "vinted";
+    | "vinted"
+    | "ebay"
+    | "amazon"
+    | "etsy";
 
 export type ProductCondition =
     | "nowy"
@@ -117,6 +120,9 @@ export const PLATFORM_NAMES: Record<Platform, string> = {
     allegro_lokalnie: "Allegro Lokalnie",
     facebook_marketplace: "FB Marketplace",
     vinted: "Vinted",
+    ebay: "eBay",
+    amazon: "Amazon",
+    etsy: "Etsy",
 };
 
 // Platform icon/color metadata — intentional hardcoded brand colors
@@ -125,6 +131,9 @@ export const PLATFORM_META: Record<Platform, { color: string; label: string }> =
     allegro_lokalnie: { color: "text-green-600", label: "Allegro Lokalnie" },
     facebook_marketplace: { color: "text-blue-600", label: "FB Marketplace" },
     vinted: { color: "text-teal-600", label: "Vinted" },
+    ebay: { color: "text-yellow-500", label: "eBay" },
+    amazon: { color: "text-yellow-600", label: "Amazon" },
+    etsy: { color: "text-orange-400", label: "Etsy" },
 };
 
 // Condition display names
@@ -151,6 +160,9 @@ export const PLATFORM_DEFAULT_TONES: Record<Platform, ToneStyle> = {
     allegro_lokalnie: "professional",
     facebook_marketplace: "friendly",
     vinted: "friendly",
+    ebay: "professional",
+    amazon: "professional",
+    etsy: "friendly",
 };
 
 // Tone style display names
