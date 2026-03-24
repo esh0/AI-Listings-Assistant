@@ -15,9 +15,9 @@ const PLATFORM_LIMITS = {
   allegro_lokalnie: { title: 75, description: 1500 },
   facebook_marketplace: { title: 60, description: 1000 },
   vinted: { title: 100, description: 750 },
-  ebay: { title: 80, description: 2000 },
+  ebay: { title: 80, description: 1000 },
   amazon: { title: 200, description: 2000 },
-  etsy: { title: 140, description: 2000 },
+  etsy: { title: 140, description: 1000 },
 } as const;
 
 interface AdResultMainProps {
