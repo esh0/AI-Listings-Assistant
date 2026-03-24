@@ -217,12 +217,13 @@ export function TemplateFormModal({ template, onClose, userPlan }: Props) {
                                     role="radio"
                                     aria-checked={tone === t}
                                     onClick={() => setTone(t)}
+                                    disabled={tone === t}
                                     className={cn(
-                                        "px-4 py-1.5 rounded-full border text-sm cursor-pointer transition-all",
+                                        "px-4 py-1.5 rounded-full border text-sm transition-all",
                                         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                                         tone === t
-                                            ? "border-primary bg-primary/10 text-primary"
-                                            : "border-border text-muted-foreground hover:border-primary/50"
+                                            ? "border-primary bg-primary/10 text-primary cursor-default"
+                                            : "border-border text-muted-foreground hover:border-primary/50 cursor-pointer"
                                     )}
                                 >
                                     {TONE_STYLE_NAMES[t]}
@@ -236,12 +237,13 @@ export function TemplateFormModal({ template, onClose, userPlan }: Props) {
                                     role="radio"
                                     aria-checked={tone === "custom"}
                                     onClick={() => setTone("custom")}
+                                    disabled={tone === "custom"}
                                     className={cn(
-                                        "px-4 py-1.5 rounded-full border text-sm cursor-pointer transition-all",
+                                        "px-4 py-1.5 rounded-full border text-sm transition-all",
                                         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                                         tone === "custom"
-                                            ? "border-primary bg-primary/10 text-primary"
-                                            : "border-border text-muted-foreground hover:border-primary/50"
+                                            ? "border-primary bg-primary/10 text-primary cursor-default"
+                                            : "border-border text-muted-foreground hover:border-primary/50 cursor-pointer"
                                     )}
                                 >
                                     Własny styl
@@ -297,12 +299,13 @@ export function TemplateFormModal({ template, onClose, userPlan }: Props) {
                                     role="radio"
                                     aria-checked={condition === c}
                                     onClick={() => setCondition(c)}
+                                    disabled={condition === c}
                                     className={cn(
-                                        "px-4 py-1.5 rounded-full border text-sm cursor-pointer transition-all",
+                                        "px-4 py-1.5 rounded-full border text-sm transition-all",
                                         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                                         condition === c
-                                            ? "border-primary bg-primary/10 text-primary"
-                                            : "border-border text-muted-foreground hover:border-primary/50"
+                                            ? "border-primary bg-primary/10 text-primary cursor-default"
+                                            : "border-border text-muted-foreground hover:border-primary/50 cursor-pointer"
                                     )}
                                 >
                                     {label}
@@ -390,7 +393,7 @@ export function TemplateFormModal({ template, onClose, userPlan }: Props) {
                     >
                         Anuluj
                     </Button>
-                    <Button onClick={handleSubmit} disabled={isSubmitting || (tone === "custom" && !customToneInstructions.trim())}>
+                    <Button onClick={handleSubmit} disabled={isSubmitting || !name.trim() || (tone === "custom" && !customToneInstructions.trim())}>
                         {isSubmitting
                             ? "Zapisywanie\u2026"
                             : isEdit
