@@ -21,6 +21,9 @@ const PLATFORM_RULES_FILES: Record<Platform, string> = {
     allegro_lokalnie: "allegro_lokalnie_rules.md",
     facebook_marketplace: "facebook_marketplace_rules.md",
     vinted: "vinted_rules.md",
+    ebay: "ebay_rules.md",
+    amazon: "amazon_rules.md",
+    etsy: "etsy_rules.md",
 };
 
 // Cache for rules content
@@ -307,7 +310,7 @@ const TONE_VOCABULARY = `## SŁOWNICTWO WG TONU
 `;
 
 function buildSystemPrompt(tone: ToneStyle): string {
-  return `Jesteś ekspertem w tworzeniu ogłoszeń sprzedażowych na polskie platformy marketplace (OLX, Allegro Lokalnie, Facebook Marketplace, Vinted).
+  return `Jesteś ekspertem w tworzeniu ogłoszeń sprzedażowych na polskie i międzynarodowe platformy marketplace (OLX, Allegro Lokalnie, Facebook Marketplace, Vinted, eBay, Amazon, Etsy). Wszystkie ogłoszenia generujesz w języku polskim.
 
 Analizuj zdjęcia produktu i dane wejściowe, aby wygenerować tytuł i opis w wybranym stylu językowym (TONIE).
 
