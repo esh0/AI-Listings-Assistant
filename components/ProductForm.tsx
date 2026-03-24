@@ -69,6 +69,7 @@ interface ProductFormProps {
     onToneChange: (value: ToneStyle) => void;
     onPriceTypeChange: (value: PriceType) => void;
     userPlan: string;
+    customToneActive?: boolean;  // NEW — when true, hides tone selector and shows "Styl z szablonu: Własny"
 }
 
 // Component for Card 2: Platform + Tone
@@ -78,7 +79,8 @@ export function ProductForm({
     onPlatformChange,
     onToneChange,
     userPlan,
-}: Pick<ProductFormProps, 'platform' | 'selectedTone' | 'onPlatformChange' | 'onToneChange' | 'userPlan'>) {
+    customToneActive,
+}: Pick<ProductFormProps, 'platform' | 'selectedTone' | 'onPlatformChange' | 'onToneChange' | 'userPlan' | 'customToneActive'>) {
     const handlePlatformChange = useCallback((p: Platform) => {
         onPlatformChange(p);
         onToneChange(PLATFORM_DEFAULT_TONES[p]);
@@ -206,7 +208,12 @@ export function ProductForm({
                 <legend className="text-sm font-medium leading-none">
                     Styl komunikacji
                 </legend>
-                <div className="flex gap-2 flex-wrap" role="radiogroup" aria-label="Wybór stylu komunikacji">
+                {customToneActive ? (
+                    <p className="text-sm text-muted-foreground italic">
+                        Styl z szablonu: Własny
+                    </p>
+                ) : (
+                    <div className="flex gap-2 flex-wrap" role="radiogroup" aria-label="Wybór stylu komunikacji">
                     {FREE_TONES.map((tone) => {
                         const isSelected = selectedTone === tone;
                         return (
@@ -276,6 +283,7 @@ export function ProductForm({
                         );
                     })}
                 </div>
+                )}
             </fieldset>
         </div>
     );
