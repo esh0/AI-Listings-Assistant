@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.3.10] - 2026-03-24
+
+### Fixed
+- Template modal: save button disabled when name is empty (previously allowed saving with blank name)
+- Template modal: tone and condition pills cannot be unchecked — selected option is now disabled to prevent deselection
+- Template deselect now resets all form fields (platform, condition, delivery, notes, priceType) to defaults instead of leaving previous template values
+- Template select now applies priceType from template
+- Pricing: added "Szablony ogłoszeń z własnym formatem" and "Własny styl tonu" to RESELER feature list
+- Locked advanced tones (FREE users) now show Sparkles icon instead of Crown — Crown reserved for RESELER-only features
+
+## [1.3.9] - 2026-03-24
+
+### Added
+- Custom style for RESELER templates: define free-text AI tone instructions within a Template
+- When a template uses custom style, the standard tone instructions are replaced by user-defined instructions
+- `customToneInstructions` field added to Template model (Prisma migration applied)
+- New textarea in TemplateFormModal (max 500 chars, RESELER only with Crown lock for others)
+- "Styl z szablonu: Własny" indicator replaces tone selector in generator when custom template active
+- API guard: custom tone blocked for FREE/STARTER users at generate-ad endpoint
+
+---
+
+## [1.3.8] - 2026-03-24
+
+### Added
+- 3 new marketplace platforms for RESELER plan: eBay (80/1000 chars), Amazon (200/2000 chars), Etsy (140/1000 chars)
+- Platform-specific AI generation rules for all 3 platforms (`lib/rules/ebay_rules.md`, `lib/rules/amazon_rules.md`, `lib/rules/etsy_rules.md`)
+- Platform tiles with Crown lock (opacity-50, tooltip) for FREE and STARTER users
+- New platform filters in ad management dashboard
+- Pricing page updated: RESELER shows "7 platform", STARTER/FREE show "4 platformy"
+
+---
+
+## [1.3.7] - 2026-03-24
+
+### Changed
+- Advanced tones (enthusiastic, funny, technical, persuasive, concise) now available to STARTER plan — previously RESELER-only
+- FREE users see advanced tones locked with updated tooltip "Dostępne w planach Starter i Reseler"
+- API gate updated: rejects advanced tones only for FREE plan (was: non-RESELER)
+- Pricing page copy updated: STARTER and RESELER now show "Wszystkie style tonu"
+- Internal: `RESELER_TONES` constant renamed to `ADVANCED_TONES` across all files
+
+---
+
 ## [1.3.6] - 2026-03-23
 
 ### Fixed

@@ -3,7 +3,10 @@ export type Platform =
     | "olx"
     | "allegro_lokalnie"
     | "facebook_marketplace"
-    | "vinted";
+    | "vinted"
+    | "ebay"
+    | "amazon"
+    | "etsy";
 
 export type ProductCondition =
     | "nowy"
@@ -17,10 +20,10 @@ export type DeliveryOption = "odbiór osobisty" | "wysyłka";
 export type ToneStyle =
     | "professional" | "friendly" | "casual"
     | "enthusiastic" | "funny" | "technical"
-    | "persuasive" | "concise";
+    | "persuasive" | "concise" | "custom";
 
 export const FREE_TONES: ToneStyle[] = ["professional", "friendly", "casual"];
-export const RESELER_TONES: ToneStyle[] = ["enthusiastic", "funny", "technical", "persuasive", "concise"];
+export const ADVANCED_TONES: ToneStyle[] = ["enthusiastic", "funny", "technical", "persuasive", "concise"];
 
 export type PriceType = "user_provided" | "ai_suggest" | "free";
 
@@ -67,6 +70,7 @@ export interface GenerateAdRequest {
     notes: string;
     images: ImageForRequest[];
     bodyTemplate?: string;
+    customToneInstructions?: string;
 }
 
 // API Response - Image analysis with preview for display
@@ -117,6 +121,9 @@ export const PLATFORM_NAMES: Record<Platform, string> = {
     allegro_lokalnie: "Allegro Lokalnie",
     facebook_marketplace: "FB Marketplace",
     vinted: "Vinted",
+    ebay: "eBay",
+    amazon: "Amazon",
+    etsy: "Etsy",
 };
 
 // Platform icon/color metadata — intentional hardcoded brand colors
@@ -125,6 +132,9 @@ export const PLATFORM_META: Record<Platform, { color: string; label: string }> =
     allegro_lokalnie: { color: "text-green-600", label: "Allegro Lokalnie" },
     facebook_marketplace: { color: "text-blue-600", label: "FB Marketplace" },
     vinted: { color: "text-teal-600", label: "Vinted" },
+    ebay: { color: "text-yellow-500", label: "eBay" },
+    amazon: { color: "text-yellow-600", label: "Amazon" },
+    etsy: { color: "text-orange-400", label: "Etsy" },
 };
 
 // Condition display names
@@ -151,6 +161,9 @@ export const PLATFORM_DEFAULT_TONES: Record<Platform, ToneStyle> = {
     allegro_lokalnie: "professional",
     facebook_marketplace: "friendly",
     vinted: "friendly",
+    ebay: "professional",
+    amazon: "professional",
+    etsy: "friendly",
 };
 
 // Tone style display names
@@ -163,6 +176,7 @@ export const TONE_STYLE_NAMES: Record<ToneStyle, string> = {
     technical: "Techniczny",
     persuasive: "Przekonujący",
     concise: "Zwięzły",
+    custom: "Własny styl",
 };
 
 // Tone style descriptions
@@ -175,4 +189,5 @@ export const TONE_STYLE_DESCRIPTIONS: Record<ToneStyle, string> = {
     technical: "Precyzyjne dane i specyfikacje bez ozdobników",
     persuasive: "Argumenty korzyści i CTA skłaniające do zakupu",
     concise: "Minimum słów, maksimum treści — bullet points i krótkie zdania",
+    custom: "Własne instrukcje stylu zdefiniowane w szablonie",
 };

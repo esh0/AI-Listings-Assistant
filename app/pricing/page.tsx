@@ -20,7 +20,7 @@ const PLANS = [
         features: [
             "5 generacji / miesiąc",
             "Maks. 3 zdjęcia",
-            "Wszystkie platformy",
+            "4 platformy (OLX, Allegro, FB Marketplace, Vinted)",
             "3 style tonu",
         ],
         retention: "Historia ogłoszeń: 7 dni",
@@ -36,8 +36,8 @@ const PLANS = [
         features: [
             "30 generacji / miesiąc",
             "Maks. 5 zdjęć",
-            "Wszystkie platformy",
-            "3 style tonu",
+            "4 platformy (OLX, Allegro, FB Marketplace, Vinted)",
+            "Wszystkie style tonu",
             "Eksport CSV",
         ],
         retention: "Historia ogłoszeń: 180 dni",
@@ -53,8 +53,10 @@ const PLANS = [
         features: [
             "80 generacji / miesiąc",
             "Maks. 8 zdjęć",
-            "Wszystkie platformy",
-            "3 style tonu",
+            "7 platform (OLX, Allegro, FB, Vinted + eBay, Amazon, Etsy)",
+            "Wszystkie style tonu",
+            "Szablony ogłoszeń z własnym formatem",
+            "Własny styl tonu (instrukcje dla AI)",
             "Eksport CSV",
             "Priorytetowa generacja",
         ],

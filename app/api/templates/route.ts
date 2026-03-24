@@ -8,7 +8,7 @@ import { ToneStyleSchema } from "@/lib/schemas";
 
 const createTemplateSchema = z.object({
     name: z.string().min(1).max(100),
-    platform: z.enum(["olx", "allegro_lokalnie", "facebook_marketplace", "vinted"]),
+    platform: z.enum(["olx", "allegro_lokalnie", "facebook_marketplace", "vinted", "ebay", "amazon", "etsy"]),
     tone: ToneStyleSchema,
     condition: z.enum([
         "nowy",
@@ -21,7 +21,19 @@ const createTemplateSchema = z.object({
     bodyTemplate: z.string().max(3000).optional(),
     priceType: z.enum(["ai_suggest", "user_provided", "free"]).optional(),
     notes: z.string().max(1000).optional(),
-});
+    customToneInstructions: z.string().min(1).max(500).optional(),
+}).refine(
+    (data) => {
+        if (data.tone === "custom") {
+            return !!data.customToneInstructions && data.customToneInstructions.trim().length > 0;
+        }
+        return true;
+    },
+    {
+        message: "Własny styl wymaga podania instrukcji stylu",
+        path: ["customToneInstructions"],
+    }
+);
 
 export async function GET() {
     const session = await auth();
@@ -46,6 +58,7 @@ export async function GET() {
             notes: true,
             isDefault: true,
             createdAt: true,
+            customToneInstructions: true,
         },
     });
     return NextResponse.json(templates);
@@ -67,7 +80,13 @@ export async function POST(request: NextRequest) {
             { status: 400 }
         );
     }
-    const { name, platform, tone, condition, delivery, bodyTemplate, priceType, notes } = result.data;
+    const { name, platform, tone, condition, delivery, bodyTemplate, priceType, notes, customToneInstructions } = result.data;
+    if (tone === "custom" && session.user.plan !== "RESELER") {
+        return NextResponse.json(
+            { error: "Własny styl dostępny jest tylko w planie Reseler" },
+            { status: 403 }
+        );
+    }
     try {
         const template = await prisma.template.create({
             data: {
@@ -80,6 +99,7 @@ export async function POST(request: NextRequest) {
                 bodyTemplate,
                 priceType,
                 notes,
+                customToneInstructions: tone === "custom" ? (customToneInstructions ?? null) : null,
             },
         });
         return NextResponse.json(template, { status: 201 });

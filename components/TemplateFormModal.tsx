@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
-import { X, ShoppingBag, Store, Facebook, Shirt } from "lucide-react";
+import { X, Crown, ShoppingBag, Store, Facebook, Shirt, ShoppingCart, Package, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -12,7 +12,7 @@ import {
     DELIVERY_NAMES,
     CONDITION_NAMES,
     FREE_TONES,
-    RESELER_TONES,
+    ADVANCED_TONES,
 } from "@/lib/types";
 import type { Platform, ToneStyle, DeliveryOption, ProductCondition } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -23,14 +23,18 @@ const PLATFORM_ICONS = {
     allegro_lokalnie: { Icon: Store, color: "text-green-600" },
     facebook_marketplace: { Icon: Facebook, color: "text-blue-600" },
     vinted: { Icon: Shirt, color: "text-teal-600" },
+    ebay: { Icon: ShoppingCart, color: "text-yellow-500" },
+    amazon: { Icon: Package, color: "text-yellow-600" },
+    etsy: { Icon: Tag, color: "text-orange-400" },
 } as const;
 
 interface Props {
     template: Template | null;
     onClose: (saved: boolean) => void;
+    userPlan: string;
 }
 
-export function TemplateFormModal({ template, onClose }: Props) {
+export function TemplateFormModal({ template, onClose, userPlan }: Props) {
     const isEdit = !!template;
     const [name, setName] = useState(template?.name ?? "");
     const [platform, setPlatform] = useState<Platform>(template?.platform ?? "olx");
@@ -41,6 +45,9 @@ export function TemplateFormModal({ template, onClose }: Props) {
     );
     const [bodyTemplate, setBodyTemplate] = useState(template?.bodyTemplate ?? "");
     const [notes, setNotes] = useState(template?.notes ?? "");
+    const [customToneInstructions, setCustomToneInstructions] = useState(
+        template?.customToneInstructions ?? ""
+    );
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -82,6 +89,10 @@ export function TemplateFormModal({ template, onClose }: Props) {
             setError("Wybierz przynajmniej jedną opcję dostawy");
             return;
         }
+        if (tone === "custom" && !customToneInstructions.trim()) {
+            setError("Podaj instrukcje stylu dla AI");
+            return;
+        }
         setIsSubmitting(true);
         setError(null);
         try {
@@ -98,6 +109,7 @@ export function TemplateFormModal({ template, onClose }: Props) {
                     delivery,
                     bodyTemplate: bodyTemplate || undefined,
                     notes: notes || undefined,
+                    customToneInstructions: tone === "custom" ? customToneInstructions : null,
                 }),
             });
             if (!res.ok) {
@@ -111,7 +123,7 @@ export function TemplateFormModal({ template, onClose }: Props) {
         } finally {
             setIsSubmitting(false);
         }
-    }, [name, platform, tone, delivery, bodyTemplate, notes, isEdit, template, onClose]);
+    }, [name, platform, tone, delivery, bodyTemplate, notes, customToneInstructions, isEdit, template, onClose]);
 
     return (
         <div
@@ -198,25 +210,82 @@ export function TemplateFormModal({ template, onClose }: Props) {
                     <fieldset className="space-y-3">
                         <legend className="text-sm font-medium">Styl komunikacji</legend>
                         <div className="flex gap-2 flex-wrap">
-                            {([...FREE_TONES, ...RESELER_TONES] as ToneStyle[]).map((t) => (
+                            {([...FREE_TONES, ...ADVANCED_TONES] as ToneStyle[]).map((t) => (
                                 <button
                                     key={t}
                                     type="button"
                                     role="radio"
                                     aria-checked={tone === t}
                                     onClick={() => setTone(t)}
+                                    disabled={tone === t}
                                     className={cn(
-                                        "px-4 py-1.5 rounded-full border text-sm cursor-pointer transition-all",
+                                        "px-4 py-1.5 rounded-full border text-sm transition-all",
                                         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                                         tone === t
-                                            ? "border-primary bg-primary/10 text-primary"
-                                            : "border-border text-muted-foreground hover:border-primary/50"
+                                            ? "border-primary bg-primary/10 text-primary cursor-default"
+                                            : "border-border text-muted-foreground hover:border-primary/50 cursor-pointer"
                                     )}
                                 >
                                     {TONE_STYLE_NAMES[t]}
                                 </button>
                             ))}
+
+                            {/* Custom tone — RESELER only */}
+                            {userPlan === "RESELER" ? (
+                                <button
+                                    type="button"
+                                    role="radio"
+                                    aria-checked={tone === "custom"}
+                                    onClick={() => setTone("custom")}
+                                    disabled={tone === "custom"}
+                                    className={cn(
+                                        "px-4 py-1.5 rounded-full border text-sm transition-all",
+                                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                                        tone === "custom"
+                                            ? "border-primary bg-primary/10 text-primary cursor-default"
+                                            : "border-border text-muted-foreground hover:border-primary/50 cursor-pointer"
+                                    )}
+                                >
+                                    Własny styl
+                                </button>
+                            ) : (
+                                <div className="relative">
+                                    <button
+                                        type="button"
+                                        className={cn(
+                                            "px-4 py-1.5 rounded-full border text-sm",
+                                            "flex items-center gap-1.5 cursor-not-allowed",
+                                            "border-border bg-muted text-muted-foreground opacity-50"
+                                        )}
+                                        aria-disabled="true"
+                                        disabled
+                                    >
+                                        <Crown className="h-3 w-3" aria-hidden="true" />
+                                        Własny styl
+                                    </button>
+                                </div>
+                            )}
                         </div>
+
+                        {/* Custom tone textarea — shown when "Własny styl" is selected */}
+                        {tone === "custom" && (
+                            <div className="w-full space-y-2">
+                                <label className="text-sm font-medium">
+                                    Instrukcje stylu dla AI <span className="text-destructive">*</span>
+                                </label>
+                                <Textarea
+                                    value={customToneInstructions}
+                                    onChange={(e) => setCustomToneInstructions(e.target.value)}
+                                    placeholder="Opisz styl pisania: np. 'Pisz entuzjastycznie, zawsze podkreślaj szybką wysyłkę, używaj słowa okazja, krótkie zdania, dużo wykrzykników'"
+                                    maxLength={500}
+                                    rows={4}
+                                    className="resize-none"
+                                />
+                                <p className="text-xs text-muted-foreground text-right">
+                                    {customToneInstructions.length}/500
+                                </p>
+                            </div>
+                        )}
                     </fieldset>
 
                     {/* Condition pills */}
@@ -230,12 +299,13 @@ export function TemplateFormModal({ template, onClose }: Props) {
                                     role="radio"
                                     aria-checked={condition === c}
                                     onClick={() => setCondition(c)}
+                                    disabled={condition === c}
                                     className={cn(
-                                        "px-4 py-1.5 rounded-full border text-sm cursor-pointer transition-all",
+                                        "px-4 py-1.5 rounded-full border text-sm transition-all",
                                         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                                         condition === c
-                                            ? "border-primary bg-primary/10 text-primary"
-                                            : "border-border text-muted-foreground hover:border-primary/50"
+                                            ? "border-primary bg-primary/10 text-primary cursor-default"
+                                            : "border-border text-muted-foreground hover:border-primary/50 cursor-pointer"
                                     )}
                                 >
                                     {label}
@@ -323,7 +393,7 @@ export function TemplateFormModal({ template, onClose }: Props) {
                     >
                         Anuluj
                     </Button>
-                    <Button onClick={handleSubmit} disabled={isSubmitting}>
+                    <Button onClick={handleSubmit} disabled={isSubmitting || !name.trim() || (tone === "custom" && !customToneInstructions.trim())}>
                         {isSubmitting
                             ? "Zapisywanie\u2026"
                             : isEdit

@@ -24,6 +24,8 @@ import {
     Shirt,
     Pencil,
     Crown,
+    ShoppingCart,
+    Tag,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -51,7 +53,7 @@ import {
     DELIVERY_NAMES,
     TONE_STYLE_NAMES,
     FREE_TONES,
-    RESELER_TONES,
+    ADVANCED_TONES,
 } from "@/lib/types";
 
 // Dynamic imports for conditionally rendered components
@@ -99,6 +101,9 @@ const PLATFORM_ICONS = {
     allegro_lokalnie: { Icon: Store, color: "text-green-600" },
     facebook_marketplace: { Icon: Facebook, color: "text-blue-600" },
     vinted: { Icon: Shirt, color: "text-teal-600" },
+    ebay: { Icon: ShoppingCart, color: "text-yellow-500" },
+    amazon: { Icon: Package, color: "text-yellow-600" },
+    etsy: { Icon: Tag, color: "text-orange-400" },
 } as const;
 
 // Step animation variants
@@ -874,8 +879,8 @@ export function LandingForm() {
                                                         </button>
                                                     );
                                                 })}
-                                                {RESELER_TONES.map((tone) => {
-                                                    const isLocked = userPlan !== "RESELER";
+                                                {ADVANCED_TONES.map((tone) => {
+                                                    const isLocked = userPlan === "FREE";
                                                     const isSelected = selectedTone === tone;
                                                     if (isLocked) {
                                                         return (
@@ -890,12 +895,12 @@ export function LandingForm() {
                                                                     )}
                                                                     aria-disabled="true"
                                                                 >
-                                                                    <Crown className="h-3 w-3" />
+                                                                    <Sparkles className="h-3 w-3" />
                                                                     {TONE_STYLE_NAMES[tone]}
                                                                 </button>
                                                                 {tooltipTone === tone && (
                                                                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1.5 rounded-lg bg-foreground text-background text-xs whitespace-nowrap z-10 pointer-events-none">
-                                                                        Dostępne w planie Reseler
+                                                                        Dostępne w planach Starter i Reseler
                                                                         <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-foreground" />
                                                                     </div>
                                                                 )}

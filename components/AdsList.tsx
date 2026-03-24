@@ -63,6 +63,9 @@ const PLATFORM_FILTERS = [
     { value: "allegro_lokalnie", label: "Allegro" },
     { value: "vinted", label: "Vinted" },
     { value: "facebook_marketplace", label: "Facebook" },
+    { value: "ebay", label: "eBay" },
+    { value: "amazon", label: "Amazon" },
+    { value: "etsy", label: "Etsy" },
 ];
 
 const STATUS_STYLES: Record<string, string> = {

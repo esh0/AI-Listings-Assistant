@@ -21,6 +21,9 @@ const PLATFORM_RULES_FILES: Record<Platform, string> = {
     allegro_lokalnie: "allegro_lokalnie_rules.md",
     facebook_marketplace: "facebook_marketplace_rules.md",
     vinted: "vinted_rules.md",
+    ebay: "ebay_rules.md",
+    amazon: "amazon_rules.md",
+    etsy: "etsy_rules.md",
 };
 
 // Cache for rules content
@@ -179,6 +182,8 @@ const PROMPT_GENERAL_GUIDELINES = `## ZASADY OGÓLNE:
 
 // Tone-specific style instructions
 function getToneInstructions(tone: ToneStyle): string {
+  if (tone === "custom") return "";  // Safety guard — custom tone uses customToneInstructions instead
+
   const toneMap = {
     professional: `## TON: PROFESSIONAL (Profesjonalny)
 - Ton formalny, rzeczowy, ekspertycki
@@ -306,8 +311,10 @@ const TONE_VOCABULARY = `## SŁOWNICTWO WG TONU
 | Za darmo | "Bezpłatnie do odbioru" | "Oddam za darmo!" | "Za free" |
 `;
 
-function buildSystemPrompt(tone: ToneStyle): string {
-  return `Jesteś ekspertem w tworzeniu ogłoszeń sprzedażowych na polskie platformy marketplace (OLX, Allegro Lokalnie, Facebook Marketplace, Vinted).
+function buildSystemPrompt(tone: ToneStyle, customToneInstructions?: string): string {
+  const isCustom = tone === "custom" && !!customToneInstructions;
+
+  return `Jesteś ekspertem w tworzeniu ogłoszeń sprzedażowych na polskie i międzynarodowe platformy marketplace (OLX, Allegro Lokalnie, Facebook Marketplace, Vinted, eBay, Amazon, Etsy). Wszystkie ogłoszenia generujesz w języku polskim.
 
 Analizuj zdjęcia produktu i dane wejściowe, aby wygenerować tytuł i opis w wybranym stylu językowym (TONIE).
 
@@ -321,9 +328,12 @@ ${PROMPT_FORBIDDEN_PHRASES}
 
 ${PROMPT_PRICE_HANDLING}
 
-${getToneInstructions(tone)}
+${isCustom
+  ? `## TON: WŁASNY (zdefiniowany przez użytkownika)\n${customToneInstructions}`
+  : getToneInstructions(tone)
+}
 
-${TONE_VOCABULARY}
+${isCustom ? "" : TONE_VOCABULARY}
 
 ${PROMPT_GENERAL_GUIDELINES}
 
@@ -439,7 +449,7 @@ Wygeneruj ogłoszenie sprzedażowe w formacie JSON zgodnie z powyższymi zasadam
             messages: [
                 {
                     role: "system",
-                    content: `${buildSystemPrompt(systemTone)}\n\n${buildJsonSchema()}`,
+                    content: `${buildSystemPrompt(systemTone, request.customToneInstructions)}\n\n${buildJsonSchema()}`,
                 },
                 {
                     role: "user",

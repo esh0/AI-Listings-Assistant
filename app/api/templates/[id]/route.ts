@@ -8,7 +8,7 @@ import { ToneStyleSchema } from "@/lib/schemas";
 
 const updateTemplateSchema = z.object({
     name: z.string().min(1).max(100).optional(),
-    platform: z.enum(["olx", "allegro_lokalnie", "facebook_marketplace", "vinted"]).optional(),
+    platform: z.enum(["olx", "allegro_lokalnie", "facebook_marketplace", "vinted", "ebay", "amazon", "etsy"]).optional(),
     tone: ToneStyleSchema.optional(),
     condition: z
         .enum([
@@ -23,6 +23,15 @@ const updateTemplateSchema = z.object({
     bodyTemplate: z.string().max(3000).optional(),
     priceType: z.enum(["ai_suggest", "user_provided", "free"]).optional(),
     notes: z.string().max(1000).optional(),
+    customToneInstructions: z.string().min(1).max(500).optional(),
+}).superRefine((data, ctx) => {
+    if (data.tone === "custom" && (!data.customToneInstructions || data.customToneInstructions.trim().length === 0)) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Własny styl wymaga podania instrukcji stylu",
+            path: ["customToneInstructions"],
+        });
+    }
 });
 
 async function getTemplateOwned(id: string, userId: string) {
@@ -78,7 +87,13 @@ export async function PATCH(
             { status: 400 }
         );
     }
-    const { condition, platform, tone, ...rest } = result.data;
+    const { condition, platform, tone, customToneInstructions, ...rest } = result.data;
+    if (tone === "custom" && session.user.plan !== "RESELER") {
+        return NextResponse.json(
+            { error: "Własny styl dostępny jest tylko w planie Reseler" },
+            { status: 403 }
+        );
+    }
     try {
         const updated = await prisma.template.update({
             where: { id },
@@ -87,6 +102,11 @@ export async function PATCH(
                 ...(platform !== undefined ? { platform: platform as Platform } : {}),
                 ...(tone !== undefined ? { tone: tone as ToneStyle } : {}),
                 ...(condition !== undefined ? { condition: CONDITION_MAP[condition] } : {}),
+                ...(tone !== undefined && tone !== "custom"
+                    ? { customToneInstructions: null }
+                    : customToneInstructions !== undefined
+                    ? { customToneInstructions }
+                    : {}),
             },
         });
         return NextResponse.json(updated);

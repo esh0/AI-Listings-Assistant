@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PLATFORM_NAMES, PLATFORM_META } from "@/lib/types";
-import { Eye, Edit, Trash2, CheckCircle, ShoppingBag, Store, Facebook, Shirt, CircleDollarSign } from "lucide-react";
+import { Eye, Edit, Trash2, CheckCircle, ShoppingBag, Store, Facebook, Shirt, CircleDollarSign, ShoppingCart, Package, Tag } from "lucide-react";
 import { useState } from "react";
 import { AdStatus, Platform } from "@prisma/client";
 import { cn } from "@/lib/utils";
@@ -54,6 +54,9 @@ const PLATFORM_ICONS: Record<Platform, React.ElementType> = {
     allegro_lokalnie: Store,
     facebook_marketplace: Facebook,
     vinted: Shirt,
+    ebay: ShoppingCart,
+    amazon: Package,
+    etsy: Tag,
 };
 
 export function AdCard({

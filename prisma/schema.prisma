@@ -106,6 +106,7 @@ model Template {
   bodyTemplate String? // Opcjonalny szkielet opisu z placeholderami
   priceType    String? // "ai_suggest" | "user_provided" | "free"
   notes        String? // Domyślne notatki (opcjonalne)
+  customToneInstructions String?  // Only set when tone === "custom"
   isDefault    Boolean          @default(false)
   createdAt DateTime         @default(now())
 
@@ -163,6 +164,9 @@ enum Platform {
   allegro_lokalnie
   facebook_marketplace
   vinted
+  ebay
+  amazon
+  etsy
 }
 
 enum ToneStyle {
@@ -174,6 +178,7 @@ enum ToneStyle {
   technical
   persuasive
   concise
+  custom
 }
 
 enum ProductCondition {

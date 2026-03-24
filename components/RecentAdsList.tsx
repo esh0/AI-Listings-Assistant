@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Plus, ArrowRight, Clock, ShoppingBag, Store, Facebook, Shirt } from "lucide-react";
+import { Plus, ArrowRight, Clock, ShoppingBag, Store, Facebook, Shirt, ShoppingCart, Package, Tag } from "lucide-react";
 import Link from "next/link";
 import type { AdStatus, Platform } from "@prisma/client";
 import { PLATFORM_META } from "@/lib/types";
@@ -35,6 +35,9 @@ const PLATFORM_ICONS: Record<Platform, React.ElementType> = {
     allegro_lokalnie: Store,
     facebook_marketplace: Facebook,
     vinted: Shirt,
+    ebay: ShoppingCart,
+    amazon: Package,
+    etsy: Tag,
 };
 
 export function RecentAdsList({ ads }: RecentAdsListProps) {

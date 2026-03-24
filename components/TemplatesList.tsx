@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { Plus, FileText, ShoppingBag, Store, Facebook, Shirt, MoreVertical, Pencil, Trash2 } from "lucide-react";
+import { Plus, FileText, ShoppingBag, Store, Facebook, Shirt, MoreVertical, Pencil, Trash2, ShoppingCart, Package, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TemplateFormModal } from "@/components/TemplateFormModal";
 import { cn } from "@/lib/utils";
@@ -16,6 +16,9 @@ const PLATFORM_ICONS = {
     allegro_lokalnie: { Icon: Store, color: "text-green-600" },
     facebook_marketplace: { Icon: Facebook, color: "text-blue-600" },
     vinted: { Icon: Shirt, color: "text-teal-600" },
+    ebay: { Icon: ShoppingCart, color: "text-yellow-500" },
+    amazon: { Icon: Package, color: "text-yellow-600" },
+    etsy: { Icon: Tag, color: "text-orange-400" },
 } as const;
 
 const PAGE_SIZE = 20;
@@ -32,9 +35,10 @@ export interface Template {
     notes?: string | null;
     isDefault: boolean;
     createdAt: string;
+    customToneInstructions?: string | null;
 }
 
-export function TemplatesList({ initialTemplates }: { initialTemplates: Template[] }) {
+export function TemplatesList({ initialTemplates, userPlan }: { initialTemplates: Template[]; userPlan: string }) {
     const [templates, setTemplates] = useState<Template[]>(initialTemplates);
     const [modalOpen, setModalOpen] = useState(false);
     const [editingTemplate, setEditingTemplate] = useState<Template | null>(null);
@@ -248,6 +252,7 @@ export function TemplatesList({ initialTemplates }: { initialTemplates: Template
                 <TemplateFormModal
                     template={editingTemplate}
                     onClose={handleModalClose}
+                    userPlan={userPlan}
                 />
             )}
         </>

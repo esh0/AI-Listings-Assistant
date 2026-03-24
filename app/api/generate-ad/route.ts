@@ -6,7 +6,7 @@ import { auth } from "@/auth";
 import { consumeCredit, IMAGE_LIMITS } from "@/lib/credits";
 import { checkGuestLimit, consumeGuestCredit, hashIP, GUEST_MAX_IMAGES } from "@/lib/guest-tracking";
 import { logActivity, adDetail } from "@/lib/activity";
-import { RESELER_TONES } from "@/lib/types";
+import { ADVANCED_TONES } from "@/lib/types";
 
 export const runtime = "nodejs";
 export const maxDuration = 60; // 60 seconds timeout
@@ -61,12 +61,35 @@ export async function POST(request: NextRequest) {
                 );
             }
 
-            // Enforce RESELER-only tones
-            if (RESELER_TONES.includes(validatedData.tone) && plan !== "RESELER") {
+            // Enforce advanced-only tones (blocked for FREE plan only)
+            if (ADVANCED_TONES.includes(validatedData.tone) && plan === "FREE") {
                 return NextResponse.json(
                     {
                         isValid: false,
-                        error: "Ten styl komunikacji dostępny jest tylko w planie Reseler.",
+                        error: "Ten styl komunikacji dostępny jest w planach Starter i Reseler.",
+                    },
+                    { status: 403 }
+                );
+            }
+
+            // Custom tone is RESELER-only (template-only concept, not for direct API use by FREE/STARTER)
+            if (validatedData.tone === "custom" && plan !== "RESELER") {
+                return NextResponse.json(
+                    {
+                        isValid: false,
+                        error: "Własny styl komunikacji dostępny jest tylko w planie Reseler.",
+                    },
+                    { status: 403 }
+                );
+            }
+
+            // eBay, Amazon, Etsy are RESELER-only platforms
+            const LOCKED_PLATFORMS = ["ebay", "amazon", "etsy"];
+            if (LOCKED_PLATFORMS.includes(validatedData.platform) && plan !== "RESELER") {
+                return NextResponse.json(
+                    {
+                        isValid: false,
+                        error: "Ta platforma dostępna jest tylko w planie Reseler.",
                     },
                     { status: 403 }
                 );
