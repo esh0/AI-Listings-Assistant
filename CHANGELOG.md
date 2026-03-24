@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.3.7] - 2026-03-24
+
+### Changed
+- Advanced tones (enthusiastic, funny, technical, persuasive, concise) now available to STARTER plan — previously RESELER-only
+- FREE users see advanced tones locked with updated tooltip "Dostępne w planach Starter i Reseler"
+- API gate updated: rejects advanced tones only for FREE plan (was: non-RESELER)
+- Pricing page copy updated: STARTER and RESELER now show "Wszystkie style tonu"
+- Internal: `RESELER_TONES` constant renamed to `ADVANCED_TONES` across all files
+
+---
+
 ## [1.3.6] - 2026-03-23
 
 ### Fixed
