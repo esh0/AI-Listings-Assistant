@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback } from "react";
-import { ShoppingBag, Store, Facebook, Shirt } from "lucide-react";
+import { ShoppingBag, Store, Facebook, Shirt, ShoppingCart, Package, Tag } from "lucide-react";
 import { Platform, PLATFORM_NAMES } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -15,6 +15,9 @@ const PLATFORM_ICONS = {
     allegro_lokalnie: Store,
     facebook_marketplace: Facebook,
     vinted: Shirt,
+    ebay: ShoppingCart,
+    amazon: Package,
+    etsy: Tag,
 } as const;
 
 const PLATFORM_COLORS = {
@@ -22,6 +25,9 @@ const PLATFORM_COLORS = {
     allegro_lokalnie: "text-green-600",
     facebook_marketplace: "text-blue-600",
     vinted: "text-teal-600",
+    ebay: "text-yellow-500",
+    amazon: "text-yellow-600",
+    etsy: "text-orange-400",
 } as const;
 
 export function PlatformSelector({ platform, onPlatformChange }: PlatformSelectorProps) {

@@ -24,6 +24,8 @@ import {
     Shirt,
     Pencil,
     Crown,
+    ShoppingCart,
+    Tag,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -99,6 +101,9 @@ const PLATFORM_ICONS = {
     allegro_lokalnie: { Icon: Store, color: "text-green-600" },
     facebook_marketplace: { Icon: Facebook, color: "text-blue-600" },
     vinted: { Icon: Shirt, color: "text-teal-600" },
+    ebay: { Icon: ShoppingCart, color: "text-yellow-500" },
+    amazon: { Icon: Package, color: "text-yellow-600" },
+    etsy: { Icon: Tag, color: "text-orange-400" },
 } as const;
 
 // Step animation variants

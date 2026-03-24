@@ -20,6 +20,9 @@ const PLATFORM_LIMITS: Record<Platform, { title: number; description: number }> 
     allegro_lokalnie: { title: 75, description: 16000 },
     facebook_marketplace: { title: 60, description: 5000 },
     vinted: { title: 100, description: 5000 },
+    ebay: { title: 80, description: 5000 },
+    amazon: { title: 200, description: 5000 },
+    etsy: { title: 140, description: 5000 },
 };
 
 interface ListingContentProps {
