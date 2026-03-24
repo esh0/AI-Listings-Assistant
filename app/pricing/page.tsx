@@ -55,6 +55,8 @@ const PLANS = [
             "Maks. 8 zdjęć",
             "7 platform (OLX, Allegro, FB, Vinted + eBay, Amazon, Etsy)",
             "Wszystkie style tonu",
+            "Szablony ogłoszeń z własnym formatem",
+            "Własny styl tonu (instrukcje dla AI)",
             "Eksport CSV",
             "Priorytetowa generacja",
         ],

@@ -189,9 +189,14 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
     const handleTemplateSelect = useCallback((templateId: string) => {
         setSelectedTemplateId(templateId);
         if (!templateId) {
+            setPlatform(DEFAULT_PLATFORM);
+            setSelectedTone(DEFAULT_TONE);
+            setCondition(DEFAULT_CONDITION);
+            setDelivery(DEFAULT_DELIVERY);
+            setNotes("");
+            setPriceType(DEFAULT_PRICE_TYPE);
             setSelectedBodyTemplate("");
             setSelectedCustomToneInstructions(null);
-            setSelectedTone(DEFAULT_TONE);
             return;
         }
         const tpl = templates.find((t) => t.id === templateId);
@@ -201,6 +206,7 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
         setCondition(tpl.condition);
         setDelivery(tpl.delivery);
         if (tpl.notes) setNotes(tpl.notes);
+        if (tpl.priceType) setPriceType(tpl.priceType as PriceType);
         setSelectedBodyTemplate(tpl.bodyTemplate ?? "");
         setSelectedCustomToneInstructions(tpl.customToneInstructions ?? null);
     }, [templates]);
