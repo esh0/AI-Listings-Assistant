@@ -72,6 +72,17 @@ export async function POST(request: NextRequest) {
                 );
             }
 
+            // Custom tone is RESELER-only (template-only concept, not for direct API use by FREE/STARTER)
+            if (validatedData.tone === "custom" && plan !== "RESELER") {
+                return NextResponse.json(
+                    {
+                        isValid: false,
+                        error: "Własny styl komunikacji dostępny jest tylko w planie Reseler.",
+                    },
+                    { status: 403 }
+                );
+            }
+
             // Authenticated user: consume credit
             try {
                 await consumeCredit(session.user.id);
