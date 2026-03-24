@@ -16,6 +16,9 @@ export const productFormSchema = z.object({
         "allegro_lokalnie",
         "facebook_marketplace",
         "vinted",
+        "ebay",
+        "amazon",
+        "etsy",
     ]),
     productName: z.string().optional(),
     condition: z.enum([
@@ -51,6 +54,9 @@ export const generateAdRequestSchema = z
             "allegro_lokalnie",
             "facebook_marketplace",
             "vinted",
+            "ebay",
+            "amazon",
+            "etsy",
         ]),
         productName: z.string(),
         condition: z.enum([
@@ -156,7 +162,7 @@ export function validateImageFile(file: File): {
 
 // ===== API schemas for ad management =====
 
-const platformEnum = z.enum(["olx", "allegro_lokalnie", "facebook_marketplace", "vinted"]);
+const platformEnum = z.enum(["olx", "allegro_lokalnie", "facebook_marketplace", "vinted", "ebay", "amazon", "etsy"]);
 const adStatusEnum = z.enum(["DRAFT", "PUBLISHED", "SOLD", "ARCHIVED"]);
 
 // Schema for saving an ad (POST /api/ads)
