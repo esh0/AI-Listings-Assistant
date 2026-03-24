@@ -6,7 +6,7 @@ import { auth } from "@/auth";
 import { consumeCredit, IMAGE_LIMITS } from "@/lib/credits";
 import { checkGuestLimit, consumeGuestCredit, hashIP, GUEST_MAX_IMAGES } from "@/lib/guest-tracking";
 import { logActivity, adDetail } from "@/lib/activity";
-import { RESELER_TONES } from "@/lib/types";
+import { ADVANCED_TONES } from "@/lib/types";
 
 export const runtime = "nodejs";
 export const maxDuration = 60; // 60 seconds timeout
@@ -61,12 +61,12 @@ export async function POST(request: NextRequest) {
                 );
             }
 
-            // Enforce RESELER-only tones
-            if (RESELER_TONES.includes(validatedData.tone) && plan !== "RESELER") {
+            // Enforce advanced-only tones (blocked for FREE plan only)
+            if (ADVANCED_TONES.includes(validatedData.tone) && plan === "FREE") {
                 return NextResponse.json(
                     {
                         isValid: false,
-                        error: "Ten styl komunikacji dostępny jest tylko w planie Reseler.",
+                        error: "Ten styl komunikacji dostępny jest w planach Starter i Reseler.",
                     },
                     { status: 403 }
                 );

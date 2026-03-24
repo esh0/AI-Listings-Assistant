@@ -20,7 +20,7 @@ export type ToneStyle =
     | "persuasive" | "concise";
 
 export const FREE_TONES: ToneStyle[] = ["professional", "friendly", "casual"];
-export const RESELER_TONES: ToneStyle[] = ["enthusiastic", "funny", "technical", "persuasive", "concise"];
+export const ADVANCED_TONES: ToneStyle[] = ["enthusiastic", "funny", "technical", "persuasive", "concise"];
 
 export type PriceType = "user_provided" | "ai_suggest" | "free";
 
