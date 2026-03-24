@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.3.10] - 2026-03-24
+
+### Fixed
+- Template modal: save button disabled when name is empty (previously allowed saving with blank name)
+- Template modal: tone and condition pills cannot be unchecked — selected option is now disabled to prevent deselection
+- Template deselect now resets all form fields (platform, condition, delivery, notes, priceType) to defaults instead of leaving previous template values
+- Template select now applies priceType from template
+- Pricing: added "Szablony ogłoszeń z własnym formatem" and "Własny styl tonu" to RESELER feature list
+- Locked advanced tones (FREE users) now show Sparkles icon instead of Crown — Crown reserved for RESELER-only features
+
 ## [1.3.9] - 2026-03-24
 
 ### Added
