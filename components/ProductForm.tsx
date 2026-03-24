@@ -251,7 +251,7 @@ export function ProductForm({
                                         )}
                                         aria-disabled="true"
                                     >
-                                        <Crown className="h-3 w-3" aria-hidden="true" />
+                                        <Sparkles className="h-3 w-3" aria-hidden="true" />
                                         {TONE_STYLE_NAMES[tone]}
                                     </button>
                                     {tooltipTone === tone && (

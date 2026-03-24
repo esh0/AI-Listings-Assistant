@@ -895,7 +895,7 @@ export function LandingForm() {
                                                                     )}
                                                                     aria-disabled="true"
                                                                 >
-                                                                    <Crown className="h-3 w-3" />
+                                                                    <Sparkles className="h-3 w-3" />
                                                                     {TONE_STYLE_NAMES[tone]}
                                                                 </button>
                                                                 {tooltipTone === tone && (
