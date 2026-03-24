@@ -74,6 +74,7 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
     const [templates, setTemplates] = useState<Template[]>([]);
     const [selectedTemplateId, setSelectedTemplateId] = useState<string>("");
     const [selectedBodyTemplate, setSelectedBodyTemplate] = useState<string>("");
+    const [selectedCustomToneInstructions, setSelectedCustomToneInstructions] = useState<string | null>(null);
     const [editingTemplate, setEditingTemplate] = useState<Template | null>(null);
 
     // Editable content state
@@ -189,6 +190,8 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
         setSelectedTemplateId(templateId);
         if (!templateId) {
             setSelectedBodyTemplate("");
+            setSelectedCustomToneInstructions(null);
+            setSelectedTone(DEFAULT_TONE);
             return;
         }
         const tpl = templates.find((t) => t.id === templateId);
@@ -199,6 +202,7 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
         setDelivery(tpl.delivery);
         if (tpl.notes) setNotes(tpl.notes);
         setSelectedBodyTemplate(tpl.bodyTemplate ?? "");
+        setSelectedCustomToneInstructions(tpl.customToneInstructions ?? null);
     }, [templates]);
 
     const handleReset = useCallback(() => {
@@ -225,6 +229,7 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
         hasInitializedEdits.current = false;
         setSelectedTemplateId("");
         setSelectedBodyTemplate("");
+        setSelectedCustomToneInstructions(null);
     }, [images]);
 
     const saveAd = useCallback(async (
@@ -371,6 +376,7 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
                     images: imagesForRequest,
                     tone: selectedTone,
                     ...(selectedBodyTemplate && { bodyTemplate: selectedBodyTemplate }),
+                    ...(selectedCustomToneInstructions && { customToneInstructions: selectedCustomToneInstructions }),
                     ...(!session?.user?.id && { guestId: getGuestId() }),
                 }),
                 signal: abortControllerRef.current.signal,
@@ -601,6 +607,7 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
                             onPlatformChange={setPlatform}
                             onToneChange={setSelectedTone}
                             userPlan={session?.user?.plan ?? "FREE"}
+                            customToneActive={selectedTone === "custom"}
                         />
                     </CardWrapper>
 
