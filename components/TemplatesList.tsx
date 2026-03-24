@@ -38,7 +38,7 @@ export interface Template {
     customToneInstructions?: string | null;
 }
 
-export function TemplatesList({ initialTemplates }: { initialTemplates: Template[] }) {
+export function TemplatesList({ initialTemplates, userPlan }: { initialTemplates: Template[]; userPlan: string }) {
     const [templates, setTemplates] = useState<Template[]>(initialTemplates);
     const [modalOpen, setModalOpen] = useState(false);
     const [editingTemplate, setEditingTemplate] = useState<Template | null>(null);
@@ -252,6 +252,7 @@ export function TemplatesList({ initialTemplates }: { initialTemplates: Template
                 <TemplateFormModal
                     template={editingTemplate}
                     onClose={handleModalClose}
+                    userPlan={userPlan}
                 />
             )}
         </>

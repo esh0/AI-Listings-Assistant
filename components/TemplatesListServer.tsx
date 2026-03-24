@@ -22,5 +22,5 @@ export async function TemplatesListServer() {
         createdAt: t.createdAt.toISOString(),
     }));
 
-    return <TemplatesList initialTemplates={mappedTemplates} />;
+    return <TemplatesList initialTemplates={mappedTemplates} userPlan={session.user.plan ?? "FREE"} />;
 }

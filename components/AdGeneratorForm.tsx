@@ -821,6 +821,7 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
                             }
                         }
                     }}
+                    userPlan={session?.user?.plan ?? "FREE"}
                 />
             )}
         </>
