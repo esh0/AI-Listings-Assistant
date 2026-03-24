@@ -83,6 +83,18 @@ export async function POST(request: NextRequest) {
                 );
             }
 
+            // eBay, Amazon, Etsy are RESELER-only platforms
+            const LOCKED_PLATFORMS = ["ebay", "amazon", "etsy"];
+            if (LOCKED_PLATFORMS.includes(validatedData.platform) && plan !== "RESELER") {
+                return NextResponse.json(
+                    {
+                        isValid: false,
+                        error: "Ta platforma dostępna jest tylko w planie Reseler.",
+                    },
+                    { status: 403 }
+                );
+            }
+
             // Authenticated user: consume credit
             try {
                 await consumeCredit(session.user.id);
