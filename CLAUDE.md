@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-AI Generator Ogłoszeń Sprzedażowych (Marketplace Assistant) - A Next.js application that uses OpenAI GPT-4.1-mini to automatically generate professional sales listings for Polish marketplace platforms (OLX, Allegro Lokalnie, FB Marketplace, Vinted). The app features user authentication, credit-based usage system with 3 subscription tiers, Stripe payments, guest access with rate limiting, ad management dashboard, activity history, templates, and AI-powered content generation with image analysis.
+AI Generator Ogłoszeń Sprzedażowych (Marketplace Assistant) - A Next.js application that uses OpenAI GPT-4.1-mini to automatically generate professional sales listings for Polish marketplace platforms (OLX, Allegro Lokalnie, FB Marketplace, Vinted — plus eBay, Amazon, Etsy for RESELER plan). The app features user authentication, credit-based usage system with 3 subscription tiers, Stripe payments, guest access with rate limiting, ad management dashboard, activity history, templates, and AI-powered content generation with image analysis.
 
 **Key Features:**
 - 🤖 AI-powered ad generation with image analysis (GPT-4.1-mini)
@@ -12,7 +12,7 @@ AI Generator Ogłoszeń Sprzedażowych (Marketplace Assistant) - A Next.js appli
 - 💳 3-tier credit system (FREE/STARTER/RESELER) with Stripe payments
 - 🎁 Guest access with UUID + IP rate limiting (3 generations)
 - 📊 Dashboard with ad management (CRUD + bulk selection/archival with CSV export)
-- 📋 Templates system (RESELER plan) for reusable ad presets
+- 📋 Templates system (RESELER plan) for reusable ad presets with custom tone instructions
 - 📜 Activity history log (all plans)
 - 🔍 Advanced filtering, sorting, and search
 - 📄 Pagination (20 ads per page)
@@ -159,8 +159,9 @@ RESEND_CONTACT_EMAIL=kontakt@marketplace-ai.pl
 
 ### Tone Variations
 
-The app supports 3 tone styles for generated listings:
+The app supports 8 tone styles for generated listings, with plan-based gating:
 
+**FREE plan (3 tones):**
 - **Professional** (Profesjonalny) - Formalny, rzeczowy, ekspertycki
   - Recommended for: Allegro Lokalnie
 - **Friendly** (Przyjazny) - Ciepły, pomocny, naturalny
@@ -168,7 +169,16 @@ The app supports 3 tone styles for generated listings:
 - **Casual** (Swobodny) - Luźny, potoczny, bezpośredni
   - Recommended for: OLX
 
-Each platform has a smart default tone that auto-selects when the platform changes. Users can override the default to match their preference or product type.
+**STARTER and above (4 additional tones):**
+- **Salesy** (Sprzedażowy) - Przekonujący, z wezwaniem do działania
+- **Minimalist** (Minimalistyczny) - Zwięzły, esencjonalny, bez zbędnych słów
+- **Storytelling** (Opowiadanie) - Narracyjny, angażujący, z historią produktu
+- **Luxury** (Ekskluzywny) - Elegancki, prestiżowy, podkreślający wyjątkowość
+
+**RESELER only (1 special tone):**
+- **Custom** (Własny styl) - Free-text AI instructions defined in the template; available only in template form, not in the ad generator directly
+
+Each platform has a smart default tone that auto-selects when the platform changes. Users can override the default to match their preference or product type. Advanced tones (Starter+) are locked with a Sparkles icon for FREE users. Custom tone is locked with a Crown icon for non-RESELER users.
 
 ### Price Handling
 
@@ -200,7 +210,7 @@ The system uses a modular prompt architecture with:
 - `lib/stripe.ts` - Stripe client, plan/boost price mappings
 
 **API Layer:**
-- `app/api/generate-ad/route.ts` - POST endpoint for ad generation (validates request, enforces per-tier image limits, consumes credit, calls OpenAI - **does not save to DB**; guest path validates guestId + IP limits; logs `AD_GENERATED` activity)
+- `app/api/generate-ad/route.ts` - POST endpoint for ad generation (validates request, enforces per-tier image limits, enforces RESELER-only platform guard for eBay/Amazon/Etsy, enforces RESELER-only guard for custom tone, consumes credit, calls OpenAI - **does not save to DB**; guest path validates guestId + IP limits; logs `AD_GENERATED` activity)
 - `app/api/ads/route.ts` - POST endpoint for saving ads (Zod `createAdSchema` validation, uploads images to Supabase, saves to DB, logs `AD_SAVED` activity); accepts optional `fromSoftwall: true` flag which triggers credit consumption at save time — used by `PendingAdHandler` when a guest-generated ad is saved after sign-in
 - `app/api/ads/[id]/route.ts` - GET/PATCH/DELETE endpoints for ad management (Zod `updateAdSchema` validation on PATCH; logs `AD_PUBLISHED`/`AD_SOLD`/`AD_ARCHIVED`/`AD_DELETED` activities)
 - `app/api/ads/export/route.ts` - CSV export endpoint; accepts optional `?ids=` comma-separated param; `escapeCSV()` prevents formula injection (prefixes `=+-@` with `'`)
@@ -210,7 +220,7 @@ The system uses a modular prompt architecture with:
 - `app/api/stripe/webhook/route.ts` - Stripe webhook handler (checkout.session.completed, invoice.paid, customer.subscription.deleted); idempotent — deduplicates via `ProcessedWebhookEvent` table
 - `app/api/stripe/portal/route.ts` - Stripe Customer Portal session for subscription management
 - `app/api/templates/route.ts` - GET/POST endpoints for template management (RESELER plan only)
-- `app/api/templates/[id]/route.ts` - DELETE endpoint for individual templates
+- `app/api/templates/[id]/route.ts` - PATCH/DELETE endpoints for individual templates; PATCH clears `customToneInstructions` when tone changes away from "custom"
 
 **Core Logic:**
 - `lib/openai.ts` - OpenAI client, modular prompt engineering, platform rules loading, tone injection
@@ -232,7 +242,7 @@ The system uses a modular prompt architecture with:
 **Template Components:**
 - `components/TemplatesListServer.tsx` - Async server component; queries DB for user's templates, passes to TemplatesList
 - `components/TemplatesList.tsx` - `"use client"` component; renders template cards with CRUD operations
-- `components/TemplateFormModal.tsx` - Modal form for creating/editing templates (name, platform, tone, condition, delivery, body template, notes)
+- `components/TemplateFormModal.tsx` - Modal form for creating/editing templates (name, platform, tone, condition, delivery, body template, notes, custom tone instructions for RESELER); tone/condition cannot be deselected (selected button is disabled); saves `customToneInstructions` only when tone === "custom"
 - `components/TemplatesListSkeleton.tsx` - Shimmer skeleton for templates page Suspense fallback
 - `components/TemplatesSoftwall.tsx` - Paywall component shown to non-RESELER users accessing templates page
 
@@ -296,6 +306,9 @@ The system uses a modular prompt architecture with:
    - Allegro Lokalnie: 75 chars title, 1500 chars description
    - FB Marketplace: 60 chars title, 1000 chars description
    - Vinted: 100 chars title, 750 chars description
+   - eBay: 80 chars title, 1000 chars description
+   - Amazon: 200 chars title, 2000 chars description
+   - Etsy: 140 chars title, 1000 chars description
 
 **Dashboard Layout:**
 - Fixed sidebar on desktop (lg:w-72), mobile overlay with hamburger menu
@@ -404,7 +417,7 @@ Token mapping:
 | Secondary actions | `secondary` / `secondary-foreground` | `bg-secondary` |
 
 **Exceptions — intentional hardcoded colors:**
-- Platform-specific colors in `PLATFORM_COLORS` (OLX=`text-orange-500`, Allegro=`text-green-600`, FB=`text-blue-600`, Vinted=`text-teal-600`)
+- Platform-specific colors in `PLATFORM_COLORS` (OLX=`text-orange-500`, Allegro=`text-green-600`, FB=`text-blue-600`, Vinted=`text-teal-600`, eBay=`text-red-500`, Amazon=`text-yellow-600`, Etsy=`text-orange-600`)
 - Image overlay backgrounds (`bg-black/60`, `bg-black/90`, `bg-white/10`) — these are translucent overlays, not theme colors
 
 **Common patterns:**
@@ -565,12 +578,15 @@ The app uses OpenAI's `gpt-4.1-mini` model with:
 
 ## Platform Support
 
-The application supports 4 marketplace platforms with distinct content styles and recommended tones:
+The application supports 7 marketplace platforms. The first 4 are available to all plans; the last 3 are RESELER-only (locked with Crown icon for others):
 
-- **OLX**: Concise, practical, factual | Recommended tone: **Casual**
-- **Allegro Lokalnie**: Professional, detailed, structured | Recommended tone: **Professional**
-- **FB Marketplace**: Friendly, direct, conversational | Recommended tone: **Friendly**
-- **Vinted**: Fashion-focused, lifestyle-oriented | Recommended tone: **Friendly**
+- **OLX**: Concise, practical, factual | Recommended tone: **Casual** | Title: 70, Desc: 1500
+- **Allegro Lokalnie**: Professional, detailed, structured | Recommended tone: **Professional** | Title: 75, Desc: 1500
+- **FB Marketplace**: Friendly, direct, conversational | Recommended tone: **Friendly** | Title: 60, Desc: 1000
+- **Vinted**: Fashion-focused, lifestyle-oriented | Recommended tone: **Friendly** | Title: 100, Desc: 750
+- **eBay** *(RESELER only)*: International marketplace, structured | Recommended tone: **Professional** | Title: 80, Desc: 1000
+- **Amazon** *(RESELER only)*: E-commerce product listings, keyword-focused | Recommended tone: **Professional** | Title: 200, Desc: 2000
+- **Etsy** *(RESELER only)*: Handmade/vintage, community-oriented | Recommended tone: **Friendly** | Title: 140, Desc: 1000
 
 Each platform has:
 - Specific rules for title format, description structure, and content style in `lib/rules/*.md`
@@ -620,9 +636,11 @@ Each platform has:
 **To add a new tone style:**
 1. Add tone to `ToneStyle` type in `lib/types.ts`
 2. Add display names in `TONE_STYLE_NAMES` and descriptions in `TONE_STYLE_DESCRIPTIONS`
-3. Update `getToneInstructions()` function in `lib/openai.ts`
-4. Add tone sections to all platform rules files in `lib/rules/*.md`
-5. Add radio button option in `components/ProductForm.tsx` with platform recommendations
+3. Decide plan gating: add to `FREE_TONES` (all plans) or `ADVANCED_TONES` (STARTER+), or leave in neither for RESELER-only special tones
+4. Update `getToneInstructions()` function in `lib/openai.ts` (return `""` for custom-type tones handled differently)
+5. Add `ToneStyleSchema` update in `lib/schemas.ts` (3 places: standalone schemas + inline schemas in template routes)
+6. Add tone sections to all platform rules files in `lib/rules/*.md`
+7. Add radio button option in `components/ProductForm.tsx` with plan-gating (Sparkles icon for STARTER-locked, Crown for RESELER-locked)
 
 **To change image limits:**
 - Update `IMAGE_LIMITS` in `lib/credits.ts` (per-plan limits) and `GUEST_MAX_IMAGES` in `lib/guest-tracking.ts`
