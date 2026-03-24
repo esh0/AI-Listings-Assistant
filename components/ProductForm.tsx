@@ -21,6 +21,8 @@ import {
 } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
+const LOCKED_PLATFORMS: Platform[] = ["ebay", "amazon", "etsy"];
+
 // Platform icons with brand colors (intentional hardcoded per CLAUDE.md exceptions)
 const PLATFORM_ICONS = {
     olx: { Icon: ShoppingBag, color: "text-orange-500" },
@@ -97,6 +99,21 @@ export function ProductForm({
         timerRef.current = setTimeout(() => setTooltipTone(null), 2000);
     };
 
+    const [tooltipPlatform, setTooltipPlatform] = useState<Platform | null>(null);
+    const platformTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    useEffect(() => {
+        return () => {
+            if (platformTimerRef.current) clearTimeout(platformTimerRef.current);
+        };
+    }, []);
+
+    const handleLockedPlatformClick = (p: Platform) => {
+        if (platformTimerRef.current) clearTimeout(platformTimerRef.current);
+        setTooltipPlatform(p);
+        platformTimerRef.current = setTimeout(() => setTooltipPlatform(null), 2000);
+    };
+
     return (
         <div className="space-y-6">
             {/* Platform tiles */}
@@ -105,7 +122,8 @@ export function ProductForm({
                     Platforma sprzedażowa
                 </legend>
                 <div className="grid grid-cols-2 gap-3" role="radiogroup" aria-label="Wybór platformy sprzedażowej">
-                    {(Object.entries(PLATFORM_NAMES) as [Platform, string][]).map(([p, label]) => {
+                    {/* Unlocked platforms */}
+                    {(["olx", "allegro_lokalnie", "facebook_marketplace", "vinted"] as Platform[]).map((p) => {
                         const { Icon, color } = PLATFORM_ICONS[p];
                         const isSelected = platform === p;
                         return (
@@ -124,7 +142,59 @@ export function ProductForm({
                                 )}
                             >
                                 <Icon className={cn("h-6 w-6", isSelected ? "text-primary" : color)} aria-hidden="true" />
-                                <span className="font-medium text-sm">{label}</span>
+                                <span className="font-medium text-sm">{PLATFORM_NAMES[p]}</span>
+                            </button>
+                        );
+                    })}
+                    {/* Locked platforms — eBay, Amazon, Etsy (RESELER only) */}
+                    {LOCKED_PLATFORMS.map((p) => {
+                        const isLocked = userPlan !== "RESELER";
+                        const { Icon, color } = PLATFORM_ICONS[p];
+                        if (isLocked) {
+                            return (
+                                <div key={p} className="relative">
+                                    <button
+                                        type="button"
+                                        onClick={() => handleLockedPlatformClick(p)}
+                                        className={cn(
+                                            "flex items-center gap-3 p-4 rounded-xl border-2 text-left w-full",
+                                            "opacity-50 cursor-not-allowed",
+                                            "border-violet-100 bg-violet-50"
+                                        )}
+                                        aria-disabled="true"
+                                    >
+                                        <Crown className="h-4 w-4 text-violet-300 flex-shrink-0" aria-hidden="true" />
+                                        <Icon className={cn("h-5 w-5", color)} aria-hidden="true" />
+                                        <span className="font-medium text-sm text-violet-300">{PLATFORM_NAMES[p]}</span>
+                                    </button>
+                                    {tooltipPlatform === p && (
+                                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1.5 rounded-lg bg-foreground text-background text-xs whitespace-nowrap z-10 pointer-events-none">
+                                            Dostępne w planie Reseler
+                                            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-foreground" />
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        }
+                        // RESELER: fully accessible
+                        const isSelected = platform === p;
+                        return (
+                            <button
+                                key={p}
+                                type="button"
+                                role="radio"
+                                aria-checked={isSelected}
+                                onClick={() => handlePlatformChange(p)}
+                                className={cn(
+                                    "flex items-center gap-3 p-4 rounded-xl border-2 transition-all text-left",
+                                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                                    isSelected
+                                        ? "border-primary bg-primary/5 shadow-sm"
+                                        : "border-border hover:border-primary/30"
+                                )}
+                            >
+                                <Icon className={cn("h-6 w-6", isSelected ? "text-primary" : color)} aria-hidden="true" />
+                                <span className="font-medium text-sm">{PLATFORM_NAMES[p]}</span>
                             </button>
                         );
                     })}
