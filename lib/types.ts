@@ -20,7 +20,7 @@ export type DeliveryOption = "odbiór osobisty" | "wysyłka";
 export type ToneStyle =
     | "professional" | "friendly" | "casual"
     | "enthusiastic" | "funny" | "technical"
-    | "persuasive" | "concise";
+    | "persuasive" | "concise" | "custom";
 
 export const FREE_TONES: ToneStyle[] = ["professional", "friendly", "casual"];
 export const ADVANCED_TONES: ToneStyle[] = ["enthusiastic", "funny", "technical", "persuasive", "concise"];
@@ -70,6 +70,7 @@ export interface GenerateAdRequest {
     notes: string;
     images: ImageForRequest[];
     bodyTemplate?: string;
+    customToneInstructions?: string;
 }
 
 // API Response - Image analysis with preview for display
@@ -175,6 +176,7 @@ export const TONE_STYLE_NAMES: Record<ToneStyle, string> = {
     technical: "Techniczny",
     persuasive: "Przekonujący",
     concise: "Zwięzły",
+    custom: "Własny styl",
 };
 
 // Tone style descriptions
@@ -187,4 +189,5 @@ export const TONE_STYLE_DESCRIPTIONS: Record<ToneStyle, string> = {
     technical: "Precyzyjne dane i specyfikacje bez ozdobników",
     persuasive: "Argumenty korzyści i CTA skłaniające do zakupu",
     concise: "Minimum słów, maksimum treści — bullet points i krótkie zdania",
+    custom: "Własne instrukcje stylu zdefiniowane w szablonie",
 };

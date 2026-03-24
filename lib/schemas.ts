@@ -5,7 +5,7 @@ import type { ToneStyle, PriceType } from "@/lib/types";
 export const ToneStyleSchema = z.enum([
     "professional", "friendly", "casual",
     "enthusiastic", "funny", "technical",
-    "persuasive", "concise",
+    "persuasive", "concise", "custom",
 ]);
 export const PriceTypeSchema = z.enum(["user_provided", "ai_suggest", "free"]);
 
@@ -77,6 +77,7 @@ export const generateAdRequestSchema = z
             .max(8, "Maksymalnie 8 zdjęć"),
         guestId: z.string().min(1).max(100).optional(),
         bodyTemplate: z.string().max(3000).optional(),
+        customToneInstructions: z.string().max(500).optional(),
     })
     .refine(
         (data) => {
@@ -88,6 +89,18 @@ export const generateAdRequestSchema = z
         {
             message: "Cena jest wymagana gdy wybrano 'Moja cena'",
             path: ["price"],
+        }
+    )
+    .refine(
+        (data) => {
+            if (data.tone === "custom") {
+                return !!data.customToneInstructions && data.customToneInstructions.trim().length > 0;
+            }
+            return true;
+        },
+        {
+            message: "Własny styl wymaga podania instrukcji stylu",
+            path: ["customToneInstructions"],
         }
     );
 
