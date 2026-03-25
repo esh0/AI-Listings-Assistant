@@ -47,9 +47,21 @@ export async function POST(request: NextRequest) {
 
         const validatedData = validationResult.data;
 
+        // eBay, Amazon, Etsy are RESELER-only platforms — blocked for guests and non-RESELER users
+        const LOCKED_PLATFORMS = ["ebay", "amazon", "etsy"];
+        const plan = session?.user?.plan ?? "FREE";
+        if (LOCKED_PLATFORMS.includes(validatedData.platform) && plan !== "RESELER") {
+            return NextResponse.json(
+                {
+                    isValid: false,
+                    error: "Ta platforma dostępna jest tylko w planie Reseler.",
+                },
+                { status: 403 }
+            );
+        }
+
         if (session?.user?.id) {
             // Enforce per-tier image limit
-            const plan = session.user.plan ?? "FREE";
             const maxImages = IMAGE_LIMITS[plan] ?? 3;
             if (validatedData.images.length > maxImages) {
                 return NextResponse.json(
@@ -78,18 +90,6 @@ export async function POST(request: NextRequest) {
                     {
                         isValid: false,
                         error: "Własny styl komunikacji dostępny jest tylko w planie Reseler.",
-                    },
-                    { status: 403 }
-                );
-            }
-
-            // eBay, Amazon, Etsy are RESELER-only platforms
-            const LOCKED_PLATFORMS = ["ebay", "amazon", "etsy"];
-            if (LOCKED_PLATFORMS.includes(validatedData.platform) && plan !== "RESELER") {
-                return NextResponse.json(
-                    {
-                        isValid: false,
-                        error: "Ta platforma dostępna jest tylko w planie Reseler.",
                     },
                     { status: 403 }
                 );
