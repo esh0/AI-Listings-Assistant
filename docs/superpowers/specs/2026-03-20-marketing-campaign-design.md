@@ -285,7 +285,19 @@ Bez emaila większość użytkowników FREE zapomni o produkcie zanim wyczerpie 
 
 ### Tydzień 2 (dni 8–14): Analiza + content
 - [ ] Sprawdzić które filmy mają najwyższy engagement
-- [ ] Napisać 1. artykuł SEO ("Jak napisać ogłoszenie na OLX")
+- [x] Napisać artykuły SEO — wszystkie 9 napisane i wdrożone (2026-03-25):
+  - `jak-napisac-ogloszenie-olx` (OLX poradnik)
+  - `opisy-vinted-przyklady` (Vinted przykłady)
+  - `generator-ogloszen-ai` (AI generator explainer)
+  - `jak-sprzedac-allegro-lokalnie` (Allegro Lokalnie)
+  - `facebook-marketplace-opis` (FB Marketplace)
+  - `jak-sprzedawac-na-ebay` (eBay, RESELER)
+  - `jak-sprzedac-na-amazon` (Amazon, RESELER)
+  - `jak-sprzedac-na-etsy` (Etsy, RESELER)
+  - `jak-pisac-opisy-produktow` (artykuł pillar, linkuje do wszystkich)
+- [x] Dodać blog do sitemap.xml + robots.ts + Footer (link "Blog")
+- [x] Przesłać sitemap.xml ponownie w GSC
+- [x] Ręcznie zindeksować 3 priorytetowe artykuły w GSC (jak-napisac-ogloszenie-olx, generator-ogloszen-ai, jak-pisac-opisy-produktow)
 - [ ] Podbić aktywność w grupach (odpowiadać na komentarze)
 - [ ] Zebrać pierwsze screenshoty/feedback od użytkowników
 
@@ -293,12 +305,11 @@ Bez emaila większość użytkowników FREE zapomni o produkcie zanim wyczerpie 
 - [ ] Zainstalować Meta Pixel na marketplace-ai.pl + skonfigurować zdarzenie "CompleteRegistration"
 - [ ] Uruchomić Meta Ads boost najlepszego organicznego posta (~150–200 zł), dzienny limit: 10–15 zł
 - [ ] Uruchomić Google Ads kampanię search (~100–150 zł), dzienny limit: 4–5 zł
-- [ ] Napisać 2. artykuł SEO
 
 ### Miesiąc 2+: Optymalizacja
 - [ ] Analiza konwersji: ile gości → rejestracje → płatni
 - [ ] Optymalizacja Meta Ads (zmiana celu na Conversions)
-- [ ] 1 nowy artykuł SEO tygodniowo
+- [ ] Nowe artykuły SEO w miarę potrzeb (np. porównania platform, case studies)
 - [ ] Zbierać i publikować opinie użytkowników jako social proof
 
 ---
