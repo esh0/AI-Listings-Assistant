@@ -17,10 +17,25 @@
 - Zero followersów na social media
 - Budżet: 250–400 zł/miesiąc
 
-**Krajobraz konkurencji:**
-- Brak silnego bezpośredniego konkurenta w Polsce
-- ChatGPT/Jasper: generyczne, brak reguł platform, brak workflow
-- Sharksribe: prawdopodobnie nieaktywny
+**Krajobraz konkurencji (zbadany 2026-03-25):**
+
+| | Marketplace AI | SellyGenie | Generator-Ogloszen |
+|---|---|---|---|
+| Darmowe generacje | ✅ 3 bez rejestracji + 5/msc | ❌ bug (nie działa po rejestracji) | ❌ tylko przykłady, generowanie płatne |
+| Model biznesowy | Freemium + subskrypcja + boost | Subskrypcja (Plus/Pro) + PAYG | Jednorazowe pakiety (5/15/29 zł) |
+| Analiza zdjęć | ✅ | ✅ | ❌ (tylko tekst) |
+| Platform-specific AI | ✅ 7 platform z regułami | ❌ generyczny output | ❌ jeden styl dla wszystkich |
+| Wybór tonu | ✅ 8 tonów | ❌ | ❌ |
+| Głos jako input | ❌ | ✅ | ❌ |
+| Wielojęzyczność | ❌ | ✅ 30+ języków | ❌ |
+
+**Wnioski:**
+- **generator-ogloszen.com** — słaby produkt, pay-wall od startu, brak analizy zdjęć, jeden generyczny styl. Nie stanowi zagrożenia.
+- **sellygenie.com** — lepszy UX, ma voice input, ale generuje "opis produktu" (nie ogłoszenie per platforma), bugujący free tier, brak miesięcznego darmowego planu.
+- **Marketplace AI** — jedyny który działa bez rejestracji, ma darmowy plan miesięczny, rozumie specyfikę każdej platformy i analizuje zdjęcia.
+
+**Kluczowa przewaga do komunikowania:** *"Zanim zapłacisz — przetestuj. 3 ogłoszenia za darmo, bez rejestracji, bez karty. Konkurencja albo ma bug, albo każe płacić przed pierwszym użyciem."*
+
 - **Okno możliwości jest otwarte — first-mover advantage na SEO i brand jest do wzięcia teraz**
 
 ---
@@ -283,7 +298,7 @@ Bez emaila większość użytkowników FREE zapomni o produkcie zanim wyczerpie 
 - **Caption IG:** długi storytellingowy z hashtagami (#sprzedajeszonline #olx #allegro #ai itd.)
 - **Caption TikTok:** krótki, bezpośredni (#olx #allegro #vinted #ai #lifehack #polskitiktok itd.)
 
-### Tydzień 2 (dni 8–14): Analiza + content
+### Tydzień 2 (dni 8–14): Analiza + content ← **BIEŻĄCY TYDZIEŃ (2026-03-25)**
 - [ ] Sprawdzić które filmy mają najwyższy engagement
 - [x] Napisać artykuły SEO — wszystkie 9 napisane i wdrożone (2026-03-25):
   - `jak-napisac-ogloszenie-olx` (OLX poradnik)
@@ -298,13 +313,57 @@ Bez emaila większość użytkowników FREE zapomni o produkcie zanim wyczerpie 
 - [x] Dodać blog do sitemap.xml + robots.ts + Footer (link "Blog")
 - [x] Przesłać sitemap.xml ponownie w GSC
 - [x] Ręcznie zindeksować 3 priorytetowe artykuły w GSC (jak-napisac-ogloszenie-olx, generator-ogloszen-ai, jak-pisac-opisy-produktow)
+- [x] Zbadać konkurencję: generator-ogloszen.com + sellygenie.com/pl (2026-03-25)
+- [ ] Opublikować Reels #2 na IG + TikTok
+- [ ] Opublikować Reels #3 na IG + TikTok
+- [ ] Napisać post bait w 3–5 grupach FB (z UTM linkiem: `?utm_source=facebook&utm_medium=group&utm_campaign=launch`)
 - [ ] Podbić aktywność w grupach (odpowiadać na komentarze)
 - [ ] Zebrać pierwsze screenshoty/feedback od użytkowników
 
-### Tydzień 3–4: Paid boost
-- [ ] Zainstalować Meta Pixel na marketplace-ai.pl + skonfigurować zdarzenie "CompleteRegistration"
+### Tydzień 3 (od 2026-03-31): Rolki konkurencja + paid boost
+- [ ] Nagrać i opublikować **Rolka "POV: testuję konkurencję"** (screen recording, bez rejestracji → bug SellyGenie → marketplace-ai.pl działa)
+- [ ] Nagrać i opublikować **Rolka "To samo zdjęcie — OLX vs Vinted"** (split screen, platform-specific AI)
+- [ ] Nagrać i opublikować **Rolka "Ile czasu tracisz na ogłoszenia?"** (timer + screen recording)
+- [ ] Zainstalować Meta Pixel + zdarzenie "CompleteRegistration"
 - [ ] Uruchomić Meta Ads boost najlepszego organicznego posta (~150–200 zł), dzienny limit: 10–15 zł
 - [ ] Uruchomić Google Ads kampanię search (~100–150 zł), dzienny limit: 4–5 zł
+
+**📹 Notatka — Rolki do nagrania (tydzień 3):**
+
+**Rolka #1 — "POV: testuję konkurencję"** *(priorytet, najwyższy potencjał viralowy)*
+```
+[0–3s]  Hook (tekst): "Znalazłem 2 konkurentów mojego AI. Przetestowałem ich."
+[3–8s]  generator-ogloszen.com — próba generowania → paywall 5 zł
+        Tekst: "Nie możesz nic zrobić za darmo. Dosłownie."
+[8–18s] sellygenie.com — 10 kredytów w nagłówku → klik "Generuj" → "No credits remaining"
+        Tekst: "Mają 10 kredytów. I jednocześnie brak kredytów. 🤡"
+[18–28s] marketplace-ai.pl — bez rejestracji, zdjęcie, generuj → gotowe ogłoszenie
+         Tekst: "U nas: 3 ogłoszenia za darmo. Bez rejestracji. Działa."
+[28–33s] CTA: "Link w bio"
+```
+Caption TikTok: `testuję konkurencję swojego AI 👀 #ai #olx #vinted #allegro #lifehack #polskitiktok #startup`
+Caption IG: Storytellingowy — "Zbudowałem generator ogłoszeń AI. Postanowiłem sprawdzić co robi konkurencja. Wyniki mówią same za siebie 😅 — marketplace-ai.pl, link w bio."
+
+**Rolka #2 — "To samo zdjęcie — OLX vs Vinted"** *(edukacyjna)*
+```
+[0–3s]  Hook: "To samo zdjęcie. Ta sama platforma? Nie."
+[3–10s] Generujesz ogłoszenie → OLX: zwięźle, cena na pierwszym miejscu
+[10–18s] To samo zdjęcie → Vinted: lifestyle, stan, emocje
+[18–25s] Oba wyniki obok — widać różnicę
+         Tekst: "Inne platformy = inne ogłoszenie. AI to rozumie."
+[25–33s] CTA: "marketplace-ai.pl — wybierasz platformę, AI wie co napisać"
+```
+
+**Rolka #3 — "Ile czasu tracisz na ogłoszenia?"** *(emocjonalna, relatabilna)*
+```
+[0–3s]  Hook: "Ile czasu zajmuje napisanie ogłoszenia na OLX?"
+[3–15s] Pusty formularz OLX, timer, szybki montaż pisania
+         Tekst: "Średnio: 15–20 minut"
+[15–18s] Cięcie. "A teraz AI:"
+[18–28s] marketplace-ai.pl — zdjęcie → generuj → gotowe
+         Tekst: "27 sekund"
+[28–33s] "3 pierwsze za darmo. Link w bio."
+```
 
 ### Miesiąc 2+: Optymalizacja
 - [ ] Analiza konwersji: ile gości → rejestracje → płatni
