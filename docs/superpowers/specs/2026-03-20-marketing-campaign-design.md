@@ -121,7 +121,7 @@
 Hej! Stworzyłem narzędzie do generowania ogłoszeń AI —
 wrzucasz zdjęcie i w kilka sekund masz gotowy opis pod OLX/Vinted/Allegro.
 
-Pierwsze 3 za darmo, bez rejestracji.
+3 generacje bez rejestracji, a po założeniu konta 5 gratis każdego miesiąca.
 Czy ktoś by przetestował i powiedział co sądzi? 🙏
 
 marketplace-ai.pl?utm_source=facebook&utm_medium=group&utm_campaign=launch
@@ -131,21 +131,22 @@ marketplace-ai.pl?utm_source=facebook&utm_medium=group&utm_campaign=launch
 ```
 Znalazłem sposób na pisanie ogłoszeń 10x szybciej — wrzucasz zdjęcie,
 AI samo rozpoznaje produkt i pisze opis pod OLX/Vinted/Allegro.
-Pierwsze 3 za darmo, bez rejestracji: marketplace-ai.pl — ktoś próbował czegoś takiego?
+3 generacje bez rejestracji, po rejestracji 5 gratis miesięcznie: marketplace-ai.pl — ktoś próbował czegoś takiego?
 ```
 
 **Wariant C — pytanie do społeczności:**
 ```
 Ile czasu zajmuje Wam pisanie jednego ogłoszenia na OLX?
 Stworzyłem narzędzie które robi to w kilka sekund ze zdjęcia.
-Szukam pierwszych testerów — marketplace-ai.pl (3 generacje gratis)
+Szukam pierwszych testerów — marketplace-ai.pl
+(3 generacje bez rejestracji, po założeniu konta 5 gratis co miesiąc)
 ```
 
 **Wariant D — dla resellerów:**
 ```
 Reselerzy — zróbcie sobie przysługę i sprawdźcie marketplace-ai.pl.
 Wrzucasz zdjęcie towaru, wybierasz platformę (OLX/Allegro/Vinted/FB),
-AI pisze gotowe ogłoszenie. 3 sztuki gratis, bez rejestracji.
+AI pisze gotowe ogłoszenie. 3 sztuki bez rejestracji, po rejestracji 5 gratis miesięcznie.
 ```
 
 **UTM do wszystkich linków:** `?utm_source=facebook&utm_medium=group&utm_campaign=launch`
