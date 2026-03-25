@@ -344,26 +344,83 @@ Bez emaila większość użytkowników FREE zapomni o produkcie zanim wyczerpie 
 Caption TikTok: `testuję konkurencję swojego AI 👀 #ai #olx #vinted #allegro #lifehack #polskitiktok #startup`
 Caption IG: Storytellingowy — "Zbudowałem generator ogłoszeń AI. Postanowiłem sprawdzić co robi konkurencja. Wyniki mówią same za siebie 😅 — marketplace-ai.pl, link w bio."
 
-**Rolka #2 — "To samo zdjęcie — OLX vs Vinted"** *(edukacyjna)*
-```
-[0–3s]  Hook: "To samo zdjęcie. Ta sama platforma? Nie."
-[3–10s] Generujesz ogłoszenie → OLX: zwięźle, cena na pierwszym miejscu
-[10–18s] To samo zdjęcie → Vinted: lifestyle, stan, emocje
-[18–25s] Oba wyniki obok — widać różnicę
-         Tekst: "Inne platformy = inne ogłoszenie. AI to rozumie."
-[25–33s] CTA: "marketplace-ai.pl — wybierasz platformę, AI wie co napisać"
-```
+**Rolka #2 — "To samo zdjęcie — OLX vs Vinted"** *(edukacyjna, 33s, screen recording + ElevenLabs)*
 
-**Rolka #3 — "Ile czasu tracisz na ogłoszenia?"** *(emocjonalna, relatabilna)*
+Timeline nagrywania:
 ```
-[0–3s]  Hook: "Ile czasu zajmuje napisanie ogłoszenia na OLX?"
-[3–15s] Pusty formularz OLX, timer, szybki montaż pisania
-         Tekst: "Średnio: 15–20 minut"
-[15–18s] Cięcie. "A teraz AI:"
-[18–28s] marketplace-ai.pl — zdjęcie → generuj → gotowe
-         Tekst: "27 sekund"
-[28–33s] "3 pierwsze za darmo. Link w bio."
+[0–3s]   marketplace-ai.pl — nieruchomy ekran, widoczny URL
+[3–8s]   Wgrywasz zdjęcie produktu (odzież działa najlepiej)
+[8–13s]  Platforma: OLX, ton: Swobodny → Generuj
+[13–22s] Spinner — AI generuje
+[22–26s] Wynik OLX — krótki, konkretny opis, cena
+[26–28s] Wracasz do formularza, zmieniasz platformę na Vinted
+[28–30s] Generuj → szybki cut do wyniku
+[30–33s] Wynik Vinted — inne słownictwo, stan, lifestyle
 ```
+Tekst na ekranie (CapCut):
+- [0–3s] „To samo zdjęcie."
+- [8–13s] „OLX"
+- [22–26s] „Konkretnie. Cena na pierwszym miejscu."
+- [26–28s] „A teraz Vinted:"
+- [30–33s] „Inne reguły. Inny ton. AI to rozumie."
+- [33s] „marketplace-ai.pl — link w bio"
+
+Voiceover ElevenLabs:
+```
+[0–3s]   "To samo zdjęcie. Dwie różne platformy."
+[3–13s]  "Wrzucam fotkę, wybieram OLX. AI zna reguły tej platformy —
+          krótko, konkretnie, cena na wierzchu."
+[13–22s] [cisza / muzyka — spinner]
+[22–28s] "Gotowe. A teraz to samo zdjęcie — ale Vinted."
+[28–33s] "Zupełnie inny opis. Inne słownictwo, inny styl, inne priorytety.
+          Bo Vinted to nie OLX."
+[33s]    "marketplace-ai.pl — link w bio."
+```
+Caption TikTok: `to samo zdjęcie → dwa różne ogłoszenia 🤯 #olx #vinted #ai #sprzedajeszonline #lifehack #polskitiktok`
+Caption IG: `Wrzuciłem to samo zdjęcie dwa razy. Raz na OLX. Raz na Vinted. AI wiedziało co zrobić — bez żadnych instrukcji. Inne platformy, inne reguły, inny styl. Automatycznie. marketplace-ai.pl — pierwsze 3 za darmo, link w bio 👆 #sprzedajeszonline #olx #vinted #allegro #ai #lifehack #sprzedaz #ogłoszenia #marketplace #polskitwórca`
+
+---
+
+**Rolka #3 — "Ile czasu tracisz na pisanie ogłoszeń?"** *(emocjonalna, relatabilna, 33s, screen recording + ElevenLabs)*
+
+Timeline nagrywania:
+```
+[0–3s]   Pusty formularz OLX (olx.pl/dodaj-ogloszenie) — nieruchomy
+[3–15s]  Przyspieszone (2x w CapCut): piszesz tytuł, opis, wybierasz kategorię,
+         cenę — celowo powoli, z zastanowieniem
+[15–18s] Cięcie do czarnego ekranu lub napis
+[18–20s] marketplace-ai.pl — wrzucasz zdjęcie
+[20–28s] Generuj → spinner → gotowe ogłoszenie
+[28–33s] Zatrzymanie na gotowym ogłoszeniu — tytuł i opis widoczne
+```
+Tekst na ekranie (CapCut):
+- [0–3s] „Ile czasu zajmuje Ci jedno ogłoszenie na OLX?"
+- [3–15s] „⏱ 15–20 minut" (timer w rogu)
+- [15–18s] „A teraz AI:"
+- [20–28s] „⏱ 27 sekund"
+- [28–33s] „marketplace-ai.pl — link w bio"
+
+Voiceover ElevenLabs:
+```
+[0–3s]   "Ile czasu zajmuje Ci napisanie jednego ogłoszenia na OLX?"
+[3–15s]  "Tytuł, opis, kategoria, cena, warunki dostawy...
+          Średnio — od piętnastu do dwudziestu minut."
+[15–18s] "A teraz to samo, ale z AI."
+[18–28s] "Wrzucam zdjęcie. Wybieram platformę. Klikam generuj.
+          Gotowe ogłoszenie — w niecałe trzydzieści sekund."
+[28–33s] "marketplace-ai.pl — pierwsze trzy za darmo. Link w bio."
+```
+Caption TikTok: `pisałeś kiedyś ogłoszenie 20 minut? ja nie robię tego już nigdy 😅 #olx #ai #lifehack #sprzedaz #polskitiktok #oszczedzajczas`
+Caption IG: `Policzyłem kiedyś ile czasu zajmuje mi napisanie jednego ogłoszenia na OLX. Tytuł: 3 minuty zastanawiania. Opis: 10 minut pisania, kasowania, pisania od nowa. Cena: kolejne 5 minut research. Razem: ~20 minut. Na jedno ogłoszenie. Teraz robię to w 27 sekund. marketplace-ai.pl — wrzucasz zdjęcie, AI pisze ogłoszenie pod konkretną platformę. Pierwsze 3 za darmo, bez rejestracji → link w bio 👆 #sprzedajeszonline #olx #allegro #vinted #ai #oszczędzajczas #sprzedaz #lifehack #polskitwórca #marketplace`
+
+Checklist produkcji (obie rolki):
+- [ ] Nagraj screen recording 9:16 (CapCut: nowe wideo → proporcje 9:16)
+- [ ] Dla Rolki #2: użyj zdjęcia odzieżowego — działa najlepiej na Vinted
+- [ ] Dla Rolki #3: nagraj powolne wpisywanie na OLX → przyspiesz 2x w CapCut
+- [ ] Dodaj teksty na ekranie (biały bold, czarny cień)
+- [ ] Podmień audio na voiceover z ElevenLabs
+- [ ] Muzyka w tle -15dB (biblioteka CapCut)
+- [ ] Eksport: 1080×1920, H.264, max jakość
 
 ### Miesiąc 2+: Optymalizacja
 - [ ] Analiza konwersji: ile gości → rejestracje → płatni
