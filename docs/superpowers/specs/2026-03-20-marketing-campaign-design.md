@@ -100,6 +100,8 @@
 - "Sprzedam elektronikę / odzież / meble [region]"
 
 **Forma wpisu (nie reklama — wartość):**
+
+**Wariant A — bazowy (feedback):**
 ```
 Hej! Stworzyłem narzędzie do generowania ogłoszeń AI —
 wrzucasz zdjęcie i w kilka sekund masz gotowy opis pod OLX/Vinted/Allegro.
@@ -107,10 +109,33 @@ wrzucasz zdjęcie i w kilka sekund masz gotowy opis pod OLX/Vinted/Allegro.
 Pierwsze 3 za darmo, bez rejestracji.
 Czy ktoś by przetestował i powiedział co sądzi? 🙏
 
-[link do marketplace-ai.pl]
+marketplace-ai.pl?utm_source=facebook&utm_medium=group&utm_campaign=launch
 ```
 
-**Ważne:** Najpierw sprawdzić regulamin grupy. W wielu grupach linki zewnętrzne są dozwolone przy naturalnym kontekście. Unikać ton sprzedażowy — pytać o feedback.
+**Wariant B — "life hack":**
+```
+Znalazłem sposób na pisanie ogłoszeń 10x szybciej — wrzucasz zdjęcie,
+AI samo rozpoznaje produkt i pisze opis pod OLX/Vinted/Allegro.
+Pierwsze 3 za darmo, bez rejestracji: marketplace-ai.pl — ktoś próbował czegoś takiego?
+```
+
+**Wariant C — pytanie do społeczności:**
+```
+Ile czasu zajmuje Wam pisanie jednego ogłoszenia na OLX?
+Stworzyłem narzędzie które robi to w kilka sekund ze zdjęcia.
+Szukam pierwszych testerów — marketplace-ai.pl (3 generacje gratis)
+```
+
+**Wariant D — dla resellerów:**
+```
+Reselerzy — zróbcie sobie przysługę i sprawdźcie marketplace-ai.pl.
+Wrzucasz zdjęcie towaru, wybierasz platformę (OLX/Allegro/Vinted/FB),
+AI pisze gotowe ogłoszenie. 3 sztuki gratis, bez rejestracji.
+```
+
+**UTM do wszystkich linków:** `?utm_source=facebook&utm_medium=group&utm_campaign=launch`
+
+**Ważne:** Najpierw sprawdzić regulamin grupy. W wielu grupach linki zewnętrzne są dozwolone przy naturalnym kontekście. Unikać ton sprzedażowy — pytać o feedback. Testować różne warianty w różnych grupach i sprawdzać który generuje więcej kliknięć w GA4.
 
 ---
 
@@ -239,15 +264,24 @@ Bez emaila większość użytkowników FREE zapomni o produkcie zanim wyczerpie 
 ## 7. Harmonogram działań
 
 ### Tydzień 1 (dni 1–7): Organic launch
-- [ ] Założyć konto TikTok + Instagram (nazwa: MarketplaceAI lub marketplace.ai.pl)
-- [ ] Założyć Facebook Page dla produktu
-- [ ] Uzupełnić bio + link w bio (marketplace-ai.pl) na każdej platformie
-- [ ] Zainstalować GA4 na marketplace-ai.pl (lub Plausible/Umami) — zdarzenie "sign_up" na rejestracji
-- [ ] Nagrać 3 filmy demo (Format #1 i #2) — screen recording wystarczy, kamera nie jest potrzebna
-- [ ] Opublikować na TikTok, Instagram Reels, Facebook z hashtagami i UTM w bio
-- [ ] Znaleźć 10–15 aktywnych grup FB i dołączyć
+- [x] Założyć konto TikTok + Instagram (nazwa: MarketplaceAI lub marketplace.ai.pl)
+- [x] Założyć Facebook Page dla produktu
+- [x] Uzupełnić bio + link w bio (marketplace-ai.pl) na każdej platformie
+- [x] Zainstalować GA4 na marketplace-ai.pl (lub Plausible/Umami) — zdarzenie "sign_up" na rejestracji
+- [x] Nagrać 3 filmy demo (Format #1 i #2) — screen recording wystarczy, kamera nie jest potrzebna
+- [x] Opublikować na TikTok, Instagram Reels, Facebook z hashtagami i UTM w bio
+- [x] Znaleźć 10–15 aktywnych grup FB i dołączyć
 - [ ] Napisać naturalny post w 3–5 grupach z prośbą o feedback (z UTM linkiem: `?utm_source=facebook&utm_medium=group&utm_campaign=launch`)
-- [ ] Dodać stronę do Google Search Console + sitemap.xml
+- [x] Dodać stronę do Google Search Console + sitemap.xml
+
+**📱 Notatka — Pierwszy Reels (2026-03-25):**
+- **Format:** Flow niezalogowanego użytkownika — strona powitalna → wybór zdjęcia → platforma/ton → generowanie → softwall → gotowe ogłoszenie
+- **Długość:** 33 sekundy, narracja 33s (ElevenLabs voiceover)
+- **Opublikowano:** Instagram Reels + TikTok (ten sam plik 9:16)
+- **Hook:** "Tworzysz ogłoszenia na OLX czy Allegro? To zajmuje za dużo czasu."
+- **CTA:** "Pierwsze ogłoszenie za darmo. Link w bio."
+- **Caption IG:** długi storytellingowy z hashtagami (#sprzedajeszonline #olx #allegro #ai itd.)
+- **Caption TikTok:** krótki, bezpośredni (#olx #allegro #vinted #ai #lifehack #polskitiktok itd.)
 
 ### Tydzień 2 (dni 8–14): Analiza + content
 - [ ] Sprawdzić które filmy mają najwyższy engagement
