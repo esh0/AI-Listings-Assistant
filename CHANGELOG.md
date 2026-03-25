@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.3.11] - 2026-03-25
+
+### Fixed
+- Security: guest users could generate listings for eBay, Amazon, Etsy (RESELER-only platforms) via direct API call — platform guard moved before auth/guest split so it applies universally
+
 ## [1.3.10] - 2026-03-24
 
 ### Fixed
