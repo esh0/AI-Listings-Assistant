@@ -11,6 +11,9 @@ export function Footer() {
         <footer className="border-t border-border py-4 px-4">
             <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
                 <nav aria-label="Stopka" className="flex items-center gap-6">
+                    <Link href="/blog" className="hover:text-foreground transition-colors">
+                        Blog
+                    </Link>
                     <Link href={pricingHref} className="hover:text-foreground transition-colors">
                         Cennik
                     </Link>

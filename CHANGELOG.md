@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.4.0] - 2026-03-25
+
+### Added
+- Blog SEO: 9 artykułów poradnikowych pod frazy związane ze sprzedażą online (`/blog`)
+  - Jak napisać ogłoszenie na OLX — poradnik i przykłady
+  - Opisy na Vinted — przykłady i szablony
+  - Generator ogłoszeń AI — jak działa Marketplace AI
+  - Jak sprzedawać na Allegro Lokalnie
+  - Facebook Marketplace — jak pisać opisy
+  - Jak sprzedawać na eBay z Polski
+  - Jak tworzyć listingi na Amazon
+  - Jak sprzedawać na Etsy
+  - Jak pisać opisy produktów które sprzedają — 7 zasad (artykuł hub)
+- Blog infrastructure: `lib/blog.ts` (rejestr metadanych), `BlogLayout`, `BlogCTA`, `BlogPostCard` komponenty
+- Strona listingowa `/blog` z kartami artykułów
+- Dynamiczny router `/blog/[slug]` ze statycznym generowaniem, metadanymi SEO per artykuł i Schema.org JSON-LD
+- Link "Blog" w stopce nawigacji
+- `.prose-blog` CSS utility dla typografii artykułów
+- Sitemap zaktualizowana o `/blog` i 9 artykułów (priority 0.7)
+- Robots.txt zaktualizowany o `/blog` i `/blog/*`
+
+### Fixed
+- CSP: dodano `https://va.vercel-scripts.com` do `script-src` — Vercel Analytics był blokowany w trybie debug
+
 ## [1.3.11] - 2026-03-25
 
 ### Fixed
