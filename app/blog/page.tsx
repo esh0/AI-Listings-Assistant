@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     description:
         "Poradniki jak pisać skuteczne ogłoszenia na OLX, Vinted, Allegro Lokalnie i Facebook Marketplace. Praktyczne wskazówki i szablony.",
     alternates: {
-        canonical: "https://marketplace-ai.pl/blog",
+        canonical: "https://www.marketplace-ai.pl/blog",
     },
     openGraph: {
         title: "Blog — Porady o sprzedaży online | Marketplace AI",

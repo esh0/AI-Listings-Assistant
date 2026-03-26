@@ -17,10 +17,25 @@
 - Zero followersów na social media
 - Budżet: 250–400 zł/miesiąc
 
-**Krajobraz konkurencji:**
-- Brak silnego bezpośredniego konkurenta w Polsce
-- ChatGPT/Jasper: generyczne, brak reguł platform, brak workflow
-- Sharksribe: prawdopodobnie nieaktywny
+**Krajobraz konkurencji (zbadany 2026-03-25):**
+
+| | Marketplace AI | SellyGenie | Generator-Ogloszen |
+|---|---|---|---|
+| Darmowe generacje | ✅ 3 bez rejestracji + 5/msc | ❌ bug (nie działa po rejestracji) | ❌ tylko przykłady, generowanie płatne |
+| Model biznesowy | Freemium + subskrypcja + boost | Subskrypcja (Plus/Pro) + PAYG | Jednorazowe pakiety (5/15/29 zł) |
+| Analiza zdjęć | ✅ | ✅ | ❌ (tylko tekst) |
+| Platform-specific AI | ✅ 7 platform z regułami | ❌ generyczny output | ❌ jeden styl dla wszystkich |
+| Wybór tonu | ✅ 8 tonów | ❌ | ❌ |
+| Głos jako input | ❌ | ✅ | ❌ |
+| Wielojęzyczność | ❌ | ✅ 30+ języków | ❌ |
+
+**Wnioski:**
+- **generator-ogloszen.com** — słaby produkt, pay-wall od startu, brak analizy zdjęć, jeden generyczny styl. Nie stanowi zagrożenia.
+- **sellygenie.com** — lepszy UX, ma voice input, ale generuje "opis produktu" (nie ogłoszenie per platforma), bugujący free tier, brak miesięcznego darmowego planu.
+- **Marketplace AI** — jedyny który działa bez rejestracji, ma darmowy plan miesięczny, rozumie specyfikę każdej platformy i analizuje zdjęcia.
+
+**Kluczowa przewaga do komunikowania:** *"Zanim zapłacisz — przetestuj. 3 ogłoszenia za darmo, bez rejestracji, bez karty. Konkurencja albo ma bug, albo każe płacić przed pierwszym użyciem."*
+
 - **Okno możliwości jest otwarte — first-mover advantage na SEO i brand jest do wzięcia teraz**
 
 ---
@@ -103,10 +118,12 @@
 
 **Wariant A — bazowy (feedback):**
 ```
-Hej! Stworzyłem narzędzie do generowania ogłoszeń AI —
+Hej wszystkim! 👋
+
+Stworzyłem narzędzie do generowania ogłoszeń AI —
 wrzucasz zdjęcie i w kilka sekund masz gotowy opis pod OLX/Vinted/Allegro.
 
-Pierwsze 3 za darmo, bez rejestracji.
+3 generacje bez rejestracji, a po założeniu konta 5 gratis każdego miesiąca.
 Czy ktoś by przetestował i powiedział co sądzi? 🙏
 
 marketplace-ai.pl?utm_source=facebook&utm_medium=group&utm_campaign=launch
@@ -114,23 +131,30 @@ marketplace-ai.pl?utm_source=facebook&utm_medium=group&utm_campaign=launch
 
 **Wariant B — "life hack":**
 ```
+Hej! 👋
+
 Znalazłem sposób na pisanie ogłoszeń 10x szybciej — wrzucasz zdjęcie,
 AI samo rozpoznaje produkt i pisze opis pod OLX/Vinted/Allegro.
-Pierwsze 3 za darmo, bez rejestracji: marketplace-ai.pl — ktoś próbował czegoś takiego?
+3 generacje bez rejestracji, po rejestracji 5 gratis miesięcznie: marketplace-ai.pl — ktoś próbował czegoś takiego?
 ```
 
 **Wariant C — pytanie do społeczności:**
 ```
+Hej wszystkim! 👋
+
 Ile czasu zajmuje Wam pisanie jednego ogłoszenia na OLX?
 Stworzyłem narzędzie które robi to w kilka sekund ze zdjęcia.
-Szukam pierwszych testerów — marketplace-ai.pl (3 generacje gratis)
+Szukam pierwszych testerów — marketplace-ai.pl
+(3 generacje bez rejestracji, po założeniu konta 5 gratis co miesiąc)
 ```
 
 **Wariant D — dla resellerów:**
 ```
+Hej! 👋
+
 Reselerzy — zróbcie sobie przysługę i sprawdźcie marketplace-ai.pl.
 Wrzucasz zdjęcie towaru, wybierasz platformę (OLX/Allegro/Vinted/FB),
-AI pisze gotowe ogłoszenie. 3 sztuki gratis, bez rejestracji.
+AI pisze gotowe ogłoszenie. 3 sztuki bez rejestracji, po rejestracji 5 gratis miesięcznie.
 ```
 
 **UTM do wszystkich linków:** `?utm_source=facebook&utm_medium=group&utm_campaign=launch`
@@ -283,22 +307,134 @@ Bez emaila większość użytkowników FREE zapomni o produkcie zanim wyczerpie 
 - **Caption IG:** długi storytellingowy z hashtagami (#sprzedajeszonline #olx #allegro #ai itd.)
 - **Caption TikTok:** krótki, bezpośredni (#olx #allegro #vinted #ai #lifehack #polskitiktok itd.)
 
-### Tydzień 2 (dni 8–14): Analiza + content
+### Tydzień 2 (dni 8–14): Analiza + content ← **BIEŻĄCY TYDZIEŃ (2026-03-25)**
 - [ ] Sprawdzić które filmy mają najwyższy engagement
-- [ ] Napisać 1. artykuł SEO ("Jak napisać ogłoszenie na OLX")
+- [x] Napisać artykuły SEO — wszystkie 9 napisane i wdrożone (2026-03-25):
+  - `jak-napisac-ogloszenie-olx` (OLX poradnik)
+  - `opisy-vinted-przyklady` (Vinted przykłady)
+  - `generator-ogloszen-ai` (AI generator explainer)
+  - `jak-sprzedac-allegro-lokalnie` (Allegro Lokalnie)
+  - `facebook-marketplace-opis` (FB Marketplace)
+  - `jak-sprzedawac-na-ebay` (eBay, RESELER)
+  - `jak-sprzedac-na-amazon` (Amazon, RESELER)
+  - `jak-sprzedac-na-etsy` (Etsy, RESELER)
+  - `jak-pisac-opisy-produktow` (artykuł pillar, linkuje do wszystkich)
+- [x] Dodać blog do sitemap.xml + robots.ts + Footer (link "Blog")
+- [x] Przesłać sitemap.xml ponownie w GSC
+- [x] Ręcznie zindeksować 3 priorytetowe artykuły w GSC (jak-napisac-ogloszenie-olx, generator-ogloszen-ai, jak-pisac-opisy-produktow)
+- [x] Zbadać konkurencję: generator-ogloszen.com + sellygenie.com/pl (2026-03-25)
+- [ ] Opublikować Reels #2 na IG + TikTok
+- [ ] Opublikować Reels #3 na IG + TikTok
+- [ ] Napisać post bait w 3–5 grupach FB (z UTM linkiem: `?utm_source=facebook&utm_medium=group&utm_campaign=launch`)
 - [ ] Podbić aktywność w grupach (odpowiadać na komentarze)
 - [ ] Zebrać pierwsze screenshoty/feedback od użytkowników
 
-### Tydzień 3–4: Paid boost
-- [ ] Zainstalować Meta Pixel na marketplace-ai.pl + skonfigurować zdarzenie "CompleteRegistration"
+### Tydzień 3 (od 2026-03-31): Rolki konkurencja + paid boost
+- [ ] Nagrać i opublikować **Rolka "POV: testuję konkurencję"** (screen recording, bez rejestracji → bug SellyGenie → marketplace-ai.pl działa)
+- [ ] Nagrać i opublikować **Rolka "To samo zdjęcie — OLX vs Vinted"** (split screen, platform-specific AI)
+- [ ] Nagrać i opublikować **Rolka "Ile czasu tracisz na ogłoszenia?"** (timer + screen recording)
+- [ ] Zainstalować Meta Pixel + zdarzenie "CompleteRegistration"
 - [ ] Uruchomić Meta Ads boost najlepszego organicznego posta (~150–200 zł), dzienny limit: 10–15 zł
 - [ ] Uruchomić Google Ads kampanię search (~100–150 zł), dzienny limit: 4–5 zł
-- [ ] Napisać 2. artykuł SEO
+
+**📹 Notatka — Rolki do nagrania (tydzień 3):**
+
+**Rolka #1 — "POV: testuję konkurencję"** *(priorytet, najwyższy potencjał viralowy)*
+```
+[0–3s]  Hook (tekst): "Znalazłem 2 konkurentów mojego AI. Przetestowałem ich."
+[3–8s]  generator-ogloszen.com — próba generowania → paywall 5 zł
+        Tekst: "Nie możesz nic zrobić za darmo. Dosłownie."
+[8–18s] sellygenie.com — 10 kredytów w nagłówku → klik "Generuj" → "No credits remaining"
+        Tekst: "Mają 10 kredytów. I jednocześnie brak kredytów. 🤡"
+[18–28s] marketplace-ai.pl — bez rejestracji, zdjęcie, generuj → gotowe ogłoszenie
+         Tekst: "U nas: 3 ogłoszenia za darmo. Bez rejestracji. Działa."
+[28–33s] CTA: "Link w bio"
+```
+Caption TikTok: `testuję konkurencję swojego AI 👀 #ai #olx #vinted #allegro #lifehack #polskitiktok #startup`
+Caption IG: Storytellingowy — "Zbudowałem generator ogłoszeń AI. Postanowiłem sprawdzić co robi konkurencja. Wyniki mówią same za siebie 😅 — marketplace-ai.pl, link w bio."
+
+**Rolka #2 — "To samo zdjęcie — OLX vs Vinted"** *(edukacyjna, 33s, screen recording + ElevenLabs)*
+
+Timeline nagrywania:
+```
+[0–3s]   marketplace-ai.pl — nieruchomy ekran, widoczny URL
+[3–8s]   Wgrywasz zdjęcie produktu (odzież działa najlepiej)
+[8–13s]  Platforma: OLX, ton: Swobodny → Generuj
+[13–22s] Spinner — AI generuje
+[22–26s] Wynik OLX — krótki, konkretny opis, cena
+[26–28s] Wracasz do formularza, zmieniasz platformę na Vinted
+[28–30s] Generuj → szybki cut do wyniku
+[30–33s] Wynik Vinted — inne słownictwo, stan, lifestyle
+```
+Tekst na ekranie (CapCut):
+- [0–3s] „To samo zdjęcie."
+- [8–13s] „OLX"
+- [22–26s] „Konkretnie. Cena na pierwszym miejscu."
+- [26–28s] „A teraz Vinted:"
+- [30–33s] „Inne reguły. Inny ton. AI to rozumie."
+- [33s] „marketplace-ai.pl — link w bio"
+
+Voiceover ElevenLabs:
+```
+[0–3s]   "To samo zdjęcie. Dwie różne platformy."
+[3–13s]  "Wrzucam fotkę, wybieram OLX. AI zna reguły tej platformy —
+          krótko, konkretnie, cena na wierzchu."
+[13–22s] [cisza / muzyka — spinner]
+[22–28s] "Gotowe. A teraz to samo zdjęcie — ale Vinted."
+[28–33s] "Zupełnie inny opis. Inne słownictwo, inny styl, inne priorytety.
+          Bo Vinted to nie OLX."
+[33s]    "marketplace-ai.pl — link w bio."
+```
+Caption TikTok: `to samo zdjęcie → dwa różne ogłoszenia 🤯 #olx #vinted #ai #sprzedajeszonline #lifehack #polskitiktok`
+Caption IG: `Wrzuciłem to samo zdjęcie dwa razy. Raz na OLX. Raz na Vinted. AI wiedziało co zrobić — bez żadnych instrukcji. Inne platformy, inne reguły, inny styl. Automatycznie. marketplace-ai.pl — pierwsze 3 za darmo, link w bio 👆 #sprzedajeszonline #olx #vinted #allegro #ai #lifehack #sprzedaz #ogłoszenia #marketplace #polskitwórca`
+
+---
+
+**Rolka #3 — "Ile czasu tracisz na pisanie ogłoszeń?"** *(emocjonalna, relatabilna, 33s, screen recording + ElevenLabs)*
+
+Timeline nagrywania:
+```
+[0–3s]   Pusty formularz OLX (olx.pl/dodaj-ogloszenie) — nieruchomy
+[3–15s]  Przyspieszone (2x w CapCut): piszesz tytuł, opis, wybierasz kategorię,
+         cenę — celowo powoli, z zastanowieniem
+[15–18s] Cięcie do czarnego ekranu lub napis
+[18–20s] marketplace-ai.pl — wrzucasz zdjęcie
+[20–28s] Generuj → spinner → gotowe ogłoszenie
+[28–33s] Zatrzymanie na gotowym ogłoszeniu — tytuł i opis widoczne
+```
+Tekst na ekranie (CapCut):
+- [0–3s] „Ile czasu zajmuje Ci jedno ogłoszenie na OLX?"
+- [3–15s] „⏱ 15–20 minut" (timer w rogu)
+- [15–18s] „A teraz AI:"
+- [20–28s] „⏱ 27 sekund"
+- [28–33s] „marketplace-ai.pl — link w bio"
+
+Voiceover ElevenLabs:
+```
+[0–3s]   "Ile czasu zajmuje Ci napisanie jednego ogłoszenia na OLX?"
+[3–15s]  "Tytuł, opis, kategoria, cena, warunki dostawy...
+          Średnio — od piętnastu do dwudziestu minut."
+[15–18s] "A teraz to samo, ale z AI."
+[18–28s] "Wrzucam zdjęcie. Wybieram platformę. Klikam generuj.
+          Gotowe ogłoszenie — w niecałe trzydzieści sekund."
+[28–33s] "marketplace-ai.pl — pierwsze trzy za darmo. Link w bio."
+```
+Caption TikTok: `pisałeś kiedyś ogłoszenie 20 minut? ja nie robię tego już nigdy 😅 #olx #ai #lifehack #sprzedaz #polskitiktok #oszczedzajczas`
+Caption IG: `Policzyłem kiedyś ile czasu zajmuje mi napisanie jednego ogłoszenia na OLX. Tytuł: 3 minuty zastanawiania. Opis: 10 minut pisania, kasowania, pisania od nowa. Cena: kolejne 5 minut research. Razem: ~20 minut. Na jedno ogłoszenie. Teraz robię to w 27 sekund. marketplace-ai.pl — wrzucasz zdjęcie, AI pisze ogłoszenie pod konkretną platformę. Pierwsze 3 za darmo, bez rejestracji → link w bio 👆 #sprzedajeszonline #olx #allegro #vinted #ai #oszczędzajczas #sprzedaz #lifehack #polskitwórca #marketplace`
+
+Checklist produkcji (obie rolki):
+- [ ] Nagraj screen recording 9:16 (CapCut: nowe wideo → proporcje 9:16)
+- [ ] Dla Rolki #2: użyj zdjęcia odzieżowego — działa najlepiej na Vinted
+- [ ] Dla Rolki #3: nagraj powolne wpisywanie na OLX → przyspiesz 2x w CapCut
+- [ ] Dodaj teksty na ekranie (biały bold, czarny cień)
+- [ ] Podmień audio na voiceover z ElevenLabs
+- [ ] Muzyka w tle -15dB (biblioteka CapCut)
+- [ ] Eksport: 1080×1920, H.264, max jakość
 
 ### Miesiąc 2+: Optymalizacja
 - [ ] Analiza konwersji: ile gości → rejestracje → płatni
 - [ ] Optymalizacja Meta Ads (zmiana celu na Conversions)
-- [ ] 1 nowy artykuł SEO tygodniowo
+- [ ] Nowe artykuły SEO w miarę potrzeb (np. porównania platform, case studies)
 - [ ] Zbierać i publikować opinie użytkowników jako social proof
 
 ---

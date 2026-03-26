@@ -3,6 +3,9 @@ import { LegalLayout } from "@/components/LegalLayout";
 export const metadata = {
     title: "Polityka Prywatności — Marketplace AI",
     description: "Polityka prywatności serwisu Marketplace AI",
+    alternates: {
+        canonical: "https://www.marketplace-ai.pl/polityka-prywatnosci",
+    },
 };
 
 export default function PolitykaPrywatnosci() {
