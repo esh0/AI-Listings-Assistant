@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const post = getPostBySlug(slug);
     if (!post) return { title: "Nie znaleziono" };
 
-    const url = `https://marketplace-ai.pl/blog/${post.slug}`;
+    const url = `https://www.marketplace-ai.pl/blog/${post.slug}`;
 
     return {
         title: post.metaTitle,
@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             authors: ["Marketplace AI"],
             images: [
                 {
-                    url: "https://marketplace-ai.pl/og-image.svg",
+                    url: "https://www.marketplace-ai.pl/og-image.svg",
                     width: 1200,
                     height: 630,
                     alt: post.metaTitle,
@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             card: "summary_large_image",
             title: post.metaTitle,
             description: post.metaDescription,
-            images: ["https://marketplace-ai.pl/og-image.svg"],
+            images: ["https://www.marketplace-ai.pl/og-image.svg"],
         },
     };
 }
@@ -66,14 +66,14 @@ export default async function BlogPostPage({ params }: PageProps) {
         author: {
             "@type": "Organization",
             name: "Marketplace AI",
-            url: "https://marketplace-ai.pl",
+            url: "https://www.marketplace-ai.pl",
         },
         publisher: {
             "@type": "Organization",
             name: "Marketplace AI",
-            url: "https://marketplace-ai.pl",
+            url: "https://www.marketplace-ai.pl",
         },
-        url: `https://marketplace-ai.pl/blog/${post.slug}`,
+        url: `https://www.marketplace-ai.pl/blog/${post.slug}`,
         description: post.metaDescription,
     };
 

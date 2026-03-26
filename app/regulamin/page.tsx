@@ -3,6 +3,9 @@ import { LegalLayout } from "@/components/LegalLayout";
 export const metadata = {
     title: "Regulamin — Marketplace AI",
     description: "Regulamin serwisu Marketplace AI",
+    alternates: {
+        canonical: "https://www.marketplace-ai.pl/regulamin",
+    },
 };
 
 export default function ReguaminPage() {

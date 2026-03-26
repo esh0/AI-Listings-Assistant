@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.4.1] - 2026-03-26
+
+### Fixed
+- SEO: `metadataBase` zmienione z `https://marketplace-ai.pl` na `https://www.marketplace-ai.pl` — naprawia problem duplikatu kanonicznego w Google Search Console
+- SEO: dodano `alternates.canonical` na wszystkich stronach publicznych (`/`, `/pricing`, `/polityka-prywatnosci`, `/regulamin`, `/blog`, `/blog/[slug]`)
+- SEO: `sitemap.ts` — wszystkie URL-e zaktualizowane do domeny z www
+- SEO: Schema.org JSON-LD w `/blog/[slug]` — URL-e zaktualizowane do www
+
 ## [1.4.0] - 2026-03-25
 
 ### Added

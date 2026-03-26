@@ -14,7 +14,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-    metadataBase: new URL("https://marketplace-ai.pl"),
+    metadataBase: new URL("https://www.marketplace-ai.pl"),
     title: "AI Generator Ogłoszeń Sprzedażowych | OLX, Allegro, Vinted",
     description:
         "Automatycznie generuj profesjonalne ogłoszenia sprzedażowe na OLX, Allegro Lokalnie, Facebook Marketplace i Vinted. Wykorzystaj AI do analizy zdjęć i tworzenia opisów.",
@@ -54,6 +54,9 @@ export const metadata: Metadata = {
     icons: {
         icon: "/favicon.svg",
         shortcut: "/favicon.svg",
+    },
+    alternates: {
+        canonical: "https://www.marketplace-ai.pl",
     },
     robots: {
         index: true,
