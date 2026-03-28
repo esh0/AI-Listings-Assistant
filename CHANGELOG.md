@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.4.2] - 2026-03-28
+
+### Added
+- Gość generuje ogłoszenie i zamyka SoftWall bez logowania — ogłoszenie zapisywane do IndexedDB natychmiast po generacji; logowanie przez topbar lub dowolny link sign-in automatycznie je odzyskuje
+- CTA "Zarejestruj się i zapisz" widoczne bezpośrednio pod wynikiem dla niezalogowanych użytkowników (bez konieczności otwierania SoftWall)
+
+### Fixed
+- LandingForm (`/`): eBay, Amazon, Etsy zablokowane dla planów innych niż RESELER — Crown + tooltip "Dostępne w planie Reseler" (wcześniej były dostępne dla gości)
+
 ## [1.4.1] - 2026-03-26
 
 ### Fixed
