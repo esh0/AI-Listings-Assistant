@@ -15,6 +15,7 @@ import { SoftWallModal } from "@/components/SoftWallModal";
 import { NoCreditsModal } from "@/components/NoCreditsModal";
 import { fileToBase64, getImageMimeType } from "@/lib/utils";
 import { getGuestId } from "@/lib/guest-id";
+import { savePendingAd } from "@/lib/storage";
 import { toast } from "sonner";
 import type {
     UploadedImage,
@@ -412,6 +413,34 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
             // Show result for all users (authenticated and unauthenticated)
             setResult(data);
 
+            // Save to IndexedDB immediately for unauthenticated users
+            // so the ad survives even if they close SoftWall and sign in via topbar
+            if (status === "unauthenticated" && data.isValid) {
+                await savePendingAd({
+                    title: data.title || "",
+                    description: data.description || "",
+                    priceMin: data.price?.min,
+                    priceMax: data.price?.max,
+                    priceReasoning: data.price?.reason,
+                    images: (data.images || []).map((img: { quality: string; suggestions: string }, index: number) => ({
+                        url: `data:${imagesForRequest[index]?.mimeType || "image/jpeg"};base64,${imagesForRequest[index]?.base64 || ""}`,
+                        quality: img.quality || "",
+                        suggestions: img.suggestions || "",
+                    })),
+                    parameters: {
+                        platform,
+                        tone: selectedTone,
+                        condition,
+                        delivery,
+                        productName,
+                        notes,
+                        priceType,
+                        userPrice: price ? parseFloat(price) : undefined,
+                    },
+                    timestamp: Date.now(),
+                });
+            }
+
             // Auto-save and redirect for authenticated users
             if (session?.user?.id && data.isValid) {
                 const title = data.title || "";
@@ -778,6 +807,22 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
                             isGuest={status !== "authenticated"}
                         />
                     </div>
+
+                    {/* CTA for unauthenticated users — visible under the result without opening SoftWall */}
+                    {status === "unauthenticated" && result?.isValid && (
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-lg bg-primary/10 border border-primary/20">
+                            <div>
+                                <p className="font-medium text-foreground">Podoba Ci się? Zapisz to ogłoszenie.</p>
+                                <p className="text-sm text-muted-foreground">Darmowe konto — 5 ogłoszeń miesięcznie, bez karty.</p>
+                            </div>
+                            <Button
+                                onClick={() => router.push("/auth/signin?callbackUrl=/dashboard")}
+                                className="shrink-0"
+                            >
+                                Zarejestruj się i zapisz
+                            </Button>
+                        </div>
+                    )}
                 </section>
             )}
 
