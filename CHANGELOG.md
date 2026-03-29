@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.4.3] - 2026-03-29
+
+### Fixed
+- SEO: `robots.ts` — URL sitemapy zaktualizowany do domeny z www (`https://www.marketplace-ai.pl/sitemap.xml`) dla spójności z canonical
+
 ## [1.4.2] - 2026-03-28
 
 ### Added

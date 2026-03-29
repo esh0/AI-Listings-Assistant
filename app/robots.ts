@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
                 disallow: ["/dashboard/", "/api/", "/auth/"],
             },
         ],
-        sitemap: "https://marketplace-ai.pl/sitemap.xml",
+        sitemap: "https://www.marketplace-ai.pl/sitemap.xml",
     };
 }
