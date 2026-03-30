@@ -13,7 +13,7 @@ import { UploadDropzone } from "@/components/UploadDropzone";
 import { ProductForm, ProductParameters, NotesAndCTA } from "@/components/ProductForm";
 import { SoftWallModal } from "@/components/SoftWallModal";
 import { NoCreditsModal } from "@/components/NoCreditsModal";
-import { fileToBase64, getImageMimeType } from "@/lib/utils";
+import { fileToBase64, getImageMimeType, compressImage } from "@/lib/utils";
 import { getGuestId } from "@/lib/guest-id";
 import { savePendingAd } from "@/lib/storage";
 import { toast } from "sonner";
@@ -346,11 +346,15 @@ export function AdGeneratorForm({ onResultChange, showHeader = true }: { onResul
 
         try {
             const imagesForRequest = await Promise.all(
-                images.map(async (img) => ({
-                    base64: await fileToBase64(img.file),
-                    filename: img.filename,
-                    mimeType: getImageMimeType(img.filename),
-                }))
+                images.map(async (img) => {
+                    // Compress to max 1200px before sending to API to keep payload under 4MB limit
+                    const compressed = await compressImage(img.file, 1200, 1200, 0.82);
+                    return {
+                        base64: await fileToBase64(compressed),
+                        filename: img.filename,
+                        mimeType: getImageMimeType(img.filename),
+                    };
+                })
             );
 
             // Store base64 images for saving later (both authenticated and unauthenticated users)

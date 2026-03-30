@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.4.4] - 2026-03-30
+
+### Fixed
+- `AdGeneratorForm`: zdjęcia kompresowane do max 1200×1200px przed wysyłką do `/api/generate-ad` — zapobiega błędowi HTTP 413 (Request Entity Too Large) przy wielu zdjęciach wysokiej rozdzielczości
+
 ## [1.4.3] - 2026-03-29
 
 ### Fixed
