@@ -1,6 +1,6 @@
 # Marketing Progress — marketplace-ai.pl
 
-Ostatnia aktualizacja: 2026-03-22 (wieczór)
+Ostatnia aktualizacja: 2026-04-04
 
 ## Status ogólny
 
@@ -13,6 +13,7 @@ Budżet: 250–400 PLN/miesiąc (na razie 0 PLN wydanych — etap organiczny)
 ### Analityka i SEO
 - [x] Google Analytics 4 skonfigurowane (ID: G-NER153CSFW) — zaimplementowane w `app/layout.tsx`
 - [x] Google Search Console — domena zweryfikowana przez DNS TXT (home.pl)
+- [x] Google Ads — nowe konto założone (ID: 810-219-3139), tag `AW-18063893093` zainstalowany w `lib/analytics.ts`
 - [x] `sitemap.xml` — wygenerowany i dostępny na `marketplace-ai.pl/sitemap.xml`
 
 ### Social media — konta
@@ -79,6 +80,45 @@ Wypróbuj za darmo → link w bio
 
 ### Facebook Page — posty
 - [x] Post 1 — Powitalny (grafika 1200x630px, Canva, kurtka jeansowa PRZED/PO, opublikowany nd 22.03 wieczór)
+
+### Bait posty na grupy FB — status zgłoszeń
+
+Styl: organiczny, od autora (twórcy aplikacji). Format: moje doświadczenie.
+Wszystkie zgłoszenia wysłane 2026-03-26 — czekają na zatwierdzenie przez administratorów.
+
+#### Post #1 — OLX (`?ref=olx`)
+| Grupa | Link | Status |
+|-------|------|--------|
+| OLX Sprzedam Kupię | https://www.facebook.com/groups/1049997311782769 | ⏳ oczekuje |
+| OLX Polska | https://www.facebook.com/groups/901099430649059/ | ⏳ oczekuje |
+| OLX — Kupię Sprzedam | https://www.facebook.com/groups/468653626940234/ | ⏳ oczekuje |
+| Stragan Całej Polski | https://www.facebook.com/groups/stragancalapolska/ | ⏳ oczekuje |
+
+#### Post #2 — Vinted (`?ref=vinted`)
+| Grupa | Link | Status |
+|-------|------|--------|
+| Vinted Polska #1 | https://www.facebook.com/groups/1207905710063074/ | ⏳ oczekuje |
+| Vinted Polska #2 | https://www.facebook.com/groups/460677911664242/ | ⏳ oczekuje |
+| Vinted Polska #3 | https://www.facebook.com/groups/643503200330904/ | ⏳ oczekuje |
+| Vinted Polska #4 | https://www.facebook.com/groups/1016692929549481/ | ⏳ oczekuje |
+| Vinted Polska #5 | https://www.facebook.com/groups/811772484574048/ | ⏳ oczekuje |
+| Vinted Polska #6 | https://www.facebook.com/groups/2065242687013750/ | ⏳ oczekuje |
+| Vinted Polska #7 | https://www.facebook.com/groups/1129524792170037 | ⏳ oczekuje |
+| Vinted Polska #8 | https://www.facebook.com/groups/1581691718764803/ | ⏳ oczekuje |
+| Vinted Polska #9 | https://www.facebook.com/groups/1203194353359931/ | ⏳ oczekuje |
+
+#### Post #3 — Allegro Lokalnie (`?ref=allegro`)
+| Grupa | Link | Status |
+|-------|------|--------|
+| Allegro Lokalnie Polska | https://www.facebook.com/groups/367282090616954/ | ⏳ oczekuje |
+
+#### Post #4 — FB Marketplace (`?ref=fb`)
+Brak odpowiednich grup — post wstrzymany.
+
+#### Post #5 — Ogólny (`?ref=grupy`)
+| Grupa | Link | Status |
+|-------|------|--------|
+| Sprzedam Kupię Polska | https://www.facebook.com/groups/3068776136771439/ | ⏳ oczekuje |
 
 ---
 
