@@ -1,6 +1,11 @@
 // lib/analytics.ts
-// Central GA4 analytics module — all tracking goes through here.
+// Central GA4 + Google Ads analytics module — all tracking goes through here.
 // Never call gtag() directly outside this file.
+//
+// Architecture:
+// - gtag.js script + gtag('consent','default','denied') loaded unconditionally in layout.tsx <head>
+// - CookieBanner calls setAnalyticsConsent(true/false) → updates consent state via gtag('consent','update',...)
+// - trackEvent() is a no-op until consent is granted
 
 const GA_ID = "G-NER153CSFW";
 const AW_ID = "AW-18063893093"; // Google Ads conversion tracking
@@ -21,39 +26,45 @@ export function hasConsentDecision(): boolean {
 }
 
 /**
- * Persist the user's choice, clean up the legacy key, and initialise GA4 if accepted.
+ * Persist the user's choice, clean up the legacy key, and update gtag consent state.
  * Called by CookieBanner when the user clicks Accept or Reject.
  */
 export function setAnalyticsConsent(accepted: boolean): void {
   if (typeof window === "undefined") return;
   localStorage.setItem(CONSENT_KEY, accepted ? "accepted" : "rejected");
-  localStorage.removeItem(LEGACY_KEY); // clean up old banner key
-  if (accepted) initGA4();
+  localStorage.removeItem(LEGACY_KEY);
+  if (typeof window.gtag === "function") {
+    if (accepted) {
+      window.gtag("consent", "update", {
+        analytics_storage: "granted",
+        ad_storage: "granted",
+        ad_user_data: "granted",
+        ad_personalization: "granted",
+      });
+    } else {
+      window.gtag("consent", "update", {
+        analytics_storage: "denied",
+        ad_storage: "denied",
+        ad_user_data: "denied",
+        ad_personalization: "denied",
+      });
+    }
+  }
 }
 
 /**
- * Inject the GA4 script tag into <head> and initialise tracking.
- * Safe to call multiple times — skips if already initialised.
+ * Called by CookieBanner on mount when the user previously accepted.
+ * gtag is already loaded — just restore the granted consent state.
  */
 export function initGA4(): void {
   if (typeof window === "undefined") return;
-  if (document.getElementById("ga4-script")) return; // already loaded
-  if (window.gtag) return; // already initialised
-
-  const script = document.createElement("script");
-  script.id = "ga4-script";
-  script.async = true;
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
-  document.head.appendChild(script);
-
-  window.dataLayer = window.dataLayer || [];
-  // Must use `arguments` (not rest params) so gtag receives the IArguments object
-  // eslint-disable-next-line prefer-rest-params
-  function gtag() { window.dataLayer.push(arguments); }
-  window.gtag = gtag as unknown as typeof window.gtag;
-  (gtag as any)("js", new Date());
-  (gtag as any)("config", GA_ID);
-  (gtag as any)("config", AW_ID);
+  if (typeof window.gtag !== "function") return;
+  window.gtag("consent", "update", {
+    analytics_storage: "granted",
+    ad_storage: "granted",
+    ad_user_data: "granted",
+    ad_personalization: "granted",
+  });
 }
 
 /**
@@ -82,7 +93,7 @@ export async function sendServerEvent(
 ): Promise<void> {
   const measurementId = process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID ?? GA_ID;
   const apiSecret = process.env.GA4_API_SECRET;
-  if (!apiSecret) return; // not configured — skip silently
+  if (!apiSecret) return;
 
   try {
     await fetch(
@@ -109,3 +120,6 @@ declare global {
     gtag?: ((...args: any[]) => void);
   }
 }
+
+// Re-export IDs for use in other modules if needed
+export { GA_ID, AW_ID };
