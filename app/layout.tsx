@@ -6,6 +6,7 @@ import { CookieBanner } from "@/components/CookieBanner";
 import { auth } from "@/auth";
 import { Analytics } from "@vercel/analytics/react";
 import { Toaster } from "sonner";
+import Script from "next/script";
 
 export const viewport: Viewport = {
     width: "device-width",
@@ -78,6 +79,25 @@ export default async function RootLayout({
                 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
                 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
                 <meta name="theme-color" content="#0a0d14" media="(prefers-color-scheme: dark)" />
+                {/* Google tag — musi być przed gtag('config',...) */}
+                <Script
+                    src="https://www.googletagmanager.com/gtag/js?id=AW-18063893093"
+                    strategy="afterInteractive"
+                />
+                <Script id="gtag-init" strategy="afterInteractive">{`
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('consent', 'default', {
+                    analytics_storage: 'denied',
+                    ad_storage: 'denied',
+                    ad_user_data: 'denied',
+                    ad_personalization: 'denied',
+                    wait_for_update: 500
+                  });
+                  gtag('config', 'AW-18063893093');
+                  gtag('config', 'G-NER153CSFW');
+                `}</Script>
             </head>
             <body className="antialiased overflow-x-hidden">
                 <AuthProvider session={session}>
