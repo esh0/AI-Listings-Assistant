@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.4.5] - 2026-04-04
+
+### Added
+- Google Ads conversion tracking: tag `AW-18063893093` dodany do `lib/analytics.ts` — ładuje się razem z GA4 po akceptacji zgody przez użytkownika
+- CSP: `https://googleads.googleapis.com` dodany do `connect-src` w `next.config.ts`
+
 ## [1.4.4] - 2026-03-30
 
 ### Fixed

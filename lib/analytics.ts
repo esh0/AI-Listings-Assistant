@@ -3,6 +3,7 @@
 // Never call gtag() directly outside this file.
 
 const GA_ID = "G-NER153CSFW";
+const AW_ID = "AW-18063893093"; // Google Ads conversion tracking
 const CONSENT_KEY = "cookie_analytics_consent"; // "accepted" | "rejected"
 const LEGACY_KEY = "cookie_notice_accepted"; // old banner key — cleaned up on first run
 
@@ -52,6 +53,7 @@ export function initGA4(): void {
   window.gtag = gtag as unknown as typeof window.gtag;
   (gtag as any)("js", new Date());
   (gtag as any)("config", GA_ID);
+  (gtag as any)("config", AW_ID);
 }
 
 /**
