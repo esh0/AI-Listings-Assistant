@@ -13,8 +13,20 @@ Budżet: 250–400 PLN/miesiąc (na razie 0 PLN wydanych — etap organiczny)
 ### Analityka i SEO
 - [x] Google Analytics 4 skonfigurowane (ID: G-NER153CSFW) — zaimplementowane w `app/layout.tsx`
 - [x] Google Search Console — domena zweryfikowana przez DNS TXT (home.pl)
-- [x] Google Ads — nowe konto założone (ID: 810-219-3139), tag `AW-18063893093` zainstalowany w `lib/analytics.ts`
+- [x] Google Ads — nowe konto założone, tag zainstalowany w `app/layout.tsx` (Consent Mode v2)
 - [x] `sitemap.xml` — wygenerowany i dostępny na `marketplace-ai.pl/sitemap.xml`
+
+#### Identyfikatory (Google)
+
+| Usługa | ID | Uwagi |
+|---|---|---|
+| Google Analytics 4 | `G-NER153CSFW` | property marketplace-ai.pl |
+| Google Ads — Customer ID | `810-219-3139` | nowe konto (stare `962-220-9514` zamknięte) |
+| Google Ads — Tag ID | `AW-18063893093` | zainstalowany w `<head>` bezwarunkowo |
+| Conversion Label (ad_generated) | `MGFrCKbw35UcEOXExKVD` | pełny send_to: `AW-18063893093/MGFrCKbw35UcEOXExKVD` |
+
+**Do zrobienia:** podpiąć konwersję `ad_generated` w `lib/analytics.ts` — wywołać `gtag('event', 'conversion', { send_to: 'AW-18063893093/MGFrCKbw35UcEOXExKVD' })` w `trackEvent('ad_generated', ...)`.
+
 
 ### Social media — konta
 - [x] Instagram: `@marketplace_ai.pl`
