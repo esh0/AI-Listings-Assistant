@@ -1,6 +1,6 @@
 # Marketing Progress — marketplace-ai.pl
 
-Ostatnia aktualizacja: 2026-04-04
+Ostatnia aktualizacja: 2026-04-05
 
 ## Status ogólny
 
@@ -27,10 +27,21 @@ Budżet: 250–400 PLN/miesiąc (na razie 0 PLN wydanych — etap organiczny)
 
 - [x] Konwersja `ad_generated` podpięta w `lib/analytics.ts` — `gtag('event', 'conversion', { send_to: 'AW-18063893093/MGFrCKbw35UcEOXExKVD' })` wywoływana przy każdym `trackEvent('ad_generated', ...)`
 
+### Google Ads — kampania
+
+| Element | Wartość |
+|---|---|
+| Kampania | `[MA] Search — Generator ogłoszeń` |
+| Budżet | 10 zł/dzień |
+| Strategia | Manualne CPC, maks. 1,50 zł |
+| G1 Edukacyjna | `"jak napisać ogłoszenie na olx"`, `"jak napisać opis produktu olx"`, `"jak wystawić rzeczy na vinted"`, `"ogłoszenie olx przykład"` |
+| G2 Zakupowa | `[generator ogłoszeń olx]`, `[generator opisu vinted]`, `"generator ogłoszeń"` |
+| GA4 ↔ Google Ads | Połączone (2026-04-05) |
+
 
 ### Social media — konta
 - [x] Instagram: `@marketplace_ai.pl`
-- [x] TikTok: `@markeplace_ai.pl` ⚠️ literówka (brakuje 't') — zmiana możliwa od ~28.03.2026
+- [x] TikTok: `@marketplace_ai.pl` — literówka poprawiona
 - [x] Facebook Page: Marketplace AI — założona, niepołączona jeszcze z Instagramem
 
 ### Instagram — posty (grafiki w Canva, format 1080x1080px)
@@ -137,20 +148,20 @@ Brak odpowiednich grup — post wstrzymany.
 ## Do zrobienia
 
 ### Najbliższe kroki
-- [ ] Opublikować posty Instagram 3–5 (dziś, niedziela)
-- [ ] Opublikować posty Instagram 6–9 (poniedziałek)
-- [ ] Nagrać Reels #1 (poniedziałek)
+- [x] Opublikować posty Instagram 3–5 (dziś, niedziela)
+- [x] Opublikować posty Instagram 6–9 (poniedziałek)
+- [x] Nagrać Reels #1 (poniedziałek)
 - [ ] Opublikować posty Facebook Page 2–5 (harmonogram w sekcji poniżej)
-- [ ] Poprawić literówkę w TikTok username (od ~28.03.2026)
+- [x] Poprawić literówkę w TikTok username (od ~28.03.2026)
 - [ ] Połączyć Facebook Page z Instagramem
-- [ ] Założyć skrzynkę `privacy@marketplace-ai.pl` na home.pl
-- [ ] Czekać na approve Facebook App Review (weryfikacja biznesowa wysłana)
+- [x] Założyć skrzynkę `privacy@marketplace-ai.pl` na home.pl
+- [x] Czekać na approve Facebook App Review (weryfikacja biznesowa wysłana)
 
 ### Tydzień 3–4 (płatne)
 - [ ] Zainstalować Meta Pixel
 - [ ] Uruchomić boost Meta Ads ~150–200 PLN
-- [ ] Uruchomić Google Ads ~100–150 PLN
-- [ ] Napisać pierwszy artykuł SEO: "Jak napisać ogłoszenie na OLX"
+- [x] Uruchomić Google Ads ~100–150 PLN
+- [x] Napisać pierwszy artykuł SEO: "Jak napisać ogłoszenie na OLX"
 
 ---
 
