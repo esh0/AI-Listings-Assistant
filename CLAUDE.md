@@ -684,3 +684,10 @@ vercel --prod
 - Avoid `Promise.all` with more than 3-4 Prisma queries — use `groupBy` or `$transaction` to batch
 
 Alternative: Docker (see README.md for Dockerfile)
+
+## Documentation Conventions
+
+**Implementation Plans (`docs/superpowers/plans/`):**
+- Plans are temporary working documents — delete them after the feature is fully implemented and merged to master.
+- Never leave completed plans in the repository. The code and CHANGELOG are the permanent record.
+- Specs (`docs/superpowers/specs/`) are architectural decision records — keep them permanently.
