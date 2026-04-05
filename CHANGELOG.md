@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.4.6] - 2026-04-05
+
+### Added
+- Google Ads conversion tracking: `ad_generated` event w `lib/analytics.ts` wysyła `gtag('event', 'conversion', { send_to: 'AW-18063893093/MGFrCKbw35UcEOXExKVD' })` przy każdej generacji ogłoszenia (consent-gated)
+
 ## [1.4.5] - 2026-04-04
 
 ### Added

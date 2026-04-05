@@ -79,6 +79,13 @@ export function trackEvent(
   if (!hasAnalyticsConsent()) return;
   if (typeof window.gtag !== "function") return;
   window.gtag("event", eventName, params ?? {});
+
+  // Google Ads conversion tracking
+  if (eventName === "ad_generated") {
+    window.gtag("event", "conversion", {
+      send_to: `${AW_ID}/MGFrCKbw35UcEOXExKVD`,
+    });
+  }
 }
 
 /**
