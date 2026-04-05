@@ -25,7 +25,7 @@ Budżet: 250–400 PLN/miesiąc (na razie 0 PLN wydanych — etap organiczny)
 | Google Ads — Tag ID | `AW-18063893093` | zainstalowany w `<head>` bezwarunkowo |
 | Conversion Label (ad_generated) | `MGFrCKbw35UcEOXExKVD` | pełny send_to: `AW-18063893093/MGFrCKbw35UcEOXExKVD` |
 
-**Do zrobienia:** podpiąć konwersję `ad_generated` w `lib/analytics.ts` — wywołać `gtag('event', 'conversion', { send_to: 'AW-18063893093/MGFrCKbw35UcEOXExKVD' })` w `trackEvent('ad_generated', ...)`.
+- [x] Konwersja `ad_generated` podpięta w `lib/analytics.ts` — `gtag('event', 'conversion', { send_to: 'AW-18063893093/MGFrCKbw35UcEOXExKVD' })` wywoływana przy każdym `trackEvent('ad_generated', ...)`
 
 
 ### Social media — konta
