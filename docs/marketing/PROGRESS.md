@@ -5,39 +5,25 @@ Ostatnia aktualizacja: 2026-04-05
 ## Status ogólny
 
 Budżet: 250–400 PLN/miesiąc (na razie 0 PLN wydanych — etap organiczny)
+Techniczne ID i konfiguracje analityki: → **CLAUDE.md** sekcja "Analytics & Marketing Integrations"
 
 ---
 
 ## Zrobione
 
 ### Analityka i SEO
-- [x] Google Analytics 4 skonfigurowane (ID: G-NER153CSFW) — zaimplementowane w `app/layout.tsx`
-- [x] Google Search Console — domena zweryfikowana przez DNS TXT (home.pl)
-- [x] Google Ads — nowe konto założone, tag zainstalowany w `app/layout.tsx` (Consent Mode v2)
-- [x] `sitemap.xml` — wygenerowany i dostępny na `marketplace-ai.pl/sitemap.xml`
+- [x] Google Analytics 4 skonfigurowane i zaimplementowane
+- [x] Google Search Console — domena zweryfikowana
+- [x] Google Ads — konto założone, tag zainstalowany (Consent Mode v2), kampania aktywna
+- [x] `sitemap.xml` — wygenerowany i dostępny
+- [x] Konwersja `ad_generated` podpięta w Google Ads
+- [x] GA4 ↔ Google Ads połączone (2026-04-05)
+- [x] Blog SEO — 9 artykułów wdrożonych (2026-03-25)
 
-#### Identyfikatory (Google)
-
-| Usługa | ID | Uwagi |
-|---|---|---|
-| Google Analytics 4 | `G-NER153CSFW` | property marketplace-ai.pl |
-| Google Ads — Customer ID | `810-219-3139` | nowe konto (stare `962-220-9514` zamknięte) |
-| Google Ads — Tag ID | `AW-18063893093` | zainstalowany w `<head>` bezwarunkowo |
-| Conversion Label (ad_generated) | `MGFrCKbw35UcEOXExKVD` | pełny send_to: `AW-18063893093/MGFrCKbw35UcEOXExKVD` |
-
-- [x] Konwersja `ad_generated` podpięta w `lib/analytics.ts` — `gtag('event', 'conversion', { send_to: 'AW-18063893093/MGFrCKbw35UcEOXExKVD' })` wywoływana przy każdym `trackEvent('ad_generated', ...)`
-
-### Google Ads — kampania
-
-| Element | Wartość |
-|---|---|
-| Kampania | `[MA] Search — Generator ogłoszeń` |
-| Budżet | 10 zł/dzień |
-| Strategia | Manualne CPC, maks. 1,50 zł |
-| G1 Edukacyjna | `"jak napisać ogłoszenie na olx"`, `"jak napisać opis produktu olx"`, `"jak wystawić rzeczy na vinted"`, `"ogłoszenie olx przykład"` |
-| G2 Zakupowa | `[generator ogłoszeń olx]`, `[generator opisu vinted]`, `"generator ogłoszeń"` |
-| GA4 ↔ Google Ads | Połączone (2026-04-05) |
-
+### Google Ads — kampania `[MA] Search — Generator ogłoszeń`
+- Budżet: 10 zł/dzień, CPC maks. 1,50 zł
+- G1 Edukacyjna: frazy "jak napisać ogłoszenie na olx", "jak napisać opis produktu olx", "jak wystawić rzeczy na vinted", "ogłoszenie olx przykład"
+- G2 Zakupowa: frazy [generator ogłoszeń olx], [generator opisu vinted], "generator ogłoszeń"
 
 ### Social media — konta
 - [x] Instagram: `@marketplace_ai.pl`
@@ -52,49 +38,18 @@ Czcionka: Montserrat (Bold dla nagłówków, Regular dla podtytułów)
 |---|-------|----------|--------|
 | 1 | Powitalny | Twórz ogłoszenia w 30 sekund | ✅ opublikowany |
 | 2 | Przed/Po | Pisałeś ogłoszenie 20 minut? | ✅ opublikowany |
-| 3 | Bezpłatny plan | 5 ogłoszeń miesięcznie za darmo | ⏳ do publikacji dziś |
-| 4 | 4 platformy | OLX, Allegro, Vinted, Facebook | ⏳ do publikacji dziś |
-| 5 | AI rozpoznaje | AI rozpoznaje, co sprzedajesz | ⏳ do publikacji dziś |
-| 6 | Ton ogłoszenia | Profesjonalnie, przyjaźnie czy swobodnie? | ⏳ do publikacji pon. |
-| 7 | Cena | Ile warto wziąć za ten produkt? | ⏳ do publikacji pon. |
-| 8 | Ile rzeczy | Ile masz rzeczy do sprzedania? | ⏳ do publikacji pon. |
-| 9 | Końcowy CTA | Mniej pisania, więcej sprzedawania | ⏳ do publikacji pon. |
+| 3 | Bezpłatny plan | 5 ogłoszeń miesięcznie za darmo | ✅ opublikowany |
+| 4 | 4 platformy | OLX, Allegro, Vinted, Facebook | ✅ opublikowany |
+| 5 | AI rozpoznaje | AI rozpoznaje, co sprzedajesz | ✅ opublikowany |
+| 6 | Ton ogłoszenia | Profesjonalnie, przyjaźnie czy swobodnie? | ✅ opublikowany |
+| 7 | Cena | Ile warto wziąć za ten produkt? | ✅ opublikowany |
+| 8 | Ile rzeczy | Ile masz rzeczy do sprzedania? | ✅ opublikowany |
+| 9 | Końcowy CTA | Mniej pisania, więcej sprzedawania | ✅ opublikowany |
 | 10 | Social proof | 5.0/5 za pierwsze ogłoszenia z AI | ✅ opublikowany |
 
-### Reels #1 — scenariusz gotowy, nagranie w poniedziałek
-**Temat:** "Zdjęcie → ogłoszenie w 30 sekund"
-**Format:** nagranie ekranu telefonu (pion 9:16), 30 sekund
-
-| Czas | Co pokazujesz |
-|------|---------------|
-| 0–3s | Otwierasz marketplace-ai.pl w przeglądarce |
-| 3–8s | Wrzucasz zdjęcie produktu z galerii |
-| 8–13s | Wybierasz platformę OLX, klikasz "Generuj" |
-| 13–22s | Animacja ładowania — AI pracuje |
-| 22–28s | Gotowe ogłoszenie — przewijasz tytuł i opis |
-| 28–30s | Zatrzymanie na adresie strony |
-
-**Przygotowanie przed nagraniem:**
-- Otwórz incognito / wyczyść historię
-- Przygotuj 2–3 zdjęcia produktu w galerii
-- Włącz tryb samolotowy (brak powiadomień)
-- Nagrywanie ekranu iPhone: Ustawienia → Centrum sterowania → Nagrywanie ekranu
-
-**Montaż w Instagram Reels:**
-1. Instagram → Reels → + → wgraj nagranie
-2. Przytnij do 30 sekund
-3. Dodaj trending audio (ikona z strzałką w górę)
-4. Dodaj tekst na początku: "zdjęcie → ogłoszenie w 30 sekund"
-5. Opublikuj
-
-**Caption do Reels:**
-```
-Zdjęcie → gotowe ogłoszenie w 30 sekund
-
-Wypróbuj za darmo → link w bio
-
-#olx #vinted #ai #sprzedajemy #ogłoszenia
-```
+### Reels #1 — "Zdjęcie → ogłoszenie w 30 sekund"
+- [x] Scenariusz gotowy
+- [x] Nagrany i opublikowany
 
 ### Social proof
 - 3 sprzedaże na OLX przy użyciu generatora
@@ -102,7 +57,7 @@ Wypróbuj za darmo → link w bio
 - Tagi: "Przedmiot zgodny z opisem", "Szybko nadane", "Bezpieczne opakowanie"
 
 ### Facebook Page — posty
-- [x] Post 1 — Powitalny (grafika 1200x630px, Canva, kurtka jeansowa PRZED/PO, opublikowany nd 22.03 wieczór)
+- [x] Post 1 — Powitalny (opublikowany nd 22.03 wieczór)
 
 ### Bait posty na grupy FB — status zgłoszeń
 
@@ -148,20 +103,10 @@ Brak odpowiednich grup — post wstrzymany.
 ## Do zrobienia
 
 ### Najbliższe kroki
-- [x] Opublikować posty Instagram 3–5 (dziś, niedziela)
-- [x] Opublikować posty Instagram 6–9 (poniedziałek)
-- [x] Nagrać Reels #1 (poniedziałek)
 - [ ] Opublikować posty Facebook Page 2–5 (harmonogram w sekcji poniżej)
-- [x] Poprawić literówkę w TikTok username (od ~28.03.2026)
 - [ ] Połączyć Facebook Page z Instagramem
-- [x] Założyć skrzynkę `privacy@marketplace-ai.pl` na home.pl
-- [x] Czekać na approve Facebook App Review (weryfikacja biznesowa wysłana)
-
-### Tydzień 3–4 (płatne)
 - [ ] Zainstalować Meta Pixel
 - [ ] Uruchomić boost Meta Ads ~150–200 PLN
-- [x] Uruchomić Google Ads ~100–150 PLN
-- [x] Napisać pierwszy artykuł SEO: "Jak napisać ogłoszenie na OLX"
 
 ---
 
