@@ -93,7 +93,7 @@ export default async function RootLayout({
                     ad_storage: 'denied',
                     ad_user_data: 'denied',
                     ad_personalization: 'denied',
-                    wait_for_update: 500
+                    wait_for_update: 2000
                   });
                   gtag('config', 'AW-18063893093');
                   gtag('config', 'G-NER153CSFW');

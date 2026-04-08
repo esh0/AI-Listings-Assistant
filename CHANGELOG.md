@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.4.7] - 2026-04-08
+
+### Fixed
+- Consent Mode v2: `wait_for_update` zwiększone z 500ms do 2000ms w `app/layout.tsx` — naprawia błąd "Needs attention" w diagnostyce Google Ads; React potrzebuje więcej czasu na zamontowanie CookieBanner przed wysłaniem sygnału zgody do Google
+
 ## [1.4.6] - 2026-04-05
 
 ### Added
