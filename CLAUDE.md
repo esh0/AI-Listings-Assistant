@@ -161,24 +161,34 @@ RESEND_CONTACT_EMAIL=kontakt@marketplace-ai.pl
 
 The app supports 8 tone styles for generated listings, with plan-based gating:
 
-**FREE plan (3 tones):**
-- **Professional** (Profesjonalny) - Formalny, rzeczowy, ekspertycki
-  - Recommended for: Allegro Lokalnie
-- **Friendly** (Przyjazny) - Ciepły, pomocny, naturalny
-  - Recommended for: FB Marketplace, Vinted
-- **Casual** (Swobodny) - Luźny, potoczny, bezpośredni
-  - Recommended for: OLX
+**FREE plan (3 tones — `FREE_TONES` constant):**
+- **Professional** (Profesjonalny) - Formalny, rzeczowy, ekspertycki — recommended for: Allegro Lokalnie
+- **Friendly** (Przyjazny) - Ciepły, pomocny, naturalny — recommended for: FB Marketplace, Vinted
+- **Casual** (Swobodny) - Luźny, potoczny, bezpośredni — recommended for: OLX
 
-**STARTER and above (4 additional tones):**
-- **Salesy** (Sprzedażowy) - Przekonujący, z wezwaniem do działania
-- **Minimalist** (Minimalistyczny) - Zwięzły, esencjonalny, bez zbędnych słów
-- **Storytelling** (Opowiadanie) - Narracyjny, angażujący, z historią produktu
-- **Luxury** (Ekskluzywny) - Elegancki, prestiżowy, podkreślający wyjątkowość
+**STARTER and above (5 additional tones — `ADVANCED_TONES` constant):**
+- **Enthusiastic** (Entuzjastyczny) - Energetyczny, pełen emocji
+- **Funny** (Zabawny) - Lekki humor bez utraty wiarygodności
+- **Technical** (Techniczny) - Precyzyjne dane, specyfikacje, zero ozdobników
+- **Persuasive** (Przekonujący) - Argumenty korzyści + CTA
+- **Concise** (Zwięzły) - Bullet points, minimum słów
 
-**RESELER only (1 special tone):**
-- **Custom** (Własny styl) - Free-text AI instructions defined in the template; available only in template form, not in the ad generator directly
+**RESELER only (1 special tone — NOT in `ADVANCED_TONES`):**
+- **Custom** (Własny styl) - Free-text AI instructions defined in the template; available only in `TemplateFormModal`, not in the standalone ad generator
 
-Each platform has a smart default tone that auto-selects when the platform changes. Users can override the default to match their preference or product type. Advanced tones (Starter+) are locked with a Sparkles icon for FREE users. Custom tone is locked with a Crown icon for non-RESELER users.
+**Plan gating rules:**
+- FREE users: `ADVANCED_TONES` locked with Sparkles icon; tooltip "Dostępne w planach Starter i Reseler"
+- STARTER+ users: all 8 tones unlocked
+- Lock condition in code: `userPlan === "FREE"` (NOT `userPlan !== "RESELER"` — Starter is unlocked)
+- API gate in `generate-ad/route.ts`: `ADVANCED_TONES.includes(tone) && plan === "FREE"` → 403
+- Custom tone: Crown icon for non-RESELER; `"custom"` is NOT added to `FREE_TONES` or `ADVANCED_TONES` — it's a standalone concept
+
+**Tooltip implementation (locked tones):**
+- State: `tooltipTone: ToneStyle | null` in the component
+- Timer: `timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)` — before each new `setTimeout`, call `clearTimeout(timerRef.current)`. `useEffect` cleanup also calls `clearTimeout(timerRef.current)` on unmount to prevent memory leaks.
+- Tooltip appears on `onClick` of locked button, disappears after 2s
+
+Each platform has a smart default tone that auto-selects when the platform changes. Users can override the default.
 
 ### Price Handling
 
@@ -347,6 +357,33 @@ The system uses a modular prompt architecture with:
   - SOLD → "Wycofaj" (Archive)
   - All states → View (Eye), Edit (hidden for SOLD), Delete (Trash2)
 
+**Template Picker 3-State Rendering (AdGeneratorForm):**
+- Always rendered for authenticated users (guests: hidden)
+- **RESELER with templates** → working `<select>` + edit button
+- **RESELER without templates** → `<select>` with only "Brak (domyślny)" + link "Utwórz pierwszy szablon →" to `/dashboard/templates`
+- **non-RESELER** → wyszarzony `<div>` (not `<select>`) showing "Brak (domyślny)" + Crown badge + "Plan Reseler", `cursor-not-allowed opacity-50`; no action on click
+
+**Custom Tone in Templates:**
+- `custom` ToneStyle: NOT in `FREE_TONES` or `ADVANCED_TONES`; only selectable in `TemplateFormModal`
+- When a template with `tone === "custom"` is selected in `AdGeneratorForm`, `ProductForm` receives `customToneActive={selectedTone === "custom"}` prop and hides its tone selector, showing "Styl z szablonu: Własny" placeholder instead
+- Clearing template selection resets `selectedTone` to `DEFAULT_TONE` (never stays as `"custom"`)
+- AI prompt: `buildSystemPrompt(tone, customToneInstructions?)` — when `tone === "custom"`, injects custom instructions AND suppresses `TONE_VOCABULARY` (which describes fixed tones only)
+- `getToneInstructions("custom")` returns `""` — safety guard, never reached in normal flow
+- `customToneInstructions` field stored in `Template` model as `String?`; PATCH that changes tone away from `"custom"` explicitly sets `customToneInstructions: null`
+
+**Locked Platform Tiles (non-RESELER):**
+- Clicking a locked platform tile (eBay/Amazon/Etsy for FREE/STARTER) is a **no-op for both `onPlatformChange` AND `onToneChange`** — only shows tooltip
+- Does NOT change the platform or the auto-selected default tone
+- Same Crown icon + "Plan Reseler" tooltip pattern as locked tones
+
+**Authentication Providers:**
+- Three providers: Google OAuth, Facebook OAuth, email magic link (ResendProvider)
+- Facebook button uses inline SVG with official Facebook `f` logo; `fill="#1877F2"` is a **hardcoded color exception** (same policy as platform-specific colors)
+- Magic link: `emailSent = true` is always set regardless of Resend result — prevents email enumeration attacks (user always sees confirmation, even if Resend failed silently)
+- Magic link token expiry: 24 hours (Auth.js v5 default). UI copy must say "24 godziny"
+- `try/finally` in magic link submit handler ensures `emailLoading` resets even on error
+- Welcome email limitation: magic link users may not receive welcome email — the 60-second `createdAt` window check in `signIn` callback is unlikely to match when user clicks the link
+
 **Image Storage:**
 - Images uploaded to Supabase Storage (`marketplace-ads` bucket)
 - Sharp resizes to 800px width, 85% JPEG quality
@@ -418,6 +455,7 @@ Token mapping:
 
 **Exceptions — intentional hardcoded colors:**
 - Platform-specific colors in `PLATFORM_COLORS` (OLX=`text-orange-500`, Allegro=`text-green-600`, FB=`text-blue-600`, Vinted=`text-teal-600`, eBay=`text-red-500`, Amazon=`text-yellow-600`, Etsy=`text-orange-600`)
+- Facebook sign-in button: `fill="#1877F2"` in inline SVG — official Facebook brand color, not available as design token
 - Image overlay backgrounds (`bg-black/60`, `bg-black/90`, `bg-white/10`) — these are translucent overlays, not theme colors
 
 **Common patterns:**
@@ -684,3 +722,79 @@ vercel --prod
 - Avoid `Promise.all` with more than 3-4 Prisma queries — use `groupBy` or `$transaction` to batch
 
 Alternative: Docker (see README.md for Dockerfile)
+
+## Analytics & Marketing Integrations
+
+### Google Analytics 4
+
+| Usługa | ID |
+|---|---|
+| GA4 Measurement ID | `G-NER153CSFW` |
+| GA4 API Secret (env) | `GA4_API_SECRET` |
+
+- Script loaded unconditionally in `<head>` via `app/layout.tsx` (`strategy="afterInteractive"`)
+- Consent Mode v2: all storage denied by default, updated to granted when user accepts cookie banner
+- `lib/analytics.ts` — single source for all tracking; `trackEvent()` is consent-gated; never call `gtag()` directly outside this file
+- Server-side events via `sendServerEvent()` using GA4 Measurement Protocol (Stripe webhooks)
+
+**GA4 custom events tracked:**
+- `ad_generated` — każda generacja ogłoszenia (consent-gated); triggers Google Ads conversion
+- `guest_generation_requested` — gość klika "Generuj"
+- `guest_limit_exhausted` — gość wyczerpał limit 3 generacji
+- `softwall_shown` — SoftWall modal widoczny (mode: save|limit)
+- `softwall_signin_clicked` — kliknięcie sign-in w SoftWall
+- `pricing_page_viewed` — otwarcie strony cennik (page_context)
+- `plan_upgrade_initiated` — kliknięcie przycisku checkout (plan_selected)
+- `boost_pack_initiated` — kliknięcie boost pack checkout
+- `subscription_activated` — Stripe webhook: subskrypcja aktywna (server-side)
+- `boost_purchase_completed` — Stripe webhook: boost zakupiony (server-side)
+- `subscription_cancelled` — Stripe webhook: subskrypcja anulowana (server-side)
+
+### Google Ads
+
+| Element | Wartość |
+|---|---|
+| Customer ID | `810-219-3139` |
+| Tag ID | `AW-18063893093` |
+| Conversion: `ad_generated` | label `MGFrCKbw35UcEOXExKVD` — `send_to: "AW-18063893093/MGFrCKbw35UcEOXExKVD"` |
+
+- Tag załadowany bezwarunkowo w `<head>` (wymagane przez Consent Mode v2 — musi być przed `gtag('consent','default',...)`)
+- GA4 ↔ Google Ads połączone (2026-04-05)
+- Konwersja `ad_generated` wywoływana w `lib/analytics.ts` → `trackEvent('ad_generated', ...)` (consent-gated)
+
+**Kampania Search — `[MA] Search — Generator ogłoszeń`:**
+
+| Element | Wartość |
+|---|---|
+| Budżet | 10 zł/dzień |
+| Strategia | Manualne CPC, maks. 1,50 zł |
+| G1 Edukacyjna | `"jak napisać ogłoszenie na olx"`, `"jak napisać opis produktu olx"`, `"jak wystawić rzeczy na vinted"`, `"ogłoszenie olx przykład"` |
+| G2 Zakupowa | `[generator ogłoszeń olx]`, `[generator opisu vinted]`, `"generator ogłoszeń"` |
+
+### Google Search Console
+
+- Domena `marketplace-ai.pl` zweryfikowana przez DNS TXT (home.pl)
+- Sitemap: `https://www.marketplace-ai.pl/sitemap.xml`
+
+### Social Media Accounts
+
+| Platforma | Handle |
+|---|---|
+| Instagram | `@marketplace_ai.pl` |
+| TikTok | `@marketplace_ai.pl` |
+| Facebook Page | Marketplace AI |
+
+### CSP — wymagane domeny dla analytics
+
+Wszystkie te domeny muszą być w CSP w `next.config.ts`:
+- `script-src`: `https://www.googletagmanager.com`
+- `connect-src`: `https://www.google-analytics.com https://*.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://googleads.googleapis.com`
+
+---
+
+## Documentation Conventions
+
+**Implementation Plans (`docs/superpowers/plans/`):**
+- Plans are temporary working documents — delete them after the feature is fully implemented and merged to master.
+- Never leave completed plans in the repository. The code and CHANGELOG are the permanent record.
+- Specs (`docs/superpowers/specs/`) are architectural decision records — keep them permanently.
