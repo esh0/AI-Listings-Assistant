@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.4.8] - 2026-04-09
+
+### Fixed
+- Consent Mode v2: `initGA4()` dodaje retry po 1000ms gdy `gtag` nie jest jeszcze załadowany — naprawia race condition na powracających użytkownikach (useEffect odpala przed `afterInteractive` skryptem), który powodował 0% consent granted w diagnostyce Google Ads
+
 ## [1.4.7] - 2026-04-08
 
 ### Fixed
