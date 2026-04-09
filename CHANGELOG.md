@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.4.9] - 2026-04-09
+
+### Added
+- Google Ads conversion tracking: `subscription_activated` event wysyła konwersję `AW-18063893093/yzpxCN223JgcEOXExKVD` po potwierdzeniu przez webhook Stripe zmiany planu — wartość dynamiczna (19,99 zł dla STARTER, 49,99 zł dla RESELER); wywoływane w `PendingAdHandler` po powrocie z Stripe Checkout z `?upgrade=success`
+
 ## [1.4.8] - 2026-04-09
 
 ### Fixed
