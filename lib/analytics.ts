@@ -94,6 +94,14 @@ export function trackEvent(
       send_to: `${AW_ID}/MGFrCKbw35UcEOXExKVD`,
     });
   }
+  if (eventName === "subscription_activated") {
+    window.gtag("event", "conversion", {
+      send_to: `${AW_ID}/yzpxCN223JgcEOXExKVD`,
+      value: (params?.value as number) ?? 19.99,
+      currency: "PLN",
+      transaction_id: params?.transaction_id as string | undefined,
+    });
+  }
 }
 
 /**

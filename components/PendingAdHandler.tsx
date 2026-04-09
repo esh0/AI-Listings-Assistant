@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import { getPendingAd, clearPendingAd } from "@/lib/storage";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CheckCircle, XCircle } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 export function PendingAdHandler() {
     const router = useRouter();
@@ -46,6 +47,15 @@ export function PendingAdHandler() {
                         data.plan !== prevPlan;
 
                     if (changed) {
+                        // Fire Google Ads conversion when subscription plan upgrades
+                        if (upgrade === "success" && data.plan !== prevPlan) {
+                            const planValue = data.plan === "RESELER" ? 49.99 : 19.99;
+                            trackEvent("subscription_activated", {
+                                value: planValue,
+                                currency: "PLN",
+                                plan: data.plan,
+                            });
+                        }
                         // Bypass SessionProvider.update() (blocked by loading=true) by
                         // calling the NextAuth session endpoint directly with CSRF token.
                         // This triggers jwt({ trigger: "update" }) and writes a new JWT cookie.
