@@ -54,17 +54,25 @@ export function setAnalyticsConsent(accepted: boolean): void {
 
 /**
  * Called by CookieBanner on mount when the user previously accepted.
- * gtag is already loaded — just restore the granted consent state.
+ * Restores granted consent state. Retries after 1s if gtag hasn't loaded yet
+ * (race condition: afterInteractive script vs useEffect on returning visitors).
  */
 export function initGA4(): void {
   if (typeof window === "undefined") return;
-  if (typeof window.gtag !== "function") return;
-  window.gtag("consent", "update", {
-    analytics_storage: "granted",
-    ad_storage: "granted",
-    ad_user_data: "granted",
-    ad_personalization: "granted",
-  });
+  const grant = () => {
+    window.gtag?.("consent", "update", {
+      analytics_storage: "granted",
+      ad_storage: "granted",
+      ad_user_data: "granted",
+      ad_personalization: "granted",
+    });
+  };
+  if (typeof window.gtag === "function") {
+    grant();
+  } else {
+    // gtag script not yet loaded — retry once it's ready
+    setTimeout(grant, 1000);
+  }
 }
 
 /**
