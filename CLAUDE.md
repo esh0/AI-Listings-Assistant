@@ -756,7 +756,7 @@ Alternative: Docker (see README.md for Dockerfile)
 |---|---|
 | Customer ID | `810-219-3139` |
 | Tag ID | `AW-18063893093` |
-| Conversion: `ad_generated` | label `MGFrCKbw35UcEOXExKVD` — `send_to: "AW-18063893093/MGFrCKbw35UcEOXExKVD"` |
+| Conversion: `ad_generated` | label `thgCCJ38iKAcEOXExKVD` — `send_to: "AW-18063893093/thgCCJ38iKAcEOXExKVD"` |
 
 - Tag załadowany bezwarunkowo w `<head>` (wymagane przez Consent Mode v2 — musi być przed `gtag('consent','default',...)`)
 - GA4 ↔ Google Ads połączone (2026-04-05)

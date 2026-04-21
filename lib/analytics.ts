@@ -91,7 +91,7 @@ export function trackEvent(
   // Google Ads conversion tracking
   if (eventName === "ad_generated") {
     window.gtag("event", "conversion", {
-      send_to: `${AW_ID}/MGFrCKbw35UcEOXExKVD`,
+      send_to: `${AW_ID}/thgCCJ38iKAcEOXExKVD`,
     });
   }
   if (eventName === "subscription_activated") {
