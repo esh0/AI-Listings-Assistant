@@ -56,6 +56,7 @@ import {
     FREE_TONES,
     ADVANCED_TONES,
 } from "@/lib/types";
+import { trackEvent } from "@/lib/analytics";
 
 // Dynamic imports for conditionally rendered components
 const FullscreenLoading = dynamic(
@@ -481,6 +482,9 @@ export function LandingForm() {
             }
 
             setResult(data);
+            if (data.isValid) {
+                trackEvent("ad_generated", { platform, tone: selectedTone, num_images: images.length });
+            }
 
             // Save to IndexedDB immediately for unauthenticated users
             // so the ad survives even if they close SoftWall and sign in via topbar
