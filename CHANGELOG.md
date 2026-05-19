@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.5.1] - 2026-05-19
+
+### Fixed
+- CSP: dodano `https://googleads.g.doubleclick.net`, `https://www.googleadservices.com` i `https://pagead2.googlesyndication.com` do `script-src` i `connect-src` oraz `https://www.google.com` do `connect-src` — gtag.js próbował łączyć się z tymi domenami przy wysyłaniu konwersji i `consent_update`, CSP je blokował co uniemożliwiało rejestrowanie konwersji Google Ads
+
 ## [1.5.0] - 2026-05-19
 
 ### Fixed
