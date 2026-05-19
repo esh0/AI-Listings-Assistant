@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.5.2] - 2026-05-19
+
+### Fixed
+- CSP: dodano `https://www.google.pl` do `connect-src` — Google Ads wysyła pingi konwersji (`1p-conversion`) do krajowego domenu Google (`www.google.pl` dla użytkowników w Polsce); poprzedni wpis `https://www.google.com` nie obejmował wariantu krajowego, co blokowało rejestrowanie konwersji w Polsce
+
 ## [1.5.1] - 2026-05-19
 
 ### Fixed
