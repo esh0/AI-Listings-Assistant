@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.5.0] - 2026-05-19
+
+### Fixed
+- GA4 / Google Ads: `setAnalyticsConsent(true)` teraz wywołuje ponownie `gtag('config', GA_ID)` i `gtag('config', AW_ID)` po akceptacji cookies — naprawia brak sesji i `page_view` w GA4 dla nowych użytkowników (pierwsze odwiedziny / incognito); `gtag('config')` wywoływane wcześniej przy `consent=denied` nie wysyłało danych i nie było ponawiane po grancie
+- GA4 / Google Ads: `initGA4()` zastępuje jednokrotny `setTimeout(1000ms)` pętlą co 500ms (maks. 10 prób, łącznie 5s) + dodaje `gtag('config')` po grancie — naprawia utratę sesji u powracających użytkowników na wolnych połączeniach gdzie gtag ładuje się po upływie poprzedniego timeout
+
 ## [1.4.9] - 2026-04-09
 
 ### Added
