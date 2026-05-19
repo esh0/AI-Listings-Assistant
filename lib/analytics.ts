@@ -41,6 +41,11 @@ export function setAnalyticsConsent(accepted: boolean): void {
         ad_user_data: "granted",
         ad_personalization: "granted",
       });
+      // Re-fire config so GA4 sends page_view now that consent is granted.
+      // gtag('config') called at page load ran under denied — GA4 needs a
+      // second call to actually record the session.
+      window.gtag("config", GA_ID);
+      window.gtag("config", AW_ID);
     } else {
       window.gtag("consent", "update", {
         analytics_storage: "denied",
@@ -66,12 +71,25 @@ export function initGA4(): void {
       ad_user_data: "granted",
       ad_personalization: "granted",
     });
+    // Re-fire config so GA4 sends page_view for returning visitors whose
+    // consent was restored after the initial gtag('config') ran under denied.
+    window.gtag?.("config", GA_ID);
+    window.gtag?.("config", AW_ID);
   };
   if (typeof window.gtag === "function") {
     grant();
   } else {
-    // gtag script not yet loaded — retry once it's ready
-    setTimeout(grant, 1000);
+    // gtag script not yet loaded (afterInteractive race) — poll until ready
+    let attempts = 0;
+    const interval = setInterval(() => {
+      attempts++;
+      if (typeof window.gtag === "function") {
+        clearInterval(interval);
+        grant();
+      } else if (attempts >= 10) {
+        clearInterval(interval);
+      }
+    }, 500);
   }
 }
 
