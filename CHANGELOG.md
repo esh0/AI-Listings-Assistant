@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 Format: [Semantic Versioning](https://semver.org) — `[version] - YYYY-MM-DD`
 
+## [1.5.3] - 2026-10-29
+
+### Changed
+- AI: model generacji ogłoszeń `gpt-4.1-mini` → `gpt-5.6-luna` (nowsza generacja, tańszy input $0.40→$0.20/1M, lepsza analiza zdjęć i polski tekst); dodano `reasoning_effort: "low"` (narzut reasoning pomijalny dla tego taska, ~14 tok) oraz `max_tokens` → `max_completion_tokens: 6000` (wymagane przez modele reasoning)
+
+### Fixed
+- AI prompt: dodano regułę w `PROMPT_FORBIDDEN_PHRASES` zakazującą meta-komentarzy o brakujących danych — model przestał pisać zwroty typu "nie podaję pojemności, bo nie została potwierdzona"; brakujące informacje są teraz po cichu pomijane zamiast komentowane (`gpt-5.6-luna` traktował instrukcje języka niepewności zbyt dosłownie i je werbalizował)
+
 ## [1.5.2] - 2026-05-19
 
 ### Fixed
