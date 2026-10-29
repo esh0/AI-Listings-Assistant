@@ -1,8 +1,41 @@
 # Google Ads — Audit & Status
-**Ostatnia aktualizacja:** 2026-04-21
+**Ostatnia aktualizacja:** 2026-10-19
 **Konto:** 810-219-3139 (Marketplace AI)
 **Okres danych:** 4–21 kwietnia 2026 (18 dni)
 **Kampanie:** `[MA] Search — Generator ogłoszeń` + `[MA] Brand`
+
+---
+
+## 🔄 Update 2026-10-19 (dane 05.10–18.10, 14 dni)
+
+> Audyt poniżej pochodzi z kwietnia 2026 (Health Score 44/100, 0 konwersji). **Wszystkie krytyczne problemy z kwietnia zostały naprawione.** Stan aktualny:
+
+**Konfiguracja stała:** Max Conversions + **tCPA 12 zł**. G1 Edukacyjna wstrzymana, G2 Zakupowa aktywna. Negatywy wdrożone: listy `[MA] Instruktażowe-OLX` (15 Exact) + `[MA] Darmowe-Druk` (5 Phrase), łącznie 51 negatywów. Harmonogram 06:00–00:00.
+
+**Trajektoria od kwietnia:** 0 konwersji (kwi) → negatywy odcięły instruktażowy śmieć → tCPA 12 zł → 09-21 CPA 13,29 → 10-05 CPA 5,78 (budżet 15 zł dławił, Lost IS budżet 39%) → **budżet 15→25 zł** → stan obecny.
+
+| Metryka | Kwiecień 2026 | 2026-10-19 | Cel (z kwietnia) |
+|---------|---------------|------------|------------------|
+| Konwersje `ad_generated` | 0 | **~21 / 14 dni** (~10/tydz.) | >5/tydz. ✅ |
+| CPA | — (0 konw.) | **~9,3 zł** (pod tCPA 12) | — |
+| CTR | 6,64% | **13,7%** | >10% ✅ |
+| Śr. CPC | 1,46 zł | 2,32 zł | <1,50 zł ⚠️ (wzrost akceptowalny — droższy, konwertujący ruch) |
+| Udział w aukcjach (Ty) | bd. | **55,35%** (było 39%) | — |
+| Budżet | 10 zł/dzień | 25 zł/dzień | — |
+
+**Słowa z konwersjami (`Raport słów kluczowych`):**
+- `generator ogłoszeń` fraza — 49 klik, 11,5 konw, CPA 9,16 (koń pociągowy)
+- `generator opisu` fraza — 16 klik, 7 konw, CPA 6,62 ⭐
+- `program do ogłoszeń` fraza — 16 klik, 2 konw, **CPA 18,65 ⚠️** (drożeje, flaga do obserwacji)
+- `ai ogłoszenie sprzedaży` ścisłe — CPA 4,86 ✅
+
+**Aukcje:** Ty 55%, chatgpt.com 27% (lider konkurencji), use.ai 16%, google.com 13%, getresponse.pl 12%.
+
+**Decyzje:** (1) Budżet 25 zł — zostaw, test wyszedł. (2) NIE klikać automatu „poszerz słowa kluczowe" — wpuści instruktażowy śmieć odcięty negatywami. (3) tCPA dojrzałe — nie ruszać.
+
+**Następny review: ~2026-11-02.** Sprawdzić: CPA trzyma <12? konwersje ~10/tydz.? `program do ogłoszeń` dalej drożeje? udział w aukcjach ~55%? Lost IS budżet wrócił (25 zł znów dławi)?
+
+**Cel biznesowy:** płatności. Ruch najlepszy w historii, tani, konwertujący — Ads nie ma już czego sensownie poprawiać. Wąskie gardło = pricing/onboarding/produkt za generacją, NIE Ads. `subscription_activated` wciąż 0 — sygnał produktowy, nie reklamowy.
 
 ---
 

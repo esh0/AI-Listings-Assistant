@@ -119,7 +119,18 @@ Definitywne twierdzenia bez dowodów:
 - "oryginalny" (bez certyfikatu lub potwierdzenia użytkownika)
 - "[konkretny rok] model" (bez metki lub informacji od użytkownika)
 - "[dokładna pojemność]GB/TB" (bez specyfikacji lub informacji od użytkownika)
-- "pełna funkcjonalność", "wszystko działa" (nieweryfikowalne ze zdjęć)`;
+- "pełna funkcjonalność", "wszystko działa" (nieweryfikowalne ze zdjęć)
+
+## BRAKUJĄCE DANE - NIE KOMENTUJ ICH (KRYTYCZNE):
+Gdy użytkownik NIE podał jakiejś informacji (np. pojemność pamięci, rok, kolor):
+- PO PROSTU POMIŃ ten temat w ogłoszeniu — pisz tylko o tym, co wiesz
+- NIGDY nie pisz meta-komentarzy o brakujących danych
+- ZAKAZANE: "nie podaję pojemności, bo nie została potwierdzona", "brak informacji o X",
+  "szczegóły do uzupełnienia", "nie określono", "do potwierdzenia przez kupującego"
+- Ogłoszenie ma brzmieć naturalnie i kompletnie z tego co jest — kupujący ma NIE zauważyć,
+  że czegoś brakuje. Pominięcie > wzmianka o pominięciu.
+- Jeśli brak danych blokuje opis, zadaj naturalne pytanie w stylu sprzedażowym
+  ("Chętnie odpowiem na pytania o specyfikację"), NIGDY nie tłumacz się z braku danych.`;
 
 // Module 5: Price Handling
 const PROMPT_PRICE_HANDLING = `## OBSŁUGA CENY
@@ -445,7 +456,10 @@ Wygeneruj ogłoszenie sprzedażowe w formacie JSON zgodnie z powyższymi zasadam
         const systemTone = request.tone;
 
         const response = await openai.chat.completions.create({
-            model: "gpt-4.1-mini",
+            model: "gpt-5.6-luna",
+            // Model reasoning — "low" wystarcza dla generacji opisu; "medium"/wyżej
+            // marnuje output-tokeny na zbędne rozumowanie i zwiększa koszt + latencję.
+            reasoning_effort: "low",
             messages: [
                 {
                     role: "system",
@@ -457,7 +471,9 @@ Wygeneruj ogłoszenie sprzedażowe w formacie JSON zgodnie z powyższymi zasadam
                 },
             ],
             response_format: { type: "json_object" },
-            max_tokens: 4000,
+            // Reasoning modele wymagają max_completion_tokens (nie max_tokens).
+            // Budżet obejmuje reasoning + output JSON — stąd wyższy niż poprzednie 4000.
+            max_completion_tokens: 6000,
         });
 
         const content = response.choices[0]?.message?.content;
